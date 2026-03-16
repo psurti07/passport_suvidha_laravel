@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Ticket;
 use App\Models\Otp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
@@ -32,7 +33,11 @@ class TodayStatisticsController extends Controller
             ->count();
         $unpaidCustomersToday = Customer::whereDate('created_at', $today)
             ->where('is_paid', false)
-            ->count();                
+            ->count();          
+            
+        $openTicketToday = Ticket::whereDate('created_at', $today)
+            ->where('status', 1)
+            ->count();           
 
         $todayStats = [           
             ['count' => $totalCustomersToday, 'label' => 'Total Customers Today', 'icon' => 'fa-users'],
@@ -41,6 +46,7 @@ class TodayStatisticsController extends Controller
             ['count' => $totalOtpToday, 'label' => 'Today OTP', 'icon' => 'fa-key'],
             ['count' => $loginOtpToday, 'label' => 'Portal Login - OTP', 'icon' => 'fa-sign-in-alt'],
             ['count' => $registrationOtpToday, 'label' => 'Passport Application - OTP', 'icon' => 'fa-passport'],
+            ['count' => $openTicketToday, 'label' => 'Support Request - Open', 'icon' => 'fa-passport'],
         ];
 
         $currentDate = Date::now()->format('j M, Y'); // e.g., 20 Apr, 2025

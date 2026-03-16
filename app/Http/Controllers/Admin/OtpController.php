@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Otp;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use App\Exports\OtpsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -17,13 +17,11 @@ class OtpController extends Controller
         $query = Otp::query();
 
         // Date filtering
-        if ($request->filled('from_date')) {
-            $query->whereDate('sent_at', '>=', $request->from_date);
-        }
+        $from_date = $request->from_date ?? Carbon::now()->subDays(1)->format('Y-m-d');
+        $to_date = $request->to_date ?? Carbon::now()->format('Y-m-d');
 
-        if ($request->filled('to_date')) {
-            $query->whereDate('sent_at', '<=', $request->to_date);
-        }
+        $query->whereDate('sent_at', '>=', $from_date)
+          ->whereDate('sent_at', '<=', $to_date);
 
         // Status filtering
         $status = $request->input('status');
@@ -60,7 +58,7 @@ class OtpController extends Controller
         $perPage = $request->input('per_page', 10); // Get per_page from request, default 10
         $otps = $query->paginate($perPage);
 
-        return view('admin.otps.index', compact('otps'));
+        return view('admin.otps.index', compact('otps','from_date','to_date'));
     }
 
     /**

@@ -1,53 +1,55 @@
 @extends('layouts.app')
 
 @section('content')
-{{-- Add Toastify CSS and JS --}}
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    {{-- Add Toastify CSS and JS in the head --}}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-{{-- Add SweetAlert2 CSS and JS (as in users index) --}}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- Add SweetAlert2 CSS and JS --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-{{-- Optional: Add Toastify custom styles like in customer index if using toasts --}}
-{{-- Override Toastify default styles and add animations --}}
-<style>
-    .toastify {
-        background: none !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-        opacity: 0;
-        transform: translateX(100%);
-        animation: slideIn 0.3s ease forwards;
-    }
-
-    .toastify.toastify-right {
-        right: 16px;
-    }
-
-    @keyframes slideIn {
-        to {
-            opacity: 1;
-            transform: translateX(0);
+    {{-- Override Toastify default styles and add animations --}}
+    <style>
+        .toastify {
+            background: none !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            opacity: 0;
+            transform: translateX(100%);
+            animation: slideIn 0.3s ease forwards;
         }
-    }
 
-    .toast-content {
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-    }
-</style>
+        .toastify.toastify-right {
+            right: 16px;
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast-content {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+    </style>
 
 <div class="mx-auto">
     <div class="bg-white rounded-xl shadow-lg border border-gray-100">
         <div class="p-4 sm:p-6 lg:p-8">
-            <form id="filterForm" action="{{ route('admin.otps.index') }}" method="GET">
+            <form id="filterForm" action="{{ route('admin.leads.tatkal') }}" method="POST">
+                @csrf
                 <div class="flex flex-col lg:flex-row justify-between items-center space-y-4 sm:space-y-0 mb-6">
-                    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                        OTP MANAGEMENT
-                    </h2>
+                    <div class="flex items-center gap-4">
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                            TATKAL LEADS
+                        </h2>
+                    </div>
                     <div class="flex flex-row lg:flex-row flex-wrap gap-4 space-y-2 lg:space-y-0 lg:space-x-2">
-                        <div class="flex flex-col lg:flex-row gap-4 w-full sm:w-auto space-y-0 lg:space-y-0 lg:space-x-2">
+                         <div class="flex flex-col lg:flex-row gap-4 w-full sm:w-auto space-y-0 lg:space-y-0 lg:space-x-2">
                             <div class="flex flex-row sm:flex-row items-center gap-2 space-x-2">
                                 <label class="text-sm font-medium text-gray-700 whitespace-nowrap">From:</label>
                                 <input type="date" name="from_date"
@@ -66,63 +68,43 @@
                         <input type="hidden" name="sort_direction" value="{{ request('sort_direction', 'desc') }}">
                         <input type="hidden" id="perPageInput" name="per_page" value="{{ request('per_page', 10) }}">
                         <button type="submit"
-                            class="w-full sm:w-auto inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                            Filter
+                            class="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                            Show Results
                         </button>
                     </div>
                 </div>
-                 {{-- Optional: Add Search Input if needed --}}
-                 {{-- <div class="flex justify-end mt-4">
-                     <div class="flex items-center gap-2">
-                         <label for="searchInput" class="text-sm font-medium text-gray-700">Search:</label>
-                         <input type="text" id="searchInput" name="search" value="{{ request('search') }}"
-                             placeholder="Search OTPs..."
-                             class="border border-gray-300 rounded-lg text-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm w-64">
-                     </div>
-                 </div> --}}
 
-                {{-- Add Export, Status, Search controls --}}
                 <div class="flex flex-col lg:flex-row justify-between items-center mt-6 gap-4">
                      <div class="flex flex-wrap items-center gap-2 space-x-2">
+                        {{-- Status Filter Moved --}}
                          {{-- Export Buttons --}}
                          <button type="button" onclick="copyToClipboard()"
                             class="inline-flex items-center px-4 py-2 bg-white text-blue-800 rounded-lg text-sm font-medium shadow-md hover:bg-gray-100 transition-colors duration-150">
                                 Copy
                             </button>
-                            {{-- Update route name when export functionality is added --}}
-                            <a href="{{ route('admin.otps.export', ['type' => 'excel'] + request()->all()) }}"
+                            {{-- Update route names if necessary --}}
+                            <a href="{{ route('admin.leads.export', array_merge(request()->all(), ['type'=>'excel','passport_type'=>'tatkal'])) }}"
                                 class="inline-flex items-center px-4 py-2 bg-white text-blue-800 rounded-lg text-sm font-medium shadow-md hover:bg-gray-100 transition-colors duration-150">
                                 Excel
                             </a>
-                            <a href="{{ route('admin.otps.export', ['type' => 'csv'] + request()->all()) }}"
+                            <a href="{{ route('admin.leads.export', array_merge(request()->all(), ['type'=>'csv','passport_type'=>'tatkal'])) }}"
                                 class="inline-flex items-center px-4 py-2 bg-white text-blue-800 rounded-lg text-sm font-medium shadow-md hover:bg-gray-100 transition-colors duration-150">
                                 CSV
                             </a>
-                            <a href="{{ route('admin.otps.export', ['type' => 'pdf'] + request()->all()) }}"
+                            <a href="{{ route('admin.leads.export', array_merge(request()->all(), ['type'=>'pdf','passport_type'=>'tatkal'])) }}"
                                 class="inline-flex items-center px-4 py-2 bg-white text-blue-800 rounded-lg text-sm font-medium shadow-md hover:bg-gray-100 transition-colors duration-150">
                                 PDF
                             </a>
                         </div>
                         <div class="flex items-center gap-4">
-                            {{-- Status Filter --}}
-                             <div class="flex items-center gap-2">
-                                <label class="text-sm font-medium text-gray-700">Status:</label>
-                                <select name="status"
-                                        onchange="document.getElementById('filterForm').submit();"
-                                        class="border border-gray-300 rounded-lg text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm w-full sm:w-32">
-                                    <option value="" {{ request('status') == '' ? 'selected' : '' }}>All</option>
-                                    <option value="verified" {{ request('status') == 'verified' ? 'selected' : '' }}>Verified</option>
-                                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                </select>
-                            </div>
-                            {{-- Search Input --}}
+                            {{-- Status Filter Moved Here --}}
                             <label for="searchInput" class="text-sm font-medium text-gray-700">Search:</label>
-                            <input type="text" id="searchInput" name="search" value="{{ request('search') }}"
-                                placeholder="Search mobile/OTP..."
+                            <input type="text" id="searchInput" name="search" value="{{ $search }}"
+                                placeholder="Search customers..."
                                 class="border border-gray-300 rounded-lg text-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm w-64">
                         </div>
                     </div>
-            </form>
+                </form>
 
             <div class="mt-8 overflow-x-auto">
                 <div class="inline-block min-w-full align-middle max-h-[60vh] overflow-y-auto">
@@ -130,54 +112,80 @@
                         <table class="min-w-full divide-y divide-gray-200 relative">
                             <thead class="bg-blue-50">
                                 <tr>
-                                    {{-- Apply sticky header styling and sorting links --}}
                                     <th scope="col" class="sticky top-0 bg-blue-50 px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b border-gray-200">
                                         {!! sortLink('id', 'ID') !!}
                                     </th>
                                     <th scope="col" class="sticky top-0 bg-blue-50 px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b border-gray-200">
-                                        {!! sortLink('mobile_number', 'Mobile Number') !!}
+                                        {!! sortLink('first_name', 'Name') !!}
                                     </th>
                                     <th scope="col" class="sticky top-0 bg-blue-50 px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b border-gray-200">
-                                        OTP {{-- OTP itself probably shouldn't be sortable --}}
+                                        {!! sortLink('email', 'Email') !!}
                                     </th>
                                     <th scope="col" class="sticky top-0 bg-blue-50 px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b border-gray-200">
-                                        {!! sortLink('sent_at', 'Sent At') !!}
+                                        {!! sortLink('mobile_number', 'Mobile') !!}
                                     </th>
                                     <th scope="col" class="sticky top-0 bg-blue-50 px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b border-gray-200">
-                                        {!! sortLink('is_verified', 'Status') !!}
+                                        {!! sortLink('is_paid', 'Status') !!}
+                                    </th>
+                                    <th scope="col" class="sticky top-0 bg-blue-50 px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b border-gray-200">
+                                         {!! sortLink('created_at', 'Created At') !!}
+                                    </th>
+                                    <th scope="col" class="sticky top-0 bg-blue-50 px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b border-gray-200">
+                                         {!! sortLink('actions', 'Actions') !!}
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white">
-                                {{-- Apply alternating row colors and hover effect --}}
-                                @forelse($otps as $otp)
-                                <tr class="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition-colors duration-150">
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{{ $otp->id }}</td>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{{ $otp->mobile_number }}</td>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{{ $otp->otp }}</td>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{{ $otp->sent_at->format('Y-m-d H:i:s') }}</td>
+                             <tbody class="bg-white">
+                                @forelse($leads as $lead)
+                                 <tr class="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition-colors duration-150 cursor-pointer" 
+                                    
+                                     >
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
+                                        {{ $lead->id }}
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
+                                        {{ $lead->first_name }} {{ $lead->last_name }}
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
+                                        {{ strtolower($lead->email) }}
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
+                                        {{ $lead->mobile_number }}
+                                    </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm">
-                                        @if($otp->is_verified)
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                Verified
-                                            </span>
+                                        @if($lead->is_paid)
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"> Paid </span>
                                         @else
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                Pending
-                                            </span>
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"> Lead </span>
                                         @endif
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
+                                         {{ $lead->created_at->format('d/m/Y H:i:s') }}
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
+                                        <a href="{{ route('admin.lead.show', $lead->id) }}"
+                                            class="text-blue-600 hover:text-blue-900" title="View Details">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                        </a>
                                     </td>
                                 </tr>
                                 @empty
-                                {{-- Add empty state message --}}
                                 <tr>
-                                     <td colspan="5" class="px-6 py-10 text-center"> {{-- Adjusted colspan --}}
+                                     <td colspan="6" class="px-6 py-10 text-center">
                                         <div class="flex flex-col items-center">
                                             <svg class="w-12 h-12 sm:w-16 sm:h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                                             </svg>
-                                            <p class="mt-4 text-gray-500 text-sm font-medium">No OTPs found</p>
-                                            <p class="mt-1 text-gray-400 text-xs">Try adjusting your filters to find what you're looking for.</p>
+                                            <p class="mt-4 text-gray-500 text-sm font-medium">No leads found</p>
+                                            <p class="mt-1 text-gray-400 text-xs">Try adjusting your search or filter to find what you're looking for.</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -188,27 +196,30 @@
                 </div>
             </div>
 
-            {{-- Add pagination controls section --}}
             <div class="mt-6 px-4 sm:px-0 flex flex-col sm:flex-row justify-between items-center gap-4">
                 {{-- Left side: Results Summary and Per Page Dropdown --}}
                 <div class="flex items-center gap-4">
-                    @if ($otps->total() > 0)
+                    {{-- Show results summary if there are items --}}
+                    @if ($leads->total() > 0)
                         <p class="text-sm text-gray-500">
                             Showing
-                            <span class="font-medium">{{ $otps->firstItem() }}</span>
+                            <span class="font-medium">{{ $leads->firstItem() }}</span>
                             to
-                            <span class="font-medium">{{ $otps->lastItem() }}</span>
+                            <span class="font-medium">{{ $leads->lastItem() }}</span>
                             of
-                            <span class="font-medium">{{ $otps->total() }}</span>
+                            <span class="font-medium">{{ $leads->total() }}</span>
                             results
                         </p>
                     @endif
 
+                    {{-- Define options before using in the @if --}}
                     @php $options = [10, 25, 50, 100]; @endphp
 
-                    @if ($otps->total() > ($options[0] ?? 10))
+                    {{-- Per Page Dropdown (only show if there are enough items) --}}
+                    @if ($leads->total() > ($options[0] ?? 10))
                         <div class="flex items-center gap-2">
                             <label for="perPageBottom" class="text-sm font-medium text-gray-700">Per Page:</label>
+                            {{-- Update onchange to set hidden input and submit form --}}
                             <select id="perPageBottom"
                                 onchange="document.getElementById('perPageInput').value = this.value; document.getElementById('filterForm').submit();"
                                 class="border border-gray-300 rounded-lg text-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
@@ -225,8 +236,9 @@
 
                 {{-- Right side: Pagination Links --}}
                 <div>
-                    @if ($otps->hasPages())
-                        {{ $otps->appends(request()->query())->links() }}
+                     {{-- Only show pagination if there are multiple pages --}}
+                    @if ($leads->hasPages())
+                        {{ $leads->appends(request()->query())->links() }}
                     @endif
                 </div>
             </div>
@@ -234,42 +246,7 @@
     </div>
 </div>
 
-{{-- Add sortLink helper function and script section --}}
-{{-- <script> ... </script> block moved below --}}
-
-@php
-    // Define the sortLink helper function
-    function sortLink($column, $label)
-    {
-        $sortBy = request('sort_by', 'id'); // Default sort column
-        $sortDirection = request('sort_direction', 'desc'); // Default sort direction
-        $newDirection = ($sortBy == $column && $sortDirection == 'asc') ? 'desc' : 'asc';
-        // Ensure the route name matches your OTP index route
-        $route = 'admin.otps.index';
-        $queryParams = array_merge(request()->except('page'), [
-            'sort_by' => $column,
-            'sort_direction' => $newDirection
-        ]);
-
-        $icon = '';
-        if ($sortBy == $column) {
-            $icon = $sortDirection == 'asc'
-                ? '<svg class="w-4 h-4 inline ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>'
-                : '<svg class="w-4 h-4 inline ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>';
-        }
-
-        // Check if the route exists before generating the link
-        if (Route::has($route)) {
-             return '<a href="' . route($route, $queryParams) . '" class="flex items-center hover:text-blue-700">' . $label . $icon . '</a>';
-        }
-        // Fallback if the route doesn't exist (optional)
-        return $label;
-    }
-@endphp
-
-{{-- Moved script block here --}}
 <script>
-    // Add Toastify functions
     function showToast(message, type = 'success') {
         let bgColorClass, textColorClass, iconSvg, borderColorClass;
 
@@ -335,27 +312,27 @@
         const table = document.querySelector('table');
         const rows = Array.from(table.querySelectorAll('tbody tr'));
 
-        // Check if the only row is the "No OTPs found" row (using colspan="5")
-        if (rows.length === 1 && rows[0].querySelector('td[colspan="5"]')) {
+        // Check if the only row is the "No customers found" row (using colspan="7")
+        if (rows.length === 1 && rows[0].querySelector('td[colspan="7"]')) {
             showToast('No data to copy.', 'error');
             return;
         }
 
         const header = Array.from(table.querySelectorAll('thead th'))
             .map(th => th.innerText.trim())
-            // No slice needed as there's no 'Action' column
+            .slice(0, -1) // Exclude the last 'Action' header
             .join('\t'); // Join header cells with TAB
 
         let text = header + '\n';
 
         text += rows.map(row => {
-            // Skip the "No OTPs found" row
-            if (row.querySelector('td[colspan="5"]')) {
+            // Skip the "No customers found" row if it exists among other rows
+            if (row.querySelector('td[colspan="7"]')) {
                 return '';
             }
             return Array.from(row.querySelectorAll('td'))
-                // No slice needed
-                .map(cell => cell.textContent.trim().replace(/\s+/g, ' ')) // Clean up whitespace
+                .slice(0, -1) // Exclude the last 'Action' cell
+                .map(cell => cell.textContent.trim().replace(/\s+/g, ' ')) // Clean whitespace
                 .join('\t');
         })
         .filter(rowText => rowText !== '')
@@ -370,21 +347,67 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Add event listeners for actions if needed (e.g., delete confirmation)
-        // Example (not implemented for OTPs):
-        // const deleteForms = document.querySelectorAll('.delete-otp-form');
-        // deleteForms.forEach(form => {
-        //     form.addEventListener('submit', function (event) { /* ... SweetAlert logic ... */ });
-        // });
+        // SweetAlert2 delete confirmation
+        const deleteForms = document.querySelectorAll('.delete-customer-form'); // Updated class
+        deleteForms.forEach(form => {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33', // Make confirm button red for delete
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!',
+                    customClass: {
+                        popup: 'rounded-lg shadow-lg',
+                        title: 'text-lg font-semibold text-gray-800',
+                        confirmButton: 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mx-1',
+                        cancelButton: 'px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 mx-1'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        event.target.submit();
+                    }
+                });
+            });
+        });
 
-        // Show flashed session messages
+        // Check for flashed session messages and show toasts
         @if(session('success'))
             showToast("{{ session('success') }}", 'success');
         @endif
+
         @if(session('error'))
             showToast("{{ session('error') }}", 'error');
         @endif
     });
-</script>
 
+    @php
+        $sortBy = request('sort_by', 'id');
+        $sortDirection = request('sort_direction', 'asc');
+
+        function sortLink($column, $label)
+        {
+            $sortBy = request('sort_by', 'id');
+            $sortDirection = request('sort_direction', 'asc');
+            $newDirection = ($sortBy == $column && $sortDirection == 'asc') ? 'desc' : 'asc';
+            $route = 'admin.leads.tatkal'; // Make sure this is correct
+            $queryParams = array_merge(request()->except('page'), [
+                'sort_by' => $column,
+                'sort_direction' => $newDirection
+            ]);
+
+            $icon = '';
+            if ($sortBy == $column) {
+                $icon = $sortDirection == 'asc'
+                    ? '<svg class="w-4 h-4 inline ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>'
+                    : '<svg class="w-4 h-4 inline ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>';
+            }
+
+            return '<a href="' . route($route, $queryParams) . '" class="flex items-center hover:text-blue-700">' . $label . $icon . '</a>';
+        }
+    @endphp
+</script>
 @endsection 

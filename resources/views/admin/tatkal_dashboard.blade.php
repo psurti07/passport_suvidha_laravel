@@ -10,37 +10,38 @@
 
     <!-- Statistics Charts -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Normal Passport Customer Registrations -->
+        <!-- Tatkal Passport Customer Registrations -->
         <div class="card p-6">
-            <h2 class="text-lg font-medium text-primary-blue mb-6">Normal Passport - Customer Registrations</h2>
+            <h2 class="text-lg font-medium text-primary-blue mb-6">Tatkal Passport - Customer Registrations</h2>
             <div class="h-[400px]">
-                <canvas id="normalCustChart"></canvas>
+                <canvas id="tatkalCustChart"></canvas>
             </div>
         </div>
 
-        <!-- Normal Passport Customer Leads -->
+        <!-- Tatkal Passport Customer Leads -->
         <div class="card p-6">
-            <h2 class="text-lg font-medium text-primary-blue mb-6">Normal Passport - Customer Leads</h2>
+            <h2 class="text-lg font-medium text-primary-blue mb-6">Tatkal Passport - Customer Leads</h2>
             <div class="h-[400px]">
-                <canvas id="normalLeadChart"></canvas>
+                <canvas id="tatkalLeadChart"></canvas>
             </div>
         </div>
 
-        <!-- Normal Passport 36 Page -->
+        <!-- Tatkal Passport 36 Page -->
         <div class="card p-6">
-            <h2 class="text-lg font-medium text-primary-blue mb-6">Normal Passport - 36 Pages</h2>
+            <h2 class="text-lg font-medium text-primary-blue mb-6">Tatkal Passport - 36 Pages</h2>
             <div class="h-[400px]">
-                <canvas id="normal36Chart"></canvas>
+                <canvas id="tatkal36Chart"></canvas>
             </div>
         </div>
 
-        <!-- Normal Passport 60 Page -->
+        <!-- Tatkal Passport 60 Page -->
         <div class="card p-6">
-            <h2 class="text-lg font-medium text-primary-blue mb-6">Normal Passport - 60 Pages</h2>
+            <h2 class="text-lg font-medium text-primary-blue mb-6">Tatkal Passport - 60 Pages</h2>
             <div class="h-[400px]">
-                <canvas id="normal60Chart"></canvas>
+                <canvas id="tatkal60Chart"></canvas>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -72,12 +73,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     padding: 10,
                     color: textGray || defaultColor,
                     // Optional: format ticks if numbers get large
-                    callback: function(value) {
-                        if (value >= 1000) {
-                            return (value / 1000) + 'k';
-                        }
-                        return value;
-                    }
+                    // callback: function(value) {
+                    //     if (value >= 1000) {
+                    //         return (value / 1000) + 'k';
+                    //     }
+                    //     return value;
+                    // }
                 }
             },
             x: {
@@ -109,28 +110,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Chart Data from Controller
     const charts = [{
-            id: 'normalCustChart',
-            label: 'Normal Registrations',
-            labels: @json($normalcustlabel),
-            data: @json($normalcustdata)
+            id: 'tatkalCustChart',
+            label: 'Tatkal Registrations',
+            labels: @json($tatkalcustlabel),
+            data: @json($tatkalcustdata)
         },
         {
-            id: 'normalLeadChart',
-            label: 'Normal Leads',
-            labels: @json($normalleadlabel),
-            data: @json($normalleaddata)
+            id: 'tatkalLeadChart',
+            label: 'Tatkal Leads',
+            labels: @json($tatkalleadlabel),
+            data: @json($tatkalleaddata)
         },
         {
-            id: 'normal36Chart',
-            label: 'Normal 36p',
-            labels: @json($normal36plabel),
-            data: @json($normal36pdata)
+            id: 'tatkal36Chart',
+            label: 'Tatkal 36p',
+            labels: @json($tatkal36plabel),
+            data: @json($tatkal36pdata)
         },
         {
-            id: 'normal60Chart',
-            label: 'Normal 60p',
-            labels: @json($normal60plabel),
-            data: @json($normal60pdata)
+            id: 'tatkal60Chart',
+            label: 'Tatkal 60p',
+            labels: @json($tatkal60plabel),
+            data: @json($tatkal60pdata)
         }
     ];
 
@@ -146,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets: [{
                     label: chart.label,
                     data: chart.data,
-                    backgroundColor: primaryBlue,
+                    backgroundColor: secondaryBlue,
                     borderRadius: 4
                 }]
             },
