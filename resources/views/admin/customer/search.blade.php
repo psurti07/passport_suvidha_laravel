@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Search Data')
+@section('title', 'Customers')
 
 @section('content')
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -84,7 +84,7 @@
                         </dl>
                         @if ($customer->is_paid == 1)
                             <div class="mt-6 pt-4 border-t border-gray-200 flex justify-end">
-                                <a href="{{ route('admin.customers.show', $customer->id) }}?previous_url={{ urlencode(request()->fullUrl()) }}"
+                                <a href="{{ route('admin.customers.show', $customer->id) }}"
                                     class="btn-primary px-5 py-2">
                                     View Full Details &rarr;
                                 </a>

@@ -33,69 +33,6 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // public function index(Request $request)
-    // {
-    //     $query = Customer::query();
-
-    //     // Search functionality
-    //     if ($request->filled('search')) {
-    //         $searchTerm = $request->search;
-    //         $query->where(function($q) use ($searchTerm) {
-    //             $q->where('pack_code', 'like', "%{$searchTerm}%")
-    //               ->orWhere('first_name', 'like', "%{$searchTerm}%")
-    //               ->orWhere('last_name', 'like', "%{$searchTerm}%")
-    //               ->orWhere('email', 'like', "%{$searchTerm}%")
-    //               ->orWhere('mobile_number', 'like', "%{$searchTerm}%")
-    //               ->orWhere('service_code', 'like', "%{$searchTerm}%");
-    //         });
-    //     }
-
-    //     // Date range filtering
-    //     if ($request->filled('from_date')) {
-    //         $query->whereDate('created_at', '>=', $request->from_date);
-    //     }
-    //     if ($request->filled('to_date')) {
-    //         $query->whereDate('created_at', '<=', $request->to_date);
-    //     }
-
-    //     // Filter by is_paid status
-    //     if ($request->filled('status')) { // Use filled() for cleaner check
-    //         $status = $request->input('status');
-    //         if ($status === 'paid') {
-    //             $query->where('is_paid', true);
-    //         } elseif ($status === 'lead') {
-    //             $query->where('is_paid', false);
-    //         }
-    //          // No 'else' needed, as filled() handles the 'All' case (empty value)
-    //     }
-
-    //     // Sorting logic
-    //     $sortBy = $request->input('sort_by', 'id'); // Default sort column
-    //     $sortDirection = $request->input('sort_direction', 'desc'); // Default sort direction
-
-    //     // Validate sortable columns to prevent errors
-    //     $sortableColumns = ['id', 'first_name', 'email', 'mobile_number', 'is_paid', 'created_at'];
-    //     if (in_array($sortBy, $sortableColumns)) {
-    //          // Combine first_name and last_name sorting if 'first_name' is chosen
-    //          if ($sortBy === 'first_name') {
-    //              $query->orderBy('first_name', $sortDirection)
-    //                    ->orderBy('last_name', $sortDirection); // Secondary sort by last name
-    //          } else {
-    //             $query->orderBy($sortBy, $sortDirection);
-    //          }
-    //     } else {
-    //         // Default sort if invalid column provided
-    //         $query->orderBy('id', 'desc');
-    //     }
-
-    //     // Apply pagination and append query string parameters
-    //     $perPage = $request->input('per_page', 10); // Get per_page value from request
-    //     $paginator = $query->paginate($perPage);
-    //     $customers = $paginator->withQueryString(); // Chain withQueryString directly
-
-    //     return view('admin.customers.index-old', compact('customers'));
-    // }
-
     public function index()
     {
         return view('admin.customers.index');
@@ -103,6 +40,9 @@ class CustomerController extends Controller
 
     public function data(Request $request)
     {
+        $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
+        $to   = $request->to_date ?? now()->format('Y-m-d');
+
         $query = Customer::select([
             'id',
             'first_name',
@@ -113,16 +53,13 @@ class CustomerController extends Controller
             'created_at'
         ]);
 
-        // Date Filter
         if ($request->from_date && $request->to_date) {
-
             $query->whereBetween('created_at', [
-                $request->from_date,
-                $request->to_date
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
             ]);
         }
 
-        // Status Filter
         if ($request->status == "paid") {
             $query->where('is_paid', 1);
         }
@@ -158,64 +95,60 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function today(Request $request)
+    public function today()
     {
-        // Base query for today's customers
-        $baseQuery = Customer::query()->whereDate('created_at', Carbon::today());
+        $baseQuery = Customer::whereDate('created_at', Carbon::today());
 
-        // Calculate counts before filtering for display
         $totalTodayCount = $baseQuery->count();
-        $paidTodayCount = (clone $baseQuery)->where('is_paid', true)->count(); // Clone to avoid modifying base query
-        $leadTodayCount = (clone $baseQuery)->where('is_paid', false)->count(); // Clone to avoid modifying base query
+        $paidTodayCount  = (clone $baseQuery)->where('is_paid', 1)->count();
+        $leadTodayCount  = (clone $baseQuery)->where('is_paid', 0)->count();
 
-        // Apply filters to a new query instance for pagination
-        $filteredQuery = Customer::query()->whereDate('created_at', Carbon::today());
+        return view('admin.customers.today', compact(
+            'totalTodayCount',
+            'paidTodayCount',
+            'leadTodayCount'
+        ));
+    }
 
-        // Search functionality
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $filteredQuery->where(function($q) use ($searchTerm) {
-                $q->where('pack_code', 'like', "%{$searchTerm}%")
-                  ->orWhere('first_name', 'like', "%{$searchTerm}%")
-                  ->orWhere('last_name', 'like', "%{$searchTerm}%")
-                  ->orWhere('email', 'like', "%{$searchTerm}%")
-                  ->orWhere('mobile_number', 'like', "%{$searchTerm}%")
-                  ->orWhere('service_code', 'like', "%{$searchTerm}%");
-            });
+    public function todayData(Request $request)
+    {
+        $query = Customer::select([
+            'id',
+            'first_name',
+            'last_name',
+            'email',
+            'mobile_number',
+            'is_paid',
+            'created_at'
+        ])->whereDate('created_at', now());
+
+        if ($request->status == "paid") {
+            $query->where('is_paid', 1);
         }
 
-        // Filter by is_paid status
-        if ($request->filled('status')) {
-            $status = $request->input('status');
-            if ($status === 'paid') {
-                $filteredQuery->where('is_paid', true);
-            } elseif ($status === 'lead') {
-                $filteredQuery->where('is_paid', false);
-            }
+        if ($request->status == "lead") {
+            $query->where('is_paid', 0);
         }
 
-        // Sorting logic
-        $sortBy = $request->input('sort_by', 'id');
-        $sortDirection = $request->input('sort_direction', 'desc');
+        return DataTables::of($query)
 
-        $sortableColumns = ['id', 'first_name', 'email', 'mobile_number', 'is_paid', 'created_at'];
-        if (in_array($sortBy, $sortableColumns)) {
-             if ($sortBy === 'first_name') {
-                 $filteredQuery->orderBy('first_name', $sortDirection)
-                       ->orderBy('last_name', $sortDirection);
-             } else {
-                $filteredQuery->orderBy($sortBy, $sortDirection);
-             }
-        } else {
-            $filteredQuery->orderBy('id', 'desc');
-        }
+            ->addIndexColumn()
 
-        // Apply pagination to the filtered query
-        $perPage = $request->input('per_page', 10);
-        $customers = $filteredQuery->paginate($perPage)->withQueryString();
+            ->addColumn('name', function ($row) {
+                return $row->first_name . ' ' . $row->last_name;
+            })
 
-        // Return the view with counts and paginated customers
-        return view('admin.customers.today', compact('customers', 'totalTodayCount', 'paidTodayCount', 'leadTodayCount'));
+            ->addColumn('status', function ($row) {
+                return $row->is_paid ? 'paid' : 'lead';
+            })
+
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at->format('d/m/Y H:i:s');
+            })
+
+            ->rawColumns(['status'])
+
+            ->make(true);
     }
 
     /**

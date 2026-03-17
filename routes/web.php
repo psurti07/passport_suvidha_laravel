@@ -48,14 +48,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('users', App\Http\Controllers\Admin\UserController::class);    
 
     // Customers Routes
-    Route::resource('customers', CustomerController::class);
-    Route::get('/customers-data', [CustomerController::class,'data'])->name('customers.data');
-
     Route::get('/search-customer', [App\Http\Controllers\Admin\SearchController::class, 'showSearchForm'])->name('customer.search.form');
     Route::post('/search-customer', [App\Http\Controllers\Admin\SearchController::class, 'searchCustomer'])->name('customer.search');
-
-    Route::get('customers/today', [CustomerController::class, 'today'])->name('customers.today');
-    // Route::get('/customers/export', [CustomerController::class, 'export'])->name('customers.export');
+    Route::get('/customers/today', [CustomerController::class, 'today'])->name('customers.today');
+    Route::get('/customers/today/data', [CustomerController::class, 'todayData'])->name('customers.today.data');
+    Route::resource('customers', CustomerController::class);
+    Route::get('/customers-data', [CustomerController::class,'data'])->name('customers.data');
+    
+    Route::get('/customers/export', [CustomerController::class, 'export'])->name('customers.export');
 
     // Leads Routes
     Route::match(['get','post'],'/leads/normal',[LeadController::class,'normalLeads'])->name('leads.normal');

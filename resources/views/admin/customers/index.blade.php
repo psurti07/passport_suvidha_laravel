@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Customers')
+
 @section('content')
 
 <div class="mx-auto">
@@ -12,7 +14,6 @@
 
                 <div class="flex flex-col lg:flex-row justify-between items-center mb-6">
 
-
                     <h2
                         class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                         CUSTOMERS
@@ -21,12 +22,14 @@
 
                         <div>
                             <label class="text-sm">From</label>
-                            <input type="date" id="from_date" class="border rounded-lg px-3 py-2 text-sm">
+                            <input type="date" id="from_date" value="{{ now()->subDays(1)->format('Y-m-d') }}"
+                                class="border rounded-lg px-3 py-2 text-sm">
                         </div>
 
                         <div>
                             <label class="text-sm">To</label>
-                            <input type="date" id="to_date" class="border rounded-lg px-3 py-2 text-sm">
+                            <input type="date" id="to_date" value="{{ now()->format('Y-m-d') }}"
+                                class="border rounded-lg px-3 py-2 text-sm">
                         </div>
 
                         <div>
@@ -96,7 +99,6 @@
 @endsection
 
 @push('scripts')
-
 <script>
 $(function() {
 
@@ -105,22 +107,20 @@ $(function() {
         processing: true,
         serverSide: true,
 
+        order: [
+            [0, 'desc']
+        ],
+
         ajax: {
             url: "{{ route('admin.customers.data') }}",
-
             data: function(d) {
-
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
                 d.status = $('#status').val();
-
             }
-
         },
 
-        columns: [
-
-            {
+        columns: [{
                 data: 'id',
                 name: 'id'
             },
@@ -140,41 +140,29 @@ $(function() {
                 data: 'status',
                 name: 'is_paid',
                 render: function(data) {
-
-                    if (data === 'paid') {
-                        return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Paid</span>';
-                    }
-
-                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Lead</span>';
+                    return data === 'paid' ?
+                        '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Paid</span>' :
+                        '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Lead</span>';
                 }
             },
             {
                 data: 'created_at',
                 name: 'created_at'
             }
-
         ],
 
         dom: 'Blfrtip',
 
-        buttons: [
-            'copy',
-            'excel',
-            'csv',
-            'pdf'
-        ],
+        buttons: ['copy', 'excel', 'csv', 'pdf'],
 
         pageLength: 10
 
     });
 
     $('#filter').click(function() {
-
         table.draw();
-
     });
 
 });
 </script>
-
 @endpush
