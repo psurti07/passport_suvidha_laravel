@@ -33,6 +33,8 @@ class Customer extends Authenticatable
         'service_code',
         'is_paid',
         'registration_step',
+        'passport_type',
+        'book_size',
     ];
 
     protected $hidden = [

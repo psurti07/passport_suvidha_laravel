@@ -91,38 +91,81 @@ class OtpController extends Controller
      * @param string $message
      * @return array
      */
-    private function sendSms($mobileNumber, $message)
-    {
-        try {
-            $username = config('services.sms.username');
-            $password = config('services.sms.password');
-            $senderId = config('services.sms.sender_id');
+//     private function sendSms($mobileNumber, $message)
+//     {
+//         try {
+//             $username = config('services.sms.username');
+//             $password = config('services.sms.password');
+//             $senderId = config('services.sms.sender_id');
             
-            $url = "http://m.onlinebusinessbazaar.in/sendsms.jsp";
+//             $url = "http://m.onlinebusinessbazaar.in/sendsms.jsp";
             
-            $response = Http::get($url, [
-                'user' => $username,
-                'password' => $password,
-                'senderid' => $senderId,
-                'mobiles' => $mobileNumber,
-                'sms' => $message
-            ]);
+//             $response = Http::get($url, [
+//                 'user' => $username,
+//                 'password' => $password,
+//                 'senderid' => $senderId,
+//                 'mobiles' => $mobileNumber,
+//                 'sms' => $message
+//             ]);
             
-            $result = $response->body();
-            Log::info('SMS API Response: ' . $result);
+//             $result = $response->body();
+//             return response()->json([
+//     'sms_api_response' => $result,
+//     'username' => $username,
+//     'senderId' => $senderId
+// ]);
             
-            return [
-                'success' => !str_contains($result, 'error'),
-                'response' => $result
-            ];
-        } catch (\Exception $e) {
-            Log::error('SMS sending failed: ' . $e->getMessage());
-            return [
-                'success' => false,
-                'error' => $e->getMessage()
-            ];
-        }
+//             return [
+//                 'success' => !str_contains($result, 'error'),
+//                 'response' => $result
+//             ];
+//         } catch (\Exception $e) {
+//             Log::error('SMS sending failed: ' . $e->getMessage());
+//             return [
+//                 'success' => false,
+//                 'error' => $e->getMessage()
+//             ];
+//         }
+//     }
+
+private function sendSms($mobileNumber, $message)
+{
+    try {
+        $username = config('services.sms.username');
+        $password = config('services.sms.password');
+        $senderId = config('services.sms.sender_id');
+        
+        $url = "http://m.onlinebusinessbazaar.in/sendsms.jsp";
+        
+        $response = Http::get($url, [
+            'user' => $username,
+            'password' => $password,
+            'senderid' => $senderId,
+            'mobiles' => '91' . $mobileNumber, // ✅ FIXED
+            'sms' => $message
+        ]);
+        
+        $result = $response->body();
+
+        // ✅ Debug safely
+        Log::info('SMS DEBUG', [
+            'response' => $result,
+            'username' => $username,
+            'senderId' => $senderId
+        ]);
+
+        return [
+            'success' => !str_contains(strtolower($result), 'error'),
+            'response' => $result
+        ];
+
+    } catch (\Exception $e) {
+        return [
+            'success' => false,
+            'error' => $e->getMessage()
+        ];
     }
+}
 
     public function verify(Request $request)
     {
@@ -150,7 +193,7 @@ class OtpController extends Controller
 
         // Find the latest OTP for this mobile number within the validity period (10 minutes)
         $otpRecord = Otp::where('mobile_number', $mobileNumber)
-            ->where('otp', $inputOtp)
+            ->where('otp', (int) $inputOtp)
             ->where('purpose', $purpose)
             ->where('is_verified', false)
             ->where('sent_at', '>=', Carbon::now()->subMinutes(10))
