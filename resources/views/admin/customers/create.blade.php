@@ -425,7 +425,7 @@
                                                 transition-all duration-200 placeholder-gray-400
                                                 @error('card_number') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror" 
                                             name="card_number" 
-                                            value="{{ old('card_number') }}" 
+                                            value="{{ old('card_number', $card_number) }}" 
                                             autocomplete="card_number"
                                             placeholder="Enter card number">
                                     </div>
@@ -487,7 +487,7 @@
                                                 transition-all duration-200 placeholder-gray-400
                                                 @error('paymentid') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror" 
                                             name="paymentid" 
-                                            value="{{ old('paymentid') }}" 
+                                            value="{{ old('paymentid', $paymentid) }}" 
                                             autocomplete="paymentid"
                                             placeholder="Enter payment id">
                                     </div>

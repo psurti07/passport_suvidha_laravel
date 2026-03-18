@@ -158,7 +158,10 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('admin.customers.create');
+        return view('admin.customers.create', [
+            'card_number' => str_pad(rand(0, 9999999999999999), 16, '0', STR_PAD_LEFT),
+            'paymentid'   => 'cash_' . Str::random(13),
+        ]);
     }
 
     /**
@@ -172,7 +175,7 @@ class CustomerController extends Controller
         $baseRules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'mobile_number' => 'required','regex:/^[6-9][0-9]{9}$/',
+            'mobile_number' => ['required','regex:/^[6-9][0-9]{9}$/'],
             'email' => 'required|email|unique:customers,email',
             'is_paid' => 'sometimes|boolean',
         ];
@@ -187,9 +190,9 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
             'service_code' => 'required|string|max:255',
-            'card_number' => 'nullable|string',
+            'card_number' => 'required|digits:16',
             'amount' => 'nullable|numeric',
-            'paymentid' => 'nullable|string'
+            'paymentid' => 'required|string|max:50'
         ];
 
         $isPaid = $request->boolean('is_paid');
