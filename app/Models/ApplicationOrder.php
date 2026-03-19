@@ -15,6 +15,6 @@ class ApplicationOrder extends Model
         'expiry_date',
         'card_number',
         'amount',
-        'paymentid'
+        'payment_id'
     ];
 }

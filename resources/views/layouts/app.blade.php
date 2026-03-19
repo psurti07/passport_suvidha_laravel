@@ -32,6 +32,9 @@
     <!-- Toastify --> 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
+    <!-- SweetAlert2 --> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.12.0/dist/cdn.min.js"></script>
     <style>
@@ -1070,6 +1073,10 @@
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="{{ asset('js/toast.js') }}"></script>
     @include('components.toast')
+
+    <!-- SweetAlert2 --> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/confirm-actions.js') }}"></script>
 
     @stack('scripts')
 </body>

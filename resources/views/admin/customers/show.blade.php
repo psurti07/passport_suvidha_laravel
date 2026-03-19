@@ -10,8 +10,8 @@
 
 @section('content')
     {{-- Add SweetAlert2 CSS and JS --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
 
     <div class="mb-6 flex justify-between items-center">
         <div>
@@ -116,57 +116,85 @@
                     </div>
 
                     {{-- Form Fields --}}
-                    <form action="{{ route('admin.customers.update', $customer->id) }}" method="POST" class="space-y-5">
+                    <form action="{{ route('admin.customers.update', $customer->id) }}" method="POST" class="space-y-5" novalidate>
                         @csrf
                         @method('PUT')
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-                            <div>
+                            <div class="space-y-2">
                                 <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">First Name
                                     <span class="text-red-500">*</span></label>
                                 <input type="text" name="first_name" id="first_name"
                                     value="{{ old('first_name', $customer->first_name) }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('first_name') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('first_name')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
-                            <div>
+                            <div class="space-y-2">
                                 <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">Last Name <span
                                         class="text-red-500">*</span></label>
                                 <input type="text" name="last_name" id="last_name"
                                     value="{{ old('last_name', $customer->last_name ?? '') }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('last_name') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('last_name')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
-                            <div>
-                                <label for="mobile_number" class="block text-sm font-medium text-gray-700 mb-1">Mobile No
+                            <div class="space-y-2">
+                                <label for="mobile_number" class="block text-sm font-medium text-gray-700 mb-1">Mobile Number
                                     <span class="text-red-500">*</span></label>
                                 <input type="text" name="mobile_number" id="mobile_number"
                                     value="{{ old('mobile_number', $customer->mobile_number) }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('mobile_number') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('mobile_number')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
-                            <div>
+                            <div class="space-y-2">
                                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Id <span
                                         class="text-red-500">*</span></label>
                                 <input type="email" name="email" id="email"
                                     value="{{ old('email', $customer->email) }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('email') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('email')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
-                            <div>
-                                <label for="pincode" class="block text-sm font-medium text-gray-700 mb-1">Pincode</label>
-                                <input type="text" name="pincode" id="pincode"
-                                    value="{{ old('pincode', $customer->pin_code) }}" placeholder="Enter pincode"
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                            <div class="space-y-2">
+                                <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address <span
+                                        class="text-red-500">*</span></label>
+                                <textarea name="address" id="address" rows="2" required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('address') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">{{ old('address', $customer->address ?? '') }}</textarea>
+                                @error('address')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
-                            <div>
+                            <div class="space-y-2">
+                                <label for="pin_code" class="block text-sm font-medium text-gray-700 mb-1">Pincode <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text" name="pin_code" id="pin_code"
+                                    value="{{ old('pin_code', $customer->pin_code) }}" required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('pin_code') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('pin_code')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="space-y-2">
                                 <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City <span
                                         class="text-red-500">*</span></label>
                                 <input type="text" name="city" id="city"
-                                    value="{{ old('city', $customer->city) }}" required placeholder="Enter city"
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                    value="{{ old('city', $customer->city) }}" required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('city') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('city')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
-                            <div>
+                            <div class="space-y-2">
                                 <label for="state" class="block text-sm font-medium text-gray-700 mb-1">State <span
                                         class="text-red-500">*</span></label>
                                 <select name="state" id="state" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm @error('state') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
                                     <option value="" disabled
                                         {{ old('state', $customer->state) ? '' : 'selected' }}>Select State</option>
                                     <option value="Gujarat"
@@ -174,27 +202,30 @@
                                     </option>
                                     {{-- Add other states --}}
                                 </select>
+                                @error('state')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
-                            <div>
-                                <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address <span
-                                        class="text-red-500">*</span></label>
-                                <textarea name="address" id="address" rows="2" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">{{ old('address', $customer->address ?? '') }}</textarea>
-                            </div>
-                            <div>
+                            <div class="space-y-2">
                                 <label for="date_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Date of
                                     Birth <span class="text-red-500">*</span></label>
                                 <input type="date" name="date_of_birth" id="date_of_birth"
                                     value="{{ old('date_of_birth', $customer->date_of_birth ? $customer->date_of_birth->format('Y-m-d') : '') }}"
                                     required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('date_of_birth') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('date_of_birth')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
-                            <div>
+                            <div class="space-y-2">
                                 <label for="place_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Place of
                                     Birth <span class="text-red-500">*</span></label>
                                 <input type="text" name="place_of_birth" id="place_of_birth"
                                     value="{{ old('place_of_birth', $customer->place_of_birth ?? '') }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('place_of_birth') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('place_of_birth')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                         {{-- Save Button --}}
@@ -207,11 +238,15 @@
 
             {{-- Documents Tab Content --}}
             <div x-show="activeTab === 'documents'" x-cloak>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 space-y-8">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-6">Uploaded Documents</h2>
-
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 space-y-8">                    
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-semibold text-gray-800">Uploaded Documents</h2>
+                        <span class="inline-flex p-2 font-semibold rounded text-sm bg-green-100 text-green-800"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg> Verify All Documents</span>
+                    </div>
                     {{-- Section 1: Display Existing Uploaded Documents --}}
-                    <div>
+                    <div> 
                         <h3 class="text-lg font-medium text-gray-700 mb-4">Current Documents</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             @forelse ($customer->applicationDocuments ?? [] as $document)
@@ -250,6 +285,13 @@
                                             </svg>
                                             View
                                         </a>
+                                        <a href="{{ Storage::url($document->file_path) }}" target="_blank"
+                                            class="text-green-600 hover:text-green-800 text-sm font-medium inline-flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            Click to Verify
+                                        </a>
                                         {{-- Staff Delete Button --}}
                                         <form id="delete-document-{{ $document->id }}"
                                             action="{{ route('admin.application-documents.destroy', $document->id) }}"
@@ -257,7 +299,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="button"
-                                                onclick="confirmDelete('{{ $document->documentType->name }}', this.form)"
+                                                onclick="confirmDelete('{{ $document->documentType->name }} document', this.form)"
                                                 class="text-red-500 hover:text-red-700 text-sm font-medium inline-flex items-center">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
                                                     fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -328,19 +370,19 @@
                     <div>
                         <h3 class="text-lg font-medium text-gray-700 mb-4">Upload New Document (Staff)</h3>
                         <form action="{{ route('admin.application-documents.store') }}" method="POST"
-                            enctype="multipart/form-data"
+                            enctype="multipart/form-data" novalidate
                             class="border border-gray-200 rounded-lg p-5 bg-gray-50 space-y-4">
                             @csrf
                             <input type="hidden" name="customer_id" value="{{ $customer->id }}">
                             <input type="hidden" name="redirect"
-                                value="{{ route('admin.customers.show', $customer->id) }}">
+                                value="{{ route('admin.customers.show', $customer->id) }}#documents">
 
-                            <div>
+                            <div class="space-y-2">
                                 <label for="document_type_id"
                                     class="block text-sm font-medium text-gray-700 mb-1">Document
                                     Type <span class="text-red-500">*</span></label>
                                 <select name="document_type_id" id="document_type_id" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm @error('document_type_id') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
                                     <option value="" disabled selected>Select document type</option>
                                     @foreach ($documentTypes as $docType)
                                         <option value="{{ $docType->id }}"
@@ -351,14 +393,20 @@
                                         </option>
                                     @endforeach
                                 </select>
+                                @error('document_type_id')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
-                            <div>
+                            <div class="space-y-2">
                                 <label for="document_file" class="block text-sm font-medium text-gray-700 mb-1">Select
                                     File <span class="text-red-500">*</span></label>
                                 <input type="file" name="document_file" id="document_file" required
-                                    class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                    class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 @error('document_file') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
                                 <p class="mt-1 text-xs text-gray-500">PDF, JPG, PNG. Max size: 5MB.</p>
+                                @error('document_file')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="flex justify-end">
@@ -684,59 +732,79 @@
 
         </div>
     </div>
+@endsection
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Event handlers can be added here if needed
+@push('scripts')
+<script>
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     // Event handlers can be added here if needed
+    // });
+
+    // Function to confirm document deletion using SweetAlert2
+    // function confirmDelete(documentName, form) {
+    //     Swal.fire({
+    //         title: 'Delete Document?',
+    //         text: `You are about to delete "${documentName}". This action cannot be undone.`,
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#d33',
+    //         cancelButtonColor: '#3085d6',
+    //         confirmButtonText: 'Yes, delete it!',
+    //         customClass: {
+    //             popup: 'rounded-lg shadow-lg',
+    //             title: 'text-lg font-semibold text-gray-800',
+    //             confirmButton: 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mx-1',
+    //             cancelButton: 'px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 mx-1'
+    //         }
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             form.submit();
+    //         }
+    //     });
+    // }
+
+    // Function to confirm account deactivation using SweetAlert2
+    function confirmDeactivate() {
+        Swal.fire({
+            title: 'Deactivate Account?',
+            text: 'You are about to deactivate this customer account. This action will prevent the user from logging in and cannot be easily undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, deactivate it!',
+            customClass: {
+                popup: 'rounded-lg shadow-lg',
+                title: 'text-lg font-semibold text-gray-800',
+                confirmButton: 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mx-1',
+                cancelButton: 'px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 mx-1'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('deactivateForm').submit();
+            }
         });
+    }
 
-        // Function to confirm document deletion using SweetAlert2
-        function confirmDelete(documentName, form) {
-            Swal.fire({
-                title: 'Delete Document?',
-                text: `You are about to delete "${documentName}". This action cannot be undone.`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!',
-                customClass: {
-                    popup: 'rounded-lg shadow-lg',
-                    title: 'text-lg font-semibold text-gray-800',
-                    confirmButton: 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mx-1',
-                    cancelButton: 'px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 mx-1'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
+    document.addEventListener("DOMContentLoaded", () => {
+        const inputs = document.querySelectorAll("input, textarea, select");
+        inputs.forEach(input => {
+            input.addEventListener("input", function() {
+                this.classList.remove("border-red-300");
+                const wrapper = this.closest(".space-y-2");
+                const error = wrapper?.querySelector(".text-red-600");
+                if (error) {
+                    error.style.display = "none";
                 }
             });
-        }
+        });
+    });
 
-        // Function to confirm account deactivation using SweetAlert2
-        function confirmDeactivate() {
-            Swal.fire({
-                title: 'Deactivate Account?',
-                text: 'You are about to deactivate this customer account. This action will prevent the user from logging in and cannot be easily undone.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, deactivate it!',
-                customClass: {
-                    popup: 'rounded-lg shadow-lg',
-                    title: 'text-lg font-semibold text-gray-800',
-                    confirmButton: 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mx-1',
-                    cancelButton: 'px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 mx-1'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('deactivateForm').submit();
-                }
-            });
+    function validateMobile(input) {
+        input.value = input.value.replace(/[^0-9]/g, '');
+        if (input.value.length === 1 && input.value < 6) {
+            input.value = '';
         }
-    </script>
-@endsection
-
-@section('scripts')
-@endsection
+    }
+</script>
+@endpush

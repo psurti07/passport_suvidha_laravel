@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\DocumentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ApplicationDocumentController extends Controller
 {
@@ -19,44 +20,50 @@ class ApplicationDocumentController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'customer_id' => 'required|exists:customers,id',
             'document_type_id' => 'required|exists:document_types,id',
-            'document_file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB max
+            'document_file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'redirect' => 'nullable|string',
         ]);
 
-        // Check if document already exists for this customer
+        $redirectUrl = $request->input('redirect') 
+            ?? route('admin.customers.show', $request->customer_id) . '#documents';
+
+        if ($validator->fails()) {
+            return redirect($redirectUrl)
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $validated = $validator->validated();
+
         $exists = ApplicationDocument::where('customer_id', $validated['customer_id'])
             ->where('document_type_id', $validated['document_type_id'])
             ->exists();
 
         if ($exists) {
-            return redirect()->back()
-                ->with('error', 'This document type has already been uploaded for this customer.')
+            return redirect($redirectUrl)
+                ->with('error', 'This document type already uploaded.')
                 ->withInput();
         }
 
-        // Upload file
         $file = $request->file('document_file');
         $fileName = time() . '_' . $file->getClientOriginalName();
-        $filePath = $file->storeAs('customer-documents/' . $validated['customer_id'], $fileName, 'public');
 
-        // Create document record
-        $document = ApplicationDocument::create([
+        $filePath = $file->storeAs(
+            'customer-documents/' . $validated['customer_id'],
+            $fileName,
+            'public'
+        );
+
+        ApplicationDocument::create([
             'customer_id' => $validated['customer_id'],
             'document_type_id' => $validated['document_type_id'],
             'is_submitted' => true,
             'file_path' => $filePath,
         ]);
 
-        // Redirect back to the customer page or specified redirect URL with hash fragment for documents tab
-        $redirectUrl = $request->input('redirect') ?? route('admin.customers.show', $validated['customer_id']);
-        // Append the hash fragment if it doesn't already have one
-        if (!str_contains($redirectUrl, '#')) {
-            $redirectUrl .= '#documents';
-        }
-        
         return redirect($redirectUrl)
             ->with('success', 'Document uploaded successfully.');
     }

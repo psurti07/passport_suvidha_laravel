@@ -160,7 +160,7 @@ class CustomerController extends Controller
     {
         return view('admin.customers.create', [
             'card_number' => str_pad(rand(0, 9999999999999999), 16, '0', STR_PAD_LEFT),
-            'paymentid'   => 'cash_' . Str::random(13),
+            'payment_id'   => 'cash_' . Str::random(13),
         ]);
     }
 
@@ -175,126 +175,114 @@ class CustomerController extends Controller
         $baseRules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'mobile_number' => ['required','regex:/^[6-9][0-9]{9}$/'],
+            'mobile_number' => ['required','regex:/^[6-9][0-9]{9}$/','unique:customers,mobile_number'],
             'email' => 'required|email|unique:customers,email',
             'is_paid' => 'sometimes|boolean',
         ];
 
         $paidRules = [
             'address' => 'required|string',
-            'pin_code' => 'required|string|max:255',
+            'pin_code' => 'required|string|max:10',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
             'place_of_birth' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
-            'service_code' => 'required|string|max:255',
-            'card_number' => 'required|digits:16',
-            'amount' => 'nullable|numeric',
-            'paymentid' => 'required|string|max:50'
+            'service_code' => 'required|string|max:50',
+            'card_number' => 'nullable|digits:16',
+            'amount' => 'required|numeric|min:1',
+            'payment_id' => 'required|string|max:50'
         ];
 
         $isPaid = $request->boolean('is_paid');
 
-        $rules = $baseRules;
-
-        if ($isPaid) {
-            $rules = array_merge($rules, $paidRules);
-        }
+        $rules = $isPaid
+            ? array_merge($baseRules, $paidRules)
+            : $baseRules;
 
         $validatedData = $request->validate($rules);
 
         $validatedData['is_paid'] = $isPaid;
         $validatedData['registration_step'] = $isPaid ? 4 : 1;
 
-        if ($isPaid && isset($validatedData['service_code'])) {
+        $services = [
+            'NORMAL_36' => ['type' => 'normal', 'size' => 36],
+            'NORMAL_60' => ['type' => 'normal', 'size' => 60],
+            'TATKAL_36' => ['type' => 'tatkal', 'size' => 36],
+            'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
+        ];
 
-            switch ($validatedData['service_code']) {
-
-                case 'NORMAL_36':
-                    $validatedData['passport_type'] = 'normal';
-                    $validatedData['book_size'] = 36;
-                    break;
-
-                case 'NORMAL_60':
-                    $validatedData['passport_type'] = 'normal';
-                    $validatedData['book_size'] = 60;
-                    break;
-
-                case 'TATKAL_36':
-                    $validatedData['passport_type'] = 'tatkal';
-                    $validatedData['book_size'] = 36;
-                    break;
-
-                case 'TATKAL_60':
-                    $validatedData['passport_type'] = 'tatkal';
-                    $validatedData['book_size'] = 60;
-                    break;
-            }
+        if ($isPaid && isset($services[$validatedData['service_code']])) {
+            $validatedData['passport_type'] = $services[$validatedData['service_code']]['type'];
+            $validatedData['book_size'] = $services[$validatedData['service_code']]['size'];
         }
-        
-        DB::transaction(function () use ($validatedData, $isPaid, $request) {
-            
+
+        DB::transaction(function () use ($validatedData, $request, $isPaid) {
+
             $customer = Customer::create($validatedData);
 
             if ($isPaid) {
 
-                $regDate = Carbon::now()->format('Y-m-d');
+                $regDate = now()->toDateString();
 
-                $cardNumber = $request->card_number ?? rand(1000000000000000,9999999999999999);
+                $cardNumber = $request->card_number 
+                    ?? substr(time() . rand(1000,9999), 0, 16);
 
-                $paymentId = $request->paymentid ?? 'cash_' . Str::random(13);
+                $paymentId = $request->payment_id 
+                    ?? 'cash_' . Str::upper(Str::random(10));
 
-                $netAmount = $request->amount ?? 0;
+                $netAmount = $request->amount;
 
-                $cgstAmount = 0;
-                $sgstAmount = 0;
-                $igstAmount = 0;
+                $cgst = 0;
+                $sgst = 0;
+                $igst = 0;
 
-                if ($request->state == 'Gujarat') {
-                    $cgstAmount = $netAmount * 0.09;
-                    $sgstAmount = $netAmount * 0.09;
-
+                if (strtolower($request->state) === 'gujarat') {
+                    $cgst = round($netAmount * 0.09, 2);
+                    $sgst = round($netAmount * 0.09, 2);
                 } else {
-                    $igstAmount = $netAmount * 0.18;
+                    $igst = round($netAmount * 0.18, 2);
                 }
 
-                $grandTotal = $netAmount + $cgstAmount + $sgstAmount + $igstAmount;
+                $totalAmount = $netAmount + $cgst + $sgst + $igst;
 
                 $order = ApplicationOrder::create([
                     'customer_id' => $customer->id,
                     'registration_date' => $regDate,
-                    'expiry_date' => Carbon::parse($regDate)->addMonths(6),
+                    'expiry_date' => now()->addMonths(6),
                     'card_number' => $cardNumber,
-                    'amount' => $grandTotal,
-                    'paymentid' => $paymentId
+                    'amount' => $totalAmount,
+                    'payment_id' => $paymentId
                 ]);
 
-                $invoiceno = Invoice::max('inv_no') + 1;
+                $invoiceNo = DB::table('invoices')
+                    ->lockForUpdate()
+                    ->max('inv_no') + 1;
 
                 $invoice = Invoice::create([
                     'customer_id' => $customer->id,
                     'card_id' => $order->id,
-                    'inv_date' => Carbon::now()->format('Y-m-d'),
-                    'inv_no' => $invoiceno,
+                    'inv_date' => now(),
+                    'inv_no' => $invoiceNo,
                     'net_amount' => $netAmount,
-                    'cgst' => $cgstAmount,
-                    'sgst' => $sgstAmount,
-                    'igst' => $igstAmount,
-                    'total_amount' => $grandTotal
+                    'cgst' => $cgst,
+                    'sgst' => $sgst,
+                    'igst' => $igst,
+                    'total_amount' => $totalAmount
                 ]);
 
                 InvoiceLog::create([
                     'log_detail' => 'Create New Customer',
                     'card_number' => $order->id,
                     'invoice_id' => $invoice->id,
-                    'staff_id' => Auth::id()
+                    'staff_id' => auth()->id()
                 ]);
             }
         });
-        
-        return redirect()->route('admin.customers.index')
+
+        return redirect()
+            ->route('admin.customers.index')
             ->with('success', 'Customer created successfully');
     }
 
@@ -335,50 +323,32 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        // Validation rules similar to API controller update
-         $baseRules = [
+        $rules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'mobile_number' => 'required|string|max:20',
-            'email' => ['required', 'email', Rule::unique('customers')->ignore($customer->id)],
-            'is_paid' => 'sometimes|boolean',
-        ];
-        $paidRules = [
-            'pack_code' => 'required|string|max:255',
+            'mobile_number' => [
+                'required',
+                'regex:/^[6-9][0-9]{9}$/',
+                Rule::unique('customers')->ignore($customer->id)
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('customers')->ignore($customer->id)
+            ],
             'address' => 'required|string',
-            'gender' => 'required|in:male,female,other',
+            'pin_code' => 'required|string|max:10',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'place_of_birth' => 'required|string|max:255',
-            'nationality' => 'required|string|max:255',
-            'payment_info_id' => 'required|numeric',
-            'service_code' => 'required|string|max:255',
         ];
 
-        // Use the is_paid value submitted in the form, default to current status if not submitted
-        $isPaid = $request->boolean('is_paid', $customer->is_paid); 
-
-        $rules = $baseRules;
-        if ($isPaid) {
-            $rules = array_merge($rules, $paidRules);
-        }
-
         $validatedData = $request->validate($rules);
-        $validatedData['is_paid'] = $isPaid; // Ensure is_paid is set correctly
-
-         // Fill missing nullable fields with null if not paid
-        if (!$isPaid) {
-             $nullableFields = ['pack_code', 'address', 'gender', 'date_of_birth', 'place_of_birth', 'nationality', 'payment_info_id', 'service_code'];
-             foreach ($nullableFields as $field) {
-                 // Only nullify if not present in the request data, otherwise keep submitted value (even if empty string)
-                 if (!array_key_exists($field, $validatedData)) {
-                     $validatedData[$field] = null;
-                 }
-             }
-        }
 
         $customer->update($validatedData);
 
-        return redirect()->route('admin.customers.index')->with('success', 'Customer updated successfully');
+        return redirect()->back()->with('success', 'Customer updated successfully');       
     }
 
     /**
