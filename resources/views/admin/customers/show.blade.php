@@ -241,9 +241,34 @@
                 <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 space-y-8">                    
                     <div class="flex justify-between items-center">
                         <h2 class="text-xl font-semibold text-gray-800">Uploaded Documents</h2>
-                        <span class="inline-flex p-2 font-semibold rounded text-sm bg-green-100 text-green-800"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg> Verify All Documents</span>
+                        @php
+                            $documents = $customer->applicationDocuments;
+                            $hasDocuments = $documents->count() > 0;
+                            $allVerified = $hasDocuments && $documents->where('is_verified', 0)->count() === 0;
+                        @endphp
+                        @if($hasDocuments)
+                            <form action="{{ route('admin.documents.updateAll') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="customer_id" value="{{ $customer->id }}">
+                                <input type="hidden" name="status" value="{{ $allVerified ? 0 : 1 }}">
+
+                                @if($allVerified)
+                                    <button class="bg-red-100 text-red-700 px-4 py-2 rounded-md text-sm font-medium inline-flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        Unverify All Documents
+                                    </button>
+                                @else
+                                    <button class="bg-green-100 text-green-700 px-4 py-2 rounded-md text-sm font-medium inline-flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        Verify All Documents
+                                    </button>
+                                @endif
+                            </form>
+                        @endif
                     </div>
                     {{-- Section 1: Display Existing Uploaded Documents --}}
                     <div> 
@@ -285,13 +310,23 @@
                                             </svg>
                                             View
                                         </a>
-                                        <a href="{{ Storage::url($document->file_path) }}" target="_blank"
+                                        @if($document->is_verified)
+                                            <a href="{{ route('admin.documents.toggleVerify', $document->id) }}"
+                                            class="text-red-600 hover:text-red-800 text-sm font-medium inline-flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            Click to Unverify
+                                            </a>
+                                        @else
+                                            <a href="{{ route('admin.documents.toggleVerify', $document->id) }}"
                                             class="text-green-600 hover:text-green-800 text-sm font-medium inline-flex items-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                             </svg>
                                             Click to Verify
-                                        </a>
+                                            </a>
+                                        @endif
                                         {{-- Staff Delete Button --}}
                                         <form id="delete-document-{{ $document->id }}"
                                             action="{{ route('admin.application-documents.destroy', $document->id) }}"

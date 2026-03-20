@@ -91,4 +91,63 @@ class ApplicationDocumentController extends Controller
             ->with('success', 'Document deleted successfully.')
             ->withFragment('documents');
     }
+
+    public function updateAll(Request $request)
+    {
+        $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'status' => 'required|in:0,1'
+        ]);
+
+        ApplicationDocument::where('customer_id', $request->customer_id)
+            ->update([
+                'is_verified' => $request->status
+            ]);
+
+        $customer = Customer::find($request->customer_id);
+
+        if ($request->status == 1 && $customer->registration_step != 5) {
+            $customer->update([
+                'registration_step' => 5
+            ]);
+        }
+
+        $message = $request->status == 1 
+            ? 'All documents verified successfully' 
+            : 'All documents unverified successfully';
+
+        return redirect()
+            ->route('admin.customers.show', $request->customer_id)
+            ->with('success', $message)
+            ->withFragment('documents');
+    }
+
+    public function toggleVerify($id)
+    {
+        $doc = ApplicationDocument::findOrFail($id);
+
+        $doc->is_verified = $doc->is_verified ? 0 : 1;
+        $doc->save();
+
+        $customer = Customer::find($doc->customer_id);
+
+        $allVerified = ApplicationDocument::where('customer_id', $doc->customer_id)
+            ->where('is_verified', 0)
+            ->count() === 0;
+
+        if ($allVerified && $customer->registration_step != 5) {
+            $customer->update([
+                'registration_step' => 5
+            ]);
+        }
+
+        $message = $doc->is_verified 
+            ? $doc->documentType->name . ' verified successfully'
+            : $doc->documentType->name . ' unverified successfully';
+
+        return redirect()
+            ->route('admin.customers.show', $customer->id)
+            ->with('success', $message)
+            ->withFragment('documents');
+    }
 } 

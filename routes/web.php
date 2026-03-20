@@ -98,6 +98,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Application Documents Routes
     Route::resource('application-documents', ApplicationDocumentController::class)->only(['store', 'destroy']);
+    Route::post('/documents/update-all', [ApplicationDocumentController::class, 'updateAll'])->name('documents.updateAll');
+    Route::get('/documents/toggle/{id}', [ApplicationDocumentController::class, 'toggleVerify'])->name('documents.toggleVerify');
 
     // Application Progress Routes
     Route::get('customers/{customer}/application-progress', [ApplicationProgressController::class, 'customerHistory'])

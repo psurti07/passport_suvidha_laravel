@@ -282,7 +282,7 @@ class CustomerController extends Controller
         });
 
         return redirect()
-            ->route('admin.customers.index')
+            ->back()
             ->with('success', 'Customer created successfully');
     }
 
@@ -300,6 +300,8 @@ class CustomerController extends Controller
                              ->with('error', 'Cannot view details for a Lead customer.');
         }
 
+        $customer->load('applicationDocuments.documentType');
+        
         return view('admin.customers.show', compact('customer'));
     }
 
