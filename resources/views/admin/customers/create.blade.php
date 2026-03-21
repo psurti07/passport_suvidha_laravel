@@ -409,7 +409,7 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Card Number Field -->
-                                <div class="space-y-2">
+                                <div>
                                     <label for="card_number" class="block text-sm font-semibold text-gray-900">
                                         Card Number
                                     </label>
@@ -417,23 +417,12 @@
                                         <input id="card_number" type="text"
                                             class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                                 hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
-                                                transition-all duration-200 placeholder-gray-400
-                                                @error('card_number') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
+                                                transition-all duration-200 placeholder-gray-400"
                                             name="card_number" value="{{ old('card_number', $card_number) }}"
                                             autocomplete="card_number" placeholder="Enter card number">
                                     </div>
-                                    @error('card_number')
-                                    <p class="mt-1 text-sm text-red-600 flex items-center">
-                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        {{ $message }}
-                                    </p>
-                                    @enderror
                                 </div>
-                                <div class="space-y-2">
+                                <div>
                                     <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
                                         <div class="flex items-center">
                                             <label class="ml-2 block text-sm font-semibold text-gray-900">Note: 18% GST
@@ -445,7 +434,7 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Card Amount Field -->
-                                <div class="space-y-2">
+                                <div>
                                     <label for="amount" class="block text-sm font-semibold text-gray-900">
                                         Card Amount
                                     </label>
@@ -453,24 +442,13 @@
                                         <input id="amount" type="text"
                                             class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                                 hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
-                                                transition-all duration-200 placeholder-gray-400
-                                                @error('amount') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror" name="amount"
+                                                transition-all duration-200 placeholder-gray-400" name="amount"
                                             value="{{ old('amount') }}" autocomplete="amount"
                                             placeholder="Enter card amount">
                                     </div>
-                                    @error('amount')
-                                    <p class="mt-1 text-sm text-red-600 flex items-center">
-                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        {{ $message }}
-                                    </p>
-                                    @enderror
                                 </div>
                                 <!-- Payment Id Field -->
-                                <div class="space-y-2">
+                                <div>
                                     <label for="payment_id" class="block text-sm font-semibold text-gray-900">
                                         Payment Id
                                     </label>
@@ -478,21 +456,10 @@
                                         <input id="payment_id" type="text"
                                             class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                                 hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
-                                                transition-all duration-200 placeholder-gray-400
-                                                @error('payment_id') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
+                                                transition-all duration-200 placeholder-gray-400"
                                             name="payment_id" value="{{ old('payment_id', $payment_id) }}"
                                             autocomplete="payment_id" placeholder="Enter payment id">
                                     </div>
-                                    @error('payment_id')
-                                    <p class="mt-1 text-sm text-red-600 flex items-center">
-                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        {{ $message }}
-                                    </p>
-                                    @enderror
                                 </div>
                             </div>
                         </div>

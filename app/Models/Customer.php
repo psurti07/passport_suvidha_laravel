@@ -19,6 +19,7 @@ class Customer extends Authenticatable
         'last_name',
         'mobile_number',
         'email',
+        'password',
         'address',
         'pin_code',
         'city',
@@ -45,7 +46,7 @@ class Customer extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        // 'password' => 'hashed',
         'date_of_birth' => 'date',
         'is_paid' => 'boolean',
         'registration_step' => 'integer',

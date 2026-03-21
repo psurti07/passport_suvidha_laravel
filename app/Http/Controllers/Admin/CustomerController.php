@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon; 
 use Illuminate\Support\Str;
 
+use Illuminate\Support\Facades\Hash;
+
 use Yajra\DataTables\Facades\DataTables;
 
 class CustomerController extends Controller
@@ -170,8 +172,131 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // public function store(Request $request)
+    // {
+    //     $baseRules = [
+    //         'first_name' => 'required|string|max:255',
+    //         'last_name' => 'required|string|max:255',
+    //         'mobile_number' => ['required','regex:/^[6-9][0-9]{9}$/','unique:customers,mobile_number'],
+    //         'email' => 'required|email|unique:customers,email',
+    //         'is_paid' => 'sometimes|boolean',
+    //     ];
+
+    //     $paidRules = [
+    //         'address' => 'required|string',
+    //         'pin_code' => 'required|string|max:10',
+    //         'city' => 'required|string|max:255',
+    //         'state' => 'required|string|max:255',
+    //         'gender' => 'required|in:male,female,other',
+    //         'date_of_birth' => 'required|date',
+    //         'place_of_birth' => 'required|string|max:255',
+    //         'nationality' => 'required|string|max:255',
+    //         'service_code' => 'required|string|max:50',
+    //         'card_number' => 'nullable|digits:16',
+    //         'amount' => 'nullable|numeric|min:1',
+    //         'payment_id' => 'nullable|string|max:50'
+    //     ];
+
+    //     $isPaid = $request->boolean('is_paid');
+
+    //     $rules = $isPaid
+    //         ? array_merge($baseRules, $paidRules)
+    //         : $baseRules;
+
+    //     $validatedData = $request->validate($rules);
+
+    //     $validatedData['is_paid'] = $isPaid;
+    //     $validatedData['registration_step'] = $isPaid ? 4 : 1;
+
+    //     if ($isPaid) {
+    //         $password = Str::random(6);
+    //         $validatedData['password'] = Hash::make($password);
+    //     }
+
+    //     $services = [
+    //         'NORMAL_36' => ['type' => 'normal', 'size' => 36],
+    //         'NORMAL_60' => ['type' => 'normal', 'size' => 60],
+    //         'TATKAL_36' => ['type' => 'tatkal', 'size' => 36],
+    //         'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
+    //     ];
+
+    //     if ($isPaid && isset($services[$validatedData['service_code']])) {
+    //         $validatedData['passport_type'] = $services[$validatedData['service_code']]['type'];
+    //         $validatedData['book_size'] = $services[$validatedData['service_code']]['size'];
+    //     }
+
+    //     DB::transaction(function () use ($validatedData, $request, $isPaid) {
+
+    //         $customer = Customer::create($validatedData);
+
+    //         if ($isPaid) {
+
+    //             $regDate = now()->toDateString();
+
+    //             $cardNumber = $request->card_number 
+    //                 ?? substr(time() . rand(1000,9999), 0, 16);
+
+    //             $paymentId = $request->payment_id 
+    //                 ?? 'cash_' . Str::upper(Str::random(10));
+
+    //             $netAmount = $request->amount ?? 0;
+
+    //             $cgst = 0;
+    //             $sgst = 0;
+    //             $igst = 0;
+
+    //             if ($netAmount > 0) {
+    //                 if (strtolower($request->state) === 'gujarat') {
+    //                     $cgst = round($netAmount * 0.09, 2);
+    //                     $sgst = round($netAmount * 0.09, 2);
+    //                 } else {
+    //                     $igst = round($netAmount * 0.18, 2);
+    //                 }
+    //             }
+
+    //             $totalAmount = $netAmount + $cgst + $sgst + $igst;
+
+    //             $order = ApplicationOrder::create([
+    //                 'customer_id' => $customer->id,
+    //                 'registration_date' => $regDate,
+    //                 'expiry_date' => now()->addMonths(6),
+    //                 'card_number' => $cardNumber,
+    //                 'amount' => $totalAmount,
+    //                 'payment_id' => $paymentId
+    //             ]);
+
+    //             $invoiceNo = DB::table('invoices')
+    //                 ->lockForUpdate()
+    //                 ->max('inv_no') + 1;
+
+    //             $invoice = Invoice::create([
+    //                 'customer_id' => $customer->id,
+    //                 'card_id' => $order->id,
+    //                 'inv_date' => now(),
+    //                 'inv_no' => $invoiceNo,
+    //                 'net_amount' => $netAmount ?? 0,
+    //                 'cgst' => $cgst,
+    //                 'sgst' => $sgst,
+    //                 'igst' => $igst,
+    //                 'total_amount' => $totalAmount
+    //             ]);
+
+    //             InvoiceLog::create([
+    //                 'log_detail' => 'Create New Customer',
+    //                 'card_number' => $order->id,
+    //                 'invoice_id' => $invoice->id,
+    //                 'staff_id' => auth()->id()
+    //             ]);
+    //         }
+    //     });
+
+    //     return redirect()
+    //         ->back()
+    //         ->with('success', 'Customer created successfully');
+    // }
     public function store(Request $request)
     {
+        // ================= VALIDATION =================
         $baseRules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -190,9 +315,11 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
             'service_code' => 'required|string|max:50',
+
+            // OPTIONAL FIELDS ✅
             'card_number' => 'nullable|digits:16',
-            'amount' => 'required|numeric|min:1',
-            'payment_id' => 'required|string|max:50'
+            'amount' => 'nullable|numeric|min:1',
+            'payment_id' => 'nullable|string|max:50',
         ];
 
         $isPaid = $request->boolean('is_paid');
@@ -201,11 +328,17 @@ class CustomerController extends Controller
             ? array_merge($baseRules, $paidRules)
             : $baseRules;
 
-        $validatedData = $request->validate($rules);
+        $validated = $request->validate($rules);
 
-        $validatedData['is_paid'] = $isPaid;
-        $validatedData['registration_step'] = $isPaid ? 4 : 1;
+        // ================= DEFAULT VALUES =================
+        $validated['is_paid'] = $isPaid;
+        $validated['registration_step'] = $isPaid ? 4 : 1;
 
+        if ($isPaid) {
+            $validated['password'] = Hash::make(Str::random(6));
+        }
+
+        // ================= SERVICE =================
         $services = [
             'NORMAL_36' => ['type' => 'normal', 'size' => 36],
             'NORMAL_60' => ['type' => 'normal', 'size' => 60],
@@ -213,77 +346,79 @@ class CustomerController extends Controller
             'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
         ];
 
-        if ($isPaid && isset($services[$validatedData['service_code']])) {
-            $validatedData['passport_type'] = $services[$validatedData['service_code']]['type'];
-            $validatedData['book_size'] = $services[$validatedData['service_code']]['size'];
+        if ($isPaid && isset($services[$validated['service_code']])) {
+            $validated['passport_type'] = $services[$validated['service_code']]['type'];
+            $validated['book_size'] = $services[$validated['service_code']]['size'];
         }
 
-        DB::transaction(function () use ($validatedData, $request, $isPaid) {
+        // ================= TRANSACTION =================
+        DB::transaction(function () use ($validated, $request, $isPaid) {
 
-            $customer = Customer::create($validatedData);
+            // ===== CREATE CUSTOMER =====
+            $customer = Customer::create($validated);
 
-            if ($isPaid) {
+            if (!$isPaid) return;
 
-                $regDate = now()->toDateString();
+            // ================= SAFE VALUES =================
+            $netAmount = $request->amount ?? 0;
 
-                $cardNumber = $request->card_number 
-                    ?? substr(time() . rand(1000,9999), 0, 16);
+            $cardNumber = $request->card_number 
+                ?? substr(time() . rand(1000,9999), 0, 16);
 
-                $paymentId = $request->payment_id 
-                    ?? 'cash_' . Str::upper(Str::random(10));
+            $paymentId = $request->payment_id 
+                ?? 'cash_' . Str::upper(Str::random(10));
 
-                $netAmount = $request->amount;
+            // ================= GST =================
+            $cgst = $sgst = $igst = 0;
 
-                $cgst = 0;
-                $sgst = 0;
-                $igst = 0;
-
+            if ($netAmount > 0) {
                 if (strtolower($request->state) === 'gujarat') {
                     $cgst = round($netAmount * 0.09, 2);
                     $sgst = round($netAmount * 0.09, 2);
                 } else {
                     $igst = round($netAmount * 0.18, 2);
                 }
-
-                $totalAmount = $netAmount + $cgst + $sgst + $igst;
-
-                $order = ApplicationOrder::create([
-                    'customer_id' => $customer->id,
-                    'registration_date' => $regDate,
-                    'expiry_date' => now()->addMonths(6),
-                    'card_number' => $cardNumber,
-                    'amount' => $totalAmount,
-                    'payment_id' => $paymentId
-                ]);
-
-                $invoiceNo = DB::table('invoices')
-                    ->lockForUpdate()
-                    ->max('inv_no') + 1;
-
-                $invoice = Invoice::create([
-                    'customer_id' => $customer->id,
-                    'card_id' => $order->id,
-                    'inv_date' => now(),
-                    'inv_no' => $invoiceNo,
-                    'net_amount' => $netAmount,
-                    'cgst' => $cgst,
-                    'sgst' => $sgst,
-                    'igst' => $igst,
-                    'total_amount' => $totalAmount
-                ]);
-
-                InvoiceLog::create([
-                    'log_detail' => 'Create New Customer',
-                    'card_number' => $order->id,
-                    'invoice_id' => $invoice->id,
-                    'staff_id' => auth()->id()
-                ]);
             }
+
+            $totalAmount = $netAmount + $cgst + $sgst + $igst;
+
+            // ================= ORDER =================
+            $order = ApplicationOrder::create([
+                'customer_id' => $customer->id,
+                'registration_date' => now()->toDateString(),
+                'expiry_date' => now()->addMonths(6),
+                'card_number' => $cardNumber,
+                'amount' => $totalAmount,
+                'payment_id' => $paymentId
+            ]);
+
+            // ================= INVOICE =================
+            $invoiceNo = DB::table('invoices')
+                ->lockForUpdate()
+                ->max('inv_no') + 1;
+
+            $invoice = Invoice::create([
+                'customer_id' => $customer->id,
+                'card_id' => $order->id,
+                'inv_date' => now(),
+                'inv_no' => $invoiceNo,
+                'net_amount' => $netAmount, // 🔥 NEVER NULL
+                'cgst' => $cgst,
+                'sgst' => $sgst,
+                'igst' => $igst,
+                'total_amount' => $totalAmount
+            ]);
+
+            // ================= LOG =================
+            InvoiceLog::create([
+                'log_detail' => 'Create New Customer',
+                'card_number' => $order->id,
+                'invoice_id' => $invoice->id,
+                'staff_id' => auth()->id()
+            ]);
         });
 
-        return redirect()
-            ->back()
-            ->with('success', 'Customer created successfully');
+        return back()->with('success', 'Customer created successfully');
     }
 
     /**
@@ -364,6 +499,236 @@ class CustomerController extends Controller
         $customer->delete();
         return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully');
     }
+
+    public function convertToCustomer(Request $request, Customer $customer)
+    {
+        if ($customer->is_paid) {
+            return back()->with('error', 'Already converted');
+        }
+
+        $validated = $request->validate([
+            'address' => 'required|string',
+            'pin_code' => 'required|string|max:10',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'gender' => 'required|in:male,female,other',
+            'date_of_birth' => 'required|date',
+            'place_of_birth' => 'required|string|max:255',
+            'nationality' => 'required|string|max:255',
+            'service_code' => 'required|string|max:50',
+            'card_number' => 'nullable|digits:16',
+            'amount' => 'required|numeric|min:1',
+            'payment_id' => 'required|string|max:50'
+        ]);
+
+        DB::transaction(function () use ($validated, $customer) {
+
+            $services = [
+                'NORMAL_36' => ['type' => 'normal', 'size' => 36],
+                'NORMAL_60' => ['type' => 'normal', 'size' => 60],
+                'TATKAL_36' => ['type' => 'tatkal', 'size' => 36],
+                'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
+            ];
+
+            $netAmount = $validated['amount'];
+
+            $cgst = $sgst = $igst = 0;
+
+            if (strtolower($validated['state']) === 'gujarat') {
+                $cgst = $netAmount * 0.09;
+                $sgst = $netAmount * 0.09;
+            } else {
+                $igst = $netAmount * 0.18;
+            }
+
+            $total = $netAmount + $cgst + $sgst + $igst;
+
+            $cardNumber = $validated['card_number']
+                ?? substr(time() . rand(1000,9999), 0, 16);
+
+            $paymentId = $validated['payment_id']
+                ?? 'cash_' . Str::upper(Str::random(10));
+
+            $update = $validated;
+
+            $update['is_paid'] = 1;
+            $update['registration_step'] = 4;
+
+            if (isset($services[$validated['service_code']])) {
+                $update['passport_type'] = $services[$validated['service_code']]['type'];
+                $update['book_size'] = $services[$validated['service_code']]['size'];
+            }
+
+            $password = Str::random(6);
+            $update['password'] = Hash::make($password);
+
+            $customer->update($update);
+
+            $order = ApplicationOrder::create([
+                'customer_id' => $customer->id,
+                'registration_date' => now()->toDateString(),
+                'expiry_date' => now()->addMonths(6),
+                'card_number' => $cardNumber,
+                'amount' => $total,
+                'payment_id' => $paymentId
+            ]);
+
+            $invoiceNo = DB::table('invoices')->lockForUpdate()->max('inv_no') + 1;
+
+            $invoice = Invoice::create([
+                'customer_id' => $customer->id,
+                'card_id' => $order->id,
+                'inv_date' => now(),
+                'inv_no' => $invoiceNo,
+                'net_amount' => $netAmount,
+                'cgst' => $cgst,
+                'sgst' => $sgst,
+                'igst' => $igst,
+                'total_amount' => $total
+            ]);
+
+            InvoiceLog::create([
+                'log_detail' => 'Convert Lead to Customer',
+                'card_number' => $order->id,
+                'invoice_id' => $invoice->id,
+                'staff_id' => auth()->id()
+            ]);
+        });
+
+        return back()->with('success', 'Lead converted successfully');
+    }
+
+    // public function convertToCustomer(Request $request, Customer $customer)
+    // {
+    //     // =========================
+    //     // Validation (FULL DATA)
+    //     // =========================
+    //     $rules = [
+    //         'address' => 'required|string',
+    //         'pin_code' => 'required|string|max:10',
+    //         'city' => 'required|string|max:255',
+    //         'state' => 'required|string|max:255',
+    //         'gender' => 'required|in:male,female,other',
+    //         'date_of_birth' => 'required|date',
+    //         'place_of_birth' => 'required|string|max:255',
+    //         'nationality' => 'required|string|max:255',
+    //         'service_code' => 'required|string|max:50',
+    //         'card_number' => 'nullable|digits:16',
+    //         'amount' => 'required|numeric|min:1',
+    //         'payment_id' => 'nullable|string|max:50'
+    //     ];
+
+    //     $validatedData = $request->validate($rules);
+
+    //     // Already converted check
+    //     if ($customer->is_paid) {
+    //         return back()->with('error', 'Already converted');
+    //     }
+
+    //     DB::transaction(function () use ($request, $customer, $validatedData) {
+
+    //         // =========================
+    //         // Service Mapping
+    //         // =========================
+    //         $services = [
+    //             'NORMAL_36' => ['type' => 'normal', 'size' => 36],
+    //             'NORMAL_60' => ['type' => 'normal', 'size' => 60],
+    //             'TATKAL_36' => ['type' => 'tatkal', 'size' => 36],
+    //             'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
+    //         ];
+
+    //         // =========================
+    //         // Amount Calculation
+    //         // =========================
+    //         $netamount = $validatedData['amount'];
+
+    //         $cgst = $sgst = $igst = 0;
+
+    //         if (strtolower($validatedData['state']) === 'gujarat') {
+    //             $cgst = $netamount * 0.09;
+    //             $sgst = $netamount * 0.09;
+    //         } else {
+    //             $igst = $netamount * 0.18;
+    //         }
+
+    //         $totalAmount = $netamount + $cgst + $sgst + $igst;
+
+    //         // =========================
+    //         // Card & Payment
+    //         // =========================
+    //         $cardNumber = $validatedData['card_number'] 
+    //             ?? substr(time() . rand(1000,9999), 0, 16);
+
+    //         $paymentId = $validatedData['payment_id'] 
+    //             ?? 'cash_' . Str::upper(Str::random(10));
+
+    //         // =========================
+    //         // UPDATE CUSTOMER (MAIN PART 🔥)
+    //         // =========================
+    //         $updateData = $validatedData;
+
+    //         $updateData['is_paid'] = 1;
+    //         $updateData['registration_step'] = 4;
+
+    //         // service_code → passport_type, book_size
+    //         if (isset($services[$validatedData['service_code']])) {
+    //             $updateData['passport_type'] = $services[$validatedData['service_code']]['type'];
+    //             $updateData['book_size'] = $services[$validatedData['service_code']]['size'];
+    //         }
+
+    //         // optional password update
+    //         $password = Str::random(6);
+    //         $updateData['password'] = Hash::make($password);
+
+    //         $customer->update($updateData);
+
+    //         // =========================
+    //         // CREATE ORDER
+    //         // =========================
+    //         $order = ApplicationOrder::create([
+    //             'customer_id' => $customer->id,
+    //             'registration_date' => now()->toDateString(),
+    //             'expiry_date' => now()->addMonths(6),
+    //             'card_number' => $cardNumber,
+    //             'amount' => $totalAmount,
+    //             'payment_id' => $paymentId
+    //         ]);
+
+    //         // =========================
+    //         // INVOICE NUMBER
+    //         // =========================
+    //         $invoiceNo = DB::table('invoices')
+    //             ->lockForUpdate()
+    //             ->max('inv_no') + 1;
+
+    //         // =========================
+    //         // CREATE INVOICE
+    //         // =========================
+    //         $invoice = Invoice::create([
+    //             'customer_id' => $customer->id,
+    //             'card_id' => $order->id,
+    //             'inv_date' => now(),
+    //             'inv_no' => $invoiceNo,
+    //             'net_amount' => $netamount,
+    //             'cgst' => $cgst,
+    //             'sgst' => $sgst,
+    //             'igst' => $igst,
+    //             'total_amount' => $totalAmount
+    //         ]);
+
+    //         // =========================
+    //         // LOG
+    //         // =========================
+    //         InvoiceLog::create([
+    //             'log_detail' => 'Convert Lead to Customer',
+    //             'card_number' => $order->id,
+    //             'invoice_id' => $invoice->id,
+    //             'staff_id' => auth()->id()
+    //         ]);
+    //     });
+
+    //     return back()->with('success', 'Lead converted to customer successfully');
+    // }
 
     public function export(Request $request)
     {

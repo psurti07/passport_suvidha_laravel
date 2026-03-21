@@ -1,18 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Admin\CustomerController;
-use App\Http\Controllers\Admin\LeadController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TodayStatisticsController;
+use App\Http\Controllers\Admin\SearchController;
+use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\ApplicationDocumentController;
+use App\Http\Controllers\Admin\ApplicationProgressController;
+use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Admin\SupportController;
-use App\Http\Controllers\Admin\DocumentTypeController;
+use App\Http\Controllers\Admin\OtpController;
 use App\Http\Controllers\Admin\FinalDetailController;
 use App\Http\Controllers\Admin\AppointmentLetterController;
-use App\Http\Controllers\Admin\ApplicationProgressController;
-use App\Http\Controllers\Admin\ApplicationDocumentController;
+use App\Http\Controllers\Admin\PreDefinedMessageController;
+use App\Http\Controllers\Admin\DocumentTypeController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,47 +41,36 @@ Auth::routes();
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
     // Dashboard Routes
-    Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
-    Route::get('/dashboard/tatkal', [App\Http\Controllers\AdminController::class, 'tatkalDashboard'])->name('dashboard.tatkal');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard/tatkal', [AdminController::class, 'tatkalDashboard'])->name('dashboard.tatkal');
 
     // Statistics Routes
     Route::get('/todaystatistics', [TodayStatisticsController::class, 'index'])->name('todaystatistics');
 
-    // Users Routes
-    Route::get('users/export', [App\Http\Controllers\Admin\UserController::class, 'export'])->name('users.export');
-    Route::resource('users', App\Http\Controllers\Admin\UserController::class);    
-
     // Customers Routes
-    Route::get('/search-customer', [App\Http\Controllers\Admin\SearchController::class, 'showSearchForm'])->name('customer.search.form');
-    Route::post('/search-customer', [App\Http\Controllers\Admin\SearchController::class, 'searchCustomer'])->name('customer.search');
+    Route::get('/search-customer', [SearchController::class, 'showSearchForm'])->name('customer.search.form');
+    Route::post('/search-customer', [SearchController::class, 'searchCustomer'])->name('customer.search');
     Route::get('/customers/today', [CustomerController::class, 'today'])->name('customers.today');
     Route::get('/customers/today/data', [CustomerController::class, 'todayData'])->name('customers.today.data');
     Route::resource('customers', CustomerController::class);
     Route::get('/customers-data', [CustomerController::class,'data'])->name('customers.data');
-    
-    Route::get('/customers/export', [CustomerController::class, 'export'])->name('customers.export');
+    Route::put('/customers/{customer}/convert', [CustomerController::class, 'convertToCustomer'])->name('customers.convert');
+    // Route::get('/customers/export', [CustomerController::class, 'export'])->name('customers.export');
+
+    // Application Documents Routes
+    Route::resource('application-documents', ApplicationDocumentController::class)->only(['store', 'destroy']);
+    Route::post('/documents/update-all', [ApplicationDocumentController::class, 'updateAll'])->name('documents.updateAll');
+    Route::get('/documents/toggle/{id}', [ApplicationDocumentController::class, 'toggleVerify'])->name('documents.toggleVerify');
+
+    // Application Progress Routes
+    Route::get('customers/{customer}/application-progress', [ApplicationProgressController::class, 'customerHistory'])
+        ->name('application-progress.customer-history');
+    Route::resource('application-progress', ApplicationProgressController::class);
 
     // Leads Routes
     Route::match(['get','post'],'/leads/normal',[LeadController::class,'normalLeads'])->name('leads.normal');
     Route::match(['get','post'],'/leads/tatkal',[LeadController::class,'tatkalLeads'])->name('leads.tatkal');
     Route::get('/lead/{customer}',[LeadController::class,'show'])->name('lead.show');
-
-    // Predefined Messages Routes
-    Route::get('predefined-messages/export', [App\Http\Controllers\Admin\PreDefinedMessageController::class, 'export'])->name('predefined-messages.export');
-    Route::resource('predefined-messages', App\Http\Controllers\Admin\PreDefinedMessageController::class);
-
-    // Document Types Routes
-    Route::resource('document-types', DocumentTypeController::class);
-
-    // Final Details Routes
-    Route::patch('final-details/{finalDetail}/approve', [FinalDetailController::class, 'approve'])->name('final-details.approve');
-    Route::patch('final-details/{finalDetail}/unapprove', [FinalDetailController::class, 'unapprove'])->name('final-details.unapprove');
-    Route::resource('final-details', FinalDetailController::class)->except(['create', 'store', 'destroy']);
-
-    // Otp Routes
-    Route::get('otps', [App\Http\Controllers\Admin\OtpController::class, 'index'])->name('otps.index');
-    Route::get('otps/export', [App\Http\Controllers\Admin\OtpController::class, 'export'])->name('otps.export');
-    // Add other admin routes here as needed
 
     // Report Routes
     Route::get('/reports/gst', [ReportController::class, 'gstReport'])->name('reports.gst');
@@ -91,18 +84,29 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Route to update the status of a specific ticket
     Route::patch('/support/tickets/{ticket}/status', [SupportController::class, 'updateStatus'])->name('support.tickets.status.update');
 
+    // Otp Routes
+    Route::get('otps', [OtpController::class, 'index'])->name('otps.index');
+    Route::get('otps/export', [OtpController::class, 'export'])->name('otps.export');
+    // Add other admin routes here as needed
+
+    // Final Details Routes
+    Route::patch('final-details/{finalDetail}/approve', [FinalDetailController::class, 'approve'])->name('final-details.approve');
+    Route::patch('final-details/{finalDetail}/unapprove', [FinalDetailController::class, 'unapprove'])->name('final-details.unapprove');
+    Route::resource('final-details', FinalDetailController::class)->except(['create', 'store', 'destroy']);
+
     // Appointment Letter Routes
     Route::get('appointment-letters/{appointmentLetter}/download', [AppointmentLetterController::class, 'download'])->name('appointment-letters.download');
     Route::get('appointment-letters/{appointmentLetter}/preview', [AppointmentLetterController::class, 'preview'])->name('appointment-letters.preview');
     Route::resource('appointment-letters', AppointmentLetterController::class);
 
-    // Application Documents Routes
-    Route::resource('application-documents', ApplicationDocumentController::class)->only(['store', 'destroy']);
-    Route::post('/documents/update-all', [ApplicationDocumentController::class, 'updateAll'])->name('documents.updateAll');
-    Route::get('/documents/toggle/{id}', [ApplicationDocumentController::class, 'toggleVerify'])->name('documents.toggleVerify');
+    // Predefined Messages Routes
+    Route::get('predefined-messages/export', [PreDefinedMessageController::class, 'export'])->name('predefined-messages.export');
+    Route::resource('predefined-messages', PreDefinedMessageController::class);
 
-    // Application Progress Routes
-    Route::get('customers/{customer}/application-progress', [ApplicationProgressController::class, 'customerHistory'])
-        ->name('application-progress.customer-history');
-    Route::resource('application-progress', ApplicationProgressController::class);
+    // Document Types Routes
+    Route::resource('document-types', DocumentTypeController::class);
+    
+    // Users Routes
+    Route::get('users/export', [UserController::class, 'export'])->name('users.export');
+    Route::resource('users', UserController::class);    
 });

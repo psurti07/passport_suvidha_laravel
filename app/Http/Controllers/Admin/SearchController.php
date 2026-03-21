@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Customer; // Use Customer model
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class SearchController extends Controller
 {
@@ -16,7 +17,10 @@ class SearchController extends Controller
      */
     public function showSearchForm()
     {
-        return view('admin.customer.search', ['customer' => null, 'mobile_no' => null]);
+        return view('admin.customer.search', [
+            'customer' => null, 
+            'mobile_no' => null
+        ]);
     }
 
     /**
@@ -42,7 +46,10 @@ class SearchController extends Controller
 
         // Query Customer model using 'mobile_number' column
         $customer = Customer::where('mobile_number', $mobileNo)->first(); 
+        
+        $cardNumber = str_pad(rand(0, 9999999999999999), 16, '0', STR_PAD_LEFT);
+        $paymentId = 'cash_' . Str::random(13);
 
-        return view('admin.customer.search', compact('customer', 'mobileNo'));
+        return view('admin.customer.search', compact('customer', 'mobileNo','cardNumber','paymentId'));
     }
 } 
