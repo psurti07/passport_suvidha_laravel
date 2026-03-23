@@ -418,7 +418,7 @@
                                             class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                                 hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                                 transition-all duration-200 placeholder-gray-400"
-                                            name="card_number" value="{{ old('card_number', $card_number) }}"
+                                            name="card_number" value="{{ old('card_number', $cardNumber) }}"
                                             autocomplete="card_number" placeholder="Enter card number">
                                     </div>
                                 </div>
@@ -457,7 +457,7 @@
                                             class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                                 hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                                 transition-all duration-200 placeholder-gray-400"
-                                            name="payment_id" value="{{ old('payment_id', $payment_id) }}"
+                                            name="payment_id" value="{{ old('payment_id', $paymentId) }}"
                                             autocomplete="payment_id" placeholder="Enter payment id">
                                     </div>
                                 </div>

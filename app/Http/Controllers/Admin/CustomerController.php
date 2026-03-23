@@ -161,8 +161,8 @@ class CustomerController extends Controller
     public function create()
     {
         return view('admin.customers.create', [
-            'card_number' => str_pad(rand(0, 9999999999999999), 16, '0', STR_PAD_LEFT),
-            'payment_id'   => 'cash_' . Str::random(13),
+            'cardNumber' => Str::upper(Str::random(16)),
+            'paymentId'   => 'cash_' . Str::upper(Str::random(10)),
         ]);
     }
 
@@ -172,131 +172,8 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // public function store(Request $request)
-    // {
-    //     $baseRules = [
-    //         'first_name' => 'required|string|max:255',
-    //         'last_name' => 'required|string|max:255',
-    //         'mobile_number' => ['required','regex:/^[6-9][0-9]{9}$/','unique:customers,mobile_number'],
-    //         'email' => 'required|email|unique:customers,email',
-    //         'is_paid' => 'sometimes|boolean',
-    //     ];
-
-    //     $paidRules = [
-    //         'address' => 'required|string',
-    //         'pin_code' => 'required|string|max:10',
-    //         'city' => 'required|string|max:255',
-    //         'state' => 'required|string|max:255',
-    //         'gender' => 'required|in:male,female,other',
-    //         'date_of_birth' => 'required|date',
-    //         'place_of_birth' => 'required|string|max:255',
-    //         'nationality' => 'required|string|max:255',
-    //         'service_code' => 'required|string|max:50',
-    //         'card_number' => 'nullable|digits:16',
-    //         'amount' => 'nullable|numeric|min:1',
-    //         'payment_id' => 'nullable|string|max:50'
-    //     ];
-
-    //     $isPaid = $request->boolean('is_paid');
-
-    //     $rules = $isPaid
-    //         ? array_merge($baseRules, $paidRules)
-    //         : $baseRules;
-
-    //     $validatedData = $request->validate($rules);
-
-    //     $validatedData['is_paid'] = $isPaid;
-    //     $validatedData['registration_step'] = $isPaid ? 4 : 1;
-
-    //     if ($isPaid) {
-    //         $password = Str::random(6);
-    //         $validatedData['password'] = Hash::make($password);
-    //     }
-
-    //     $services = [
-    //         'NORMAL_36' => ['type' => 'normal', 'size' => 36],
-    //         'NORMAL_60' => ['type' => 'normal', 'size' => 60],
-    //         'TATKAL_36' => ['type' => 'tatkal', 'size' => 36],
-    //         'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
-    //     ];
-
-    //     if ($isPaid && isset($services[$validatedData['service_code']])) {
-    //         $validatedData['passport_type'] = $services[$validatedData['service_code']]['type'];
-    //         $validatedData['book_size'] = $services[$validatedData['service_code']]['size'];
-    //     }
-
-    //     DB::transaction(function () use ($validatedData, $request, $isPaid) {
-
-    //         $customer = Customer::create($validatedData);
-
-    //         if ($isPaid) {
-
-    //             $regDate = now()->toDateString();
-
-    //             $cardNumber = $request->card_number 
-    //                 ?? substr(time() . rand(1000,9999), 0, 16);
-
-    //             $paymentId = $request->payment_id 
-    //                 ?? 'cash_' . Str::upper(Str::random(10));
-
-    //             $netAmount = $request->amount ?? 0;
-
-    //             $cgst = 0;
-    //             $sgst = 0;
-    //             $igst = 0;
-
-    //             if ($netAmount > 0) {
-    //                 if (strtolower($request->state) === 'gujarat') {
-    //                     $cgst = round($netAmount * 0.09, 2);
-    //                     $sgst = round($netAmount * 0.09, 2);
-    //                 } else {
-    //                     $igst = round($netAmount * 0.18, 2);
-    //                 }
-    //             }
-
-    //             $totalAmount = $netAmount + $cgst + $sgst + $igst;
-
-    //             $order = ApplicationOrder::create([
-    //                 'customer_id' => $customer->id,
-    //                 'registration_date' => $regDate,
-    //                 'expiry_date' => now()->addMonths(6),
-    //                 'card_number' => $cardNumber,
-    //                 'amount' => $totalAmount,
-    //                 'payment_id' => $paymentId
-    //             ]);
-
-    //             $invoiceNo = DB::table('invoices')
-    //                 ->lockForUpdate()
-    //                 ->max('inv_no') + 1;
-
-    //             $invoice = Invoice::create([
-    //                 'customer_id' => $customer->id,
-    //                 'card_id' => $order->id,
-    //                 'inv_date' => now(),
-    //                 'inv_no' => $invoiceNo,
-    //                 'net_amount' => $netAmount ?? 0,
-    //                 'cgst' => $cgst,
-    //                 'sgst' => $sgst,
-    //                 'igst' => $igst,
-    //                 'total_amount' => $totalAmount
-    //             ]);
-
-    //             InvoiceLog::create([
-    //                 'log_detail' => 'Create New Customer',
-    //                 'card_number' => $order->id,
-    //                 'invoice_id' => $invoice->id,
-    //                 'staff_id' => auth()->id()
-    //             ]);
-    //         }
-    //     });
-
-    //     return redirect()
-    //         ->back()
-    //         ->with('success', 'Customer created successfully');
-    // }
     public function store(Request $request)
     {
-        // ================= VALIDATION =================
         $baseRules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -315,108 +192,20 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
             'service_code' => 'required|string|max:50',
-
-            // OPTIONAL FIELDS ✅
-            'card_number' => 'nullable|digits:16',
-            'amount' => 'nullable|numeric|min:1',
+            'card_number' => 'nullable|string|size:16',
+            'amount' => 'required|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
         ];
 
         $isPaid = $request->boolean('is_paid');
 
-        $rules = $isPaid
-            ? array_merge($baseRules, $paidRules)
-            : $baseRules;
+        $rules = $isPaid ? array_merge($baseRules, $paidRules) : $baseRules;
 
         $validated = $request->validate($rules);
 
-        // ================= DEFAULT VALUES =================
         $validated['is_paid'] = $isPaid;
-        $validated['registration_step'] = $isPaid ? 4 : 1;
 
-        if ($isPaid) {
-            $validated['password'] = Hash::make(Str::random(6));
-        }
-
-        // ================= SERVICE =================
-        $services = [
-            'NORMAL_36' => ['type' => 'normal', 'size' => 36],
-            'NORMAL_60' => ['type' => 'normal', 'size' => 60],
-            'TATKAL_36' => ['type' => 'tatkal', 'size' => 36],
-            'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
-        ];
-
-        if ($isPaid && isset($services[$validated['service_code']])) {
-            $validated['passport_type'] = $services[$validated['service_code']]['type'];
-            $validated['book_size'] = $services[$validated['service_code']]['size'];
-        }
-
-        // ================= TRANSACTION =================
-        DB::transaction(function () use ($validated, $request, $isPaid) {
-
-            // ===== CREATE CUSTOMER =====
-            $customer = Customer::create($validated);
-
-            if (!$isPaid) return;
-
-            // ================= SAFE VALUES =================
-            $netAmount = $request->amount ?? 0;
-
-            $cardNumber = $request->card_number 
-                ?? substr(time() . rand(1000,9999), 0, 16);
-
-            $paymentId = $request->payment_id 
-                ?? 'cash_' . Str::upper(Str::random(10));
-
-            // ================= GST =================
-            $cgst = $sgst = $igst = 0;
-
-            if ($netAmount > 0) {
-                if (strtolower($request->state) === 'gujarat') {
-                    $cgst = round($netAmount * 0.09, 2);
-                    $sgst = round($netAmount * 0.09, 2);
-                } else {
-                    $igst = round($netAmount * 0.18, 2);
-                }
-            }
-
-            $totalAmount = $netAmount + $cgst + $sgst + $igst;
-
-            // ================= ORDER =================
-            $order = ApplicationOrder::create([
-                'customer_id' => $customer->id,
-                'registration_date' => now()->toDateString(),
-                'expiry_date' => now()->addMonths(6),
-                'card_number' => $cardNumber,
-                'amount' => $totalAmount,
-                'payment_id' => $paymentId
-            ]);
-
-            // ================= INVOICE =================
-            $invoiceNo = DB::table('invoices')
-                ->lockForUpdate()
-                ->max('inv_no') + 1;
-
-            $invoice = Invoice::create([
-                'customer_id' => $customer->id,
-                'card_id' => $order->id,
-                'inv_date' => now(),
-                'inv_no' => $invoiceNo,
-                'net_amount' => $netAmount, // 🔥 NEVER NULL
-                'cgst' => $cgst,
-                'sgst' => $sgst,
-                'igst' => $igst,
-                'total_amount' => $totalAmount
-            ]);
-
-            // ================= LOG =================
-            InvoiceLog::create([
-                'log_detail' => 'Create New Customer',
-                'card_number' => $order->id,
-                'invoice_id' => $invoice->id,
-                'staff_id' => auth()->id()
-            ]);
-        });
+        $this->createOrConvert($validated, null, 'create');
 
         return back()->with('success', 'Customer created successfully');
     }
@@ -516,12 +305,38 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
             'service_code' => 'required|string|max:50',
-            'card_number' => 'nullable|digits:16',
+            'card_number' => 'nullable|string|size:16',
             'amount' => 'required|numeric|min:1',
-            'payment_id' => 'required|string|max:50'
+            'payment_id' => 'nullable|string|max:50',
         ]);
 
-        DB::transaction(function () use ($validated, $customer) {
+        $validated['is_paid'] = true;
+
+        $this->createOrConvert($validated, $customer, 'convert');
+
+        return redirect()
+            ->route('admin.customers.show', $customer->id)
+            ->with('success', 'Lead converted successfully')
+            ->withFragment('info');
+    }
+
+    private function createOrConvert($validated, $customer = null, $type = 'create')
+    {
+        return DB::transaction(function () use ($validated, $customer, $type) {
+
+            $isPaid = $validated['is_paid'];
+
+            $customerData = collect($validated)->except([
+                'amount',
+                'card_number',
+                'payment_id'
+            ])->toArray();
+
+            $customerData['registration_step'] = $isPaid ? 4 : 1;
+
+            if ($isPaid) {
+                $customerData['password'] = Hash::make(Str::random(8));
+            }
 
             $services = [
                 'NORMAL_36' => ['type' => 'normal', 'size' => 36],
@@ -530,50 +345,47 @@ class CustomerController extends Controller
                 'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
             ];
 
+            if ($isPaid && isset($services[$validated['service_code']])) {
+                $customerData['passport_type'] = $services[$validated['service_code']]['type'];
+                $customerData['book_size'] = $services[$validated['service_code']]['size'];
+            }
+
+            if ($customer) {
+                $customer->update($customerData);
+            } else {
+                $customer = Customer::create($customerData);
+            }
+
+            if (!$isPaid) {
+                return $customer;
+            }
+
             $netAmount = $validated['amount'];
+
+            $cardNumber = $validated['card_number'] ?? Str::upper(Str::random(16));
+            $paymentId  = $validated['payment_id'] ?? 'cash_' . Str::upper(Str::random(10));
 
             $cgst = $sgst = $igst = 0;
 
             if (strtolower($validated['state']) === 'gujarat') {
-                $cgst = $netAmount * 0.09;
-                $sgst = $netAmount * 0.09;
+                $cgst = round($netAmount * 0.09, 2);
+                $sgst = round($netAmount * 0.09, 2);
             } else {
-                $igst = $netAmount * 0.18;
+                $igst = round($netAmount * 0.18, 2);
             }
 
-            $total = $netAmount + $cgst + $sgst + $igst;
-
-            $cardNumber = $validated['card_number']
-                ?? substr(time() . rand(1000,9999), 0, 16);
-
-            $paymentId = $validated['payment_id']
-                ?? 'cash_' . Str::upper(Str::random(10));
-
-            $update = $validated;
-
-            $update['is_paid'] = 1;
-            $update['registration_step'] = 4;
-
-            if (isset($services[$validated['service_code']])) {
-                $update['passport_type'] = $services[$validated['service_code']]['type'];
-                $update['book_size'] = $services[$validated['service_code']]['size'];
-            }
-
-            $password = Str::random(6);
-            $update['password'] = Hash::make($password);
-
-            $customer->update($update);
+            $totalAmount = $netAmount + $cgst + $sgst + $igst;
 
             $order = ApplicationOrder::create([
                 'customer_id' => $customer->id,
                 'registration_date' => now()->toDateString(),
                 'expiry_date' => now()->addMonths(6),
                 'card_number' => $cardNumber,
-                'amount' => $total,
+                'amount' => $totalAmount,
                 'payment_id' => $paymentId
             ]);
 
-            $invoiceNo = DB::table('invoices')->lockForUpdate()->max('inv_no') + 1;
+            $invoiceNo = DB::table('invoices')->max('inv_no') + 1;
 
             $invoice = Invoice::create([
                 'customer_id' => $customer->id,
@@ -584,230 +396,100 @@ class CustomerController extends Controller
                 'cgst' => $cgst,
                 'sgst' => $sgst,
                 'igst' => $igst,
-                'total_amount' => $total
+                'total_amount' => $totalAmount
             ]);
 
             InvoiceLog::create([
-                'log_detail' => 'Convert Lead to Customer',
+                'log_detail' => $type === 'convert'
+                    ? 'Convert Lead to Customer'
+                    : 'Create New Customer',
                 'card_number' => $order->id,
                 'invoice_id' => $invoice->id,
                 'staff_id' => auth()->id()
             ]);
-        });
 
-        return back()->with('success', 'Lead converted successfully');
+            return $customer;
+        });
     }
 
-    // public function convertToCustomer(Request $request, Customer $customer)
+    // public function export(Request $request)
     // {
-    //     // =========================
-    //     // Validation (FULL DATA)
-    //     // =========================
-    //     $rules = [
-    //         'address' => 'required|string',
-    //         'pin_code' => 'required|string|max:10',
-    //         'city' => 'required|string|max:255',
-    //         'state' => 'required|string|max:255',
-    //         'gender' => 'required|in:male,female,other',
-    //         'date_of_birth' => 'required|date',
-    //         'place_of_birth' => 'required|string|max:255',
-    //         'nationality' => 'required|string|max:255',
-    //         'service_code' => 'required|string|max:50',
-    //         'card_number' => 'nullable|digits:16',
-    //         'amount' => 'required|numeric|min:1',
-    //         'payment_id' => 'nullable|string|max:50'
-    //     ];
+    //     // Query Building (Replicate index logic)
+    //     $query = Customer::query();
 
-    //     $validatedData = $request->validate($rules);
-
-    //     // Already converted check
-    //     if ($customer->is_paid) {
-    //         return back()->with('error', 'Already converted');
+    //     // Search functionality
+    //     if ($request->filled('search')) {
+    //         $searchTerm = $request->search;
+    //         $query->where(function($q) use ($searchTerm) {
+    //             $q->where('pack_code', 'like', "%{$searchTerm}%")
+    //               ->orWhere('first_name', 'like', "%{$searchTerm}%")
+    //               ->orWhere('last_name', 'like', "%{$searchTerm}%")
+    //               ->orWhere('email', 'like', "%{$searchTerm}%")
+    //               ->orWhere('mobile_number', 'like', "%{$searchTerm}%")
+    //               ->orWhere('service_code', 'like', "%{$searchTerm}%");
+    //         });
     //     }
 
-    //     DB::transaction(function () use ($request, $customer, $validatedData) {
+    //     // Date range filtering
+    //     if ($request->filled('from_date')) {
+    //         $query->whereDate('created_at', '>=', $request->from_date);
+    //     }
+    //     if ($request->filled('to_date')) {
+    //         $query->whereDate('created_at', '<=', $request->to_date);
+    //     }
 
-    //         // =========================
-    //         // Service Mapping
-    //         // =========================
-    //         $services = [
-    //             'NORMAL_36' => ['type' => 'normal', 'size' => 36],
-    //             'NORMAL_60' => ['type' => 'normal', 'size' => 60],
-    //             'TATKAL_36' => ['type' => 'tatkal', 'size' => 36],
-    //             'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
-    //         ];
-
-    //         // =========================
-    //         // Amount Calculation
-    //         // =========================
-    //         $netamount = $validatedData['amount'];
-
-    //         $cgst = $sgst = $igst = 0;
-
-    //         if (strtolower($validatedData['state']) === 'gujarat') {
-    //             $cgst = $netamount * 0.09;
-    //             $sgst = $netamount * 0.09;
-    //         } else {
-    //             $igst = $netamount * 0.18;
+    //     // Filter by is_paid status
+    //     if ($request->filled('status')) { 
+    //         $status = $request->input('status');
+    //         if ($status === 'paid') {
+    //             $query->where('is_paid', true);
+    //         } elseif ($status === 'lead') {
+    //             $query->where('is_paid', false);
     //         }
+    //     }
 
-    //         $totalAmount = $netamount + $cgst + $sgst + $igst;
+    //     // Sorting logic
+    //     $sortBy = $request->input('sort_by', 'id'); 
+    //     $sortDirection = $request->input('sort_direction', 'desc');
 
-    //         // =========================
-    //         // Card & Payment
-    //         // =========================
-    //         $cardNumber = $validatedData['card_number'] 
-    //             ?? substr(time() . rand(1000,9999), 0, 16);
+    //     $sortableColumns = ['id', 'first_name', 'email', 'mobile_number', 'is_paid', 'created_at'];
+    //     if (in_array($sortBy, $sortableColumns)) {
+    //          if ($sortBy === 'first_name') {
+    //              $query->orderBy('first_name', $sortDirection)
+    //                    ->orderBy('last_name', $sortDirection);
+    //          } else {
+    //             $query->orderBy($sortBy, $sortDirection);
+    //          }
+    //     } else {
+    //         $query->orderBy('id', 'desc');
+    //     }
 
-    //         $paymentId = $validatedData['payment_id'] 
-    //             ?? 'cash_' . Str::upper(Str::random(10));
+    //     $customers = $query->get(); // Fetch all matching customers for export
 
-    //         // =========================
-    //         // UPDATE CUSTOMER (MAIN PART 🔥)
-    //         // =========================
-    //         $updateData = $validatedData;
+    //     // Handle export based on type
+    //     $type = $request->input('type', 'excel');
+    //     // Use correct file extensions
+    //     $filename = 'customers.' . ($type === 'excel' ? 'xlsx' : $type);
 
-    //         $updateData['is_paid'] = 1;
-    //         $updateData['registration_step'] = 4;
-
-    //         // service_code → passport_type, book_size
-    //         if (isset($services[$validatedData['service_code']])) {
-    //             $updateData['passport_type'] = $services[$validatedData['service_code']]['type'];
-    //             $updateData['book_size'] = $services[$validatedData['service_code']]['size'];
-    //         }
-
-    //         // optional password update
-    //         $password = Str::random(6);
-    //         $updateData['password'] = Hash::make($password);
-
-    //         $customer->update($updateData);
-
-    //         // =========================
-    //         // CREATE ORDER
-    //         // =========================
-    //         $order = ApplicationOrder::create([
-    //             'customer_id' => $customer->id,
-    //             'registration_date' => now()->toDateString(),
-    //             'expiry_date' => now()->addMonths(6),
-    //             'card_number' => $cardNumber,
-    //             'amount' => $totalAmount,
-    //             'payment_id' => $paymentId
-    //         ]);
-
-    //         // =========================
-    //         // INVOICE NUMBER
-    //         // =========================
-    //         $invoiceNo = DB::table('invoices')
-    //             ->lockForUpdate()
-    //             ->max('inv_no') + 1;
-
-    //         // =========================
-    //         // CREATE INVOICE
-    //         // =========================
-    //         $invoice = Invoice::create([
-    //             'customer_id' => $customer->id,
-    //             'card_id' => $order->id,
-    //             'inv_date' => now(),
-    //             'inv_no' => $invoiceNo,
-    //             'net_amount' => $netamount,
-    //             'cgst' => $cgst,
-    //             'sgst' => $sgst,
-    //             'igst' => $igst,
-    //             'total_amount' => $totalAmount
-    //         ]);
-
-    //         // =========================
-    //         // LOG
-    //         // =========================
-    //         InvoiceLog::create([
-    //             'log_detail' => 'Convert Lead to Customer',
-    //             'card_number' => $order->id,
-    //             'invoice_id' => $invoice->id,
-    //             'staff_id' => auth()->id()
-    //         ]);
-    //     });
-
-    //     return back()->with('success', 'Lead converted to customer successfully');
+    //     switch($type) {
+    //         case 'excel':
+    //             // Provide filename with correct extension and explicit type
+    //             return ExcelFacade::download(new CustomersExport($customers), $filename, ExcelConstant::XLSX);
+    //         case 'csv':
+    //             // Filename already has .csv, explicit type is good practice
+    //             return ExcelFacade::download(new CustomersExport($customers), $filename, ExcelConstant::CSV);
+    //         case 'pdf':
+    //             // Filename needs .pdf extension here too
+    //             $pdfFilename = 'customers.pdf';
+    //             try {
+    //                 return Pdf::loadView('exports.customers', ['customers' => $customers])
+    //                          ->download($pdfFilename);
+    //             } catch (\Exception $e) {
+    //                 Log::error("PDF Export Error: " . $e->getMessage());
+    //                 return redirect()->back()->with('error', 'Could not generate PDF export.');
+    //             }
+    //         default:
+    //             return redirect()->back()->with('error', 'Invalid export type requested.');
+    //     }
     // }
-
-    public function export(Request $request)
-    {
-        // Query Building (Replicate index logic)
-        $query = Customer::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
-                $q->where('pack_code', 'like', "%{$searchTerm}%")
-                  ->orWhere('first_name', 'like', "%{$searchTerm}%")
-                  ->orWhere('last_name', 'like', "%{$searchTerm}%")
-                  ->orWhere('email', 'like', "%{$searchTerm}%")
-                  ->orWhere('mobile_number', 'like', "%{$searchTerm}%")
-                  ->orWhere('service_code', 'like', "%{$searchTerm}%");
-            });
-        }
-
-        // Date range filtering
-        if ($request->filled('from_date')) {
-            $query->whereDate('created_at', '>=', $request->from_date);
-        }
-        if ($request->filled('to_date')) {
-            $query->whereDate('created_at', '<=', $request->to_date);
-        }
-
-        // Filter by is_paid status
-        if ($request->filled('status')) { 
-            $status = $request->input('status');
-            if ($status === 'paid') {
-                $query->where('is_paid', true);
-            } elseif ($status === 'lead') {
-                $query->where('is_paid', false);
-            }
-        }
-
-        // Sorting logic
-        $sortBy = $request->input('sort_by', 'id'); 
-        $sortDirection = $request->input('sort_direction', 'desc');
-
-        $sortableColumns = ['id', 'first_name', 'email', 'mobile_number', 'is_paid', 'created_at'];
-        if (in_array($sortBy, $sortableColumns)) {
-             if ($sortBy === 'first_name') {
-                 $query->orderBy('first_name', $sortDirection)
-                       ->orderBy('last_name', $sortDirection);
-             } else {
-                $query->orderBy($sortBy, $sortDirection);
-             }
-        } else {
-            $query->orderBy('id', 'desc');
-        }
-
-        $customers = $query->get(); // Fetch all matching customers for export
-
-        // Handle export based on type
-        $type = $request->input('type', 'excel');
-        // Use correct file extensions
-        $filename = 'customers.' . ($type === 'excel' ? 'xlsx' : $type);
-
-        switch($type) {
-            case 'excel':
-                // Provide filename with correct extension and explicit type
-                return ExcelFacade::download(new CustomersExport($customers), $filename, ExcelConstant::XLSX);
-            case 'csv':
-                // Filename already has .csv, explicit type is good practice
-                return ExcelFacade::download(new CustomersExport($customers), $filename, ExcelConstant::CSV);
-            case 'pdf':
-                // Filename needs .pdf extension here too
-                $pdfFilename = 'customers.pdf';
-                try {
-                    return Pdf::loadView('exports.customers', ['customers' => $customers])
-                             ->download($pdfFilename);
-                } catch (\Exception $e) {
-                    Log::error("PDF Export Error: " . $e->getMessage());
-                    return redirect()->back()->with('error', 'Could not generate PDF export.');
-                }
-            default:
-                return redirect()->back()->with('error', 'Invalid export type requested.');
-        }
-    }
 }

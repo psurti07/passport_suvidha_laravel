@@ -47,8 +47,8 @@ class SearchController extends Controller
         // Query Customer model using 'mobile_number' column
         $customer = Customer::where('mobile_number', $mobileNo)->first(); 
         
-        $cardNumber = str_pad(rand(0, 9999999999999999), 16, '0', STR_PAD_LEFT);
-        $paymentId = 'cash_' . Str::random(13);
+        $cardNumber = Str::upper(Str::random(16));
+        $paymentId = 'cash_' . Str::upper(Str::random(10));
 
         return view('admin.customer.search', compact('customer', 'mobileNo','cardNumber','paymentId'));
     }
