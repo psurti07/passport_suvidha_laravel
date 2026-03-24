@@ -120,103 +120,105 @@
                         @csrf
                         @method('PUT')
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-                            <div class="space-y-2">
+                            <div>
                                 <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">First Name
                                     <span class="text-red-500">*</span></label>
-                                <input type="text" name="first_name" id="first_name"
+                                <input type="text" id="first_name" name="first_name" 
                                     value="{{ old('first_name', $customer->first_name) }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('first_name') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                 @error('first_name')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <div class="space-y-2">
+                            <div>
                                 <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">Last Name <span
                                         class="text-red-500">*</span></label>
-                                <input type="text" name="last_name" id="last_name"
+                                <input type="text" id="last_name" name="last_name"
                                     value="{{ old('last_name', $customer->last_name ?? '') }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('last_name') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                 @error('last_name')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
-                            <div class="space-y-2">
+                            <div>
                                 <label for="mobile_number" class="block text-sm font-medium text-gray-700 mb-1">Mobile Number
                                     <span class="text-red-500">*</span></label>
-                                <input type="text" name="mobile_number" id="mobile_number"
+                                <input type="tel" id="mobile_number" name="mobile_number"
                                     value="{{ old('mobile_number', $customer->mobile_number) }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('mobile_number') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                    maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                 @error('mobile_number')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <div class="space-y-2">
+                            <div>
                                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Id <span
                                         class="text-red-500">*</span></label>
-                                <input type="email" name="email" id="email"
+                                <input type="email" id="email" name="email" 
                                     value="{{ old('email', $customer->email) }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('email') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                 @error('email')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <div class="space-y-2">
+                            <div>
                                 <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address <span
                                         class="text-red-500">*</span></label>
-                                <textarea name="address" id="address" rows="2" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('address') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">{{ old('address', $customer->address ?? '') }}</textarea>
+                                <textarea id="address" name="address" rows="2" required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">{{ old('address', $customer->address ?? '') }}</textarea>
                                 @error('address')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <div class="space-y-2">
+                            <div>
                                 <label for="pin_code" class="block text-sm font-medium text-gray-700 mb-1">Pincode <span
                                         class="text-red-500">*</span></label>
-                                <input type="text" name="pin_code" id="pin_code"
+                                <input type="text" id="pin_code" name="pin_code" 
                                     value="{{ old('pin_code', $customer->pin_code) }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('pin_code') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                    maxlength="6" minlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                 @error('pin_code')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
+                                <span id="pincode-error" class="text-red-500 text-sm"></span>
                             </div>
-                            <div class="space-y-2">
+                            <div>
                                 <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City <span
                                         class="text-red-500">*</span></label>
-                                <input type="text" name="city" id="city"
-                                    value="{{ old('city', $customer->city) }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('city') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                <input type="text" id="city" name="city" 
+                                    value="{{ old('city', $customer->city) }}" required readonly
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                 @error('city')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <div class="space-y-2">
+                            <div>
                                 <label for="state" class="block text-sm font-medium text-gray-700 mb-1">State <span
                                         class="text-red-500">*</span></label>
-                                <input type="text" name="state" id="state"
-                                    value="{{ old('state', $customer->state) }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('state') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                <input type="text" id="state" name="state" 
+                                    value="{{ old('state', $customer->state) }}" required readonly
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                 @error('state')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <div class="space-y-2">
+                            <div>
                                 <label for="date_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Date of
                                     Birth <span class="text-red-500">*</span></label>
-                                <input type="date" name="date_of_birth" id="date_of_birth"
-                                    value="{{ old('date_of_birth', $customer->date_of_birth ? $customer->date_of_birth->format('Y-m-d') : '') }}"
-                                    required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('date_of_birth') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                <input type="date" id="date_of_birth" name="date_of_birth" 
+                                    value="{{ old('date_of_birth', $customer->date_of_birth ? $customer->date_of_birth->format('Y-m-d') : '') }}" required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                 @error('date_of_birth')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <div class="space-y-2">
+                            <div>
                                 <label for="place_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Place of
                                     Birth <span class="text-red-500">*</span></label>
-                                <input type="text" name="place_of_birth" id="place_of_birth"
+                                <input type="text" id="place_of_birth" name="place_of_birth" 
                                     value="{{ old('place_of_birth', $customer->place_of_birth ?? '') }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm @error('place_of_birth') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                 @error('place_of_birth')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -815,25 +817,68 @@
         });
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const inputs = document.querySelectorAll("input, textarea, select");
-        inputs.forEach(input => {
-            input.addEventListener("input", function() {
-                this.classList.remove("border-red-300");
-                const wrapper = this.closest(".space-y-2");
-                const error = wrapper?.querySelector(".text-red-600");
-                if (error) {
-                    error.style.display = "none";
-                }
-            });
-        });
-    });
+    let debounceTimer;
 
-    function validateMobile(input) {
-        input.value = input.value.replace(/[^0-9]/g, '');
-        if (input.value.length === 1 && input.value < 6) {
-            input.value = '';
-        }
-    }
+    $(document).ready(function () {
+
+        $('#pin_code').on('input', function () {
+
+            clearTimeout(debounceTimer);
+
+            let pincode = $(this).val().trim();
+
+            $('#pincode-error').text('');
+
+            if (!/^\d*$/.test(pincode)) {
+                $('#pincode-error').text('Only numbers allowed');
+                $('#city').val('');
+                $('#state').val('');
+                return;
+            }
+
+            if (pincode.length !== 6) {
+                $('#city').val('');
+                $('#state').val('');
+                return;
+            }
+
+            debounceTimer = setTimeout(function () {
+
+                $.ajax({
+                    url: "{{ route('admin.pincode.location') }}",
+                    type: "POST",
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        pincode: pincode
+                    },
+                    beforeSend: function () {
+                        $('#city').val('Loading...');
+                        $('#state').val('Loading...');
+                    },
+                    success: function (res) {
+                        if (res.status === 'success') {
+                            $('#city').val(res.city);
+                            $('#state').val(res.state);
+                            $('#pincode-error').text('');
+                        } else {
+                            $('#city').val('');
+                            $('#state').val('');
+                            $('#pincode-error').text(res.message || 'Invalid pincode');
+                        }
+                    },
+                    error: function (xhr) {
+                        $('#city').val('');
+                        $('#state').val('');
+
+                        let msg = xhr.responseJSON?.message || 'Invalid pincode';
+                        $('#pincode-error').text(msg);
+                    }
+                });
+
+            }, 500); 
+        });
+
+    });
 </script>
 @endpush
+

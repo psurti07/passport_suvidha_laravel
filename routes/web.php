@@ -55,7 +55,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('customers', CustomerController::class);
     Route::get('/customers-data', [CustomerController::class,'data'])->name('customers.data');
     Route::put('/customers/{customer}/convert', [CustomerController::class, 'convertToCustomer'])->name('customers.convert');
-    // Route::get('/customers/export', [CustomerController::class, 'export'])->name('customers.export');
+    Route::post('/pincode-location', [CustomerController::class, 'getPincodeLocation'])->name('pincode.location');
 
     // Application Documents Routes
     Route::resource('application-documents', ApplicationDocumentController::class)->only(['store', 'destroy']);

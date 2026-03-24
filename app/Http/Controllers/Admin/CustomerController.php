@@ -12,11 +12,6 @@ use App\Models\InvoiceLog;
 
 use Illuminate\Validation\Rule;
 
-use App\Exports\CustomersExport;      
-use Maatwebsite\Excel\Facades\Excel as ExcelFacade;
-use Maatwebsite\Excel\Excel as ExcelConstant; 
-use Barryvdh\DomPDF\Facade\Pdf;
-
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +22,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
 use Yajra\DataTables\Facades\DataTables;
+
+use App\Services\LocationService;
 
 class CustomerController extends Controller
 {
@@ -193,7 +190,7 @@ class CustomerController extends Controller
             'nationality' => 'required|string|max:255',
             'service_code' => 'required|string|max:50',
             'card_number' => 'nullable|string|size:16',
-            'amount' => 'required|numeric|min:1',
+            'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
         ];
 
@@ -306,7 +303,7 @@ class CustomerController extends Controller
             'nationality' => 'required|string|max:255',
             'service_code' => 'required|string|max:50',
             'card_number' => 'nullable|string|size:16',
-            'amount' => 'required|numeric|min:1',
+            'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
         ]);
 
@@ -360,7 +357,7 @@ class CustomerController extends Controller
                 return $customer;
             }
 
-            $netAmount = $validated['amount'];
+            $netAmount = $validated['amount'] ?? 0;
 
             $cardNumber = $validated['card_number'] ?? Str::upper(Str::random(16));
             $paymentId  = $validated['payment_id'] ?? 'cash_' . Str::upper(Str::random(10));
@@ -385,7 +382,7 @@ class CustomerController extends Controller
                 'payment_id' => $paymentId
             ]);
 
-            $invoiceNo = DB::table('invoices')->max('inv_no') + 1;
+            $invoiceNo = (DB::table('invoices')->max('inv_no') ?? 0) + 1;
 
             $invoice = Invoice::create([
                 'customer_id' => $customer->id,
@@ -412,84 +409,34 @@ class CustomerController extends Controller
         });
     }
 
-    // public function export(Request $request)
-    // {
-    //     // Query Building (Replicate index logic)
-    //     $query = Customer::query();
+    public function getPincodeLocation(Request $request)
+    {
+        $request->validate([
+            'pincode' => 'required|digits:6'
+        ]);
 
-    //     // Search functionality
-    //     if ($request->filled('search')) {
-    //         $searchTerm = $request->search;
-    //         $query->where(function($q) use ($searchTerm) {
-    //             $q->where('pack_code', 'like', "%{$searchTerm}%")
-    //               ->orWhere('first_name', 'like', "%{$searchTerm}%")
-    //               ->orWhere('last_name', 'like', "%{$searchTerm}%")
-    //               ->orWhere('email', 'like', "%{$searchTerm}%")
-    //               ->orWhere('mobile_number', 'like', "%{$searchTerm}%")
-    //               ->orWhere('service_code', 'like', "%{$searchTerm}%");
-    //         });
-    //     }
+        try {
+            $result = LocationService::getByPincode($request->pincode);
 
-    //     // Date range filtering
-    //     if ($request->filled('from_date')) {
-    //         $query->whereDate('created_at', '>=', $request->from_date);
-    //     }
-    //     if ($request->filled('to_date')) {
-    //         $query->whereDate('created_at', '<=', $request->to_date);
-    //     }
+            if (isset($result['error'])) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $result['error']
+                ], 422);
+            }
 
-    //     // Filter by is_paid status
-    //     if ($request->filled('status')) { 
-    //         $status = $request->input('status');
-    //         if ($status === 'paid') {
-    //             $query->where('is_paid', true);
-    //         } elseif ($status === 'lead') {
-    //             $query->where('is_paid', false);
-    //         }
-    //     }
+            return response()->json([
+                'status' => 'success',
+                'city' => $result['city'],
+                'state' => $result['state']
+            ]);
 
-    //     // Sorting logic
-    //     $sortBy = $request->input('sort_by', 'id'); 
-    //     $sortDirection = $request->input('sort_direction', 'desc');
+        } catch (\Exception $e) {
 
-    //     $sortableColumns = ['id', 'first_name', 'email', 'mobile_number', 'is_paid', 'created_at'];
-    //     if (in_array($sortBy, $sortableColumns)) {
-    //          if ($sortBy === 'first_name') {
-    //              $query->orderBy('first_name', $sortDirection)
-    //                    ->orderBy('last_name', $sortDirection);
-    //          } else {
-    //             $query->orderBy($sortBy, $sortDirection);
-    //          }
-    //     } else {
-    //         $query->orderBy('id', 'desc');
-    //     }
-
-    //     $customers = $query->get(); // Fetch all matching customers for export
-
-    //     // Handle export based on type
-    //     $type = $request->input('type', 'excel');
-    //     // Use correct file extensions
-    //     $filename = 'customers.' . ($type === 'excel' ? 'xlsx' : $type);
-
-    //     switch($type) {
-    //         case 'excel':
-    //             // Provide filename with correct extension and explicit type
-    //             return ExcelFacade::download(new CustomersExport($customers), $filename, ExcelConstant::XLSX);
-    //         case 'csv':
-    //             // Filename already has .csv, explicit type is good practice
-    //             return ExcelFacade::download(new CustomersExport($customers), $filename, ExcelConstant::CSV);
-    //         case 'pdf':
-    //             // Filename needs .pdf extension here too
-    //             $pdfFilename = 'customers.pdf';
-    //             try {
-    //                 return Pdf::loadView('exports.customers', ['customers' => $customers])
-    //                          ->download($pdfFilename);
-    //             } catch (\Exception $e) {
-    //                 Log::error("PDF Export Error: " . $e->getMessage());
-    //                 return redirect()->back()->with('error', 'Could not generate PDF export.');
-    //             }
-    //         default:
-    //             return redirect()->back()->with('error', 'Invalid export type requested.');
-    //     }
-    // }
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong'
+            ], 500);
+        }
+    }
 }
