@@ -12,9 +12,9 @@ use App\Models\InvoiceLog;
 
 use Illuminate\Validation\Rule;
 
-use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Carbon; 
 use Illuminate\Support\Str;
@@ -23,8 +23,7 @@ use Illuminate\Support\Facades\Hash;
 
 use Yajra\DataTables\Facades\DataTables;
 
-use App\Services\LocationService;
-
+use Illuminate\Support\Facades\Validator;
 class CustomerController extends Controller
 {
     /**
@@ -158,8 +157,8 @@ class CustomerController extends Controller
     public function create()
     {
         return view('admin.customers.create', [
-            'cardNumber' => Str::upper(Str::random(16)),
-            'paymentId'   => 'cash_' . Str::upper(Str::random(10)),
+            'cardNumber' => generateCardNumber(),
+            'paymentId'   => generatePaymentId(),
         ]);
     }
 
@@ -292,7 +291,7 @@ class CustomerController extends Controller
             return back()->with('error', 'Already converted');
         }
 
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',
             'city' => 'required|string|max:255',
@@ -307,6 +306,18 @@ class CustomerController extends Controller
             'payment_id' => 'nullable|string|max:50',
         ]);
 
+        if ($validator->fails()) {
+            return redirect()
+                ->route('admin.customer.search.form')
+                ->withErrors($validator)
+                ->withInput()
+                ->with([
+                    'mobileNo' => $customer->mobile_number,
+                    'customer_id' => $customer->id 
+                ]);
+        }
+
+        $validated = $validator->validated();
         $validated['is_paid'] = true;
 
         $this->createOrConvert($validated, $customer, 'convert');
@@ -359,8 +370,8 @@ class CustomerController extends Controller
 
             $netAmount = $validated['amount'] ?? 0;
 
-            $cardNumber = $validated['card_number'] ?? Str::upper(Str::random(16));
-            $paymentId  = $validated['payment_id'] ?? 'cash_' . Str::upper(Str::random(10));
+            $cardNumber = $validated['card_number'] ?? generateCardNumber();
+            $paymentId  = $validated['payment_id'] ?? generatePaymentId();
 
             $cgst = $sgst = $igst = 0;
 
@@ -407,36 +418,5 @@ class CustomerController extends Controller
 
             return $customer;
         });
-    }
-
-    public function getPincodeLocation(Request $request)
-    {
-        $request->validate([
-            'pincode' => 'required|digits:6'
-        ]);
-
-        try {
-            $result = LocationService::getByPincode($request->pincode);
-
-            if (isset($result['error'])) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $result['error']
-                ], 422);
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'city' => $result['city'],
-                'state' => $result['state']
-            ]);
-
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Something went wrong'
-            ], 500);
-        }
     }
 }

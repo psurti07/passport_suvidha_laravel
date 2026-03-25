@@ -408,12 +408,12 @@
                             <input type="hidden" name="redirect"
                                 value="{{ route('admin.customers.show', $customer->id) }}#documents">
 
-                            <div class="space-y-2">
+                            <div>
                                 <label for="document_type_id"
                                     class="block text-sm font-medium text-gray-700 mb-1">Document
                                     Type <span class="text-red-500">*</span></label>
-                                <select name="document_type_id" id="document_type_id" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm @error('document_type_id') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                <select id="document_type_id" name="document_type_id" required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
                                     <option value="" disabled selected>Select document type</option>
                                     @foreach ($documentTypes as $docType)
                                         <option value="{{ $docType->id }}"
@@ -429,11 +429,11 @@
                                 @enderror
                             </div>
 
-                            <div class="space-y-2">
+                            <div>
                                 <label for="document_file" class="block text-sm font-medium text-gray-700 mb-1">Select
                                     File <span class="text-red-500">*</span></label>
-                                <input type="file" name="document_file" id="document_file" required
-                                    class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 @error('document_file') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                <input type="file" id="document_file" name="document_file" required
+                                    class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                                 <p class="mt-1 text-xs text-gray-500">PDF, JPG, PNG. Max size: 5MB.</p>
                                 @error('document_file')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -459,13 +459,13 @@
             <div 
                 x-show="activeTab === 'application-process'" 
                 x-cloak 
-                x-data="applicationProcessComponent()"
+                x-data="applicationProcessComponent({{ $errors->any() ? 'true' : 'false' }})"
             >
             <script>
-                function applicationProcessComponent() {
+                function applicationProcessComponent(show = false) {
                     return {
                         predefinedMessages: @json(\App\Models\PreDefinedMessage::all()),
-                        showRemarkForm: false,
+                        showRemarkForm: show,
                         selectedMessage: '',
                         selectedStatus: '',
                         showFileUpload: false,
@@ -523,19 +523,18 @@
                     <div x-show="showRemarkForm" x-cloak x-transition
                         class="border border-gray-200 rounded-lg p-5 mb-6 bg-gray-50">
                         <form action="{{ route('admin.application-progress.store') }}" method="POST"
-                            enctype="multipart/form-data" class="space-y-5">
+                            enctype="multipart/form-data" class="space-y-5" novalidate>
                             @csrf
                             {{-- Add customer_id as needed --}}
                             <input type="hidden" name="customer_id" value="{{ $customer->id }}">
-                            <input type="hidden" name="redirect"
-                                value="{{ route('admin.customers.show', $customer->id) }}#application-process">
+                            <input type="hidden" name="redirect" value="{{ route('admin.customers.show', $customer->id) }}#application-process">
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                                 <div>
                                     <label for="application_status"
                                         class="block text-sm font-medium text-gray-700 mb-1">Application Status <span
                                             class="text-red-500">*</span></label>
-                                    <select name="application_status" id="application_status" required
+                                    <select id="application_status" name="application_status" required
                                         x-model="selectedStatus" @change="updateFileUpload(); updateRemarks()"
                                         class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
                                         <option value="" disabled selected>Select Application Status</option>
@@ -550,25 +549,34 @@
                                         <option value="appointment_rescheduled2">Appointment Rescheduled2</option>
                                         <option value="appointment_rescheduled3">Appointment Rescheduled3</option>
                                     </select>
+                                    @error('application_status')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label for="status_date" class="block text-sm font-medium text-gray-700 mb-1">Status
                                         Date <span class="text-red-500">*</span></label>
-                                    <input type="date" name="status_date" id="status_date" required
+                                    <input type="date" id="status_date" name="status_date" required
                                         value="{{ date('Y-m-d') }}"
                                         class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                    @error('status_date')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 {{-- File Upload Fields --}}
                                 <div x-show="showFileUpload || showAppointmentFields" class="md:col-span-2">
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Upload File <span
                                                     x-show="showFileUpload" class="text-red-500">*</span></label>
-                                            <input type="file" name="file" id="file"
+                                            <input type="file" id="file" name="file" 
                                                 :required="showFileUpload"
                                                 class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                                             <p class="mt-1 text-xs text-gray-500">PDF, JPG, PNG. Max size: 5MB.</p>
+                                            @error('file')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                            @enderror
                                         </div>
 
                                         <div x-show="showAppointmentFields">
@@ -578,6 +586,9 @@
                                             <input type="date" name="appointment_date" id="appointment_date"
                                                 :required="showAppointmentFields"
                                                 class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                            @error('appointment_date')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                            @enderror
                                         </div>
 
                                         <div x-show="showAppointmentFields">
@@ -587,6 +598,9 @@
                                             <input type="time" name="appointment_time" id="appointment_time"
                                                 :required="showAppointmentFields"
                                                 class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                            @error('appointment_time')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -608,6 +622,9 @@
                                         <span class="text-red-500">*</span></label>
                                     <textarea name="remark" id="remark" rows="4" required placeholder="Enter remarks..." x-model="remarks"
                                         class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm"></textarea>
+                                    @error('remark')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
 

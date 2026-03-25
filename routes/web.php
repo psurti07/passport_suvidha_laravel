@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TodayStatisticsController;
 use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\CommonController;
 use App\Http\Controllers\Admin\ApplicationDocumentController;
 use App\Http\Controllers\Admin\ApplicationProgressController;
 use App\Http\Controllers\Admin\LeadController;
@@ -55,7 +56,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('customers', CustomerController::class);
     Route::get('/customers-data', [CustomerController::class,'data'])->name('customers.data');
     Route::put('/customers/{customer}/convert', [CustomerController::class, 'convertToCustomer'])->name('customers.convert');
-    Route::post('/pincode-location', [CustomerController::class, 'getPincodeLocation'])->name('pincode.location');
+    Route::post('/pincode-location', [CommonController::class, 'getPincodeLocation'])->name('pincode.location');
 
     // Application Documents Routes
     Route::resource('application-documents', ApplicationDocumentController::class)->only(['store', 'destroy']);

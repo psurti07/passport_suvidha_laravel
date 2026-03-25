@@ -67,7 +67,7 @@ class ApplicationProgressController extends Controller
             'customer_id' => 'required|exists:customers,id',
             'application_status' => 'required|string|max:255',
             'status_date' => 'required|date',
-            'remark' => 'nullable|string',
+            'remark' => 'required|string',
             'file' => 'required_if:application_status,details_verification,appointment_scheduled,appointment_rescheduled1,appointment_rescheduled2,appointment_rescheduled3|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'redirect' => 'nullable|string',
             'appointment_date' => 'required_if:application_status,appointment_scheduled,appointment_rescheduled1,appointment_rescheduled2,appointment_rescheduled3|nullable|date',
@@ -75,7 +75,7 @@ class ApplicationProgressController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
+            return redirect($request->redirect ?? url()->previous())
                 ->withErrors($validator)
                 ->withInput();
         }
