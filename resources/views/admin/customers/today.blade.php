@@ -71,6 +71,9 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created
                                 </th>
 
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
+                                </th>
+
                             </tr>
 
                         </thead>
@@ -138,12 +141,42 @@ $(function() {
             {
                 data: 'created_at',
                 name: 'created_at'
+            },
+            {
+                data: 'actions',
+                name: 'actions',
+                orderable: false,
+                searchable: false
             }
         ],
 
         dom: 'Blfrtip',
 
-        buttons: ['copy', 'excel', 'csv', 'pdf'],
+        buttons: [{
+                extend: 'copy',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+            {
+                extend: 'excel',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+            {
+                extend: 'csv',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+            {
+                extend: 'pdf',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            }
+        ],
 
         pageLength: 10
 

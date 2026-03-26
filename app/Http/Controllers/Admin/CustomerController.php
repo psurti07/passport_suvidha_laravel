@@ -82,7 +82,23 @@ class CustomerController extends Controller
                 return $row->created_at->format('d/m/Y H:i:s');
             })
 
-            ->rawColumns(['status'])
+            ->addColumn('actions', function ($row) {
+                return '
+                    <a href="'.route('admin.customers.show', $row->id).'" 
+                    class="text-blue-600 hover:text-blue-900" 
+                    title="View Customer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path fill-rule="evenodd"
+                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                ';
+            })
+
+            ->rawColumns(['status','actions'])
 
             ->make(true);
     }
@@ -144,7 +160,23 @@ class CustomerController extends Controller
                 return $row->created_at->format('d/m/Y H:i:s');
             })
 
-            ->rawColumns(['status'])
+            ->addColumn('actions', function ($row) {
+                return '
+                    <a href="'.route('admin.customers.show', $row->id).'" 
+                    class="text-blue-600 hover:text-blue-900" 
+                    title="View Customer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path fill-rule="evenodd"
+                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                ';
+            })
+
+            ->rawColumns(['status','actions'])
 
             ->make(true);
     }
@@ -216,7 +248,7 @@ class CustomerController extends Controller
     {
         // Prevent accessing details page for leads
         if (!$customer->is_paid) {
-            return redirect()->route('admin.customers.index')
+            return redirect()->back()
                              ->with('error', 'Cannot view details for a Lead customer.');
         }
 

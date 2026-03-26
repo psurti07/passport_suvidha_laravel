@@ -459,49 +459,55 @@
             <div 
                 x-show="activeTab === 'application-process'" 
                 x-cloak 
-                x-data="applicationProcessComponent({{ $errors->any() ? 'true' : 'false' }})"
-            >
-            <script>
-                function applicationProcessComponent(show = false) {
-                    return {
-                        predefinedMessages: @json(\App\Models\PreDefinedMessage::all()),
-                        showRemarkForm: show,
-                        selectedMessage: '',
-                        selectedStatus: '',
-                        showFileUpload: false,
-                        showAppointmentFields: false,
-                        remarks: '',
-                        updateRemarks() {
-                            if (this.selectedStatus) {
-                                // Find the predefined message where message_name matches selectedStatus (case-insensitive)
-                                const matched = this.predefinedMessages.find(
-                                    msg => msg.message_name && msg.message_name.toLowerCase() === this.selectedStatus.toLowerCase()
-                                );
-                                if (matched) {
-                                    this.remarks = matched.message_remarks;
-                                } else {
-                                    this.remarks = "";
+                x-data="applicationProcessComponent({{ $errors->any() ? 'true' : 'false' }},'{{ old('application_status') }}')"
+                x-init="init()">
+                
+                <script>
+                    function applicationProcessComponent(show = false, oldStatus = '') {
+                        return {
+                            predefinedMessages: @json(\App\Models\PreDefinedMessage::all()),
+                            showRemarkForm: show,
+                            selectedMessage: '',
+                            selectedStatus: oldStatus || '',
+                            showFileUpload: false,
+                            showAppointmentFields: false,
+                            remarks: '{{ old('remark') }}',
+                            init() {
+                                if (this.selectedStatus) {
+                                    this.updateFileUpload();
+                                    this.updateRemarks();
                                 }
+                            },
+
+                            updateRemarks() {
+                                if (this.selectedStatus) {
+                                    // Find the predefined message where message_name matches selectedStatus (case-insensitive)
+                                    const matched = this.predefinedMessages.find(
+                                        msg => msg.message_name && msg.message_name.toLowerCase() === this.selectedStatus.toLowerCase()
+                                    );
+                                    if (matched && !this.remarks) {
+                                        this.remarks = matched.message_remarks;
+                                    }
+                                }
+                            },
+                            updateFileUpload() {
+                                this.showFileUpload = [
+                                    'details_verification', 
+                                    'appointment_scheduled', 
+                                    'appointment_rescheduled1', 
+                                    'appointment_rescheduled2', 
+                                    'appointment_rescheduled3'
+                                ].includes(this.selectedStatus);
+                                this.showAppointmentFields = [
+                                    'appointment_scheduled', 
+                                    'appointment_rescheduled1', 
+                                    'appointment_rescheduled2', 
+                                    'appointment_rescheduled3'
+                                ].includes(this.selectedStatus);
                             }
-                        },
-                        updateFileUpload() {
-                            this.showFileUpload = [
-                                'details_verification', 
-                                'appointment_scheduled', 
-                                'appointment_rescheduled1', 
-                                'appointment_rescheduled2', 
-                                'appointment_rescheduled3'
-                            ].includes(this.selectedStatus);
-                            this.showAppointmentFields = [
-                                'appointment_scheduled', 
-                                'appointment_rescheduled1', 
-                                'appointment_rescheduled2', 
-                                'appointment_rescheduled3'
-                            ].includes(this.selectedStatus);
                         }
                     }
-                }
-            </script>
+                </script>
 
                 {{-- Alpine component for form toggle --}}
                 <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
@@ -537,7 +543,7 @@
                                     <select id="application_status" name="application_status" required
                                         x-model="selectedStatus" @change="updateFileUpload(); updateRemarks()"
                                         class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
-                                        <option value="" disabled selected>Select Application Status</option>
+                                        <option value="" disabled>Select Application Status</option>
                                         <option value="in_process">In Process</option>
                                         <option value="documents_submitted">Documents Submitted</option>
                                         <option value="details_verification">Details Verification</option>
