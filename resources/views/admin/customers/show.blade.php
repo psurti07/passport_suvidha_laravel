@@ -461,53 +461,6 @@
                 x-cloak 
                 x-data="applicationProcessComponent({{ $errors->any() ? 'true' : 'false' }},'{{ old('application_status') }}')"
                 x-init="init()">
-                
-                <script>
-                    function applicationProcessComponent(show = false, oldStatus = '') {
-                        return {
-                            predefinedMessages: @json(\App\Models\PreDefinedMessage::all()),
-                            showRemarkForm: show,
-                            selectedMessage: '',
-                            selectedStatus: oldStatus || '',
-                            showFileUpload: false,
-                            showAppointmentFields: false,
-                            remarks: '{{ old('remark') }}',
-                            init() {
-                                if (this.selectedStatus) {
-                                    this.updateFileUpload();
-                                    this.updateRemarks();
-                                }
-                            },
-
-                            updateRemarks() {
-                                if (this.selectedStatus) {
-                                    // Find the predefined message where message_name matches selectedStatus (case-insensitive)
-                                    const matched = this.predefinedMessages.find(
-                                        msg => msg.message_name && msg.message_name.toLowerCase() === this.selectedStatus.toLowerCase()
-                                    );
-                                    if (matched && !this.remarks) {
-                                        this.remarks = matched.message_remarks;
-                                    }
-                                }
-                            },
-                            updateFileUpload() {
-                                this.showFileUpload = [
-                                    'details_verification', 
-                                    'appointment_scheduled', 
-                                    'appointment_rescheduled1', 
-                                    'appointment_rescheduled2', 
-                                    'appointment_rescheduled3'
-                                ].includes(this.selectedStatus);
-                                this.showAppointmentFields = [
-                                    'appointment_scheduled', 
-                                    'appointment_rescheduled1', 
-                                    'appointment_rescheduled2', 
-                                    'appointment_rescheduled3'
-                                ].includes(this.selectedStatus);
-                            }
-                        }
-                    }
-                </script>
 
                 {{-- Alpine component for form toggle --}}
                 <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
@@ -572,7 +525,7 @@
 
                                 {{-- File Upload Fields --}}
                                 <div x-show="showFileUpload || showAppointmentFields" class="md:col-span-2">
-                                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                                    <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5"> -->
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Upload File <span
                                                     x-show="showFileUpload" class="text-red-500">*</span></label>
@@ -585,7 +538,7 @@
                                             @enderror
                                         </div>
 
-                                        <div x-show="showAppointmentFields">
+                                        <div class="mt-4" x-show="showAppointmentFields">
                                             <label for="appointment_date"
                                                 class="block text-sm font-medium text-gray-700 mb-1">Appointment Date <span
                                                     class="text-red-500">*</span></label>
@@ -597,7 +550,7 @@
                                             @enderror
                                         </div>
 
-                                        <div x-show="showAppointmentFields">
+                                        <div class="mt-4" x-show="showAppointmentFields">
                                             <label for="appointment_time"
                                                 class="block text-sm font-medium text-gray-700 mb-1">Appointment Time <span
                                                     class="text-red-500">*</span></label>
@@ -608,20 +561,20 @@
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
 
-                                {{-- <div>
+                                <div class="md:col-span-2">
                                     <label for="predefined_message"
                                         class="block text-sm font-medium text-gray-700 mb-1">Pre-defined Messages</label>
                                     <select name="predefined_message" id="predefined_message" x-model="selectedMessage" @change="updateRemarks()"
                                         class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
                                         <option value="" selected>Select Message (Optional)</option>
                                         @foreach (\App\Models\PreDefinedMessage::all() as $message)
-                                            <option value="{{ $message->message_remarks }}">{{ $message->message_name }}</option>
+                                            <option value="{{ $message->message_name }}">{{ $message->message_name }}</option>
                                         @endforeach
                                     </select>
-                                </div> --}}
+                                </div> 
 
                                 <div class="md:col-span-2">
                                     <label for="remark" class="block text-sm font-medium text-gray-700 mb-1">Remarks
@@ -902,6 +855,65 @@
         });
 
     });
+
+    function applicationProcessComponent(show = false, oldStatus = '') {
+        return {
+            predefinedMessages: @json(\App\Models\PreDefinedMessage::all()),
+            showRemarkForm: show,
+            selectedMessage: '',
+            selectedStatus: oldStatus || '',
+            showFileUpload: false,
+            showAppointmentFields: false,
+            remarks: '{{ old('remark') }}',
+            init() {
+                if (this.selectedStatus) {
+                    this.updateFileUpload();
+                    this.updateRemarks();
+                }
+            },
+            updateRemarks() {
+                if (!this.selectedMessage) {
+                    this.remarks = ''; 
+                    return;
+                }
+    
+                if (this.selectedMessage) {
+                    const matched = this.predefinedMessages.find(
+                        msg => msg.message_name === this.selectedMessage
+                    );
+
+                    if (matched && (!this.remarks || this.selectedMessage)) {
+                        this.remarks = matched.message_remarks;
+                    }
+                } 
+                else if (this.selectedStatus) {
+                    const matched = this.predefinedMessages.find(
+                        msg => msg.message_name && 
+                            msg.message_name.toLowerCase() === this.selectedStatus.toLowerCase()
+                    );
+
+                    if (matched && !this.remarks) {
+                        this.remarks = matched.message_remarks;
+                    }
+                }
+            },
+            updateFileUpload() {
+                this.showFileUpload = [
+                    'details_verification', 
+                    'appointment_scheduled', 
+                    'appointment_rescheduled1', 
+                    'appointment_rescheduled2', 
+                    'appointment_rescheduled3'
+                ].includes(this.selectedStatus);
+                this.showAppointmentFields = [
+                    'appointment_scheduled', 
+                    'appointment_rescheduled1', 
+                    'appointment_rescheduled2', 
+                    'appointment_rescheduled3'
+                ].includes(this.selectedStatus);
+            }
+        }
+    }
 </script>
 @endpush
 
