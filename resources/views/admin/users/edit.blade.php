@@ -11,7 +11,7 @@
             </div>
 
             <div class="p-8 pt-0">
-                <form method="POST" action="{{ route('admin.users.update', $user) }}" class="space-y-6">
+                <form method="POST" action="{{ route('admin.users.update', $user) }}" class="space-y-6" novalidate>
                     @csrf
                     @method('PUT')
 

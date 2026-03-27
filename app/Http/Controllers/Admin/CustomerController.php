@@ -4,26 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use App\Models\Customer;
 use App\Models\ApplicationOrder;
 use App\Models\Invoice;
 use App\Models\InvoiceLog;
 use App\Models\ApplicationStatus;
-
 use Illuminate\Validation\Rule;
-
-// use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-// use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon; 
 use Illuminate\Support\Str;
-
 use Illuminate\Support\Facades\Hash;
-
 use Yajra\DataTables\Facades\DataTables;
-
 use Illuminate\Support\Facades\Validator;
 class CustomerController extends Controller
 {

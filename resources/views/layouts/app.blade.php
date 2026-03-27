@@ -701,7 +701,7 @@
                     <span class="nav-link-text">Create An Account</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">ALL LEADS </div>
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">ALL LEADS </div>
 
                 <a href="{{ route('admin.leads.normal') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.leads.normal') ? 'active' : '' }}"
@@ -723,9 +723,9 @@
                         </path>
                     </svg>
                     <span class="nav-link-text">Tatkal Leads</span>
-                </a>
+                </a> -->
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">ALL OFFER PAGES </div>
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">ALL OFFER PAGES </div>
 
                 <a href="{{ route('admin.customers.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.*') && !request()->routeIs('admin.customers.today') ? 'active' : '' }}"
@@ -758,9 +758,9 @@
                         </path>
                     </svg>
                     <span class="nav-link-text">Bumper Offer</span>
-                </a>
+                </a> -->
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">LOAN APPLICATION </div>
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">LOAN APPLICATION </div>
 
                 <a href="{{ route('admin.customers.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.*') && !request()->routeIs('admin.customers.today') ? 'active' : '' }}"
@@ -782,7 +782,7 @@
                         </path>
                     </svg>
                     <span class="nav-link-text">Tatkal Application</span>
-                </a>
+                </a> -->
 
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">REPORTS</div>
 
@@ -837,7 +837,7 @@
                     <span class="nav-link-text">Guest Support</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SMS</div>
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SMS</div>
 
                 <a href="{{ route('admin.otps.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
@@ -870,7 +870,7 @@
                         </path>
                     </svg>
                     <span class="nav-link-text">Remarketing Log</span>
-                </a>
+                </a> -->
 
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SYSTEM</div>
 
@@ -885,7 +885,7 @@
                     <span class="nav-link-text">OTP Management</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">DND LIST</div>
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">DND LIST</div>
 
                 <a href="{{ route('admin.otps.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
@@ -907,9 +907,9 @@
                         </path>
                     </svg>
                     <span class="nav-link-text">Tatkal Dnd List</span>
-                </a>
+                </a> -->
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">PAYMENT LOG</div>
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">PAYMENT LOG</div>
 
                 <a href="{{ route('admin.otps.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
@@ -942,7 +942,7 @@
                         </path>
                     </svg>
                     <span class="nav-link-text">Paytm</span>
-                </a>
+                </a> -->
 
                 {{-- Documents Section --}}
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">DOCUMENTS</div>
@@ -998,7 +998,7 @@
                     <span class="nav-link-text">Document Types</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">OTHER OPTIONS</div>
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">OTHER OPTIONS</div>
 
                 <a href="{{ route('admin.otps.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
@@ -1031,7 +1031,7 @@
                         </path>
                     </svg>
                     <span class="nav-link-text">Pages</span>
-                </a>
+                </a> -->
 
                 {{-- Staff Management Section --}}
                 @if (Auth::check() && Auth::user()->isAdmin())

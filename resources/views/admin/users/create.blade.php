@@ -11,7 +11,7 @@
             </div>
 
             <div class="p-8 p-0">
-                <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-6">
+                <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-6" novalidate>
                     @csrf
 
                     <!-- Name Field -->
