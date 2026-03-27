@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\ApplicationOrder;
 use App\Models\Invoice;
 use App\Models\InvoiceLog;
+use App\Models\ApplicationStatus;
 
 use Illuminate\Validation\Rule;
 
@@ -253,8 +254,10 @@ class CustomerController extends Controller
         }
 
         $customer->load('applicationDocuments.documentType');
+
+        $statuses = ApplicationStatus::orderBy('priority_no')->get();
         
-        return view('admin.customers.show', compact('customer'));
+        return view('admin.customers.show', compact('customer', 'statuses'));
     }
 
     /**

@@ -462,6 +462,67 @@
                 x-data="applicationProcessComponent({{ $errors->any() ? 'true' : 'false' }},'{{ old('application_status') }}')"
                 x-init="init()">
 
+                <script>
+                    function applicationProcessComponent(show = false, oldStatus = '') {
+                        return {
+                            predefinedMessages: @json(\App\Models\PreDefinedMessage::all()),
+                            showRemarkForm: show,
+                            selectedMessage: '',
+                            selectedStatus: oldStatus || '',
+                            showFileUpload: false,
+                            showAppointmentFields: false,
+                            remarks: '{{ old('remark') }}',
+                            init() {
+                                if (this.selectedStatus) {
+                                    this.updateFileUpload();
+                                    this.updateRemarks();
+                                }
+                            },
+                            updateRemarks() {
+                                if (!this.selectedMessage) {
+                                    this.remarks = ''; 
+                                    return;
+                                }
+                    
+                                if (this.selectedMessage) {
+                                    const matched = this.predefinedMessages.find(
+                                        msg => msg.message_name === this.selectedMessage
+                                    );
+
+                                    if (matched && (!this.remarks || this.selectedMessage)) {
+                                        this.remarks = matched.message_remarks;
+                                    }
+                                } 
+                                else if (this.selectedStatus) {
+                                    const matched = this.predefinedMessages.find(
+                                        msg => msg.message_name && 
+                                            msg.message_name.toLowerCase() === this.selectedStatus.toLowerCase()
+                                    );
+
+                                    if (matched && !this.remarks) {
+                                        this.remarks = matched.message_remarks;
+                                    }
+                                }
+                            },
+                            updateFileUpload() {
+                                this.showFileUpload = [
+                                    'details_verification', 
+                                    'appointment_scheduled', 
+                                    'appointment_rescheduled1', 
+                                    'appointment_rescheduled2', 
+                                    'appointment_rescheduled3'
+                                ].includes(this.selectedStatus);
+                                this.showAppointmentFields = [
+                                    'appointment_scheduled', 
+                                    'appointment_rescheduled1', 
+                                    'appointment_rescheduled2', 
+                                    'appointment_rescheduled3'
+                                ].includes(this.selectedStatus);
+                            }
+                        }
+                    }
+                </script>
+                
                 {{-- Alpine component for form toggle --}}
                 <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
                     <div class="flex justify-between items-center mb-4">
@@ -497,16 +558,11 @@
                                         x-model="selectedStatus" @change="updateFileUpload(); updateRemarks()"
                                         class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
                                         <option value="" disabled>Select Application Status</option>
-                                        <option value="in_process">In Process</option>
-                                        <option value="documents_submitted">Documents Submitted</option>
-                                        <option value="details_verification">Details Verification</option>
-                                        <option value="appointment_scheduled">Appointment Scheduled</option>
-                                        <option value="pov_success">POV Success</option>
-                                        <option value="pov_failed">POV Failed</option>
-                                        <option value="pov_insufficient_documents">POV Insufficient Documents</option>
-                                        <option value="appointment_rescheduled1">Appointment Rescheduled1</option>
-                                        <option value="appointment_rescheduled2">Appointment Rescheduled2</option>
-                                        <option value="appointment_rescheduled3">Appointment Rescheduled3</option>
+                                        @foreach ($statuses as $status)
+                                            <option value="{{ $status->slug }}">
+                                                {{ $status->status_name }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                     @error('application_status')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -855,65 +911,6 @@
         });
 
     });
-
-    function applicationProcessComponent(show = false, oldStatus = '') {
-        return {
-            predefinedMessages: @json(\App\Models\PreDefinedMessage::all()),
-            showRemarkForm: show,
-            selectedMessage: '',
-            selectedStatus: oldStatus || '',
-            showFileUpload: false,
-            showAppointmentFields: false,
-            remarks: '{{ old('remark') }}',
-            init() {
-                if (this.selectedStatus) {
-                    this.updateFileUpload();
-                    this.updateRemarks();
-                }
-            },
-            updateRemarks() {
-                if (!this.selectedMessage) {
-                    this.remarks = ''; 
-                    return;
-                }
-    
-                if (this.selectedMessage) {
-                    const matched = this.predefinedMessages.find(
-                        msg => msg.message_name === this.selectedMessage
-                    );
-
-                    if (matched && (!this.remarks || this.selectedMessage)) {
-                        this.remarks = matched.message_remarks;
-                    }
-                } 
-                else if (this.selectedStatus) {
-                    const matched = this.predefinedMessages.find(
-                        msg => msg.message_name && 
-                            msg.message_name.toLowerCase() === this.selectedStatus.toLowerCase()
-                    );
-
-                    if (matched && !this.remarks) {
-                        this.remarks = matched.message_remarks;
-                    }
-                }
-            },
-            updateFileUpload() {
-                this.showFileUpload = [
-                    'details_verification', 
-                    'appointment_scheduled', 
-                    'appointment_rescheduled1', 
-                    'appointment_rescheduled2', 
-                    'appointment_rescheduled3'
-                ].includes(this.selectedStatus);
-                this.showAppointmentFields = [
-                    'appointment_scheduled', 
-                    'appointment_rescheduled1', 
-                    'appointment_rescheduled2', 
-                    'appointment_rescheduled3'
-                ].includes(this.selectedStatus);
-            }
-        }
-    }
 </script>
 @endpush
 
