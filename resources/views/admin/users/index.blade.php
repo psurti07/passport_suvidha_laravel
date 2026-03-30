@@ -75,7 +75,8 @@
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Email</th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Active</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Active
+                                </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created
                                 </th>
@@ -123,7 +124,7 @@ $(function() {
             data: function(d) {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
-                d.status = $('#status').val(); 
+                d.status = $('#status').val();
             }
         },
 

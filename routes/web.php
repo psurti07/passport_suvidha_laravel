@@ -108,8 +108,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('document-types', DocumentTypeController::class);
     
     // Users Routes
-    // Route::get('users/export', [UserController::class, 'export'])->name('users.export');
-
     Route::resource('users', UserController::class);  
     Route::get('/users-data', [UserController::class, 'data'])->name('users.data');  
 
