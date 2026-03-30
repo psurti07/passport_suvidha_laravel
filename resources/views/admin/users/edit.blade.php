@@ -4,7 +4,7 @@
 <div class="py-2 lg:py-8">
     <div class="max-w-3xl mx-auto sm:px-1 lg:px-8">
         <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-            <!-- Header Section -->
+            {{-- Header Section --}}
             <div class="px-8 py-4 lg:py-6 bg-gray-50 border-b border-gray-200">
                 <h2 class="text-2xl font-bold text-gray-900">Edit Staff User</h2>
                 <p class="text-sm text-gray-600 mt-1">Update staff member information</p>
@@ -15,7 +15,7 @@
                     @csrf
                     @method('PUT')
 
-                    <!-- Name Field -->
+                    {{-- Name Field --}}
                     <div class="space-y-2">
                         <label for="name" class="block text-sm font-semibold text-gray-900">
                             Full Name
@@ -30,8 +30,8 @@
                                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
                             </div>
-                            <input type="text" id="name" name="name"
-                                value="{{ old('name', $user->name) }}" required placeholder="Enter staff member's full name"
+                            <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required
+                                placeholder="Enter staff member's full name"
                                 class="peer p-2 pl-10 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                        hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                        transition-all duration-200 placeholder-gray-400
@@ -49,7 +49,7 @@
                         @enderror
                     </div>
 
-                    <!-- Email Field -->
+                    {{-- Email Field --}}
                     <div class="space-y-2">
                         <label for="email" class="block text-sm font-semibold text-gray-900">
                             Email Address
@@ -64,8 +64,8 @@
                                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
                             </div>
-                            <input type="email" id="email" name="email"
-                                value="{{ old('email', $user->email) }}" required placeholder="Enter staff member's email address"
+                            <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}"
+                                required placeholder="Enter staff member's email address"
                                 class="peer p-2 pl-10 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                        hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                        transition-all duration-200 placeholder-gray-400
@@ -83,7 +83,7 @@
                         @enderror
                     </div>
 
-                    <!-- Account Status -->
+                    {{-- Account Status --}}
                     <div class="space-y-2">
                         <label class="block text-sm font-semibold text-gray-900">
                             Account Status
@@ -115,7 +115,7 @@
                         @enderror
                     </div>
 
-                    <!-- User Roles -->
+                    {{-- User Roles --}}
                     @if(isset($roles) && count($roles) > 0)
                     <div class="space-y-2">
                         <label class="block text-sm font-semibold text-gray-900">
@@ -145,7 +145,7 @@
                     </div>
                     @endif
 
-                    <!-- Form Actions -->
+                    {{-- Form Actions --}}
                     <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
                         <a href="{{ route('admin.users.index') }}"
                             class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200">

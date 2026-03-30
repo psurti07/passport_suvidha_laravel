@@ -261,7 +261,11 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        return view('admin.customers.edit', compact('customer'));
+        return view('admin.customers.edit', [
+            'cardNumber' => generateCardNumber(),
+            'paymentId'   => generatePaymentId(),
+            'customer' => $customer
+        ]);
     }
 
     /**
@@ -313,6 +317,9 @@ class CustomerController extends Controller
         return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully');
     }
 
+    /**
+     * Handle both creating new customer and converting lead to customer
+    */
     public function convertToCustomer(Request $request, Customer $customer)
     {
         if ($customer->is_paid) {

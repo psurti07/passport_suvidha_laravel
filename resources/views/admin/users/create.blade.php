@@ -4,7 +4,6 @@
 <div class="py-2 lg:py-8">
     <div class="max-w-3xl mx-auto sm:px-1 lg:px-8">
         <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-            <!-- Header Section -->
             <div class="px-8 py-4 lg:py-6 bg-gray-50 border-b border-gray-200">
                 <h2 class="text-2xl font-bold text-gray-900">Create New Staff User</h2>
                 <p class="text-sm text-gray-600 mt-1">Add a new staff member to your team</p>
@@ -14,7 +13,7 @@
                 <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-6" novalidate>
                     @csrf
 
-                    <!-- Name Field -->
+                    {{-- Name Field --}}
                     <div class="space-y-2">
                         <label for="name" class="block text-sm font-semibold text-gray-900">
                             Full Name
@@ -56,7 +55,7 @@
                         @enderror
                     </div>
 
-                    <!-- Email Field -->
+                    {{-- Email Field --}}
                     <div class="space-y-2">
                         <label for="email" class="block text-sm font-semibold text-gray-900">
                             Email Address
@@ -98,9 +97,9 @@
                         @enderror
                     </div>
 
-                    <!-- Password Fields Group -->
+                    {{-- Password Fields Group --}}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Password Field -->
+                        {{-- Password Field --}}
                         <div class="space-y-2">
                             <label for="password" class="block text-sm font-semibold text-gray-900">
                                 Password
@@ -144,7 +143,7 @@
                             @enderror
                         </div>
 
-                        <!-- Confirm Password Field -->
+                        {{-- Confirm Password Field --}}
                         <div class="space-y-2">
                             <label for="password-confirm" class="block text-sm font-semibold text-gray-900">
                                 Confirm Password
@@ -177,7 +176,7 @@
                         </div>
                     </div>
 
-                    <!-- Password Requirements -->
+                    {{-- Password Requirements --}}
                     <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
                         <h4 class="text-sm font-semibold text-gray-900 mb-2">Password Requirements:</h4>
                         <ul class="space-y-1">
@@ -208,7 +207,7 @@
                         </ul>
                     </div>
 
-                    <!-- Form Actions -->
+                    {{-- Form Actions --}}
                     <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
                         <a href="{{ route('admin.users.index') }}"
                             class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200">

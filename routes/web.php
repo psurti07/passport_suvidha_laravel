@@ -106,6 +106,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Document Types Routes
     Route::resource('document-types', DocumentTypeController::class);
+    Route::get('/document-types-data', [DocumentTypeController::class, 'data'])->name('document-types.data'); 
     
     // Users Routes
     Route::resource('users', UserController::class);  

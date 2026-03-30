@@ -18,9 +18,6 @@ class UserController extends Controller
         $this->middleware('admin');
     }
 
-    /**
-     * Display a listing of staff users.
-     */
     public function index()
     {
         if (!auth()->user()->isAdmin()) {
@@ -137,9 +134,6 @@ class UserController extends Controller
             ->make(true);
     }
 
-    /**
-     * Show the form for creating a new staff user.
-     */
     public function create()
     {
         if (!auth()->user()->isAdmin()) {
@@ -148,9 +142,6 @@ class UserController extends Controller
         return view('admin.users.create');
     }
 
-    /**
-     * Store a newly created staff user.
-     */
     public function store(Request $request)
     {
         if (!auth()->user()->isAdmin()) {
@@ -175,9 +166,6 @@ class UserController extends Controller
             ->with('success', 'Staff user created successfully.');
     }
 
-    /**
-     * Display the specified staff user.
-     */
     public function show(User $user)
     {
         if (!auth()->user()->isAdmin()) {
@@ -190,9 +178,6 @@ class UserController extends Controller
         return view('admin.users.show', compact('user'));
     }
 
-    /**
-     * Show the form for editing the specified staff user.
-     */
     public function edit(User $user)
     {
         if (!auth()->user()->isAdmin()) {
@@ -205,9 +190,6 @@ class UserController extends Controller
         return view('admin.users.edit', compact('user'));
     }
 
-    /**
-     * Update the specified staff user.
-     */
     public function update(Request $request, User $user)
     {
         if (!auth()->user()->isAdmin()) {
@@ -234,9 +216,6 @@ class UserController extends Controller
             ->with('success', 'Staff user updated successfully.');
     }
 
-    /**
-     * Remove the specified staff user.
-     */
     public function destroy(User $user)
     {
         if (!auth()->user()->isAdmin()) {
