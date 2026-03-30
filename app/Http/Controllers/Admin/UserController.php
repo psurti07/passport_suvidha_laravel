@@ -55,12 +55,12 @@ class UserController extends Controller
                 $to . ' 23:59:59'
             ]);
 
-        if ($request->filled('status')) {
-            if ($request->status == 'active') {
+        if ($request->filled('is_active')) {
+            if ($request->is_active == '1') {
                 $query->where('is_active', 1);
             }
 
-            if ($request->status == 'inactive') {
+            if ($request->is_active == '0') {
                 $query->where('is_active', 0);
             }
         }
@@ -69,7 +69,7 @@ class UserController extends Controller
 
             ->addIndexColumn()
 
-            ->addColumn('status', function ($row) {
+            ->addColumn('is_active', function ($row) {
                 return $row->is_active ? 1 : 0;
             })
 

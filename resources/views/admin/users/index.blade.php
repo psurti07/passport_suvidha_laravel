@@ -39,10 +39,10 @@
 
                         <div>
                             <label class="text-sm">Status</label>
-                            <select id="status" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
+                            <select id="is_active" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
                                 <option value="">All</option>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
                             </select>
                         </div>
 
@@ -124,7 +124,7 @@ $(function() {
             data: function(d) {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
-                d.status = $('#status').val();
+                d.is_active = $('#is_active').val();
             }
         },
 
@@ -141,7 +141,7 @@ $(function() {
                 name: 'email'
             },
             {
-                data: 'status',
+                data: 'is_active',
                 name: 'is_active',
                 render: function(data) {
                     return data === 1 ?
