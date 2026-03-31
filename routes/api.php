@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\FinalDetailController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\RequiredDocumentsController;
+use App\Http\Controllers\Api\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,8 +35,10 @@ Route::post('/customers/create', [CustomerController::class, 'create'])->name('a
 
 // Customer login route
 Route::post('/customers/login', [CustomerController::class, 'login'])->name('api.customers.login');
+Route::middleware('auth:sanctum')
+     ->put('/customers/{customer}', [CustomerController::class, 'update']);
 
-// OTP routes
+// OTP 
 // STEP-1 : OTP Send
 Route::post('/otp/send', [OtpController::class, 'send']);
 // STEP-2 : OTP verification
@@ -62,7 +65,12 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
 
 
     // Application Progress Route - only the customer status endpoint
-    Route::get('/application-progress', [ApplicationProgressController::class, 'getCustomerApplicationStatus'])->name('api.application-progress.status');
+    // Route::get('/application-progress', [ApplicationProgressController::class, 'getCustomerApplicationStatus'])->name('api.application-progress.status');
+
+    Route::middleware('auth:sanctum')->get(
+    '/application-progress',
+    [ApplicationProgressController::class, 'getCustomerApplicationStatus']
+);
 
     // Application Review Routes
     Route::get('/application-review/summary', [FinalDetailController::class, 'getApplicationSummary'])->name('api.application-review.summary');
@@ -84,4 +92,10 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
         Route::get('/download/{document_type_id}', [RequiredDocumentsController::class, 'download'])->name('api.required-documents.download');
         Route::delete('/{document_type_id}', [RequiredDocumentsController::class, 'delete'])->name('api.required-documents.delete');
     });
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/create-order', [PaymentController::class, 'createOrder']);
+    Route::post('/verify-payment', [PaymentController::class, 'verifyPayment']);
 });

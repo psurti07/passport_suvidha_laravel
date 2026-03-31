@@ -99,54 +99,60 @@ class CustomerController extends Controller
      * @param  Customer $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Customer $customer)
-    {
-        $baseRules = [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'mobile_number' => 'required|string|max:20',
-            'email' => ['required', 'email', Rule::unique('customers')->ignore($customer->id)],
-            'is_paid' => 'sometimes|boolean',
-        ];
+public function update(Request $request, Customer $customer)
+{
+    $isPaid = $request->input('is_paid', $customer->is_paid);
 
-        $paidRules = [
-            'address' => 'required|string',
-            'gender' => 'required|in:male,female,other',
-            'date_of_birth' => 'required|date',
-            'place_of_birth' => 'required|string|max:255',
-            'nationality' => 'required|string|max:255',
-            'payment_info_id' => 'required|numeric',
-            'service_code' => 'required|string|max:255',
-        ];
+    // ✅ Base rules (always applied)
+    
+    $rules = [
+        'first_name' => 'required|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'mobile_number' => 'required|string|max:20',
+        'email' => ['required', 'email', Rule::unique('customers')->ignore($customer->id)],
 
-        $isPaid = $request->input('is_paid', $customer->is_paid);
+        // ✅ Always allow these fields (nullable)
+        'address' => 'nullable|string',
+        'gender' => 'nullable|in:male,female,other',
+        'date_of_birth' => 'nullable|date',
+        'place_of_birth' => 'nullable|string|max:255',
+        'nationality' => 'nullable|string|max:255',
+        'service_code' => 'nullable|string|max:255',
+    ];
 
-        $rules = $baseRules;
-        if ($isPaid) {
-            $rules = array_merge($rules, $paidRules);
-        }
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $data = $validator->validated();
-        $data['is_paid'] = $request->has('is_paid') ? $request->input('is_paid') : $customer->is_paid;
-
-        if (!$data['is_paid']) {
-            $nullableFields = ['address', 'gender', 'date_of_birth', 'place_of_birth', 'nationality', 'payment_info_id', 'service_code'];
-            foreach ($nullableFields as $field) {
-                if (!isset($data[$field])) {
-                    $data[$field] = null;
-                }
-            }
-        }
-
-        $customer->update($data);
-        return response()->json($customer);
+    // ✅ If paid → make them required
+    if ($isPaid) {
+        $rules['address'] = 'required|string';
+        $rules['gender'] = 'required|in:male,female,other';
+        $rules['date_of_birth'] = 'required|date';
+        $rules['place_of_birth'] = 'required|string|max:255';
+        $rules['nationality'] = 'required|string|max:255';
     }
+
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    $data = $validator->validated();
+
+    // ✅ Preserve is_paid
+    $data['is_paid'] = $request->has('is_paid')
+        ? $request->input('is_paid')
+        : $customer->is_paid;
+
+    // ❌ REMOVE THIS BLOCK COMPLETELY (was causing issue)
+    /*
+    if (!$data['is_paid']) {
+        ...
+    }
+    */
+
+    $customer->update($data);
+
+    return response()->json($customer);
+}
 
     /**
      * Remove the specified resource from storage.

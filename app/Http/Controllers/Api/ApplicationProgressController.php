@@ -20,6 +20,11 @@ class ApplicationProgressController extends Controller
     public function getCustomerApplicationStatus()
     {
         $user = Auth::user();
+        if (!$user) {
+    return response()->json([
+        'message' => 'Unauthenticated'
+    ], 401);
+}
         $userId = $user->id;
         
         // Get all progress entries for the customer

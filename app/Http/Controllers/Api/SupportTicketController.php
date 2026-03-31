@@ -11,6 +11,8 @@ use App\Http\Resources\TicketResource;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use App\Services\SmsService;
+use Illuminate\Support\Facades\Mail;
 
 class SupportTicketController extends Controller
 {
@@ -90,32 +92,74 @@ class SupportTicketController extends Controller
             $ticketData['message'] = $validatedData['message'];
 
         } else {
-            // Guest User (Not authenticated or not a Customer instance)
+           // Guest User (Not authenticated or not a Customer instance)
             $rules['name'] = 'required|string|max:255';
             $rules['email'] = 'required|email|max:255';
-
-            // Validate all rules for guest users
+            $rules['mobile_number'] = 'required|digits:10'; // ✅ ADD THIS
+            
             $validator = Validator::make($request->all(), $rules);
-
+            
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 422);
             }
-
-            // Get all validated data for guests
+            
             $validatedData = $validator->validated();
-
-            $ticketData['customer_id'] = null; // No associated customer for guests
+            
+            $ticketData['customer_id'] = null;
             $ticketData['name'] = $validatedData['name'];
             $ticketData['email'] = $validatedData['email'];
             $ticketData['subject'] = $validatedData['subject'];
             $ticketData['message'] = $validatedData['message'];
+            
+            // ✅ store mobile for SMS
+            $mobileNumber = $validatedData['mobile_number'];
         }
+            
+            //
+            // CREATE TICKET
+            //
+            $ticket = Ticket::create($ticketData);
+            
+            $smsService = new SmsService();
+            
+            try {
+            
+                // ✅ determine mobile + name for BOTH cases
+                if ($customer instanceof Customer) {
+                    $mobileNumber = $customer->mobile_number;
+                    $name = $ticketData['name'];
+                }
 
-        // Create the ticket in the database using combined data
-        $ticket = Ticket::create($ticketData);
+                // =========================
+                // 📧 SEND EMAIL
+                // =========================
+                if (!empty($ticketData['email'])) {
+                    Mail::raw(
+                        "Hello $name,\n\nYour support ticket (#{$ticket->id}) has been created successfully.\n\nSubject: {$ticket->subject}\n\nWe will get back to you soon.\n\nThank you.",
+                        function ($message) use ($ticketData) {
+                            $message->to($ticketData['email'])
+                                    ->subject('Support Ticket Created');
+                        }
+                    );
+                }
 
-        // Return the created ticket using TicketResource
-        return new TicketResource($ticket);
+                // if (!empty($mobileNumber)) {
+
+        // ✅ FIXED message (no #, no undefined variable)
+
+        // $message = "Hello, 123456 is the OTP for logging into your Passport Suvidha account. Please don't share this with others. Thank you.";
+
+        // $response = $smsService->sendSms($mobileNumber, $message);
+
+        // Log::info('TICKET SMS RESULT', $response);
+        //         }
+            
+            } catch (\Exception $e) {
+                Log::error("SMS Failed: " . $e->getMessage());
+            }
+            
+            // Return response
+            return new TicketResource($ticket);
     }
 
     // TODO: Add show, update, destroy methods as needed
