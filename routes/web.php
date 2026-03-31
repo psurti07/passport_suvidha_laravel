@@ -99,9 +99,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('appointment-letters/{appointmentLetter}/download', [AppointmentLetterController::class, 'download'])->name('appointment-letters.download');
     Route::get('appointment-letters/{appointmentLetter}/preview', [AppointmentLetterController::class, 'preview'])->name('appointment-letters.preview');
     Route::resource('appointment-letters', AppointmentLetterController::class);
+    Route::get('/appointment-letters-data', [AppointmentLetterController::class, 'data'])->name('appointment-letters.data'); 
 
     // Predefined Messages Routes
-    // Route::get('predefined-messages/export', [PreDefinedMessageController::class, 'export'])->name('predefined-messages.export');
     Route::resource('predefined-messages', PreDefinedMessageController::class);
     Route::get('/predefined-messages-data', [PreDefinedMessageController::class, 'data'])->name('predefined-messages.data'); 
 

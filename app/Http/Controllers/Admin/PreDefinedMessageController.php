@@ -25,15 +25,15 @@ class PreDefinedMessageController extends Controller
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
         $query = PreDefinedMessage::with('status')->select([
-                'id',
-                'status_id',
-                'message_name',
-                'message_remarks',
-                'created_at',
-                'updated_at',
+                'pre_defined_messages.id',
+                'pre_defined_messages.status_id',
+                'pre_defined_messages.message_name',
+                'pre_defined_messages.message_remarks',
+                'pre_defined_messages.created_at',
+                'pre_defined_messages.updated_at',
             ])
 
-            ->whereBetween('created_at', [
+            ->whereBetween('pre_defined_messages.created_at', [
                 $from . ' 00:00:00',
                 $to . ' 23:59:59'
             ]);
