@@ -87,8 +87,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Otp Routes
     Route::get('otps', [OtpController::class, 'index'])->name('otps.index');
-    Route::get('otps/export', [OtpController::class, 'export'])->name('otps.export');
-    // Add other admin routes here as needed
+    // Route::get('otps/export', [OtpController::class, 'export'])->name('otps.export');
+    Route::get('/otps-data', [OtpController::class, 'data'])->name('otps.data'); 
 
     // Final Details Routes
     Route::patch('final-details/{finalDetail}/approve', [FinalDetailController::class, 'approve'])->name('final-details.approve');
