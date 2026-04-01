@@ -47,10 +47,10 @@
                             class="w-full border border-gray-300 rounded-lg text-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm @error('status_id') border-red-500 @enderror">
                             <option value="">Select Application Status</option>
                             @foreach ($statuses as $status)
-                                <option value="{{ $status->id }}"
-                                    {{ old('status_id', $preDefinedMessage->status_id) == $status->id ? 'selected' : '' }}>
-                                    {{ $status->status_name }}
-                                </option>
+                            <option value="{{ $status->id }}"
+                                {{ old('status_id', $preDefinedMessage->status_id) == $status->id ? 'selected' : '' }}>
+                                {{ $status->status_name }}
+                            </option>
                             @endforeach
                         </select>
                         @error('status_id')

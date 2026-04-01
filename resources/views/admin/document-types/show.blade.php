@@ -12,9 +12,12 @@
                     View Document Type
                 </h2>
                 <div class="flex items-center space-x-3">
-                    <a href="{{ route('admin.document-types.edit', $documentType) }}" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 transition-all duration-200 shadow-md hover:shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    <a href="{{ route('admin.document-types.edit', $documentType) }}"
+                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 transition-all duration-200 shadow-md hover:shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
                         Edit
                     </a>
@@ -70,8 +73,7 @@
                         </div>
                         <div class="ml-7">
                             <div
-                                class="bg-gray-50 p-4 rounded-lg border border-gray-100 whitespace-pre-wrap text-gray-800">
-                                {{ $documentType->description }}</div>
+                                class="bg-gray-50 p-4 rounded-lg border border-gray-100 whitespace-pre-wrap text-gray-800">{{ $documentType->description }}</div>
                         </div>
                     </div>
 

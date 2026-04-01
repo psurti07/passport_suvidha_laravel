@@ -61,15 +61,19 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Customer
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile</th>
-
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Upload Date
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Appintment Date & Time
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Upload
+                                    Date
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Uploaded By
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Appintment
+                                    Date & Time
+                                </th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Uploaded
+                                    By
                                 </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
