@@ -17,37 +17,6 @@ class AppointmentLetterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // public function index(Request $request)
-    // {
-    //     $query = AppointmentLetter::with(['customer', 'uploader']);
-        
-    //     // Apply search filter
-    //     if ($request->has('search') && !empty($request->search)) {
-    //         $searchTerm = $request->search;
-    //         $query->whereHas('customer', function($q) use ($searchTerm) {
-    //             $q->where('first_name', 'like', "%{$searchTerm}%")
-    //               ->orWhere('last_name', 'like', "%{$searchTerm}%")
-    //               ->orWhere('email', 'like', "%{$searchTerm}%")
-    //               ->orWhere('mobile_number', 'like', "%{$searchTerm}%");
-    //         });
-    //     }
-        
-    //     // Apply date filters
-    //     if ($request->has('start_date') && !empty($request->start_date)) {
-    //         $query->whereDate('upload_date', '>=', $request->start_date);
-    //     }
-        
-    //     if ($request->has('end_date') && !empty($request->end_date)) {
-    //         $query->whereDate('upload_date', '<=', $request->end_date);
-    //     }
-        
-    //     // Sort by newest first by default
-    //     $query->latest();
-        
-    //     $appointmentLetters = $query->paginate(10);
-        
-    //     return view('admin.appointment-letters.index-old', compact('appointmentLetters'));
-    // }
     public function index()
     {
         return view('admin.appointment-letters.index');
@@ -112,7 +81,16 @@ class AppointmentLetterController extends Controller
 
             ->addColumn('name', function ($row) {
                 return $row->uploader->name ?? 'System';
-            })     
+            })  
+            
+            ->filterColumn('customer_name', function($query, $keyword) {
+                $query->whereHas('customer', function($q) use ($keyword) {
+                    $q->where('first_name', 'like', "%{$keyword}%")
+                    ->orWhere('last_name', 'like', "%{$keyword}%")
+                    ->orWhere('email', 'like', "%{$keyword}%")
+                    ->orWhere('mobile_number', 'like', "%{$keyword}%");
+                });
+            })
 
             ->addColumn('actions', function ($row) {
                 return '

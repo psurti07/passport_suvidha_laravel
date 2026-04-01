@@ -121,7 +121,7 @@ $(function() {
             },
             {
                 data: 'customer_name',
-                name: 'customer.first_name'
+                name: 'customer_name'
             },
             {
                 data: 'mobile',
