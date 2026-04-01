@@ -94,6 +94,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('final-details/{finalDetail}/approve', [FinalDetailController::class, 'approve'])->name('final-details.approve');
     Route::patch('final-details/{finalDetail}/unapprove', [FinalDetailController::class, 'unapprove'])->name('final-details.unapprove');
     Route::resource('final-details', FinalDetailController::class)->except(['create', 'store', 'destroy']);
+    Route::get('/final-details-data', [FinalDetailController::class, 'data'])->name('final-details.data'); 
 
     // Appointment Letter Routes
     Route::get('appointment-letters/{appointmentLetter}/download', [AppointmentLetterController::class, 'download'])->name('appointment-letters.download');

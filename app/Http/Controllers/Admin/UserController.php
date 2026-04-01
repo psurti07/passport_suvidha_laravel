@@ -88,7 +88,7 @@ class UserController extends Controller
                     
                         <!-- View -->
                         <a href="'.route('admin.users.show', $row->id).'" 
-                            class="text-blue-600 hover:text-blue-900" title="View User">
+                            class="text-blue-600 hover:text-blue-900" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -100,7 +100,7 @@ class UserController extends Controller
 
                         <!-- Edit -->
                         <a href="'.route('admin.users.edit', $row->id).'" 
-                            class="text-yellow-600 hover:text-yellow-900" title="Edit User">
+                            class="text-yellow-600 hover:text-yellow-900" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
                                 <path
@@ -115,7 +115,7 @@ class UserController extends Controller
                             <button type="button" 
                                 onclick="confirmDelete(\''.$row->name.' user\', this.form)"
                                 class="text-red-600 hover:text-red-900" 
-                                title="Delete User">
+                                title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                     viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd"

@@ -60,7 +60,7 @@ class PreDefinedMessageController extends Controller
                     
                         <!-- View -->
                         <a href="'.route('admin.predefined-messages.show', $row->id).'" 
-                            class="text-blue-600 hover:text-blue-900" title="View Predefined Message">
+                            class="text-blue-600 hover:text-blue-900" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -72,7 +72,7 @@ class PreDefinedMessageController extends Controller
 
                         <!-- Edit -->
                         <a href="'.route('admin.predefined-messages.edit', $row->id).'" 
-                            class="text-yellow-600 hover:text-yellow-900" title="Edit Predefined Message">
+                            class="text-yellow-600 hover:text-yellow-900" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
                                 <path
@@ -87,7 +87,7 @@ class PreDefinedMessageController extends Controller
                             <button type="button" 
                                 onclick="confirmDelete(\''.$row->status->status_name.' predefined message\', this.form)"
                                 class="text-red-600 hover:text-red-900" 
-                                title="Delete Predefined Message">
+                                title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                     viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd"

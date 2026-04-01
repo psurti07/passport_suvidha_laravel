@@ -65,7 +65,7 @@ class DocumentTypeController extends Controller
                     
                         <!-- View -->
                         <a href="'.route('admin.document-types.show', $row->id).'" 
-                            class="text-blue-600 hover:text-blue-900" title="View Document Type">
+                            class="text-blue-600 hover:text-blue-900" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -77,7 +77,7 @@ class DocumentTypeController extends Controller
 
                         <!-- Edit -->
                         <a href="'.route('admin.document-types.edit', $row->id).'" 
-                            class="text-yellow-600 hover:text-yellow-900" title="Edit Document Type">
+                            class="text-yellow-600 hover:text-yellow-900" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
                                 <path
@@ -92,7 +92,7 @@ class DocumentTypeController extends Controller
                             <button type="button" 
                                 onclick="confirmDelete(\''.$row->name.' document type\', this.form)"
                                 class="text-red-600 hover:text-red-900" 
-                                title="Delete Document Type">
+                                title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                     viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd"
