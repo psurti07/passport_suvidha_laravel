@@ -12,38 +12,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class FinalDetailController extends Controller
 {
-    // public function index()
-    // {
-    //     $query = FinalDetail::with(['customer', 'uploader']);
-
-    //     // Handle search
-    //     if (request()->has('search') && !empty(request('search'))) {
-    //         $searchTerm = request('search');
-    //         $query->whereHas('customer', function($q) use ($searchTerm) {
-    //             $q->where('first_name', 'like', '%' . $searchTerm . '%')
-    //               ->orWhere('last_name', 'like', '%' . $searchTerm . '%')
-    //               ->orWhere('email', 'like', '%' . $searchTerm . '%')
-    //               ->orWhere('mobile_number', 'like', '%' . $searchTerm . '%');
-    //         });
-    //     }
-
-    //     // Handle approval status filter
-    //     if (request()->has('approval_status') && !empty(request('approval_status'))) {
-    //         $status = request('approval_status') === 'approved';
-    //         $query->where('is_approved', $status);
-    //     }
-
-    //     // Handle sorting
-    //     $sortBy = request('sort_by', 'id');
-    //     $sortDirection = request('sort_direction', 'desc');
-    //     $query->orderBy($sortBy, $sortDirection);
-
-    //     // Get paginated results
-    //     $finalDetails = $query->paginate(request('per_page', 10));
-
-    //     return view('admin.final-details.index', compact('finalDetails'));
-    // }
-
     public function index()
     {
         return view('admin.final-details.index');
