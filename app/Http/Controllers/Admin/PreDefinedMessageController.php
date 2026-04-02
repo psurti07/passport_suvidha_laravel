@@ -4,49 +4,106 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PreDefinedMessage;
+use App\Models\ApplicationStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\Facades\DataTables;
 
 class PreDefinedMessageController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        // Basic implementation for index - fetch all for now
-        // We can add pagination, sorting, filtering later based on the view's needs
-        $query = PreDefinedMessage::query();
+        return view('admin.predefmessages.index');
+    }
 
-        // Simple search (adapt columns as needed)
-        if ($search = $request->input('search')) {
-            $query->where('message_name', 'like', "%{$search}%")
-                  ->orWhere('message_remarks', 'like', "%{$search}%");
-        }
-        
-        // Sorting
-        $sortBy = $request->input('sort_by', 'id'); // Default sort column
-        $sortDirection = $request->input('sort_direction', 'desc'); // Default sort direction
+    public function data(Request $request)
+    {
+        $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
+        $to   = $request->to_date ?? now()->format('Y-m-d');
 
-        // Validate sortable columns to prevent errors
-        $sortableColumns = ['id', 'message_name', 'message_remarks', 'created_at', 'updated_at'];
-        if (in_array($sortBy, $sortableColumns) && in_array(strtolower($sortDirection), ['asc', 'desc'])) {
-            $query->orderBy($sortBy, $sortDirection);
-        }
-        
-        // Date Range Filter (assuming created_at)
-        if ($fromDate = $request->input('from_date')) {
-            $query->whereDate('created_at', '>=', $fromDate);
-        }
-        if ($toDate = $request->input('to_date')) {
-            $query->whereDate('created_at', '<=', $toDate);
-        }
-        
-        // Pagination
-        $perPage = $request->input('per_page', 10); // Default items per page
-        $preDefinedMessages = $query->paginate($perPage);
+        $query = PreDefinedMessage::with('status')->select([
+                'pre_defined_messages.id',
+                'pre_defined_messages.status_id',
+                'pre_defined_messages.message_name',
+                'pre_defined_messages.message_remarks',
+                'pre_defined_messages.created_at',
+                'pre_defined_messages.updated_at',
+            ])
 
-        return view('admin.predefmessages.index', compact('preDefinedMessages'));
+            ->whereBetween('pre_defined_messages.created_at', [
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
+            ]);
+
+        return DataTables::of($query)
+
+            ->addIndexColumn()
+
+            ->addColumn('status_name', function ($row) {
+                return $row->status->status_name ?? '-';
+            })
+
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at->format('d/m/Y H:i:s');
+            })
+
+            ->editColumn('updated_at', function ($row) {
+                return $row->updated_at->format('d/m/Y H:i:s');
+            })
+
+            ->addColumn('actions', function ($row) {
+                return '
+                    <div class="flex items-center gap-2">
+                    
+                        <!-- View -->
+                        <a href="'.route('admin.predefined-messages.show', $row->id).'" 
+                            class="text-blue-600 hover:text-blue-900" title="View">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                <path fill-rule="evenodd"
+                                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </a>
+
+                        <!-- Edit -->
+                        <a href="'.route('admin.predefined-messages.edit', $row->id).'" 
+                            class="text-yellow-600 hover:text-yellow-900" title="Edit">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path
+                                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                            </svg>
+                        </a>
+
+                        <!-- Delete -->
+                        <form action="'.route('admin.predefined-messages.destroy', $row->id).'" method="POST" class="inline">
+                            '.csrf_field().'
+                            '.method_field('DELETE').'
+                            <button type="button" 
+                                onclick="confirmDelete(\''.$row->status->status_name.' predefined message\', this.form)"
+                                class="text-red-600 hover:text-red-900" 
+                                title="Delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                    viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </form>
+
+                    </div>
+                ';
+            })
+
+            ->rawColumns(['actions'])
+
+            ->make(true);
     }
 
     /**
@@ -54,8 +111,8 @@ class PreDefinedMessageController extends Controller
      */
     public function create()
     {
-        // Return the create view
-        return view('admin.predefmessages.create'); 
+        $statuses = ApplicationStatus::orderBy('priority_no')->get();
+        return view('admin.predefmessages.create', compact('statuses')); 
         // return redirect()->route('admin.predefined-messages.index')->with('warning', 'Create form not implemented yet.'); // Placeholder removed
     }
 
@@ -64,26 +121,23 @@ class PreDefinedMessageController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the incoming request data
         $validatedData = $request->validate([
+            'status_id' => 'required|exists:application_statuses,id',
             'message_name' => 'required|string|max:255|unique:pre_defined_messages,message_name', // Ensure name is unique
             'message_remarks' => 'required|string',
         ]);
 
         try {
-            // Create a new PreDefinedMessage record
             PreDefinedMessage::create($validatedData);
 
-            // Redirect back to the index page with a success message
             return redirect()->route('admin.predefined-messages.index')
                              ->with('success', 'Predefined message created successfully.');
         } catch (\Exception $e) {
             // Log the error (optional but recommended)
             // Log::error('Error creating predefined message: ' . $e->getMessage());
             
-            // Redirect back with an error message
             return redirect()->back()
-                             ->withInput() // Keep old input
+                             ->withInput() 
                              ->with('error', 'Error creating message. Please try again.');
         }
     }
@@ -93,7 +147,7 @@ class PreDefinedMessageController extends Controller
      */
     public function show(PreDefinedMessage $predefined_message)
     {
-        // Return the show view
+        $predefined_message->load('status');
         return view('admin.predefmessages.show', ['preDefinedMessage' => $predefined_message]);
     }
 
@@ -102,8 +156,8 @@ class PreDefinedMessageController extends Controller
      */
     public function edit(PreDefinedMessage $predefined_message)
     {
-        // Return the edit view
-        return view('admin.predefmessages.edit', ['preDefinedMessage' => $predefined_message]);
+        $statuses = ApplicationStatus::orderBy('priority_no')->get();
+        return view('admin.predefmessages.edit', ['preDefinedMessage' => $predefined_message,'statuses' => $statuses]);
     }
 
     /**
@@ -111,25 +165,21 @@ class PreDefinedMessageController extends Controller
      */
     public function update(Request $request, PreDefinedMessage $predefined_message)
     {
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            // Ensure name is unique, ignoring the current message's ID
+            'status_id' => 'required|exists:application_statuses,id',
+            'message_name' => 'required|string|max:255|unique:pre_defined_messages,message_name,' . $predefined_message->id,
+            'message_remarks' => 'required|string',
+        ]);
+        
         try {
-            // Validate the incoming request data
-            $validatedData = $request->validate([
-                // Ensure name is unique, ignoring the current message's ID
-                'message_name' => 'required|string|max:255|unique:pre_defined_messages,message_name,' . $predefined_message->id,
-                'message_remarks' => 'required|string',
-            ]);
-
-            // Update the PreDefinedMessage record
             $predefined_message->update($validatedData);
 
-            // Redirect back to the index page with a success message
             return redirect()->route('admin.predefined-messages.index')
                              ->with('success', 'Predefined message updated successfully.');
         } catch (\Exception $e) {
-            // Log the error
             Log::error('Error updating predefined message: ' . $e->getMessage());
-            
-            // Redirect back with an error message
             return redirect()->back()
                              ->withInput()
                              ->with('error', 'Error updating message: ' . $e->getMessage());
@@ -142,24 +192,11 @@ class PreDefinedMessageController extends Controller
     public function destroy(PreDefinedMessage $predefined_message)
     {
         try {
-            // Delete the message
             $predefined_message->delete();
-            
             return redirect()->route('admin.predefined-messages.index')->with('success', 'Message deleted successfully.');
         } catch (\Exception $e) {
-            // Log error
             Log::error('Error deleting message: ' . $e->getMessage());
             return redirect()->route('admin.predefined-messages.index')->with('error', 'Error deleting message.');
         }
-    }
-    
-    /**
-     * Export data.
-     */
-    public function export(Request $request)
-    {
-        // Export logic needed (Excel, CSV, PDF)
-        $type = $request->input('type', 'excel');
-        return redirect()->route('admin.predefined-messages.index')->with('warning', "Export ({$type}) not implemented yet."); // Placeholder
     }
 }

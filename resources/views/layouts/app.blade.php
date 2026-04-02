@@ -23,473 +23,485 @@
     <!-- Styles -->
     <link href="{{ asset('css/fonts.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+
+    <!-- Datatable -->
+    <link rel="stylesheet" href="{{ asset('vendor/datatables/css/jquery.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/datatables/css/buttons.dataTables.min.css') }}">
+
+    <!-- Toastify --> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <!-- SweetAlert2 --> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.12.0/dist/cdn.min.js"></script>
     <style>
-        :root {
-            --primary-blue: #0D3B66;
-            --secondary-blue: #1E5B94;
-            --accent-blue: #2A77C9;
-            --light-gray: #F3F4F6;
-            --text-gray: #6B7280;
-            --border-color: #E5E7EB;
-        }
+    :root {
+        --primary-blue: #0D3B66;
+        --secondary-blue: #1E5B94;
+        --accent-blue: #2A77C9;
+        --light-gray: #F3F4F6;
+        --text-gray: #6B7280;
+        --border-color: #E5E7EB;
+    }
 
-        /* Ensure font consistency */
-        body {
-            font-family: var(--font-family-sans);
-        }
+    /* Ensure font consistency */
+    body {
+        font-family: var(--font-family-sans);
+    }
 
-        /* Custom Scrollbar Styles */
-        ::-webkit-scrollbar {
-            width: 8px;
-            /* Width of the entire scrollbar */
-            height: 8px;
-            /* Height of the horizontal scrollbar */
-        }
+    /* Custom Scrollbar Styles */
+    ::-webkit-scrollbar {
+        width: 8px;
+        /* Width of the entire scrollbar */
+        height: 8px;
+        /* Height of the horizontal scrollbar */
+    }
 
-        ::-webkit-scrollbar-track {
-            background: var(--light-gray);
-            /* Color of the tracking area */
-            border-radius: 10px;
-        }
+    ::-webkit-scrollbar-track {
+        background: var(--light-gray);
+        /* Color of the tracking area */
+        border-radius: 10px;
+    }
 
-        ::-webkit-scrollbar-thumb {
-            background-color: var(--secondary-blue);
-            /* Color of the scroll thumb */
-            border-radius: 10px;
-            /* Roundness of the scroll thumb */
-            border: 2px solid var(--light-gray);
-            /* Creates padding around scroll thumb */
-        }
+    ::-webkit-scrollbar-thumb {
+        background-color: var(--secondary-blue);
+        /* Color of the scroll thumb */
+        border-radius: 10px;
+        /* Roundness of the scroll thumb */
+        border: 2px solid var(--light-gray);
+        /* Creates padding around scroll thumb */
+    }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background-color: var(--primary-blue);
-            /* Color of the scroll thumb on hover */
-        }
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: var(--primary-blue);
+        /* Color of the scroll thumb on hover */
+    }
 
-        /* End Custom Scrollbar Styles */
+    /* End Custom Scrollbar Styles */
 
-        body {
-            background: linear-gradient(135deg, var(--light-gray) 0%, var(--border-color) 100%);
-            min-height: 100vh;
-            position: relative;
-        }
+    body {
+        background: linear-gradient(135deg, var(--light-gray) 0%, var(--border-color) 100%);
+        min-height: 100vh;
+        position: relative;
+    }
 
-        .layout-wrapper {
-            display: flex;
-            min-height: 100vh;
-            position: relative;
-        }
+    .layout-wrapper {
+        display: flex;
+        min-height: 100vh;
+        position: relative;
+    }
 
+    .sidebar {
+        background: white;
+        box-shadow: 0 4px 6px -1px rgba(13, 59, 102, 0.05),
+            0 10px 15px -3px rgba(13, 59, 102, 0.1);
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 256px;
+        z-index: 40;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid var(--border-color);
+    }
+
+    .main-content {
+        flex: 1;
+        margin-left: 256px;
+        min-height: 100vh;
+        transition: margin-left 0.3s ease-in-out;
+        width: auto;
+    }
+
+    .top-nav {
+        background: white;
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        box-shadow: 0 1px 3px 0 rgba(13, 59, 102, 0.05);
+        width: 100%;
+    }
+
+    .top-nav .container {
+        height: 100%;
+    }
+
+    .top-nav .flex {
+        height: 100%;
+    }
+
+    .page-title {
+        color: var(--primary-blue);
+        font-weight: 600;
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        letter-spacing: -0.025em;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .user-name {
+        color: var(--text-gray);
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-blue);
+        color: white;
+        padding: 0.5rem 1.25rem;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--secondary-blue);
+    }
+
+    .page-content {
+        padding: 1rem;
+    }
+
+    .menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: transparent;
+        border-radius: 0.375rem;
+        color: var(--primary-blue);
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+        touch-action: manipulation;
+        margin-right: 0.75rem;
+    }
+
+    .menu-toggle:hover {
+        background-color: var(--light-gray);
+    }
+
+    .menu-toggle:focus {
+        outline: 2px solid var(--accent-blue);
+    }
+
+    .menu-toggle:active {
+        transform: scale(0.95);
+    }
+
+    .main-content.sidebar-collapsed {
+        margin-left: 80px;
+    }
+
+    .sidebar.collapsed {
+        width: 80px;
+    }
+
+    .sidebar.collapsed .nav-link-text,
+    .sidebar.collapsed .sidebar-header span,
+    .sidebar.collapsed .text-xs {
+        display: none;
+    }
+
+    .sidebar.collapsed nav {
+        padding: 1rem 0.5rem;
+    }
+
+    .sidebar.collapsed .nav-link {
+        justify-content: center;
+        padding: 0.75rem;
+    }
+
+    .sidebar.collapsed .nav-link svg {
+        margin-right: 0;
+    }
+
+    .sidebar.collapsed .sidebar-header {
+        justify-content: center;
+        padding: 1rem 0.5rem;
+    }
+
+    .sidebar.collapsed .close-sidebar {
+        display: none;
+    }
+
+    .sidebar nav {
+        flex: 1;
+        padding: 0.5rem;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--secondary-blue) var(--light-gray);
+        scroll-behavior: smooth;
+    }
+
+    .sidebar nav::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .sidebar nav::-webkit-scrollbar-track {
+        background: var(--light-gray);
+        border-radius: 3px;
+    }
+
+    .sidebar nav::-webkit-scrollbar-thumb {
+        background-color: var(--secondary-blue);
+        border-radius: 3px;
+    }
+
+    .sidebar nav::-webkit-scrollbar-thumb:hover {
+        background-color: var(--primary-blue);
+    }
+
+    /* Add styles for active state and hover effects */
+    .nav-link {
+        color: var(--text-gray);
+        transition: all 0.2s ease;
+        border-radius: 0.5rem;
+        margin: 0.25rem 0.5rem;
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-link:hover {
+        background-color: var(--light-gray);
+        color: var(--primary-blue);
+        transform: translateX(4px);
+    }
+
+    .nav-link.active {
+        background-color: var(--primary-blue);
+        color: white;
+        font-weight: 500;
+    }
+
+    .nav-link.active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background-color: var(--accent-blue);
+        border-radius: 0 4px 4px 0;
+    }
+
+    .nav-link svg {
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .nav-link:hover svg {
+        transform: scale(1.1);
+    }
+
+    .nav-link-text {
+        margin-left: 0.75rem;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sidebar-header {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 1.5rem;
+        background-color: var(--primary-blue);
+        min-height: 64px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-title-text {
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: -0.025em;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .close-sidebar {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px;
+        height: 32px;
+        border-radius: 0.375rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        outline: none;
+    }
+
+    .close-sidebar:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .close-sidebar:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+
+    .sidebar-section-title {
+        color: var(--text-gray);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 1rem 1.5rem 0.5rem;
+        margin-top: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar.collapsed .sidebar-section-title {
+        display: none;
+    }
+
+    /* Add these styles in the style block before the media queries */
+    [x-cloak] {
+        display: none !important;
+    }
+
+    .transition {
+        transition-property: all;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .transform {
+        transform: translateX(0);
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 1024px) {
         .sidebar {
-            background: white;
-            box-shadow: 0 4px 6px -1px rgba(13, 59, 102, 0.05),
-                0 10px 15px -3px rgba(13, 59, 102, 0.1);
-            height: 100vh;
+            transform: translateX(-100%);
             position: fixed;
-            left: 0;
-            top: 0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 256px;
-            z-index: 40;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid var(--border-color);
+            z-index: 50;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
         }
 
         .main-content {
-            flex: 1;
-            margin-left: 256px;
-            min-height: 100vh;
-            transition: margin-left 0.3s ease-in-out;
-            width: auto;
-        }
-
-        .top-nav {
-            background: white;
-            position: sticky;
-            top: 0;
-            z-index: 30;
-            box-shadow: 0 1px 3px 0 rgba(13, 59, 102, 0.05);
+            margin-left: 0;
             width: 100%;
-        }
-
-        .top-nav .container {
-            height: 100%;
-        }
-
-        .top-nav .flex {
-            height: 100%;
-        }
-
-        .page-title {
-            color: var(--primary-blue);
-            font-weight: 600;
-            font-size: 1.25rem;
-            line-height: 1.75rem;
-            letter-spacing: -0.025em;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .user-name {
-            color: var(--text-gray);
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 0.5rem 1.25rem;
-            border-radius: 0.375rem;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--secondary-blue);
-        }
-
-        .page-content {
-            padding: 1rem;
         }
 
         .menu-toggle {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: transparent;
-            border-radius: 0.375rem;
-            color: var(--primary-blue);
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-            touch-action: manipulation;
-            margin-right: 0.75rem;
         }
 
-        .menu-toggle:hover {
-            background-color: var(--light-gray);
-        }
-
-        .menu-toggle:focus {
-            outline: 2px solid var(--accent-blue);
-        }
-
-        .menu-toggle:active {
-            transform: scale(0.95);
-        }
-
-        .main-content.sidebar-collapsed {
-            margin-left: 80px;
-        }
-
-        .sidebar.collapsed {
-            width: 80px;
-        }
-
-        .sidebar.collapsed .nav-link-text,
-        .sidebar.collapsed .sidebar-header span,
-        .sidebar.collapsed .text-xs {
-            display: none;
-        }
-
-        .sidebar.collapsed nav {
-            padding: 1rem 0.5rem;
-        }
-
-        .sidebar.collapsed .nav-link {
-            justify-content: center;
+        .page-content {
             padding: 0.75rem;
         }
+    }
 
-        .sidebar.collapsed .nav-link svg {
-            margin-right: 0;
-        }
-
-        .sidebar.collapsed .sidebar-header {
-            justify-content: center;
-            padding: 1rem 0.5rem;
-        }
-
-        .sidebar.collapsed .close-sidebar {
-            display: none;
-        }
-
-        .sidebar nav {
-            flex: 1;
+    @media (max-width: 768px) {
+        .top-nav {
             padding: 0.5rem;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: var(--secondary-blue) var(--light-gray);
-            scroll-behavior: smooth;
         }
 
-        .sidebar nav::-webkit-scrollbar {
-            width: 6px;
+        .page-title {
+            font-size: 1.1rem;
         }
 
-        .sidebar nav::-webkit-scrollbar-track {
-            background: var(--light-gray);
-            border-radius: 3px;
+        .user-info {
+            gap: 0.75rem;
         }
 
-        .sidebar nav::-webkit-scrollbar-thumb {
-            background-color: var(--secondary-blue);
-            border-radius: 3px;
+        .user-name {
+            font-size: 0.85rem;
         }
 
-        .sidebar nav::-webkit-scrollbar-thumb:hover {
-            background-color: var(--primary-blue);
+        .btn-primary {
+            padding: 0.375rem 1rem;
+            font-size: 0.85rem;
         }
 
-        /* Add styles for active state and hover effects */
         .nav-link {
-            color: var(--text-gray);
-            transition: all 0.2s ease;
-            border-radius: 0.5rem;
-            margin: 0.25rem 0.5rem;
-            padding: 0.75rem 1rem;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-link:hover {
-            background-color: var(--light-gray);
-            color: var(--primary-blue);
-            transform: translateX(4px);
-        }
-
-        .nav-link.active {
-            background-color: var(--primary-blue);
-            color: white;
-            font-weight: 500;
-        }
-
-        .nav-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background-color: var(--accent-blue);
-            border-radius: 0 4px 4px 0;
-        }
-
-        .nav-link svg {
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-        }
-
-        .nav-link:hover svg {
-            transform: scale(1.1);
-        }
-
-        .nav-link-text {
-            margin-left: 0.75rem;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            padding: 0.5rem 0.75rem;
         }
 
         .sidebar-header {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1.25rem 1.5rem;
-            background-color: var(--primary-blue);
-            min-height: 64px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            padding: 1rem;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .top-nav .container {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
         }
 
-        .sidebar-title-text {
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: -0.025em;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .close-sidebar {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 32px;
-            height: 32px;
-            border-radius: 0.375rem;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
+        .user-name {
             display: none;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: none;
-            outline: none;
         }
 
-        .close-sidebar:hover {
-            background-color: rgba(255, 255, 255, 0.2);
+        .page-title {
+            font-size: 1rem;
         }
 
-        .close-sidebar:active {
-            transform: translateY(-50%) scale(0.95);
+        .nav-link {
+            padding: 0.375rem 0.5rem;
+        }
+
+        .nav-link-text {
+            font-size: 0.875rem;
         }
 
         .sidebar-section-title {
-            color: var(--text-gray);
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 1rem 1.5rem 0.5rem;
-            margin-top: 0.5rem;
-            transition: all 0.3s ease;
+            font-size: 0.7rem;
+            padding: 0.75rem 1rem 0.25rem;
         }
+    }
 
-        .sidebar.collapsed .sidebar-section-title {
+    /* Mobile Menu Overlay */
+    @media (max-width: 1024px) {
+        .sidebar-overlay {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
         }
 
-        /* Add these styles in the style block before the media queries */
-        [x-cloak] {
-            display: none !important;
+        .sidebar-overlay.active {
+            display: block;
         }
-
-        .transition {
-            transition-property: all;
-            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .transform {
-            transform: translateX(0);
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 1024px) {
-            .sidebar {
-                transform: translateX(-100%);
-                position: fixed;
-                z-index: 50;
-            }
-
-            .sidebar.collapsed {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-            }
-
-            .menu-toggle {
-                display: flex;
-            }
-
-            .page-content {
-                padding: 0.75rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .top-nav {
-                padding: 0.5rem;
-            }
-
-            .page-title {
-                font-size: 1.1rem;
-            }
-
-            .user-info {
-                gap: 0.75rem;
-            }
-
-            .user-name {
-                font-size: 0.85rem;
-            }
-
-            .btn-primary {
-                padding: 0.375rem 1rem;
-                font-size: 0.85rem;
-            }
-
-            .nav-link {
-                padding: 0.5rem 0.75rem;
-            }
-
-            .sidebar-header {
-                padding: 1rem;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .top-nav .container {
-                padding-left: 0.5rem;
-                padding-right: 0.5rem;
-            }
-
-            .user-name {
-                display: none;
-            }
-
-            .page-title {
-                font-size: 1rem;
-            }
-
-            .nav-link {
-                padding: 0.375rem 0.5rem;
-            }
-
-            .nav-link-text {
-                font-size: 0.875rem;
-            }
-
-            .sidebar-section-title {
-                font-size: 0.7rem;
-                padding: 0.75rem 1rem 0.25rem;
-            }
-        }
-
-        /* Mobile Menu Overlay */
-        @media (max-width: 1024px) {
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 40;
-            }
-
-            .sidebar-overlay.active {
-                display: block;
-            }
-        }
+    }
     </style>
 </head>
 
@@ -529,7 +541,8 @@
             }
         }, 100);
     }
-}" x-init="console.log('Alpine initialized, sidebar state from localStorage:', localStorage.getItem('sidebarCollapsed')); scrollToActive()" x-cloak>
+}" x-init="console.log('Alpine initialized, sidebar state from localStorage:', localStorage.getItem('sidebarCollapsed')); scrollToActive()"
+    x-cloak>
     <div class="layout-wrapper">
         <div class="sidebar-overlay" :class="{ 'active': isMobileMenuOpen }" @click="toggleSidebar()"></div>
         <main class="main-content" :class="{ 'sidebar-collapsed': sidebarCollapsed }">
@@ -549,15 +562,16 @@
                         </div>
                         <div class="user-info">
                             @auth
-                                <span class="user-name">Hello, <span class="font-bold">{{ Auth::user()->name }}</span></span>
-                                <a href="{{ route('logout') }}"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                    class="btn-primary">
-                                    Logout
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                                    @csrf
-                                </form>
+                            <span class="user-name">Hello, <span
+                                    class="font-bold">{{ Auth::user()->name }}</span></span>
+                            <a href="{{ route('logout') }}"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                class="btn-primary">
+                                Logout
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                                @csrf
+                            </form>
                             @endauth
                         </div>
                     </div>
@@ -589,6 +603,17 @@
                     <span class="nav-link-text">Dashboard</span>
                 </a>
 
+                <a href="{{ route('admin.dashboard.tatkal') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.dashboard.tatkal') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Tatkal Dashboard' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Tatkal Dashboard</span>
+                </a>
+
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">STATISTICS</div>
 
                 <a href="{{ route('admin.todaystatistics') }}"
@@ -602,23 +627,39 @@
                     <span class="nav-link-text">Today Statistics</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">REPORTS</div>
-                <a href="{{ route('admin.reports.gst') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.reports.gst') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'GST Report' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
+                <!-- <a href="{{ route('admin.todaystatistics') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.todaystatistics') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Today Statistics' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">GST Report</span>
+                    <span class="nav-link-text">Normal Statistics</span>
                 </a>
+
+                <a href="{{ route('admin.todaystatistics') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.todaystatistics') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Today Statistics' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Tatkal Statistics</span>
+                </a> -->
 
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">CUSTOMER MANAGEMENT</div>
 
+                @php
+                    $isCustomerRoute = (
+                        request()->routeIs('admin.customer.search') ||
+                        request()->routeIs('admin.customer.search.form') ||
+                        request()->routeIs('admin.customers.*')
+                    ) && !request()->routeIs('admin.customers.today');
+                @endphp
                 <a href="{{ route('admin.customer.search.form') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customer.search.*') ? 'active' : '' }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ $isCustomerRoute ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Search Customer' : ''">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -639,10 +680,9 @@
                 </a>
 
                 <a href="{{ route('admin.customers.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.*') && !request()->routeIs('admin.customers.today') ? 'active' : '' }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.index') && !request()->routeIs('admin.customers.today') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Customers' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
                         </path>
@@ -650,24 +690,128 @@
                     <span class="nav-link-text">Customers</span>
                 </a>
 
-                
-
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SYSTEM</div>
-
-                <a href="{{ route('admin.otps.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                <a href="{{ route('admin.customers.create') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.create') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Create An Account' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                            d="M12 4v16m8-8H4">
                         </path>
                     </svg>
-                    <span class="nav-link-text">OTP Management</span>
+                    <span class="nav-link-text">Create An Account</span>
                 </a>
 
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">ALL LEADS </div>
+
+                <a href="{{ route('admin.leads.normal') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.leads.normal') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Normal Leads' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Normal Leads</span>
+                </a>
+
+                <a href="{{ route('admin.leads.tatkal') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.leads.tatkal') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Tatkal Leads' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Tatkal Leads</span>
+                </a> -->
+
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">ALL OFFER PAGES </div>
+
+                <a href="{{ route('admin.customers.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.*') && !request()->routeIs('admin.customers.today') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Customers' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Card Offer</span>
+                </a>
+
+                <a href="{{ route('admin.customers.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.*') && !request()->routeIs('admin.customers.today') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Customers' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Special Offer</span>
+                </a>
+
+                <a href="{{ route('admin.customers.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.*') && !request()->routeIs('admin.customers.today') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Customers' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Bumper Offer</span>
+                </a> -->
+
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">LOAN APPLICATION </div>
+
+                <a href="{{ route('admin.customers.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.*') && !request()->routeIs('admin.customers.today') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Customers' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Normal Application</span>
+                </a>
+
+                <a href="{{ route('admin.customers.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.*') && !request()->routeIs('admin.customers.today') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Customers' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Tatkal Application</span>
+                </a> -->
+
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">REPORTS</div>
+
+                <a href="{{ route('admin.reports.gst') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.reports.gst') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'GST Report' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Invoice</span>
+                </a>
+
+                <a href="{{ route('admin.reports.gst') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.reports.gst') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'GST Report' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">GST Report</span>
+                </a> -->
+
                 {{-- Support Section --}}
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SUPPORT</div>
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SUPPORT</div>
 
                 <a href="{{ route('admin.support.customer') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.support.customer') ? 'active' : '' }}"
@@ -691,7 +835,114 @@
                         </path>
                     </svg>
                     <span class="nav-link-text">Guest Support</span>
+                </a> -->
+
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SMS</div>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Custom Sms</span>
                 </a>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Sms Message</span>
+                </a>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Remarketing Log</span>
+                </a> -->
+
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SYSTEM</div>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">OTP Management</span>
+                </a>
+
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">DND LIST</div>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Normal Dnd List</span>
+                </a>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Tatkal Dnd List</span>
+                </a> -->
+
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">PAYMENT LOG</div>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Razor Pay</span>
+                </a>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Zaak Pay</span>
+                </a>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Paytm</span>
+                </a> -->
 
                 {{-- Documents Section --}}
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">DOCUMENTS</div>
@@ -747,23 +998,55 @@
                     <span class="nav-link-text">Document Types</span>
                 </a>
 
-                
+                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">OTHER OPTIONS</div>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Important Update</span>
+                </a>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Site Options</span>
+                </a>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Pages</span>
+                </a> -->
 
                 {{-- Staff Management Section --}}
                 @if (Auth::check() && Auth::user()->isAdmin())
-                    <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">STAFF MANAGEMENT</div>
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">STAFF MANAGEMENT</div>
 
-                    <a href="{{ route('admin.users.index') }}"
-                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
-                        x-bind:title="sidebarCollapsed ? 'Staff Members' : ''">
-                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                            </path>
-                        </svg>
-                        <span class="nav-link-text">Staff Members</span>
-                    </a>
+                <a href="{{ route('admin.users.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Staff Members' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Staff Members</span>
+                </a>
                 @endif
 
 
@@ -771,6 +1054,25 @@
             </nav>
         </aside>
     </div>
+
+    <!-- Datatable --> 
+    <script src="{{ asset('vendor/datatables/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/js/vfs_fonts.js') }}"></script>
+
+    <!-- Toastify --> 
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="{{ asset('js/toast.js') }}"></script>
+    @include('components.toast')
+
+    <!-- SweetAlert2 --> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/confirm-actions.js') }}"></script>
 
     @stack('scripts')
 </body>

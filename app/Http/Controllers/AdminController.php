@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Customer;
 
 class AdminController extends Controller
 {
@@ -22,8 +23,48 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+
     public function dashboard()
     {
-        return view('admin.dashboard');
+        $charts = [
+            'normalcust' => Customer::getDashboardData('normal',1),
+            'normallead' => Customer::getDashboardData('normal',0),
+            'normal36p'  => Customer::getDashboardData(null,1,'NORMAL_36'),
+            'normal60p'  => Customer::getDashboardData(null,1,'NORMAL_60')
+        ];
+
+        $data = [];
+
+        foreach ($charts as $key => $list) {
+
+            $list = $list->reverse()->values();
+
+            $data[$key.'label'] = $list->map(fn($r) => $r->recday.'-'.$r->recmonth)->toArray();
+            $data[$key.'data']  = $list->pluck('totaluser')->toArray();
+        }
+
+        return view('admin.dashboard', $data);
+    }
+
+    public function tatkalDashboard()
+    {
+        $charts = [
+            'tatkalcust' => Customer::getDashboardData('tatkal',1),
+            'tatkallead' => Customer::getDashboardData('tatkal',0),
+            'tatkal36p'  => Customer::getDashboardData(null,1,'TATKAL_36'),
+            'tatkal60p'  => Customer::getDashboardData(null,1,'TATKAL_60')
+        ];
+
+        $data = [];
+
+        foreach ($charts as $key => $list) {
+
+            $list = $list->reverse()->values();
+
+            $data[$key.'label'] = $list->map(fn($r) => $r->recday.'-'.$r->recmonth)->toArray();
+            $data[$key.'data']  = $list->pluck('totaluser')->toArray();
+        }
+
+        return view('admin.tatkal_dashboard', $data);
     }
 } 

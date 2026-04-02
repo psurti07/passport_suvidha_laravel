@@ -9,10 +9,6 @@
 @endphp
 
 @section('content')
-    {{-- Add SweetAlert2 CSS and JS --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <div class="mb-6 flex justify-between items-center">
         <div>
             <h1 class="text-3xl font-bold text-gray-800 mt-2">CUSTOMER DETAILS</h1>
@@ -116,85 +112,193 @@
                     </div>
 
                     {{-- Form Fields --}}
-                    <form action="{{ route('admin.customers.update', $customer->id) }}" method="POST" class="space-y-5">
+                    <form action="{{ route('admin.customers.update', $customer->id) }}" method="POST" class="space-y-5" novalidate>
                         @csrf
                         @method('PUT')
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                             <div>
                                 <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">First Name
                                     <span class="text-red-500">*</span></label>
-                                <input type="text" name="first_name" id="first_name"
+                                <input type="text" id="first_name" name="first_name" 
                                     value="{{ old('first_name', $customer->first_name) }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                    @error('first_name') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('first_name')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                                @enderror
                             </div>
                             <div>
                                 <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">Last Name <span
                                         class="text-red-500">*</span></label>
-                                <input type="text" name="last_name" id="last_name"
+                                <input type="text" id="last_name" name="last_name"
                                     value="{{ old('last_name', $customer->last_name ?? '') }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                    @error('last_name') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('last_name')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                                @enderror
                             </div>
 
                             <div>
-                                <label for="mobile_number" class="block text-sm font-medium text-gray-700 mb-1">Mobile No
+                                <label for="mobile_number" class="block text-sm font-medium text-gray-700 mb-1">Mobile Number
                                     <span class="text-red-500">*</span></label>
-                                <input type="text" name="mobile_number" id="mobile_number"
+                                <input type="tel" id="mobile_number" name="mobile_number"
                                     value="{{ old('mobile_number', $customer->mobile_number) }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                    maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                    @error('mobile_number') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('mobile_number')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                                @enderror
                             </div>
                             <div>
                                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Id <span
                                         class="text-red-500">*</span></label>
-                                <input type="email" name="email" id="email"
+                                <input type="email" id="email" name="email" 
                                     value="{{ old('email', $customer->email) }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                            </div>
-                            <div>
-                                <label for="pincode" class="block text-sm font-medium text-gray-700 mb-1">Pincode</label>
-                                <input type="text" name="pincode" id="pincode"
-                                    value="{{ old('pincode', $customer->pin_code) }}" placeholder="Enter pincode"
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                            </div>
-                            <div>
-                                <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City <span
-                                        class="text-red-500">*</span></label>
-                                <input type="text" name="city" id="city"
-                                    value="{{ old('city', $customer->city) }}" required placeholder="Enter city"
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                            </div>
-                            <div>
-                                <label for="state" class="block text-sm font-medium text-gray-700 mb-1">State <span
-                                        class="text-red-500">*</span></label>
-                                <select name="state" id="state" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
-                                    <option value="" disabled
-                                        {{ old('state', $customer->state) ? '' : 'selected' }}>Select State</option>
-                                    <option value="Gujarat"
-                                        {{ old('state', $customer->state) == 'Gujarat' ? 'selected' : '' }}>Gujarat
-                                    </option>
-                                    {{-- Add other states --}}
-                                </select>
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                    @error('email') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('email')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                                @enderror
                             </div>
                             <div>
                                 <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address <span
                                         class="text-red-500">*</span></label>
-                                <textarea name="address" id="address" rows="2" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">{{ old('address', $customer->address ?? '') }}</textarea>
+                                <textarea id="address" name="address" rows="2" required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                    @error('address') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">{{ old('address', $customer->address ?? '') }}
+                                </textarea>
+                                @error('address')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="pin_code" class="block text-sm font-medium text-gray-700 mb-1">Pincode <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text" id="pin_code" name="pin_code" 
+                                    value="{{ old('pin_code', $customer->pin_code) }}" required
+                                    maxlength="6" minlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                    @error('pin_code') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('pin_code')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                                @enderror
+                                <span id="pincode-error" class="text-red-500 text-sm"></span>
+                            </div>
+                            <div>
+                                <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text" id="city" name="city" 
+                                    value="{{ old('city', $customer->city) }}" required readonly
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                    @error('city') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('city')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="state" class="block text-sm font-medium text-gray-700 mb-1">State <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text" id="state" name="state" 
+                                    value="{{ old('state', $customer->state) }}" required readonly
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                    @error('state') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('state')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                                @enderror
                             </div>
                             <div>
                                 <label for="date_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Date of
                                     Birth <span class="text-red-500">*</span></label>
-                                <input type="date" name="date_of_birth" id="date_of_birth"
-                                    value="{{ old('date_of_birth', $customer->date_of_birth ? $customer->date_of_birth->format('Y-m-d') : '') }}"
-                                    required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                <input type="date" id="date_of_birth" name="date_of_birth" 
+                                    value="{{ old('date_of_birth', $customer->date_of_birth ? $customer->date_of_birth->format('Y-m-d') : '') }}" required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                    @error('date_of_birth') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('date_of_birth')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                                @enderror
                             </div>
                             <div>
                                 <label for="place_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Place of
                                     Birth <span class="text-red-500">*</span></label>
-                                <input type="text" name="place_of_birth" id="place_of_birth"
+                                <input type="text" id="place_of_birth" name="place_of_birth" 
                                     value="{{ old('place_of_birth', $customer->place_of_birth ?? '') }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                    @error('place_of_birth') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('place_of_birth')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                                @enderror
                             </div>
                         </div>
                         {{-- Save Button --}}
@@ -207,11 +311,40 @@
 
             {{-- Documents Tab Content --}}
             <div x-show="activeTab === 'documents'" x-cloak>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 space-y-8">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-6">Uploaded Documents</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 space-y-8">                    
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-semibold text-gray-800">Uploaded Documents</h2>
+                        @php
+                            $documents = $customer->applicationDocuments;
+                            $hasDocuments = $documents->count() > 0;
+                            $allVerified = $hasDocuments && $documents->where('is_verified', 0)->count() === 0;
+                        @endphp
+                        @if($hasDocuments)
+                            <form action="{{ route('admin.documents.updateAll') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="customer_id" value="{{ $customer->id }}">
+                                <input type="hidden" name="status" value="{{ $allVerified ? 0 : 1 }}">
 
+                                @if($allVerified)
+                                    <button class="bg-red-100 text-red-700 px-4 py-2 rounded-md text-sm font-medium inline-flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        Unverify All Documents
+                                    </button>
+                                @else
+                                    <button class="bg-green-100 text-green-700 px-4 py-2 rounded-md text-sm font-medium inline-flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        Verify All Documents
+                                    </button>
+                                @endif
+                            </form>
+                        @endif
+                    </div>
                     {{-- Section 1: Display Existing Uploaded Documents --}}
-                    <div>
+                    <div> 
                         <h3 class="text-lg font-medium text-gray-700 mb-4">Current Documents</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             @forelse ($customer->applicationDocuments ?? [] as $document)
@@ -250,6 +383,23 @@
                                             </svg>
                                             View
                                         </a>
+                                        @if($document->is_verified)
+                                            <a href="{{ route('admin.documents.toggleVerify', $document->id) }}"
+                                            class="text-red-600 hover:text-red-800 text-sm font-medium inline-flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            Click to Unverify
+                                            </a>
+                                        @else
+                                            <a href="{{ route('admin.documents.toggleVerify', $document->id) }}"
+                                            class="text-green-600 hover:text-green-800 text-sm font-medium inline-flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            Click to Verify
+                                            </a>
+                                        @endif
                                         {{-- Staff Delete Button --}}
                                         <form id="delete-document-{{ $document->id }}"
                                             action="{{ route('admin.application-documents.destroy', $document->id) }}"
@@ -257,7 +407,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="button"
-                                                onclick="confirmDelete('{{ $document->documentType->name }}', this.form)"
+                                                onclick="confirmDelete('{{ $document->documentType->name }} document', this.form)"
                                                 class="text-red-500 hover:text-red-700 text-sm font-medium inline-flex items-center">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
                                                     fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -328,19 +478,20 @@
                     <div>
                         <h3 class="text-lg font-medium text-gray-700 mb-4">Upload New Document (Staff)</h3>
                         <form action="{{ route('admin.application-documents.store') }}" method="POST"
-                            enctype="multipart/form-data"
+                            enctype="multipart/form-data" novalidate
                             class="border border-gray-200 rounded-lg p-5 bg-gray-50 space-y-4">
                             @csrf
                             <input type="hidden" name="customer_id" value="{{ $customer->id }}">
                             <input type="hidden" name="redirect"
-                                value="{{ route('admin.customers.show', $customer->id) }}">
+                                value="{{ route('admin.customers.show', $customer->id) }}#documents">
 
                             <div>
                                 <label for="document_type_id"
                                     class="block text-sm font-medium text-gray-700 mb-1">Document
                                     Type <span class="text-red-500">*</span></label>
-                                <select name="document_type_id" id="document_type_id" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
+                                <select id="document_type_id" name="document_type_id" required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm
+                                    @error('document_type_id') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
                                     <option value="" disabled selected>Select document type</option>
                                     @foreach ($documentTypes as $docType)
                                         <option value="{{ $docType->id }}"
@@ -351,14 +502,35 @@
                                         </option>
                                     @endforeach
                                 </select>
+                                @error('document_type_id')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                                @enderror
                             </div>
 
                             <div>
                                 <label for="document_file" class="block text-sm font-medium text-gray-700 mb-1">Select
                                     File <span class="text-red-500">*</span></label>
-                                <input type="file" name="document_file" id="document_file" required
-                                    class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                <input type="file" id="document_file" name="document_file" required
+                                    class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100
+                                    @error('document_file') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
                                 <p class="mt-1 text-xs text-gray-500">PDF, JPG, PNG. Max size: 5MB.</p>
+                                @error('document_file')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                                @enderror
                             </div>
 
                             <div class="flex justify-end">
@@ -380,50 +552,70 @@
             <div 
                 x-show="activeTab === 'application-process'" 
                 x-cloak 
-                x-data="applicationProcessComponent()"
-            >
-            <script>
-                function applicationProcessComponent() {
-                    return {
-                        predefinedMessages: @json(\App\Models\PreDefinedMessage::all()),
-                        showRemarkForm: false,
-                        selectedMessage: '',
-                        selectedStatus: '',
-                        showFileUpload: false,
-                        showAppointmentFields: false,
-                        remarks: '',
-                        updateRemarks() {
-                            if (this.selectedStatus) {
-                                // Find the predefined message where message_name matches selectedStatus (case-insensitive)
-                                const matched = this.predefinedMessages.find(
-                                    msg => msg.message_name && msg.message_name.toLowerCase() === this.selectedStatus.toLowerCase()
-                                );
-                                if (matched) {
-                                    this.remarks = matched.message_remarks;
-                                } else {
-                                    this.remarks = "";
+                x-data="applicationProcessComponent({{ $errors->any() ? 'true' : 'false' }},'{{ old('application_status') }}')"
+                x-init="init()">
+
+                <script>
+                    function applicationProcessComponent(show = false, oldStatus = '') {
+                        return {
+                            predefinedMessages: @json(\App\Models\PreDefinedMessage::all()),
+                            showRemarkForm: show,
+                            selectedMessage: '',
+                            selectedStatus: oldStatus || '',
+                            showFileUpload: false,
+                            showAppointmentFields: false,
+                            remarks: '{{ old('remark') }}',
+                            init() {
+                                if (this.selectedStatus) {
+                                    this.updateFileUpload();
+                                    this.updateRemarks();
                                 }
+                            },
+                            updateRemarks() {
+                                if (!this.selectedMessage) {
+                                    this.remarks = ''; 
+                                    return;
+                                }
+                    
+                                if (this.selectedMessage) {
+                                    const matched = this.predefinedMessages.find(
+                                        msg => msg.message_name === this.selectedMessage
+                                    );
+
+                                    if (matched && (!this.remarks || this.selectedMessage)) {
+                                        this.remarks = matched.message_remarks;
+                                    }
+                                } 
+                                else if (this.selectedStatus) {
+                                    const matched = this.predefinedMessages.find(
+                                        msg => msg.message_name && 
+                                            msg.message_name.toLowerCase() === this.selectedStatus.toLowerCase()
+                                    );
+
+                                    if (matched && !this.remarks) {
+                                        this.remarks = matched.message_remarks;
+                                    }
+                                }
+                            },
+                            updateFileUpload() {
+                                this.showFileUpload = [
+                                    'details_verification', 
+                                    'appointment_scheduled', 
+                                    'appointment_rescheduled1', 
+                                    'appointment_rescheduled2', 
+                                    'appointment_rescheduled3'
+                                ].includes(this.selectedStatus);
+                                this.showAppointmentFields = [
+                                    'appointment_scheduled', 
+                                    'appointment_rescheduled1', 
+                                    'appointment_rescheduled2', 
+                                    'appointment_rescheduled3'
+                                ].includes(this.selectedStatus);
                             }
-                        },
-                        updateFileUpload() {
-                            this.showFileUpload = [
-                                'details_verification', 
-                                'appointment_scheduled', 
-                                'appointment_rescheduled1', 
-                                'appointment_rescheduled2', 
-                                'appointment_rescheduled3'
-                            ].includes(this.selectedStatus);
-                            this.showAppointmentFields = [
-                                'appointment_scheduled', 
-                                'appointment_rescheduled1', 
-                                'appointment_rescheduled2', 
-                                'appointment_rescheduled3'
-                            ].includes(this.selectedStatus);
                         }
                     }
-                }
-            </script>
-
+                </script>
+                
                 {{-- Alpine component for form toggle --}}
                 <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
                     <div class="flex justify-between items-center mb-4">
@@ -444,91 +636,149 @@
                     <div x-show="showRemarkForm" x-cloak x-transition
                         class="border border-gray-200 rounded-lg p-5 mb-6 bg-gray-50">
                         <form action="{{ route('admin.application-progress.store') }}" method="POST"
-                            enctype="multipart/form-data" class="space-y-5">
+                            enctype="multipart/form-data" class="space-y-5" novalidate>
                             @csrf
                             {{-- Add customer_id as needed --}}
                             <input type="hidden" name="customer_id" value="{{ $customer->id }}">
-                            <input type="hidden" name="redirect"
-                                value="{{ route('admin.customers.show', $customer->id) }}#application-process">
+                            <input type="hidden" name="redirect" value="{{ route('admin.customers.show', $customer->id) }}#application-process">
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                                 <div>
                                     <label for="application_status"
                                         class="block text-sm font-medium text-gray-700 mb-1">Application Status <span
                                             class="text-red-500">*</span></label>
-                                    <select name="application_status" id="application_status" required
+                                    <select id="application_status" name="application_status" required
                                         x-model="selectedStatus" @change="updateFileUpload(); updateRemarks()"
-                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
-                                        <option value="" disabled selected>Select Application Status</option>
-                                        <option value="in_process">In Process</option>
-                                        <option value="documents_submitted">Documents Submitted</option>
-                                        <option value="details_verification">Details Verification</option>
-                                        <option value="appointment_scheduled">Appointment Scheduled</option>
-                                        <option value="pov_success">POV Success</option>
-                                        <option value="pov_failed">POV Failed</option>
-                                        <option value="pov_insufficient_documents">POV Insufficient Documents</option>
-                                        <option value="appointment_rescheduled1">Appointment Rescheduled1</option>
-                                        <option value="appointment_rescheduled2">Appointment Rescheduled2</option>
-                                        <option value="appointment_rescheduled3">Appointment Rescheduled3</option>
+                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm
+                                        @error('application_status') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                        <option value="" disabled>Select Application Status</option>
+                                        @foreach ($statuses as $status)
+                                            <option value="{{ $status->slug }}">
+                                                {{ $status->status_name }}
+                                            </option>
+                                        @endforeach
                                     </select>
+                                    @error('application_status')
+                                    <p class="mt-1 text-sm text-red-600 flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        {{ $message }}
+                                    </p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label for="status_date" class="block text-sm font-medium text-gray-700 mb-1">Status
                                         Date <span class="text-red-500">*</span></label>
-                                    <input type="date" name="status_date" id="status_date" required
+                                    <input type="date" id="status_date" name="status_date" required
                                         value="{{ date('Y-m-d') }}"
-                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                        @error('status_date') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                    @error('status_date')
+                                    <p class="mt-1 text-sm text-red-600 flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        {{ $message }}
+                                    </p>
+                                    @enderror
                                 </div>
 
                                 {{-- File Upload Fields --}}
                                 <div x-show="showFileUpload || showAppointmentFields" class="md:col-span-2">
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Upload File <span
-                                                    x-show="showFileUpload" class="text-red-500">*</span></label>
-                                            <input type="file" name="file" id="file"
-                                                :required="showFileUpload"
-                                                class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                                            <p class="mt-1 text-xs text-gray-500">PDF, JPG, PNG. Max size: 5MB.</p>
-                                        </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Upload File <span
+                                                x-show="showFileUpload" class="text-red-500">*</span></label>
+                                        <input type="file" id="file" name="file" 
+                                            :required="showFileUpload"
+                                            class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100
+                                            @error('file') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                        <p class="mt-1 text-xs text-gray-500">PDF, JPG, PNG. Max size: 5MB.</p>
+                                        @error('file')
+                                        <p class="mt-1 text-sm text-red-600 flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
+                                    </div>
 
-                                        <div x-show="showAppointmentFields">
-                                            <label for="appointment_date"
-                                                class="block text-sm font-medium text-gray-700 mb-1">Appointment Date <span
-                                                    class="text-red-500">*</span></label>
-                                            <input type="date" name="appointment_date" id="appointment_date"
-                                                :required="showAppointmentFields"
-                                                class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                        </div>
+                                    <div class="mt-4" x-show="showAppointmentFields">
+                                        <label for="appointment_date"
+                                            class="block text-sm font-medium text-gray-700 mb-1">Appointment Date <span
+                                                class="text-red-500">*</span></label>
+                                        <input type="date" name="appointment_date" id="appointment_date"
+                                            :required="showAppointmentFields"
+                                            class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                            @error('appointment_date') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                        @error('appointment_date')
+                                        <p class="mt-1 text-sm text-red-600 flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
+                                    </div>
 
-                                        <div x-show="showAppointmentFields">
-                                            <label for="appointment_time"
-                                                class="block text-sm font-medium text-gray-700 mb-1">Appointment Time <span
-                                                    class="text-red-500">*</span></label>
-                                            <input type="time" name="appointment_time" id="appointment_time"
-                                                :required="showAppointmentFields"
-                                                class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                        </div>
+                                    <div class="mt-4" x-show="showAppointmentFields">
+                                        <label for="appointment_time"
+                                            class="block text-sm font-medium text-gray-700 mb-1">Appointment Time <span
+                                                class="text-red-500">*</span></label>
+                                        <input type="time" name="appointment_time" id="appointment_time"
+                                            :required="showAppointmentFields"
+                                            class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                            @error('appointment_time') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                        @error('appointment_time')
+                                        <p class="mt-1 text-sm text-red-600 flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
                                     </div>
                                 </div>
 
-                                {{-- <div>
+                                <div class="md:col-span-2">
                                     <label for="predefined_message"
                                         class="block text-sm font-medium text-gray-700 mb-1">Pre-defined Messages</label>
                                     <select name="predefined_message" id="predefined_message" x-model="selectedMessage" @change="updateRemarks()"
                                         class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
                                         <option value="" selected>Select Message (Optional)</option>
                                         @foreach (\App\Models\PreDefinedMessage::all() as $message)
-                                            <option value="{{ $message->message_remarks }}">{{ $message->message_name }}</option>
+                                            <option value="{{ $message->message_name }}">{{ $message->message_name }}</option>
                                         @endforeach
                                     </select>
-                                </div> --}}
+                                </div> 
 
                                 <div class="md:col-span-2">
                                     <label for="remark" class="block text-sm font-medium text-gray-700 mb-1">Remarks
                                         <span class="text-red-500">*</span></label>
                                     <textarea name="remark" id="remark" rows="4" required placeholder="Enter remarks..." x-model="remarks"
-                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm"></textarea>
+                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                        @error('remark') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"></textarea>
+                                    @error('remark')
+                                    <p class="mt-1 text-sm text-red-600 flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        {{ $message }}
+                                    </p>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -684,59 +934,95 @@
 
         </div>
     </div>
+@endsection
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Event handlers can be added here if needed
+@push('scripts')
+<script>
+    // Function to confirm account deactivation using SweetAlert2
+    function confirmDeactivate() {
+        Swal.fire({
+            title: 'Deactivate Account?',
+            text: 'You are about to deactivate this customer account. This action will prevent the user from logging in and cannot be easily undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, deactivate it!',
+            customClass: {
+                popup: 'rounded-lg shadow-lg',
+                title: 'text-lg font-semibold text-gray-800',
+                confirmButton: 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mx-1',
+                cancelButton: 'px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 mx-1'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('deactivateForm').submit();
+            }
+        });
+    }
+
+    let debounceTimer;
+
+    $(document).ready(function () {
+
+        $('#pin_code').on('input', function () {
+
+            clearTimeout(debounceTimer);
+
+            let pincode = $(this).val().trim();
+
+            $('#pincode-error').text('');
+
+            if (!/^\d*$/.test(pincode)) {
+                $('#pincode-error').text('Only numbers allowed');
+                $('#city').val('');
+                $('#state').val('');
+                return;
+            }
+
+            if (pincode.length !== 6) {
+                $('#city').val('');
+                $('#state').val('');
+                return;
+            }
+
+            debounceTimer = setTimeout(function () {
+
+                $.ajax({
+                    url: "{{ route('admin.pincode.location') }}",
+                    type: "POST",
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        pincode: pincode
+                    },
+                    beforeSend: function () {
+                        $('#city').val('Loading...');
+                        $('#state').val('Loading...');
+                    },
+                    success: function (res) {
+                        if (res.status === 'success') {
+                            $('#city').val(res.city);
+                            $('#state').val(res.state);
+                            $('#pincode-error').text('');
+                        } else {
+                            $('#city').val('');
+                            $('#state').val('');
+                            $('#pincode-error').text(res.message || 'Invalid pincode');
+                        }
+                    },
+                    error: function (xhr) {
+                        $('#city').val('');
+                        $('#state').val('');
+
+                        let msg = xhr.responseJSON?.message || 'Invalid pincode';
+                        $('#pincode-error').text(msg);
+                    }
+                });
+
+            }, 500); 
         });
 
-        // Function to confirm document deletion using SweetAlert2
-        function confirmDelete(documentName, form) {
-            Swal.fire({
-                title: 'Delete Document?',
-                text: `You are about to delete "${documentName}". This action cannot be undone.`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!',
-                customClass: {
-                    popup: 'rounded-lg shadow-lg',
-                    title: 'text-lg font-semibold text-gray-800',
-                    confirmButton: 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mx-1',
-                    cancelButton: 'px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 mx-1'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        }
+    });
+</script>
+@endpush
 
-        // Function to confirm account deactivation using SweetAlert2
-        function confirmDeactivate() {
-            Swal.fire({
-                title: 'Deactivate Account?',
-                text: 'You are about to deactivate this customer account. This action will prevent the user from logging in and cannot be easily undone.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, deactivate it!',
-                customClass: {
-                    popup: 'rounded-lg shadow-lg',
-                    title: 'text-lg font-semibold text-gray-800',
-                    confirmButton: 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mx-1',
-                    cancelButton: 'px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 mx-1'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('deactivateForm').submit();
-                }
-            });
-        }
-    </script>
-@endsection
-
-@section('scripts')
-@endsection

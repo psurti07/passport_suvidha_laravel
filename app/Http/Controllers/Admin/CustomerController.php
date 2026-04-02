@@ -5,15 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use App\Models\ApplicationOrder;
+use App\Models\Invoice;
+use App\Models\InvoiceLog;
+use App\Models\ApplicationStatus;
 use Illuminate\Validation\Rule;
-// Imports needed for export
-use App\Exports\CustomersExport;       // We will create this
-use Maatwebsite\Excel\Facades\Excel as ExcelFacade;
-use Maatwebsite\Excel\Excel as ExcelConstant; // Renamed to avoid conflict
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Carbon; // Add Carbon import
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon; 
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 class CustomerController extends Controller
 {
     /**
@@ -21,67 +25,76 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $query = Customer::query();
+        return view('admin.customers.index');
+    }
 
-        // Search functionality
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
-                $q->where('pack_code', 'like', "%{$searchTerm}%")
-                  ->orWhere('first_name', 'like', "%{$searchTerm}%")
-                  ->orWhere('last_name', 'like', "%{$searchTerm}%")
-                  ->orWhere('email', 'like', "%{$searchTerm}%")
-                  ->orWhere('mobile_number', 'like', "%{$searchTerm}%")
-                  ->orWhere('service_code', 'like', "%{$searchTerm}%");
-            });
+    public function data(Request $request)
+    {
+        $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
+        $to   = $request->to_date ?? now()->format('Y-m-d');
+
+        $query = Customer::select([
+            'id',
+            'first_name',
+            'last_name',
+            'email',
+            'mobile_number',
+            'is_paid',
+            'created_at'
+        ]);
+
+        if ($request->from_date && $request->to_date) {
+            $query->whereBetween('created_at', [
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
+            ]);
         }
 
-        // Date range filtering
-        if ($request->filled('from_date')) {
-            $query->whereDate('created_at', '>=', $request->from_date);
-        }
-        if ($request->filled('to_date')) {
-            $query->whereDate('created_at', '<=', $request->to_date);
+        if ($request->status == "paid") {
+            $query->where('is_paid', 1);
         }
 
-        // Filter by is_paid status
-        if ($request->filled('status')) { // Use filled() for cleaner check
-            $status = $request->input('status');
-            if ($status === 'paid') {
-                $query->where('is_paid', true);
-            } elseif ($status === 'lead') {
-                $query->where('is_paid', false);
-            }
-             // No 'else' needed, as filled() handles the 'All' case (empty value)
+        if ($request->status == "lead") {
+            $query->where('is_paid', 0);
         }
 
-        // Sorting logic
-        $sortBy = $request->input('sort_by', 'id'); // Default sort column
-        $sortDirection = $request->input('sort_direction', 'desc'); // Default sort direction
+        return DataTables::of($query)
 
-        // Validate sortable columns to prevent errors
-        $sortableColumns = ['id', 'first_name', 'email', 'mobile_number', 'is_paid', 'created_at'];
-        if (in_array($sortBy, $sortableColumns)) {
-             // Combine first_name and last_name sorting if 'first_name' is chosen
-             if ($sortBy === 'first_name') {
-                 $query->orderBy('first_name', $sortDirection)
-                       ->orderBy('last_name', $sortDirection); // Secondary sort by last name
-             } else {
-                $query->orderBy($sortBy, $sortDirection);
-             }
-        } else {
-            // Default sort if invalid column provided
-            $query->orderBy('id', 'desc');
-        }
+            ->addIndexColumn()
 
-        // Apply pagination and append query string parameters
-        $perPage = $request->input('per_page', 10); // Get per_page value from request
-        $paginator = $query->paginate($perPage);
-        $customers = $paginator->withQueryString(); // Chain withQueryString directly
+            ->addColumn('name', function ($row) {
+                return $row->first_name . ' ' . $row->last_name;
+            })
 
-        return view('admin.customers.index', compact('customers'));
+            ->addColumn('status', function ($row) {
+                return $row->is_paid ? 'paid' : 'lead';
+            })
+
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at->format('d/m/Y H:i:s');
+            })
+
+            ->addColumn('actions', function ($row) {
+                return '
+                    <a href="'.route('admin.customers.show', $row->id).'" 
+                    class="text-blue-600 hover:text-blue-900" 
+                    title="View Customer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path fill-rule="evenodd"
+                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                ';
+            })
+
+            ->rawColumns(['status','actions'])
+
+            ->make(true);
     }
 
     /**
@@ -90,64 +103,76 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function today(Request $request)
+    public function today()
     {
-        // Base query for today's customers
-        $baseQuery = Customer::query()->whereDate('created_at', Carbon::today());
+        $baseQuery = Customer::whereDate('created_at', Carbon::today());
 
-        // Calculate counts before filtering for display
         $totalTodayCount = $baseQuery->count();
-        $paidTodayCount = (clone $baseQuery)->where('is_paid', true)->count(); // Clone to avoid modifying base query
-        $leadTodayCount = (clone $baseQuery)->where('is_paid', false)->count(); // Clone to avoid modifying base query
+        $paidTodayCount  = (clone $baseQuery)->where('is_paid', 1)->count();
+        $leadTodayCount  = (clone $baseQuery)->where('is_paid', 0)->count();
 
-        // Apply filters to a new query instance for pagination
-        $filteredQuery = Customer::query()->whereDate('created_at', Carbon::today());
+        return view('admin.customers.today', compact(
+            'totalTodayCount',
+            'paidTodayCount',
+            'leadTodayCount'
+        ));
+    }
 
-        // Search functionality
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $filteredQuery->where(function($q) use ($searchTerm) {
-                $q->where('pack_code', 'like', "%{$searchTerm}%")
-                  ->orWhere('first_name', 'like', "%{$searchTerm}%")
-                  ->orWhere('last_name', 'like', "%{$searchTerm}%")
-                  ->orWhere('email', 'like', "%{$searchTerm}%")
-                  ->orWhere('mobile_number', 'like', "%{$searchTerm}%")
-                  ->orWhere('service_code', 'like', "%{$searchTerm}%");
-            });
+    public function todayData(Request $request)
+    {
+        $query = Customer::select([
+            'id',
+            'first_name',
+            'last_name',
+            'email',
+            'mobile_number',
+            'is_paid',
+            'created_at'
+        ])->whereDate('created_at', now());
+
+        if ($request->status == "paid") {
+            $query->where('is_paid', 1);
         }
 
-        // Filter by is_paid status
-        if ($request->filled('status')) {
-            $status = $request->input('status');
-            if ($status === 'paid') {
-                $filteredQuery->where('is_paid', true);
-            } elseif ($status === 'lead') {
-                $filteredQuery->where('is_paid', false);
-            }
+        if ($request->status == "lead") {
+            $query->where('is_paid', 0);
         }
 
-        // Sorting logic
-        $sortBy = $request->input('sort_by', 'id');
-        $sortDirection = $request->input('sort_direction', 'desc');
+        return DataTables::of($query)
 
-        $sortableColumns = ['id', 'first_name', 'email', 'mobile_number', 'is_paid', 'created_at'];
-        if (in_array($sortBy, $sortableColumns)) {
-             if ($sortBy === 'first_name') {
-                 $filteredQuery->orderBy('first_name', $sortDirection)
-                       ->orderBy('last_name', $sortDirection);
-             } else {
-                $filteredQuery->orderBy($sortBy, $sortDirection);
-             }
-        } else {
-            $filteredQuery->orderBy('id', 'desc');
-        }
+            ->addIndexColumn()
 
-        // Apply pagination to the filtered query
-        $perPage = $request->input('per_page', 10);
-        $customers = $filteredQuery->paginate($perPage)->withQueryString();
+            ->addColumn('name', function ($row) {
+                return $row->first_name . ' ' . $row->last_name;
+            })
 
-        // Return the view with counts and paginated customers
-        return view('admin.customers.today', compact('customers', 'totalTodayCount', 'paidTodayCount', 'leadTodayCount'));
+            ->addColumn('status', function ($row) {
+                return $row->is_paid ? 'paid' : 'lead';
+            })
+
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at->format('d/m/Y H:i:s');
+            })
+
+            ->addColumn('actions', function ($row) {
+                return '
+                    <a href="'.route('admin.customers.show', $row->id).'" 
+                    class="text-blue-600 hover:text-blue-900" 
+                    title="View Customer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path fill-rule="evenodd"
+                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                ';
+            })
+
+            ->rawColumns(['status','actions'])
+
+            ->make(true);
     }
 
     /**
@@ -157,7 +182,10 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('admin.customers.create');
+        return view('admin.customers.create', [
+            'cardNumber' => generateCardNumber(),
+            'paymentId'   => generatePaymentId(),
+        ]);
     }
 
     /**
@@ -168,48 +196,40 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        // Validation rules similar to API controller
         $baseRules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'mobile_number' => 'required|string|max:20',
+            'mobile_number' => ['required','regex:/^[6-9][0-9]{9}$/','unique:customers,mobile_number'],
             'email' => 'required|email|unique:customers,email',
             'is_paid' => 'sometimes|boolean',
         ];
+
         $paidRules = [
-            'pack_code' => 'required|string|max:255',
             'address' => 'required|string',
+            'pin_code' => 'required|string|max:10',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
             'place_of_birth' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
-            'payment_info_id' => 'required|numeric',
-            'service_code' => 'required|string|max:255',
+            'service_code' => 'required|string|max:50',
+            'card_number' => 'nullable|string|size:16',
+            'amount' => 'nullable|numeric|min:1',
+            'payment_id' => 'nullable|string|max:50',
         ];
 
-        $isPaid = $request->boolean('is_paid'); 
+        $isPaid = $request->boolean('is_paid');
 
-        $rules = $baseRules;
-        if ($isPaid) {
-            $rules = array_merge($rules, $paidRules);
-        }
+        $rules = $isPaid ? array_merge($baseRules, $paidRules) : $baseRules;
 
-        $validatedData = $request->validate($rules);
-        $validatedData['is_paid'] = $isPaid; // Ensure is_paid is set correctly
+        $validated = $request->validate($rules);
 
-         // Fill missing nullable fields with null if not paid
-        if (!$isPaid) {
-             $nullableFields = ['pack_code', 'address', 'gender', 'date_of_birth', 'place_of_birth', 'nationality', 'payment_info_id', 'service_code'];
-             foreach ($nullableFields as $field) {
-                 if (!isset($validatedData[$field])) {
-                     $validatedData[$field] = null;
-                 }
-             }
-        }
+        $validated['is_paid'] = $isPaid;
 
-        Customer::create($validatedData);
+        $this->createOrConvert($validated, null, 'create');
 
-        return redirect()->route('admin.customers.index')->with('success', 'Customer created successfully');
+        return back()->with('success', 'Customer created successfully');
     }
 
     /**
@@ -222,11 +242,15 @@ class CustomerController extends Controller
     {
         // Prevent accessing details page for leads
         if (!$customer->is_paid) {
-            return redirect()->route('admin.customers.index')
+            return redirect()->back()
                              ->with('error', 'Cannot view details for a Lead customer.');
         }
 
-        return view('admin.customers.show', compact('customer'));
+        $customer->load('applicationDocuments.documentType');
+
+        $statuses = ApplicationStatus::orderBy('priority_no')->get();
+        
+        return view('admin.customers.show', compact('customer', 'statuses'));
     }
 
     /**
@@ -237,7 +261,11 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        return view('admin.customers.edit', compact('customer'));
+        return view('admin.customers.edit', [
+            'cardNumber' => generateCardNumber(),
+            'paymentId'   => generatePaymentId(),
+            'customer' => $customer
+        ]);
     }
 
     /**
@@ -249,50 +277,32 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        // Validation rules similar to API controller update
-         $baseRules = [
+        $rules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'mobile_number' => 'required|string|max:20',
-            'email' => ['required', 'email', Rule::unique('customers')->ignore($customer->id)],
-            'is_paid' => 'sometimes|boolean',
-        ];
-        $paidRules = [
-            'pack_code' => 'required|string|max:255',
+            'mobile_number' => [
+                'required',
+                'regex:/^[6-9][0-9]{9}$/',
+                Rule::unique('customers')->ignore($customer->id)
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('customers')->ignore($customer->id)
+            ],
             'address' => 'required|string',
-            'gender' => 'required|in:male,female,other',
+            'pin_code' => 'required|string|max:10',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'place_of_birth' => 'required|string|max:255',
-            'nationality' => 'required|string|max:255',
-            'payment_info_id' => 'required|numeric',
-            'service_code' => 'required|string|max:255',
         ];
 
-        // Use the is_paid value submitted in the form, default to current status if not submitted
-        $isPaid = $request->boolean('is_paid', $customer->is_paid); 
-
-        $rules = $baseRules;
-        if ($isPaid) {
-            $rules = array_merge($rules, $paidRules);
-        }
-
         $validatedData = $request->validate($rules);
-        $validatedData['is_paid'] = $isPaid; // Ensure is_paid is set correctly
-
-         // Fill missing nullable fields with null if not paid
-        if (!$isPaid) {
-             $nullableFields = ['pack_code', 'address', 'gender', 'date_of_birth', 'place_of_birth', 'nationality', 'payment_info_id', 'service_code'];
-             foreach ($nullableFields as $field) {
-                 // Only nullify if not present in the request data, otherwise keep submitted value (even if empty string)
-                 if (!array_key_exists($field, $validatedData)) {
-                     $validatedData[$field] = null;
-                 }
-             }
-        }
 
         $customer->update($validatedData);
 
-        return redirect()->route('admin.customers.index')->with('success', 'Customer updated successfully');
+        return redirect()->back()->with('success', 'Customer updated successfully');       
     }
 
     /**
@@ -307,84 +317,141 @@ class CustomerController extends Controller
         return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully');
     }
 
-    public function export(Request $request)
+    /**
+     * Handle both creating new customer and converting lead to customer
+    */
+    public function convertToCustomer(Request $request, Customer $customer)
     {
-        // Query Building (Replicate index logic)
-        $query = Customer::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
-                $q->where('pack_code', 'like', "%{$searchTerm}%")
-                  ->orWhere('first_name', 'like', "%{$searchTerm}%")
-                  ->orWhere('last_name', 'like', "%{$searchTerm}%")
-                  ->orWhere('email', 'like', "%{$searchTerm}%")
-                  ->orWhere('mobile_number', 'like', "%{$searchTerm}%")
-                  ->orWhere('service_code', 'like', "%{$searchTerm}%");
-            });
+        if ($customer->is_paid) {
+            return back()->with('error', 'Already converted');
         }
 
-        // Date range filtering
-        if ($request->filled('from_date')) {
-            $query->whereDate('created_at', '>=', $request->from_date);
-        }
-        if ($request->filled('to_date')) {
-            $query->whereDate('created_at', '<=', $request->to_date);
+        $validator = Validator::make($request->all(), [
+            'address' => 'required|string',
+            'pin_code' => 'required|string|max:10',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'gender' => 'required|in:male,female,other',
+            'date_of_birth' => 'required|date',
+            'place_of_birth' => 'required|string|max:255',
+            'nationality' => 'required|string|max:255',
+            'service_code' => 'required|string|max:50',
+            'card_number' => 'nullable|string|size:16',
+            'amount' => 'nullable|numeric|min:1',
+            'payment_id' => 'nullable|string|max:50',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()
+                ->route('admin.customer.search.form')
+                ->withErrors($validator)
+                ->withInput()
+                ->with([
+                    'mobileNo' => $customer->mobile_number,
+                    'customer_id' => $customer->id 
+                ]);
         }
 
-        // Filter by is_paid status
-        if ($request->filled('status')) { 
-            $status = $request->input('status');
-            if ($status === 'paid') {
-                $query->where('is_paid', true);
-            } elseif ($status === 'lead') {
-                $query->where('is_paid', false);
+        $validated = $validator->validated();
+        $validated['is_paid'] = true;
+
+        $this->createOrConvert($validated, $customer, 'convert');
+
+        return redirect()
+            ->route('admin.customers.show', $customer->id)
+            ->with('success', 'Lead converted successfully')
+            ->withFragment('info');
+    }
+
+    private function createOrConvert($validated, $customer = null, $type = 'create')
+    {
+        return DB::transaction(function () use ($validated, $customer, $type) {
+
+            $isPaid = $validated['is_paid'];
+
+            $customerData = collect($validated)->except([
+                'amount',
+                'card_number',
+                'payment_id'
+            ])->toArray();
+
+            $customerData['registration_step'] = $isPaid ? 4 : 1;
+
+            if ($isPaid) {
+                $customerData['password'] = Hash::make(Str::random(8));
             }
-        }
 
-        // Sorting logic
-        $sortBy = $request->input('sort_by', 'id'); 
-        $sortDirection = $request->input('sort_direction', 'desc');
+            $services = [
+                'NORMAL_36' => ['type' => 'normal', 'size' => 36],
+                'NORMAL_60' => ['type' => 'normal', 'size' => 60],
+                'TATKAL_36' => ['type' => 'tatkal', 'size' => 36],
+                'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
+            ];
 
-        $sortableColumns = ['id', 'first_name', 'email', 'mobile_number', 'is_paid', 'created_at'];
-        if (in_array($sortBy, $sortableColumns)) {
-             if ($sortBy === 'first_name') {
-                 $query->orderBy('first_name', $sortDirection)
-                       ->orderBy('last_name', $sortDirection);
-             } else {
-                $query->orderBy($sortBy, $sortDirection);
-             }
-        } else {
-            $query->orderBy('id', 'desc');
-        }
+            if ($isPaid && isset($services[$validated['service_code']])) {
+                $customerData['passport_type'] = $services[$validated['service_code']]['type'];
+                $customerData['book_size'] = $services[$validated['service_code']]['size'];
+            }
 
-        $customers = $query->get(); // Fetch all matching customers for export
+            if ($customer) {
+                $customer->update($customerData);
+            } else {
+                $customer = Customer::create($customerData);
+            }
 
-        // Handle export based on type
-        $type = $request->input('type', 'excel');
-        // Use correct file extensions
-        $filename = 'customers.' . ($type === 'excel' ? 'xlsx' : $type);
+            if (!$isPaid) {
+                return $customer;
+            }
 
-        switch($type) {
-            case 'excel':
-                // Provide filename with correct extension and explicit type
-                return ExcelFacade::download(new CustomersExport($customers), $filename, ExcelConstant::XLSX);
-            case 'csv':
-                // Filename already has .csv, explicit type is good practice
-                return ExcelFacade::download(new CustomersExport($customers), $filename, ExcelConstant::CSV);
-            case 'pdf':
-                // Filename needs .pdf extension here too
-                $pdfFilename = 'customers.pdf';
-                try {
-                    return Pdf::loadView('exports.customers', ['customers' => $customers])
-                             ->download($pdfFilename);
-                } catch (\Exception $e) {
-                    Log::error("PDF Export Error: " . $e->getMessage());
-                    return redirect()->back()->with('error', 'Could not generate PDF export.');
-                }
-            default:
-                return redirect()->back()->with('error', 'Invalid export type requested.');
-        }
+            $netAmount = $validated['amount'] ?? 0;
+
+            $cardNumber = $validated['card_number'] ?? generateCardNumber();
+            $paymentId  = $validated['payment_id'] ?? generatePaymentId();
+
+            $cgst = $sgst = $igst = 0;
+
+            if (strtolower($validated['state']) === 'gujarat') {
+                $cgst = round($netAmount * 0.09, 2);
+                $sgst = round($netAmount * 0.09, 2);
+            } else {
+                $igst = round($netAmount * 0.18, 2);
+            }
+
+            $totalAmount = $netAmount + $cgst + $sgst + $igst;
+
+            $order = ApplicationOrder::create([
+                'customer_id' => $customer->id,
+                'registration_date' => now()->toDateString(),
+                'expiry_date' => now()->addMonths(6),
+                'card_number' => $cardNumber,
+                'amount' => $totalAmount,
+                'payment_id' => $paymentId
+            ]);
+
+            $invoiceNo = (DB::table('invoices')->max('inv_no') ?? 0) + 1;
+
+            $invoice = Invoice::create([
+                'customer_id' => $customer->id,
+                'card_id' => $order->id,
+                'inv_date' => now(),
+                'inv_no' => $invoiceNo,
+                'net_amount' => $netAmount,
+                'cgst' => $cgst,
+                'sgst' => $sgst,
+                'igst' => $igst,
+                'total_amount' => $totalAmount
+            ]);
+
+            InvoiceLog::create([
+                'log_detail' => $type === 'convert'
+                    ? 'Convert Lead to Customer'
+                    : 'Create New Customer',
+                'card_number' => $order->id,
+                'invoice_id' => $invoice->id,
+                'staff_id' => auth()->id()
+            ]);
+
+            return $customer;
+        });
     }
 }

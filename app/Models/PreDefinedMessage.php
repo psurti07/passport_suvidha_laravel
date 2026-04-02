@@ -10,6 +10,7 @@ class PreDefinedMessage extends Model
     use HasFactory;
 
     protected $fillable = [
+        'status_id',
         'message_name',
         'message_remarks',
     ];
@@ -22,5 +23,10 @@ class PreDefinedMessage extends Model
     public function getRouteKeyName()
     {
         return 'id';
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(ApplicationStatus::class, 'status_id');
     }
 }

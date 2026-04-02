@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Customer; // Use Customer model
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class SearchController extends Controller
 {
@@ -16,7 +17,19 @@ class SearchController extends Controller
      */
     public function showSearchForm()
     {
-        return view('admin.customer.search', ['customer' => null, 'mobile_no' => null]);
+        $customer = null;
+        $mobileNo = session('mobileNo');
+
+        if (session('customer_id')) {
+            $customer = Customer::find(session('customer_id'));
+        }
+
+        return view('admin.customer.search', [
+            'customer' => $customer,
+            'mobileNo' => $mobileNo,
+            'cardNumber' => generateCardNumber(),
+            'paymentId' => generatePaymentId(),
+        ]);
     }
 
     /**
@@ -28,7 +41,7 @@ class SearchController extends Controller
     public function searchCustomer(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'mobile_no' => 'required|digits:10', // Keep input name as mobile_no if form uses it
+            'mobile_no' => 'required|digits:10', 
         ]);
 
         if ($validator->fails()) {
@@ -40,9 +53,13 @@ class SearchController extends Controller
         $mobileNo = $request->input('mobile_no');
         $customer = null;
 
-        // Query Customer model using 'mobile_number' column
         $customer = Customer::where('mobile_number', $mobileNo)->first(); 
-
-        return view('admin.customer.search', compact('customer', 'mobileNo'));
+        
+        return view('admin.customer.search', [
+            'customer' => $customer,
+            'mobileNo' => $mobileNo,
+            'cardNumber' => generateCardNumber(),
+            'paymentId' => generatePaymentId(),
+        ]);
     }
 } 
