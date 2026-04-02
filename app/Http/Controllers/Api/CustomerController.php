@@ -290,39 +290,76 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function selectService(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'service_code' => 'required|string|max:255',
-        ]);
+    // public function selectService(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'service_code' => 'required|string|max:255',
+    //     ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+    //     if ($validator->fails()) {
+    //         return response()->json(['errors' => $validator->errors()], 422);
+    //     }
 
-        // Get customer via auth
-        $customer = $request->user();
+    //     // Get customer via auth
+    //     $customer = $request->user();
 
-        // Verify registration step
-        if ($customer->registration_step < 3) {
-            return response()->json([
-                'errors' => ['registration' => ['Please complete additional information first.']]
-            ], 422);
-        }
+    //     // Verify registration step
+    //     if ($customer->registration_step < 3) {
+    //         return response()->json([
+    //             'errors' => ['registration' => ['Please complete additional information first.']]
+    //         ], 422);
+    //     }
 
-        // Update customer with service selection
-        $data = $validator->validated();
-        $data['registration_step'] = 4; // Step 4: Service selection
-        $data['is_paid'] = false; // Not paid yet
+    //     // Update customer with service selection
+    //     $data = $validator->validated();
+    //     $data['registration_step'] = 4; // Step 4: Service selection
+    //     $data['is_paid'] = false; // Not paid yet
         
-        $customer->update($data);
+    //     $customer->update($data);
 
-        return response()->json([
-            'message' => 'Service selected successfully',
-            'customer' => $customer,
-            'next_step' => 'payment'
-        ]);
+    //     return response()->json([
+    //         'message' => 'Service selected successfully',
+    //         'customer' => $customer,
+    //         'next_step' => 'payment'
+    //     ]);
+    // }
+
+    public function selectService(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'service_code' => 'required|string|max:255',
+        'book_size' => 'required|string|max:10',
+        'passport_type' => 'required|string|max:10',
+        'nationality' => 'required|string|max:255',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
     }
+
+    // Get customer via auth
+    $customer = $request->user();
+
+    // Verify registration step
+    if ($customer->registration_step < 3) {
+        return response()->json([
+            'errors' => ['registration' => ['Please complete additional information first.']]
+        ], 422);
+    }
+
+    // Update customer with service selection and additional fields
+    $data = $validator->validated();
+    $data['registration_step'] = 4; // Step 4: Service selection
+    $data['is_paid'] = false; // Not paid yet
+    
+    $customer->update($data);
+
+    return response()->json([
+        'message' => 'Service selected successfully',
+        'customer' => $customer,
+        'next_step' => 'payment'
+    ]);
+}
 
     /**
      * Handle login request for customers 
