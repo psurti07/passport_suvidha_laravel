@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FinalDetail extends Model
 {
@@ -26,31 +27,26 @@ class FinalDetail extends Model
         'is_approved' => 'boolean',
     ];
 
-    /**
-     * Get the customer that owns the final detail.
-     */
-    public function customer()
+    // Relationships
+    public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }
 
-    /**
-     * Get the user who uploaded the final detail.
-     */
-    public function uploader()
+    public function uploader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');
     }
 
     /**
-     * Get the entity who approved the final detail.
+     * Custom logic 
      */
     public function approver()
     {
         if (!$this->approved_by_role || !$this->approved_by) {
             return null;
         }
-        
+
         if ($this->approved_by_role === 'user') {
             return User::find($this->approved_by);
         } else {
@@ -58,16 +54,14 @@ class FinalDetail extends Model
         }
     }
 
-    /**
-     * Get the approver name.
-     */
     public function getApproverNameAttribute()
     {
         $approver = $this->approver();
+
         if (!$approver) {
             return 'Not approved';
         }
-        
+
         if ($this->approved_by_role === 'user') {
             return $approver->name . ' (Staff)';
         } else {

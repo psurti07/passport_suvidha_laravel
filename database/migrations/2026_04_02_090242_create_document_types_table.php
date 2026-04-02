@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOtpsTable extends Migration
+class CreateDocumentTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateOtpsTable extends Migration
      */
     public function up()
     {
-        Schema::create('otps', function (Blueprint $table) {
+        Schema::create('document_types', function (Blueprint $table) {
             $table->id();
-            $table->string('mobile_number');
-            $table->string('otp');
-            $table->timestamp('sent_at');
-            $table->boolean('is_verified')->default(false);
-            $table->string('purpose')->default('registration');
+            $table->string('name')->unique();
+            $table->text('description')->nullable();
+            $table->boolean('is_mandatory')->default(true);
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ class CreateOtpsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('otps');
+        Schema::dropIfExists('document_types');
     }
 }

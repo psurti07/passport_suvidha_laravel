@@ -32,20 +32,15 @@ class AppointmentLetter extends Model
     protected $casts = [
         'upload_date' => 'datetime',
         'appointment_date' => 'date',
-        'appointment_time' => 'datetime'
+        'appointment_time' => 'string'
     ];
 
-    /**
-     * Get the customer that owns the appointment letter.
-     */
+    // Relationships
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }
 
-    /**
-     * Get the user who uploaded the appointment letter.
-     */
     public function uploader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');

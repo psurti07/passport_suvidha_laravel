@@ -21,4 +21,9 @@ class Otp extends Model
         'sent_at' => 'datetime',
         'is_verified' => 'boolean'
     ];
+
+    // public function scopeVerified($query)
+    // {
+    //     return $query->where('is_verified', true);
+    // }
 }

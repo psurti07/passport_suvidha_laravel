@@ -15,12 +15,15 @@ class AdminUserSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@passportsuvidha.com',
-            'password' => Hash::make('Admin@123'),
-            'role' => 'admin',
-            'is_active' => true,
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@passportsuvidha.com'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('Admin@123'),
+                'role' => 'admin',
+                'is_active' => true,
+                'is_admin' => true,
+            ]
+        );
     }
 }

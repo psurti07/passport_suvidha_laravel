@@ -15,10 +15,12 @@ class CreateAppointmentLettersTable extends Migration
     {
         Schema::create('appointment_letters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
+            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
             $table->string('file_path');
             $table->timestamp('upload_date')->useCurrent();
-            $table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
+            $table->date('appointment_date')->nullable();
+            $table->time('appointment_time')->nullable();
+            $table->foreignId('uploaded_by')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

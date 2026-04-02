@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ApplicationStatus extends Model
 {
@@ -14,4 +15,14 @@ class ApplicationStatus extends Model
         'slug',
         'priority_no'
     ];
+
+    protected $casts = [
+        'priority_no' => 'integer',
+    ];
+
+    // Relationships
+    public function applicationProgresses(): HasMany
+    {
+        return $this->hasMany(ApplicationProgress::class, 'application_status');
+    }
 }

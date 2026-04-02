@@ -20,6 +20,7 @@ class DocumentType extends Model
         'is_mandatory' => 'boolean',
     ];
 
+    // Relationships
     public function applicationDocuments(): HasMany
     {
         return $this->hasMany(ApplicationDocument::class);

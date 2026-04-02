@@ -16,16 +16,9 @@ class CreateTicketRemarksTable extends Migration
         Schema::create('ticket_remarks', function (Blueprint $table) {
             $table->id();
             $table->string('ticket_number');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->text('comment');
-            $table->timestamps(0);
-
-            // Add foreign key constraint for ticket_number
-            $table->foreign('ticket_number')->references('ticket_number')->on('tickets')->onDelete('cascade');
-
-            // Add foreign key constraints if needed, assuming 'users' and 'tickets' tables exist
-            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            // $table->foreign('ticket_number')->references('ticket_number')->on('tickets')->onDelete('cascade'); // Note: Foreign key on non-primary key
+            $table->timestamps();
         });
     }
 

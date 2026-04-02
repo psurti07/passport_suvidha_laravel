@@ -17,4 +17,11 @@ class Service extends Model
         'service_gst',
         'service_total_amount',
     ];
+
+    protected $casts = [
+        'service_gov_amount' => 'decimal:2',
+        'service_charges' => 'decimal:2',
+        'service_gst' => 'decimal:2',
+        'service_total_amount' => 'decimal:2',
+    ];
 }

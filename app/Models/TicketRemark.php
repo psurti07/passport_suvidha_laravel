@@ -21,19 +21,14 @@ class TicketRemark extends Model
         'comment',
     ];
 
-    /**
-     * Get the ticket that the remark belongs to.
-     */
+    // Relationships
     public function ticket(): BelongsTo
     {
         return $this->belongsTo(Ticket::class, 'ticket_number', 'ticket_number');
     }
 
-    /**
-     * Get the user (staff) who created the remark.
-     */
-    public function user(): BelongsTo // Assuming admins/staff are in the User model
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
