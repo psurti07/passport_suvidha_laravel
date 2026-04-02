@@ -1,33 +1,41 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>OTP Report</title>
     <style>
-        body {
-            font-family: sans-serif;
-            font-size: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 6px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .verified {
-            color: green;
-        }
-        .pending {
-            color: orange;
-        }
+    body {
+        font-family: sans-serif;
+        font-size: 10px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 6px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .verified {
+        color: green;
+    }
+
+    .pending {
+        color: orange;
+    }
     </style>
 </head>
+
 <body>
     <h2>OTP Report</h2>
     <p>Generated on: {{ date('Y-m-d H:i:s') }}</p>
@@ -60,4 +68,5 @@
         </tbody>
     </table>
 </body>
-</html> 
+
+</html>
