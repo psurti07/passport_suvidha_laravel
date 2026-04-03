@@ -19,8 +19,8 @@ class ApplicationProgress extends Model
         'status_date',
         'remark',
         'remarked_by',
-        // 'file_type',
-        // 'file',
+        'file_type',
+        'file',
     ];
 
     protected $casts = [
@@ -46,18 +46,18 @@ class ApplicationProgress extends Model
     /**
      * Get the related file based on file_type.
      */
-    // public function getRelatedFileAttribute()
-    // {
-    //     if (!$this->file_type || !$this->file) {
-    //         return null;
-    //     }
+    public function getRelatedFileAttribute()
+    {
+        if (!$this->file_type || !$this->file) {
+            return null;
+        }
 
-    //     if ($this->file_type === 'appointment_letters') {
-    //         return AppointmentLetter::find($this->file);
-    //     } elseif ($this->file_type === 'final_details') {
-    //         return FinalDetail::find($this->file);
-    //     }
+        if ($this->file_type === 'appointment_letters') {
+            return AppointmentLetter::find($this->file);
+        } elseif ($this->file_type === 'final_details') {
+            return FinalDetail::find($this->file);
+        }
 
-    //     return null;
-    // }
+        return null;
+    }
 } 
