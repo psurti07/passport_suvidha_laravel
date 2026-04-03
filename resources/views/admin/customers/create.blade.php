@@ -352,30 +352,24 @@
                                 @enderror
                             </div>
                             <div>
-                                <label for="service_code" class="block text-sm font-semibold text-gray-900">
-                                    Service Code
+                                <label for="service_id" class="block text-sm font-semibold text-gray-900">
+                                    Service Name
                                     <span class="text-red-500" x-show="isPaid">*</span>
                                 </label>
                                 <div class="relative group">
-                                    <select id="service_code" name="service_code" :required="isPaid"
+                                    <select id="service_id" name="service_id" :required="isPaid"
                                         class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm
-                                        @error('service_code') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
-                                        <option value="" disabled selected>Select service code</option>
-                                        <option value="NORMAL_36"
-                                            {{ old('service_code') == 'NORMAL_36' ? 'selected' : '' }}>NORMAL 36
-                                        </option>
-                                        <option value="NORMAL_60"
-                                            {{ old('service_code') == 'NORMAL_60' ? 'selected' : '' }}>NORMAL 60
-                                        </option>
-                                        <option value="TATKAL_36"
-                                            {{ old('service_code') == 'TATKAL_36' ? 'selected' : '' }}>TATKAL 36
-                                        </option>
-                                        <option value="TATKAL_60"
-                                            {{ old('service_code') == 'TATKAL_60' ? 'selected' : '' }}>TATKAL 60
-                                        </option>
+                                        @error('service_id') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                        <option value="" disabled selected>Select service name</option>
+                                        @foreach($services as $service)
+                                            <option value="{{ $service->id }}"
+                                                {{ old('service_id') == $service->id ? 'selected' : '' }}>
+                                                {{ $service->service_name }} 
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
-                                @error('service_code')
+                                @error('service_id')
                                 <p class="mt-1 text-sm text-red-600 flex items-center">
                                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"

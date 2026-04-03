@@ -9,6 +9,7 @@ use App\Models\ApplicationOrder;
 use App\Models\Invoice;
 use App\Models\InvoiceLog;
 use App\Models\ApplicationStatus;
+use App\Models\Service;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -185,6 +186,7 @@ class CustomerController extends Controller
         return view('admin.customers.create', [
             'cardNumber' => generateCardNumber(),
             'paymentId'   => generatePaymentId(),
+            'services' => Service::all()
         ]);
     }
 
@@ -205,6 +207,7 @@ class CustomerController extends Controller
         ];
 
         $paidRules = [
+            'service_id' => 'required|exists:services,id',
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',
             'city' => 'required|string|max:255',
@@ -213,7 +216,6 @@ class CustomerController extends Controller
             'date_of_birth' => 'required|date',
             'place_of_birth' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
-            'service_code' => 'required|string|max:50',
             'card_number' => 'nullable|string|size:16',
             'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
@@ -327,6 +329,7 @@ class CustomerController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
+            'service_id' => 'required|exists:services,id',
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',
             'city' => 'required|string|max:255',
@@ -335,7 +338,6 @@ class CustomerController extends Controller
             'date_of_birth' => 'required|date',
             'place_of_birth' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
-            'service_code' => 'required|string|max:50',
             'card_number' => 'nullable|string|size:16',
             'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
@@ -377,21 +379,25 @@ class CustomerController extends Controller
 
             $customerData['registration_step'] = $isPaid ? 4 : 1;
 
-            if ($isPaid) {
-                $customerData['password'] = Hash::make(Str::random(8));
+            if (!$isPaid) {
+                $customerData['service_id'] = 1;
             }
 
-            $services = [
-                'NORMAL_36' => ['type' => 'normal', 'size' => 36],
-                'NORMAL_60' => ['type' => 'normal', 'size' => 60],
-                'TATKAL_36' => ['type' => 'tatkal', 'size' => 36],
-                'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
-            ];
+            // if ($isPaid) {
+            //     $customerData['password'] = Hash::make(Str::random(8));
+            // }
 
-            if ($isPaid && isset($services[$validated['service_code']])) {
-                $customerData['passport_type'] = $services[$validated['service_code']]['type'];
-                $customerData['book_size'] = $services[$validated['service_code']]['size'];
-            }
+            // $services = [
+            //     'NORMAL_36' => ['type' => 'normal', 'size' => 36],
+            //     'NORMAL_60' => ['type' => 'normal', 'size' => 60],
+            //     'TATKAL_36' => ['type' => 'tatkal', 'size' => 36],
+            //     'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
+            // ];
+
+            // if ($isPaid && isset($services[$validated['service_code']])) {
+            //     $customerData['passport_type'] = $services[$validated['service_code']]['type'];
+            //     $customerData['book_size'] = $services[$validated['service_code']]['size'];
+            // }
 
             if ($customer) {
                 $customer->update($customerData);
