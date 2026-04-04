@@ -62,77 +62,7 @@ class ApplicationProgressController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // public function store(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'customer_id' => 'required|exists:customers,id',
-    //         'application_status' => 'required|string|max:255',
-    //         'status_date' => 'required|date',
-    //         'remark' => 'required|string',
-    //         'file' => 'required_if:application_status,details_verification,appointment_scheduled,appointment_rescheduled1,appointment_rescheduled2,appointment_rescheduled3|file|mimes:pdf,jpg,jpeg,png|max:5120',
-    //         'redirect' => 'nullable|string',
-    //         'appointment_date' => 'required_if:application_status,appointment_scheduled,appointment_rescheduled1,appointment_rescheduled2,appointment_rescheduled3|nullable|date',
-    //         'appointment_time' => 'required_if:application_status,appointment_scheduled,appointment_rescheduled1,appointment_rescheduled2,appointment_rescheduled3|nullable',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return redirect($request->redirect ?? url()->previous())
-    //             ->withErrors($validator)
-    //             ->withInput();
-    //     }
-
-    //     $data = $request->all();
-        
-    //     // Set the current admin user as the remarker if remark is provided
-    //     if (!empty($data['remark'])) {
-    //         $data['remarked_by'] = Auth::id();
-    //     }
-
-    //     // Handle file upload for Details Verification and Appointment Scheduled
-    //     if ($request->hasFile('file')) {
-    //         $file = $request->file('file');
-    //         $fileName = time() . '_' . $file->getClientOriginalName();
-    //         $filePath = $file->storeAs('uploads', $fileName, 'public');
-
-    //         if ($request->application_status === 'details_verification') {
-    //             // Create FinalDetail record
-    //             $finalDetail = FinalDetail::create([
-    //                 'customer_id' => $request->customer_id,
-    //                 'file_path' => $filePath,
-    //                 'upload_date' => now(),
-    //                 'uploaded_by' => Auth::id(),
-    //                 'is_approved' => false
-    //             ]);
-                
-    //             $data['file_type'] = 'final_details';
-    //             $data['file'] = $finalDetail->id;
-    //         } elseif (in_array($request->application_status, ['appointment_scheduled', 'appointment_rescheduled1', 'appointment_rescheduled2', 'appointment_rescheduled3'])) {
-    //             // Create AppointmentLetter record with appointment date and time
-    //             $appointmentLetter = AppointmentLetter::create([
-    //                 'customer_id' => $request->customer_id,
-    //                 'file_path' => $filePath,
-    //                 'upload_date' => now(),
-    //                 'uploaded_by' => Auth::id(),
-    //                 'appointment_date' => $request->appointment_date,
-    //                 'appointment_time' => $request->appointment_time
-    //             ]);
-                
-    //             $data['file_type'] = 'appointment_letters';
-    //             $data['file'] = $appointmentLetter->id;
-    //         }                        
-    //     }
-
-    //     ApplicationProgress::create($data);
-        
-    //     // Check if a redirect URL was provided
-    //     if ($request->has('redirect')) {
-    //         return redirect($request->redirect)
-    //             ->with('success', 'Application progress entry created successfully.');
-    //     }
-        
-    //     return redirect()->route('admin.application-progress.index')
-    //         ->with('success', 'Application progress entry created successfully.');
-    // }
+    
     public function store(Request $request)
     {
         $status = \App\Models\ApplicationStatus::find($request->status_id);
@@ -257,54 +187,7 @@ class ApplicationProgressController extends Controller
      * @param  \App\Models\ApplicationProgress  $applicationProgress
      * @return \Illuminate\Http\Response
      */
-    // public function update(Request $request, ApplicationProgress $applicationProgress)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'customer_id' => 'required|exists:customers,id',
-    //         'application_status' => 'required|string|max:255',
-    //         'status_date' => 'required|date',
-    //         'remark' => 'nullable|string',
-    //         'file_type' => 'nullable|in:final_details,appointment_letters',
-    //         'file' => 'nullable|numeric|required_with:file_type',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return redirect()->back()
-    //             ->withErrors($validator)
-    //             ->withInput();
-    //     }
-
-    //     $data = $request->all();
-        
-    //     // Set the current admin user as the remarker if remark is changed
-    //     if (isset($data['remark']) && $data['remark'] !== $applicationProgress->remark) {
-    //         $data['remarked_by'] = Auth::id();
-    //     }
-
-    //     // Validate the file reference based on file_type
-    //     if (!empty($data['file_type']) && !empty($data['file'])) {
-    //         if ($data['file_type'] === 'appointment_letters') {
-    //             $validator = Validator::make($data, [
-    //                 'file' => 'exists:appointment_letters,id',
-    //             ]);
-    //         } elseif ($data['file_type'] === 'final_details') {
-    //             $validator = Validator::make($data, [
-    //                 'file' => 'exists:final_details,id',
-    //             ]);
-    //         }
-
-    //         if ($validator->fails()) {
-    //             return redirect()->back()
-    //                 ->withErrors($validator)
-    //                 ->withInput();
-    //         }
-    //     }
-
-    //     $applicationProgress->update($data);
-        
-    //     return redirect()->route('admin.application-progress.index')
-    //         ->with('success', 'Application progress entry updated successfully.');
-    // }
+    
     public function update(Request $request, ApplicationProgress $applicationProgress)
     {
         $status = \App\Models\ApplicationStatus::find($request->status_id);

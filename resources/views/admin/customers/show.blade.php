@@ -616,7 +616,6 @@
                             msg => msg.status_id == this.selectedStatus
                         );
 
-                        // ✅ Check if old selectedMessage still valid
                         const exists = this.filteredMessages.some(
                             msg => msg.message_name === this.selectedMessage
                         );
