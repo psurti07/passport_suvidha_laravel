@@ -23,6 +23,6 @@ class ApplicationStatus extends Model
     // Relationships
     public function applicationProgresses(): HasMany
     {
-        return $this->hasMany(ApplicationProgress::class, 'status_id');
+        return $this->hasMany(ApplicationProgress::class, 'application_status');
     }
 }

@@ -251,8 +251,15 @@ class CustomerController extends Controller
         $customer->load('applicationDocuments.documentType');
 
         $statuses = ApplicationStatus::orderBy('priority_no')->get();
+
+        $predefinedMessages = \App\Models\PreDefinedMessage::select(
+            'id',
+            'message_name',
+            'message_remarks',
+            'status_id' 
+        )->get();
         
-        return view('admin.customers.show', compact('customer', 'statuses'));
+        return view('admin.customers.show', compact('customer', 'statuses', 'predefinedMessages'));
     }
 
     /**

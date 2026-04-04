@@ -22,8 +22,8 @@ class Otp extends Model
         'is_verified' => 'boolean'
     ];
 
-    // public function scopeVerified($query)
-    // {
-    //     return $query->where('is_verified', true);
-    // }
+    public function scopeVerified($query)
+    {
+        return $query->where('is_verified', true);
+    }
 }

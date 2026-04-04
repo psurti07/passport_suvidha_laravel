@@ -15,7 +15,7 @@ class ApplicationProgress extends Model
 
     protected $fillable = [
         'customer_id',
-        'status_id',
+        'application_status',
         'status_date',
         'remark',
         'remarked_by',
@@ -40,7 +40,7 @@ class ApplicationProgress extends Model
 
     public function status()
     {
-        return $this->belongsTo(ApplicationStatus::class, 'status_id');
+        return $this->belongsTo(ApplicationStatus::class, 'application_status', 'slug');
     }
 
     /**
