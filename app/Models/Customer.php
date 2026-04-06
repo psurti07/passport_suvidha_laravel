@@ -30,7 +30,8 @@ class Customer extends Authenticatable
         'place_of_birth',
         'nationality',
         'is_paid',
-        'registration_step'
+        'registration_step',
+        'is_active',
     ];
 
     protected $hidden = [
@@ -41,7 +42,12 @@ class Customer extends Authenticatable
     protected $casts = [
         'date_of_birth' => 'date',
         'is_paid' => 'boolean',
+        'is_active' => 'boolean',
         'registration_step' => 'integer',
+        'service_id' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     // Get full name attribute

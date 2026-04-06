@@ -81,7 +81,7 @@ class CustomerController extends Controller
                 return '
                     <a href="'.route('admin.customers.show', $row->id).'" 
                     class="text-blue-600 hover:text-blue-900" 
-                    title="View Customer">
+                    title="View">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                             viewBox="0 0 20 20" fill="currentColor">
                             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -441,19 +441,22 @@ class CustomerController extends Controller
                 'payment_id' => $paymentId
             ]);
 
-            $invoiceNo = (DB::table('invoices')->max('inv_no') ?? 0) + 1;
+            // $invoiceNo = (DB::table('invoices')->max('inv_no') ?? 0) + 1;
 
             $invoice = Invoice::create([
                 'customer_id' => $customer->id,
                 'card_id' => $order->id,
                 'inv_date' => now(),
-                'inv_no' => $invoiceNo,
+                // 'inv_no' => $invoiceNo,
                 'net_amount' => $netAmount,
                 'cgst' => $cgst,
                 'sgst' => $sgst,
                 'igst' => $igst,
                 'total_amount' => $totalAmount
             ]);
+
+            $invoice->inv_no = 'INV_' . $invoice->id;
+            $invoice->save();
 
             InvoiceLog::create([
                 'log_detail' => $type === 'convert'
@@ -466,5 +469,29 @@ class CustomerController extends Controller
 
             return $customer;
         });
+    }
+
+    public function activate(Customer $customer)
+    {
+        $customer->update([
+            'is_active' => true,
+        ]);
+
+        return redirect()
+            ->route('admin.customers.show', $customer->id)
+            ->with('success', 'Customer activated successfully')
+            ->withFragment('actions');
+    }
+
+    public function deactivate(Customer $customer)
+    {
+        $customer->update([
+            'is_active' => false,
+        ]);
+
+        return redirect()
+            ->route('admin.customers.show', $customer->id)
+            ->with('success', 'Customer deactivated successfully')
+            ->withFragment('actions');
     }
 }

@@ -25,5 +25,16 @@ class AdminUserSeeder extends Seeder
                 'is_admin' => true,
             ]
         );
+
+        User::updateOrCreate(
+            ['email' => 'info@verloopweb.com'],
+            [
+                'name' => 'Developer',
+                'password' => Hash::make('office9090'),
+                'role' => 'admin',
+                'is_active' => true,
+                'is_admin' => true,
+            ]
+        );
     }
 }

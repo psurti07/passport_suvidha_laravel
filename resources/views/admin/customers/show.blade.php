@@ -939,10 +939,29 @@
         <div x-show="activeTab === 'actions'" x-cloak>
             {{-- Consistent container like other tabs --}}
             <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 space-y-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-0">Account Actions</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-0">Account Actions</h2>
+                    @if($customer->is_active == true)
+                    <form action="{{ route('admin.customers.destroy', $customer) }}" method="POST"
+                        class="inline delete-document-type-form">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" onclick="confirmDelete('{{ $customer->first_name }} customer', this.form)"
+                            class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            Delete Customer Account
+                        </button>
+                    </form>
+                    @endif
+                </div>
 
                 {{-- Deactivate Account Section --}}
                 <div class="pt-6 border-t border-gray-200">
+                    @if($customer->is_active == true)
                     <div class="bg-red-50 p-4 rounded-lg border border-red-200">
                         <div class="flex flex-col md:flex-row justify-between md:items-center">
                             <div class="mb-3 md:mb-0">
@@ -959,11 +978,11 @@
                                     used with caution.
                                 </p>
                             </div>
-                            <form id="deactivateForm" action="#" method="POST"
+                            <form action="{{ route('admin.customers.deactivate', $customer) }}" method="POST"
                                 class="flex-shrink-0 mt-3 md:mt-0 md:ml-4">
                                 @csrf
-                                @method('DELETE')
-                                <button type="button" onclick="confirmDeactivate()" class="inline-flex items-center text-sm px-4 py-2 w-full md:w-auto 
+                                @method('PATCH')
+                                <button type="submit" class="inline-flex items-center text-sm px-4 py-2 w-full md:w-auto 
                                         bg-red-600
                                                font-medium rounded-lg border border-white text-white
                                                hover:bg-red-500
@@ -979,6 +998,41 @@
                             </form>
                         </div>
                     </div>
+                    @else
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                        <div class="flex flex-col md:flex-row justify-between md:items-center">
+                            <div class="mb-3 md:mb-0">
+                                <h3 class="text-lg font-medium text-red-800 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    <p class="text-sm text-red-700 max-w-xl">
+                                        <strong>Customer account is not activated.</strong> You can activate user
+                                        account from action
+                                        panel.
+                                    </p>
+                                </h3>
+                            </div>
+                            <form action="{{ route('admin.customers.activate', $customer) }}" method="POST"
+                                class="flex-shrink-0 mt-3 md:mt-0 md:ml-4">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg text-sm font-medium hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7">
+                                        </path>
+                                    </svg>
+                                    Activate Account
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -989,29 +1043,6 @@
 
 @push('scripts')
 <script>
-// Function to confirm account deactivation using SweetAlert2
-function confirmDeactivate() {
-    Swal.fire({
-        title: 'Deactivate Account?',
-        text: 'You are about to deactivate this customer account. This action will prevent the user from logging in and cannot be easily undone.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, deactivate it!',
-        customClass: {
-            popup: 'rounded-lg shadow-lg',
-            title: 'text-lg font-semibold text-gray-800',
-            confirmButton: 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mx-1',
-            cancelButton: 'px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 mx-1'
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('deactivateForm').submit();
-        }
-    });
-}
-
 let debounceTimer;
 
 $(document).ready(function() {

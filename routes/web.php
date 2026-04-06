@@ -41,6 +41,9 @@ Auth::routes();
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
+    // Common Routes
+    Route::post('/pincode-location', [CommonController::class, 'getPincodeLocation'])->name('pincode.location');
+
     // Dashboard Routes
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard/tatkal', [AdminController::class, 'tatkalDashboard'])->name('dashboard.tatkal');
@@ -56,7 +59,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('customers', CustomerController::class);
     Route::get('/customers-data', [CustomerController::class,'data'])->name('customers.data');
     Route::put('/customers/{customer}/convert', [CustomerController::class, 'convertToCustomer'])->name('customers.convert');
-    Route::post('/pincode-location', [CommonController::class, 'getPincodeLocation'])->name('pincode.location');
+    Route::patch('customers/{customer}/activate', [CustomerController::class, 'activate'])->name('customers.activate');
+    Route::patch('customers/{customer}/deactivate', [CustomerController::class, 'deactivate'])->name('customers.deactivate');
 
     // Application Documents Routes
     Route::resource('application-documents', ApplicationDocumentController::class)->only(['store', 'destroy']);
