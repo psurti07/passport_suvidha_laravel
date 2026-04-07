@@ -147,6 +147,15 @@ class ApplicationProgressController extends Controller
 
         ApplicationProgress::create($data);
 
+        if ($status && $status->step) {
+            $customer = Customer::find($request->customer_id);
+            if ($customer) {
+                $customer->update([
+                    'registration_step' => $status->step
+                ]);
+            }
+        }
+        
         if ($request->has('redirect')) {
             return redirect($request->redirect)
                 ->with('success', 'Application progress entry created successfully.');
@@ -273,6 +282,15 @@ class ApplicationProgressController extends Controller
         }
 
         $applicationProgress->update($data);
+
+        if ($status && $status->step) {
+            $customer = Customer::find($request->customer_id);
+            if ($customer) {
+                $customer->update([
+                    'registration_step' => $status->step
+                ]);
+            }
+        }
 
         return redirect()->route('admin.application-progress.index')
             ->with('success', 'Application progress entry updated successfully.');

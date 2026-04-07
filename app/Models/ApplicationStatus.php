@@ -13,7 +13,8 @@ class ApplicationStatus extends Model
     protected $fillable = [
         'status_name',
         'slug',
-        'priority_no'
+        'priority_no',
+        'step'
     ];
 
     protected $casts = [

@@ -18,6 +18,8 @@ use App\Http\Controllers\Admin\AppointmentLetterController;
 use App\Http\Controllers\Admin\PreDefinedMessageController;
 use App\Http\Controllers\Admin\DocumentTypeController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ApplicationStatusController;
+use App\Models\ApplicationStatus;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,6 +78,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::match(['get','post'],'/leads/normal',[LeadController::class,'normalLeads'])->name('leads.normal');
     Route::match(['get','post'],'/leads/tatkal',[LeadController::class,'tatkalLeads'])->name('leads.tatkal');
     Route::get('/lead/{customer}',[LeadController::class,'show'])->name('lead.show');
+
+    // Application Status Routes
+    Route::get('/application-status', [ApplicationStatusController::class, 'index'])->name('application.status');
+    Route::get('/application-status/data', [ApplicationStatusController::class, 'data'])->name('application.status.data');
 
     // Report Routes
     Route::get('/reports/gst', [ReportController::class, 'gstReport'])->name('reports.gst');

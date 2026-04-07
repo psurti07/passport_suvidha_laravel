@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 
 class ApplicationProgress extends Model
 {
@@ -33,14 +34,14 @@ class ApplicationProgress extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function remarkedByUser(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'remarked_by');
-    }
-
     public function status()
     {
         return $this->belongsTo(ApplicationStatus::class, 'status_id');
+    }
+
+    public function remarkedByUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'remarked_by');
     }
 
     /**
