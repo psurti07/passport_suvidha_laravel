@@ -135,19 +135,19 @@ $(function() {
             },
             {
                 data: 'customer',
-                name: 'customer.first_name'
+                name: 'customer'
             },
             {
                 data: 'mobile',
-                name: 'customer.mobile_number'
+                name: 'mobile'
             },
             {
                 data: 'service',
-                name: 'customer.service.service_name'
+                name: 'service'
             },
             {
                 data: 'status',
-                name: 'status.status_name'
+                name: 'status'
             },
             {
                 data: 'status_date',

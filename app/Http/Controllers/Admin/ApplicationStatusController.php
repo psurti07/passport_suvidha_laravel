@@ -69,6 +69,29 @@ class ApplicationStatusController extends Controller
                 return $row->remark;
             })
 
+            ->filterColumn('customer', function($query, $keyword) {
+                $query->whereHas('customer', function($q) use ($keyword) {
+                    $q->where('first_name', 'like', "%{$keyword}%")
+                    ->orWhere('last_name', 'like', "%{$keyword}%");
+                });
+            })
+
+            ->filterColumn('mobile', function($query, $keyword) {
+                $query->whereHas('customer', function($q) use ($keyword) {
+                    $q->where('mobile_number', 'like', "%{$keyword}%");
+                });
+            })
+
+            ->filterColumn('service', function($query, $keyword) {
+                $query->whereHas('customer.service', function($q) use ($keyword) {
+                    $q->where('service_name', 'like', "%{$keyword}%");
+                });
+            })
+
+            ->filterColumn('remark', function($query, $keyword) {
+                $query->where('remark', 'like', "%{$keyword}%");
+            })
+
             ->addColumn('actions', function ($row) {
                 return '
                     <a href="'.route('admin.customers.show', $row->customer->id).'#application-process" 
