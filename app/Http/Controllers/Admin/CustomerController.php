@@ -242,7 +242,6 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        // Prevent accessing details page for leads
         if (!$customer->is_paid) {
             return redirect()->back()
                              ->with('error', 'Cannot view details for a Lead customer.');
@@ -390,22 +389,6 @@ class CustomerController extends Controller
                 $customerData['service_id'] = 1;
             }
 
-            // if ($isPaid) {
-            //     $customerData['password'] = Hash::make(Str::random(8));
-            // }
-
-            // $services = [
-            //     'NORMAL_36' => ['type' => 'normal', 'size' => 36],
-            //     'NORMAL_60' => ['type' => 'normal', 'size' => 60],
-            //     'TATKAL_36' => ['type' => 'tatkal', 'size' => 36],
-            //     'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
-            // ];
-
-            // if ($isPaid && isset($services[$validated['service_code']])) {
-            //     $customerData['passport_type'] = $services[$validated['service_code']]['type'];
-            //     $customerData['book_size'] = $services[$validated['service_code']]['size'];
-            // }
-
             if ($customer) {
                 $customer->update($customerData);
             } else {
@@ -434,20 +417,17 @@ class CustomerController extends Controller
 
             $order = ApplicationOrder::create([
                 'customer_id' => $customer->id,
-                'registration_date' => now()->toDateString(),
+                'registration_date' => now(),
                 'expiry_date' => now()->addMonths(6),
                 'card_number' => $cardNumber,
                 'amount' => $totalAmount,
                 'payment_id' => $paymentId
             ]);
 
-            // $invoiceNo = (DB::table('invoices')->max('inv_no') ?? 0) + 1;
-
             $invoice = Invoice::create([
                 'customer_id' => $customer->id,
                 'card_id' => $order->id,
                 'inv_date' => now(),
-                // 'inv_no' => $invoiceNo,
                 'net_amount' => $netAmount,
                 'cgst' => $cgst,
                 'sgst' => $sgst,

@@ -91,36 +91,4 @@
         </div>
     </div>
 </div>
-
-{{-- Add Toastify CSS and JS --}}
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
-<script>
-// Toast notification function
-function showToast(message, type = 'success') {
-    let bgColor = type === 'success' ? 'linear-gradient(to right, #00b09b, #96c93d)' :
-        type === 'error' ? 'linear-gradient(to right, #ff5f6d, #ffc371)' :
-        'linear-gradient(to right, #00b09b, #96c93d)';
-
-    Toastify({
-        text: message,
-        duration: 3000,
-        gravity: "top",
-        position: "right",
-        backgroundColor: bgColor,
-        stopOnFocus: true,
-    }).showToast();
-}
-
-// Show session messages
-document.addEventListener('DOMContentLoaded', function() {
-    @if(session('success'))
-    showToast("{{ session('success') }}", 'success');
-    @endif
-    @if(session('error'))
-    showToast("{{ session('error') }}", 'error');
-    @endif
-});
-</script>
 @endsection

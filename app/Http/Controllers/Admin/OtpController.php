@@ -6,9 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Otp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-// use App\Exports\OtpsExport;
-// use Maatwebsite\Excel\Facades\Excel;
-// use Barryvdh\DomPDF\Facade\Pdf;
 use Yajra\DataTables\Facades\DataTables;
 
 class OtpController extends Controller

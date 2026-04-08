@@ -65,7 +65,7 @@ class ApplicationProgressController extends Controller
     
     public function store(Request $request)
     {
-        $status = \App\Models\ApplicationStatus::find($request->status_id);
+        $status = ApplicationStatus::find($request->status_id);
         $slug = $status?->slug;
 
         $rules = [
@@ -199,7 +199,7 @@ class ApplicationProgressController extends Controller
     
     public function update(Request $request, ApplicationProgress $applicationProgress)
     {
-        $status = \App\Models\ApplicationStatus::find($request->status_id);
+        $status = ApplicationStatus::find($request->status_id);
         $slug = $status?->slug;
 
         $rules = [

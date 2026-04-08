@@ -97,30 +97,35 @@ class Customer extends Authenticatable
         return $this->hasOne(ApplicationOrder::class);
     }
 
-    // public static function getDashboardData($type = null, $paid = null, $service = null)
-    // {
-    //     $query = DB::table('customers')
-    //         ->selectRaw('YEAR(created_at) as recyear,
-    //                     MONTH(created_at) as recmonth,
-    //                     DAY(created_at) as recday,
-    //                     COUNT(id) as totaluser')
-    //         ->whereNull('deleted_at');
+    public static function getDashboardData($type = null, $paid = null, $service = null)
+    {
+        $query = DB::table('customers')
+            ->join('services', 'customers.service_id', '=', 'services.id')
+            ->selectRaw('YEAR(customers.created_at) as recyear,
+                        MONTH(customers.created_at) as recmonth,
+                        DAY(customers.created_at) as recday,
+                        COUNT(customers.id) as totaluser')
+            ->whereNull('customers.deleted_at');
 
-    //     if ($type) {
-    //         $query->where('passport_type', $type);
-    //     }
+        if ($type) {
+            if ($type == 'normal') {
+                $query->where('services.service_name', 'like', '%Normal%');
+            } elseif ($type == 'tatkal') {
+                $query->where('services.service_name', 'like', '%Tatkal%');
+            }
+        }
 
-    //     if (!is_null($paid)) {
-    //         $query->where('is_paid', $paid);
-    //     }
+        if (!is_null($paid)) {
+            $query->where('customers.is_paid', $paid);
+        }
 
-    //     if ($service) {
-    //         $query->where('service_code', $service);
-    //     }
+        if ($service) {
+            $query->where('services.service_code', $service);
+        }
 
-    //     return $query->groupByRaw('YEAR(created_at), MONTH(created_at), DAY(created_at)')
-    //         ->orderByRaw('YEAR(created_at) desc, MONTH(created_at) desc, DAY(created_at) desc')
-    //         ->limit(10)
-    //         ->get();
-    // }
+        return $query->groupByRaw('YEAR(customers.created_at), MONTH(customers.created_at), DAY(customers.created_at)')
+            ->orderByRaw('YEAR(customers.created_at) desc, MONTH(customers.created_at) desc, DAY(customers.created_at) desc')
+            ->limit(10)
+            ->get();
+    }
 }
