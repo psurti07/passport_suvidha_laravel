@@ -12,9 +12,9 @@ class Otp extends Model
     protected $fillable = [
         'mobile_number',
         'otp',
-        'purpose',
         'sent_at',
-        'is_verified'
+        'is_verified',
+        'purpose'
     ];
 
     protected $casts = [

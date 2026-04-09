@@ -154,12 +154,7 @@ $(function() {
             },
             {
                 data: 'is_approved',
-                name: 'is_approved',
-                render: function(data) {
-                    return data === 1 ?
-                        '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Approved</span>' :
-                        '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Pending</span>';
-                }
+                name: 'is_approved'
             },
             {
                 data: 'approved_date',

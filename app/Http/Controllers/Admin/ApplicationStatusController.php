@@ -61,10 +61,6 @@ class ApplicationStatusController extends Controller
                     '</span>';
             })
 
-            ->editColumn('status_date', function ($row) {
-                return $row->status_date->format('d/m/Y');
-            })
-
             ->addColumn('remark', function ($row) {
                 return $row->remark;
             })
@@ -73,6 +69,10 @@ class ApplicationStatusController extends Controller
                 return $row->remarkedByUser->name ?? 'N/A';
             })
 
+            ->editColumn('status_date', function ($row) {
+                return $row->status_date->format('d/m/Y');
+            })
+            
             ->filterColumn('customer', function($query, $keyword) {
                 $query->whereHas('customer', function($q) use ($keyword) {
                     $q->where('first_name', 'like', "%{$keyword}%")

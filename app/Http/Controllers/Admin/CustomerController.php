@@ -55,41 +55,38 @@ class CustomerController extends Controller
             ]);
         }
 
-        if ($request->status == "paid") {
-            $query->where('is_paid', 1);
-        }
-
-        if ($request->status == "lead") {
-            $query->where('is_paid', 0);
-        }
-
         if($request->service) {
             $query->where('service_id', $request->service);
         }
 
+        if ($request->filled('is_paid')) {
+            $query->where('is_paid', $request->is_paid);
+        }
+        
         return DataTables::of($query)
 
             ->addIndexColumn()
+
+            ->addColumn('service', function ($row) {
+                if (!$row->service) {
+                    return '-';
+                }
+                $isTatkal = str_starts_with($row->service->service_code, 'TP');
+                return '<span>
+                    '.($isTatkal ? '🟢 ' : '⚪').$row->service->service_name.'
+                </span>';
+            })
 
             ->addColumn('name', function ($row) {
                 return $row->first_name . ' ' . $row->last_name;
             })
 
-            ->addColumn('service', function ($row) {
-
-                if (!$row->service) {
-                    return '-';
+            ->editColumn('is_paid', function ($row) {
+                if ($row->is_paid == '1') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Paid</span>';
+                }  else {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Lead</span>';
                 }
-
-                $isTatkal = str_starts_with($row->service->service_code, 'TP');
-
-                return '<span>
-                            '.($isTatkal ? '🟢 ' : '⚪').$row->service->service_name.'
-                        </span>';
-            })
-
-            ->addColumn('status', function ($row) {
-                return $row->is_paid ? 'paid' : 'lead';
             })
 
             ->editColumn('created_at', function ($row) {
@@ -112,7 +109,7 @@ class CustomerController extends Controller
                 ';
             })
 
-            ->rawColumns(['service', 'status','actions'])
+            ->rawColumns(['service', 'is_paid', 'actions'])
 
             ->make(true);
     }
@@ -131,10 +128,13 @@ class CustomerController extends Controller
         $paidTodayCount  = (clone $baseQuery)->where('is_paid', 1)->count();
         $leadTodayCount  = (clone $baseQuery)->where('is_paid', 0)->count();
 
+        $services = Service::all();
+
         return view('admin.customers.today', compact(
             'totalTodayCount',
             'paidTodayCount',
-            'leadTodayCount'
+            'leadTodayCount',
+            'services'
         ));
     }
 
@@ -142,6 +142,7 @@ class CustomerController extends Controller
     {
         $query = Customer::select([
             'id',
+            'service_id',
             'first_name',
             'last_name',
             'email',
@@ -150,24 +151,38 @@ class CustomerController extends Controller
             'created_at'
         ])->whereDate('created_at', now());
 
-        if ($request->status == "paid") {
-            $query->where('is_paid', 1);
+        if($request->service) {
+            $query->where('service_id', $request->service);
         }
 
-        if ($request->status == "lead") {
-            $query->where('is_paid', 0);
+        if ($request->filled('is_paid')) {
+            $query->where('is_paid', $request->is_paid);
         }
 
         return DataTables::of($query)
 
             ->addIndexColumn()
 
+            ->addColumn('service', function ($row) {
+                if (!$row->service) {
+                    return '-';
+                }
+                $isTatkal = str_starts_with($row->service->service_code, 'TP');
+                return '<span>
+                            '.($isTatkal ? '🟢 ' : '⚪').$row->service->service_name.'
+                        </span>';
+            })
+
             ->addColumn('name', function ($row) {
                 return $row->first_name . ' ' . $row->last_name;
             })
 
-            ->addColumn('status', function ($row) {
-                return $row->is_paid ? 'paid' : 'lead';
+            ->editColumn('is_paid', function ($row) {
+                if ($row->is_paid == '1') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Paid</span>';
+                }  else {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Lead</span>';
+                }
             })
 
             ->editColumn('created_at', function ($row) {
@@ -190,7 +205,7 @@ class CustomerController extends Controller
                 ';
             })
 
-            ->rawColumns(['status','actions'])
+            ->rawColumns(['service', 'is_paid', 'actions'])
 
             ->make(true);
     }

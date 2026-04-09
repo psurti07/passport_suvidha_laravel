@@ -88,11 +88,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Support Routes
     Route::get('/support/customer', [SupportController::class, 'customerSupport'])->name('support.customer');
+    Route::get('/support/customer/data', [SupportController::class, 'customerSupportData'])->name('support.customer.data');
     Route::get('/support/guest', [SupportController::class, 'guestSupport'])->name('support.guest');
+    Route::get('/support/guest/data', [SupportController::class, 'guestSupportData'])->name('support.guest.data');
     Route::get('/support/tickets/{ticket}', [SupportController::class, 'show'])->name('support.tickets.show');
-    // Route to store a new remark for a specific ticket
     Route::post('/support/tickets/{ticket}/remarks', [SupportController::class, 'storeRemark'])->name('support.tickets.remarks.store');
-    // Route to update the status of a specific ticket
     Route::patch('/support/tickets/{ticket}/status', [SupportController::class, 'updateStatus'])->name('support.tickets.status.update');
 
     // Otp Routes

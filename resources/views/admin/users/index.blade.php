@@ -142,12 +142,7 @@ $(function() {
             },
             {
                 data: 'is_active',
-                name: 'is_active',
-                render: function(data) {
-                    return data === 1 ?
-                        '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Active</span>' :
-                        '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Inactive</span>';
-                }
+                name: 'is_active'
             },
             {
                 data: 'created_at',

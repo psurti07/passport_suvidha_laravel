@@ -42,7 +42,7 @@
                             <select id="is_mandatory" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
                                 <option value="">All</option>
                                 <option value="1">Mandatory</option>
-                                <option value="0">Not Mandatory</option>
+                                <option value="0">Optional</option>
                             </select>
                         </div>
 
@@ -143,12 +143,7 @@ $(function() {
             },
             {
                 data: 'is_mandatory',
-                name: 'is_mandatory',
-                render: function(data) {
-                    return data === 1 ?
-                        '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Mandatory</span>' :
-                        '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Not Mandatory</span>';
-                }
+                name: 'is_mandatory'
             },
             {
                 data: 'created_at',

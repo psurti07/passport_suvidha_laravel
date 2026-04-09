@@ -79,6 +79,9 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
                                 </th>
 
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Purpose
+                                </th>
+
                             </tr>
 
                         </thead>
@@ -138,12 +141,11 @@ $(function() {
             },
             {
                 data: 'is_verified',
-                name: 'is_verified',
-                render: function(data) {
-                    return data === 1 ?
-                        '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Verified</span>' :
-                        '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Pending</span>';
-                }
+                name: 'is_verified'
+            },
+            {
+                data: 'purpose',
+                name: 'purpose'
             }
         ],
 

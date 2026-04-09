@@ -20,35 +20,33 @@ class DocumentTypeController extends Controller
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
         $query = DocumentType::select([
-                'id',
-                'name',
-                'description',
-                'is_mandatory',
-                'created_at',
-                'updated_at',
-            ])
+            'id',
+            'name',
+            'description',
+            'is_mandatory',
+            'created_at',
+            'updated_at',
+        ])
 
-            ->whereBetween('created_at', [
-                $from . ' 00:00:00',
-                $to . ' 23:59:59'
-            ]);
+        ->whereBetween('created_at', [
+            $from . ' 00:00:00',
+            $to . ' 23:59:59'
+        ]);
 
         if ($request->filled('is_mandatory')) {
-            if ($request->is_mandatory == '1') {
-                $query->where('is_mandatory', 1);
-            }
-
-            if ($request->is_mandatory == '0') {
-                $query->where('is_mandatory', 0);
-            }
+            $query->where('is_mandatory', $request->is_mandatory);
         }
 
         return DataTables::of($query)
 
             ->addIndexColumn()
 
-            ->addColumn('is_mandatory', function ($row) {
-                return $row->is_mandatory ? 1 : 0;
+            ->editColumn('is_mandatory', function ($row) {
+                if ($row->is_mandatory == '1') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Mandatory</span>';
+                }  else {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Optional</span>';
+                }
             })
 
             ->editColumn('created_at', function ($row) {
@@ -106,7 +104,7 @@ class DocumentTypeController extends Controller
                 ';
             })
 
-            ->rawColumns(['actions'])
+            ->rawColumns(['is_mandatory', 'actions'])
 
             ->make(true);
     }

@@ -627,6 +627,19 @@
                     <span class="nav-link-text">Today Statistics</span>
                 </a>
 
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SYSTEM</div>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">OTP Management</span>
+                </a>
+
                 <!-- <a href="{{ route('admin.todaystatistics') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.todaystatistics') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Today Statistics' : ''">
@@ -799,7 +812,7 @@
                 </a> -->
 
                 {{-- Support Section --}}
-                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SUPPORT</div>
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SUPPORT</div>
 
                 <a href="{{ route('admin.support.customer') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.support.customer') ? 'active' : '' }}"
@@ -823,7 +836,7 @@
                         </path>
                     </svg>
                     <span class="nav-link-text">Guest Support</span>
-                </a> -->
+                </a>
 
                 <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SMS</div>
 
@@ -859,19 +872,6 @@
                     </svg>
                     <span class="nav-link-text">Remarketing Log</span>
                 </a> -->
-
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SYSTEM</div>
-
-                <a href="{{ route('admin.otps.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text">OTP Management</span>
-                </a>
 
                 <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">DND LIST</div>
 

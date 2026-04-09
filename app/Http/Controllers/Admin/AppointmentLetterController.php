@@ -28,18 +28,18 @@ class AppointmentLetterController extends Controller
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
         $query = AppointmentLetter::with('customer', 'uploader')->select([
-                'appointment_letters.id',
-                'appointment_letters.customer_id',
-                'appointment_letters.upload_date',
-                'appointment_letters.appointment_date',
-                'appointment_letters.appointment_time',
-                'appointment_letters.uploaded_by',
-            ])
+            'appointment_letters.id',
+            'appointment_letters.customer_id',
+            'appointment_letters.upload_date',
+            'appointment_letters.appointment_date',
+            'appointment_letters.appointment_time',
+            'appointment_letters.uploaded_by',
+        ])
 
-            ->whereBetween('appointment_letters.upload_date', [
-                $from . ' 00:00:00',
-                $to . ' 23:59:59'
-            ]);
+        ->whereBetween('appointment_letters.upload_date', [
+            $from . ' 00:00:00',
+            $to . ' 23:59:59'
+        ]);
 
         return DataTables::of($query)
 
