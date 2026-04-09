@@ -12,16 +12,12 @@ class ApplicationOrder extends Model
         
     protected $fillable = [
         'customer_id',
-        'registration_date',
-        'expiry_date',
         'card_number',
         'amount',
         'payment_id'
     ];
 
     protected $casts = [
-        'registration_date' => 'date',
-        'expiry_date' => 'date',
         'amount' => 'decimal:2',
     ];
 

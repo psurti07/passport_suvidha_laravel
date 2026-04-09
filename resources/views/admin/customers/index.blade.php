@@ -41,6 +41,18 @@
                             </select>
                         </div>
 
+                        <div>
+                            <label class="text-sm">Service</label>
+                            <select id="service" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
+                                <option value="">All</option>
+                                @foreach($services as $service)
+                                    <option value="{{ $service->id }}">
+                                        {{ $service->service_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="flex items-end">
                             <button type="button" id="filter"
                                 class="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
@@ -67,6 +79,8 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ID</th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Name</th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Service</th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Email</th>
 
@@ -120,6 +134,7 @@ $(function() {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
                 d.status = $('#status').val();
+                d.service = $('#service').val();
             }
         },
 
@@ -130,6 +145,10 @@ $(function() {
             {
                 data: 'name',
                 name: 'first_name'
+            },
+            {
+                data: 'service',
+                name: 'service'
             },
             {
                 data: 'email',

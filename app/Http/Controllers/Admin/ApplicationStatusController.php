@@ -21,7 +21,7 @@ class ApplicationStatusController extends Controller
         $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
-        $query = ApplicationProgress::with(['customer', 'status'])
+        $query = ApplicationProgress::with(['customer', 'status', 'remarkedByUser'])
         ->latest('status_date');
 
         if ($request->from_date && $request->to_date) {
@@ -69,6 +69,10 @@ class ApplicationStatusController extends Controller
                 return $row->remark;
             })
 
+            ->addColumn('remarked_by', function ($row) {
+                return $row->remarkedByUser->name ?? 'N/A';
+            })
+
             ->filterColumn('customer', function($query, $keyword) {
                 $query->whereHas('customer', function($q) use ($keyword) {
                     $q->where('first_name', 'like', "%{$keyword}%")
@@ -90,6 +94,12 @@ class ApplicationStatusController extends Controller
 
             ->filterColumn('remark', function($query, $keyword) {
                 $query->where('remark', 'like', "%{$keyword}%");
+            })
+
+            ->filterColumn('remarked_by', function($query, $keyword) {
+                $query->whereHas('remarkedByUser', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
             })
 
             ->addColumn('actions', function ($row) {

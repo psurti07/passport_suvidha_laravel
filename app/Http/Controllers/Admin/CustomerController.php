@@ -28,7 +28,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return view('admin.customers.index');
+        $services = Service::all();
+        return view('admin.customers.index', compact('services'));
     }
 
     public function data(Request $request)
@@ -36,8 +37,9 @@ class CustomerController extends Controller
         $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
-        $query = Customer::select([
+        $query = Customer::with('service')->select([
             'id',
+            'service_id',
             'first_name',
             'last_name',
             'email',
@@ -61,12 +63,29 @@ class CustomerController extends Controller
             $query->where('is_paid', 0);
         }
 
+        if($request->service) {
+            $query->where('service_id', $request->service);
+        }
+
         return DataTables::of($query)
 
             ->addIndexColumn()
 
             ->addColumn('name', function ($row) {
                 return $row->first_name . ' ' . $row->last_name;
+            })
+
+            ->addColumn('service', function ($row) {
+
+                if (!$row->service) {
+                    return '-';
+                }
+
+                $isTatkal = str_starts_with($row->service->service_code, 'TP');
+
+                return '<span>
+                            '.($isTatkal ? '🟢 ' : '⚪').$row->service->service_name.'
+                        </span>';
             })
 
             ->addColumn('status', function ($row) {
@@ -93,7 +112,7 @@ class CustomerController extends Controller
                 ';
             })
 
-            ->rawColumns(['status','actions'])
+            ->rawColumns(['service', 'status','actions'])
 
             ->make(true);
     }
@@ -417,8 +436,6 @@ class CustomerController extends Controller
 
             $order = ApplicationOrder::create([
                 'customer_id' => $customer->id,
-                'registration_date' => now(),
-                'expiry_date' => now()->addMonths(6),
                 'card_number' => $cardNumber,
                 'amount' => $totalAmount,
                 'payment_id' => $paymentId

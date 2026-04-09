@@ -85,6 +85,9 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Remark
                                 </th>
 
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Remarked By
+                                </th>
+
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
                                 </th>
 
@@ -156,6 +159,10 @@ $(function() {
             {
                 data: 'remark',
                 name: 'remark'
+            },
+            {
+                data: 'remarked_by',
+                name: 'remarked_by'
             },
             {
                 data: 'actions',
