@@ -32,6 +32,7 @@ class Customer extends Authenticatable
         'is_paid',
         'registration_step',
         'is_active',
+        'is_dnd',
     ];
 
     protected $hidden = [
@@ -43,6 +44,7 @@ class Customer extends Authenticatable
         'date_of_birth' => 'date',
         'is_paid' => 'boolean',
         'is_active' => 'boolean',
+        'is_dnd' => 'boolean',
         'registration_step' => 'integer',
         'service_id' => 'integer',
         'created_at' => 'datetime',
