@@ -835,7 +835,7 @@
                     <span class="nav-link-text">Razorpay Log</span>
                 </a>
 
-                <a href="{{ route('admin.dnd.index') }}"
+                <!-- <a href="{{ route('admin.dnd.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.dnd.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'DND List' : ''">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -843,7 +843,7 @@
                         <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
                     </svg>
                     <span class="nav-link-text">Cashfree Log</span>
-                </a>
+                </a> -->
 
                 {{-- Support Section --}}
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SUPPORT</div>
