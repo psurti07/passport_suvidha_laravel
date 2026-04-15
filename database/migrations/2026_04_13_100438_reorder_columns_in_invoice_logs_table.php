@@ -33,7 +33,7 @@ class ReorderColumnsInInvoiceLogsTable extends Migration
             $table->foreign('staff_id')
                   ->references('id')
                   ->on('users')
-                  ->onDelete('cascade');
+                  ->cascadeOnDelete('cascade');
         });
     }
 
