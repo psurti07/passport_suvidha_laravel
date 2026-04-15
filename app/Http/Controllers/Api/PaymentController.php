@@ -167,7 +167,7 @@ class PaymentController extends Controller
 
             $cgst = $sgst = $igst = 0;
 
-            if ($customer->state == 'GJ') {
+            if (strtoupper($customer->state) == 'GJ') {
                 $cgst = round($serviceCharges * 0.09, 2);
                 $sgst = round($serviceCharges * 0.09, 2);
                 $total = $netAmount + $cgst + $sgst;
@@ -194,8 +194,8 @@ class PaymentController extends Controller
 
             DB::commit();
             $smsService = new SmsService();
-            $mobileNumber = $customer->mobile_number;
-            if (!empty($mobileNumber)) {
+            if (isset($customer) && !empty($customer->mobile_number)) {
+                  $mobileNumber = $customer->mobile_number;
 
                     $message = "Congrats, Your Passport Application is submitted successfully! Our Company Executive will contact you within 24-48 hours to proceed. Thanks, PassportSuvidha";
 
@@ -214,8 +214,8 @@ class PaymentController extends Controller
             Log::error('PAYMENT VERIFY ERROR: ' . $e->getMessage());
 
              $smsService = new SmsService();
-            $mobileNumber = $customer->mobile_number;
-            if (!empty($mobileNumber)) {
+             if (isset($customer) && !empty($customer->mobile_number)) {
+                 $mobileNumber = $customer->mobile_number;
 
                     $message = "Sorry, your payment for Passport Consulting application was not successful. We request you to try another payment method {#var#} Passport Suvidha";
 
@@ -235,7 +235,7 @@ class PaymentController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Payment verification failed',
-                'error' => $e->getMessage()
+                // 'error' => $e->getMessage()
             ], 400);
         }
     }
