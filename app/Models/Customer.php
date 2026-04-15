@@ -14,6 +14,8 @@ class Customer extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens, SoftDeletes;
 
+    protected $table = "customers";
+
     protected $fillable = [
         'first_name',
         'last_name',
@@ -28,6 +30,8 @@ class Customer extends Authenticatable
         'date_of_birth',
         'place_of_birth',
         'nationality',
+        'service_id',
+        'payment_info_id',
         'service_code',
         'passport_type',
         'book_size',

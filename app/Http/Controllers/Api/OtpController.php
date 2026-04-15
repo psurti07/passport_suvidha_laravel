@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Services\SmsService;
 
 class OtpController extends Controller
 {
@@ -28,23 +29,18 @@ class OtpController extends Controller
         $mobileNumber = $validated['mobile_number'];
         $purpose = $validated['purpose'];
 
-        // Find the customer with this mobile number
         $customer = Customer::where('mobile_number', $mobileNumber)->first();
 
-        // For login purpose, customer must exist
         if ($purpose === 'login' && !$customer) {
             return response()->json(['errors' => ['mobile_number' => ['Customer not found with this mobile number.']]], 404);
         }
 
-        // For registration purpose in OTP verification step, customer must exist
         if ($purpose === 'registration' && !$customer) {
             return response()->json(['errors' => ['mobile_number' => ['Complete basic information first.']]], 422);
         }
 
-        // Generate a random 4-digit OTP
         $otp = str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT);
         
-        // Store the OTP with purpose
         Otp::create([
             'mobile_number' => $mobileNumber,
             'otp' => $otp,
@@ -52,7 +48,6 @@ class OtpController extends Controller
             'purpose' => $purpose
         ]);
 
-        // Send SMS using the API
         if ($purpose === 'login') {
             $message = "Hello, {$otp} is the OTP for logging into your Passport Suvidha account. Please don't share this with others. Thank you.";
         } else {
@@ -68,7 +63,6 @@ class OtpController extends Controller
             ]);                        
         }
         
-        // Response for client
         $response = [
             'message' => 'OTP sent successfully.',
             'mobile_number' => $mobileNumber,
@@ -76,7 +70,6 @@ class OtpController extends Controller
             'expires_in' => 10, // minutes            
         ];
         
-        // Add warning if SMS failed but we're continuing anyway
         if (isset($smsResult) && !$smsResult['success']) {
             $response['warning'] = 'We had trouble sending the OTP. If you did not receive it, please try again later.';
         }
@@ -91,81 +84,44 @@ class OtpController extends Controller
      * @param string $message
      * @return array
      */
-//     private function sendSms($mobileNumber, $message)
-//     {
-//         try {
-//             $username = config('services.sms.username');
-//             $password = config('services.sms.password');
-//             $senderId = config('services.sms.sender_id');
-            
-//             $url = "http://m.onlinebusinessbazaar.in/sendsms.jsp";
-            
-//             $response = Http::get($url, [
-//                 'user' => $username,
-//                 'password' => $password,
-//                 'senderid' => $senderId,
-//                 'mobiles' => $mobileNumber,
-//                 'sms' => $message
-//             ]);
-            
-//             $result = $response->body();
-//             return response()->json([
-//     'sms_api_response' => $result,
-//     'username' => $username,
-//     'senderId' => $senderId
-// ]);
-            
-//             return [
-//                 'success' => !str_contains($result, 'error'),
-//                 'response' => $result
-//             ];
-//         } catch (\Exception $e) {
-//             Log::error('SMS sending failed: ' . $e->getMessage());
-//             return [
-//                 'success' => false,
-//                 'error' => $e->getMessage()
-//             ];
-//         }
-//     }
 
-private function sendSms($mobileNumber, $message)
-{
-    try {
-        $username = config('services.sms.username');
-        $password = config('services.sms.password');
-        $senderId = config('services.sms.sender_id');
-        
-        $url = "http://m.onlinebusinessbazaar.in/sendsms.jsp";
-        
-        $response = Http::get($url, [
-            'user' => $username,
-            'password' => $password,
-            'senderid' => $senderId,
-            'mobiles' => '91' . $mobileNumber, // ✅ FIXED
-            'sms' => $message
-        ]);
-        
-        $result = $response->body();
+    private function sendSms($mobileNumber, $message)
+    {
+        try {
+            $username = config('services.sms.username');
+            $password = config('services.sms.password');
+            $senderId = config('services.sms.sender_id');
+            
+            $url = "http://m.onlinebusinessbazaar.in/sendsms.jsp";
+            
+            $response = Http::get($url, [
+                'user' => $username,
+                'password' => $password,
+                'senderid' => $senderId,
+                'mobiles' => '91' . $mobileNumber, 
+                'sms' => $message
+            ]);
+            
+            $result = $response->body();
 
-        // ✅ Debug safely
-        Log::info('SMS DEBUG', [
-            'response' => $result,
-            'username' => $username,
-            'senderId' => $senderId
-        ]);
+            Log::info('SMS DEBUG', [
+                'response' => $result,
+                'username' => $username,
+                'senderId' => $senderId
+            ]);
 
-        return [
-            'success' => !str_contains(strtolower($result), 'error'),
-            'response' => $result
-        ];
+            return [
+                'success' => !str_contains(strtolower($result), 'error'),
+                'response' => $result
+            ];
 
-    } catch (\Exception $e) {
-        return [
-            'success' => false,
-            'error' => $e->getMessage()
-        ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
     }
-}
 
     public function verify(Request $request)
     {
@@ -184,14 +140,12 @@ private function sendSms($mobileNumber, $message)
         $inputOtp = $validated['otp'];
         $purpose = $validated['purpose'];
 
-        // Find the customer associated with the mobile number
         $customer = Customer::where('mobile_number', $mobileNumber)->first();
 
         if (!$customer) {
             return response()->json(['errors' => ['mobile_number' => ['Customer not found.']]], 404);
         }
 
-        // Find the latest OTP for this mobile number within the validity period (10 minutes)
         $otpRecord = Otp::where('mobile_number', $mobileNumber)
             ->where('otp', (int) $inputOtp)
             ->where('purpose', $purpose)
@@ -206,22 +160,19 @@ private function sendSms($mobileNumber, $message)
             ], 401);
         }
 
-        // Mark OTP as verified
         $otpRecord->update(['is_verified' => true]);
 
-        // For login purpose
+
         if ($purpose === 'login') {
-            // For login, customer must be fully registered (completed all steps)
+
             if ($customer->registration_step < 4) {
                 return response()->json([
                     'errors' => ['registration' => ['Please complete your registration process first.']]
                 ], 422);
             }
             
-            // Invalidate previous tokens
             $customer->tokens()->delete();
             
-            // Create authentication token
             $token = $customer->createToken('customer-login-token')->plainTextToken;
             
             return response()->json([
@@ -231,25 +182,37 @@ private function sendSms($mobileNumber, $message)
                 'token_type' => 'Bearer'
             ]);
         }
-        
-        // For registration purpose
+    
         if ($purpose === 'registration') {
-            // Update customer's registration step to 2 (completed OTP verification)
-            $customer->update(['registration_step' => 2]);
+
+            if ($customer->registration_step < 2) {
+                $customer->update(['registration_step' => 2]);
+            }
             
-            // Invalidate previous tokens (optional, good practice)
             $customer->tokens()->delete();
-            
-            // Create a new Sanctum token for the registration flow
+
             $token = $customer->createToken('customer-registration-token')->plainTextToken;
             
             return response()->json([
                 'message' => 'OTP verified successfully.',
                 'customer' => $customer,
                 'token' => $token,
+                'registration_step' => $customer->registration_step,
+                'next_step' => $this->getNextStep($customer->registration_step),
                 'token_type' => 'Bearer',
-                'next_step' => 'additional_information'
             ]);
         }
+    }
+
+    private function getNextStep($step)
+    {
+        return match ($step) {
+            1 => 'otp_verification',
+            2 => 'additional_information',
+            3 => 'service_selection',
+            4 => 'payment',
+            default => 'start',
+        };
+
     }
 }

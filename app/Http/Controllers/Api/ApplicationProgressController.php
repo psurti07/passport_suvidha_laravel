@@ -8,6 +8,7 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ApplicationProgressController extends Controller
 {     
@@ -20,6 +21,11 @@ class ApplicationProgressController extends Controller
     public function getCustomerApplicationStatus()
     {
         $user = Auth::user();
+        if (!$user) {
+    return response()->json([
+        'message' => 'Unauthenticated'
+    ], 401);
+}
         $userId = $user->id;
         
         // Get all progress entries for the customer
@@ -67,5 +73,73 @@ class ApplicationProgressController extends Controller
             'current_stage' => $lastCompletedStage
         ]);
     }
-       
+
+public function details(Request $request)
+{
+    $user = $request->user();
+
+    $customer = Customer::find($user->id);
+
+    $service = DB::table('services')
+        ->where('id', $customer->service_id)
+        ->first();
+
+    $invoice = DB::table('invoices')
+        ->where('customer_id', $customer->id)
+        ->latest()
+        ->first();
+
+    $progress = DB::table('application_progress')
+        ->where('customer_id', $customer->id)
+        ->get();
+
+    $statuses = DB::table('application_statuses')->orderBy('id')->get();
+
+    // map stages
+    $stages = [];
+    $currentStage = null;
+
+    foreach ($statuses as $status) {
+        $stageData = $progress->firstWhere('status_id', $status->id);
+
+        $completed = $stageData ? true : false;
+
+        $stages[] = [
+            'title' => $status->slug,
+            'label' => $status->status_name,
+            'completed' => $completed,
+            'date' => $stageData ? $stageData->created_at : null,
+        ];
+
+        // Pick first incomplete stage as current, fallback to last completed
+        if (!$currentStage && !$completed) {
+            $currentStage = [
+                'title' => $status->slug,
+                'label' => $status->status_name,
+                'completed' => false,
+                'date' => null,
+            ];
+        }
+    }
+
+    // If all stages completed, current stage = last stage
+    if (!$currentStage && !empty($stages)) {
+        $currentStage = end($stages);
+    }
+
+    // progress %
+    $completedCount = collect($stages)->where('completed', true)->count();
+    $totalStages = count($stages);
+
+    return response()->json([
+        'customer' => $customer,
+        'service' => $service,
+        'invoice' => $invoice,
+        'progress' => [
+            'percentage' => ($totalStages > 0) ? round(($completedCount / $totalStages) * 100) : 0,
+            'stages' => $stages,
+            'current_stage' => $currentStage
+        ]
+    ]);
+}    
 } 

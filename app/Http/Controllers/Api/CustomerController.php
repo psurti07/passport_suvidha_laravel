@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use App\Services\SmsService;
 
 class CustomerController extends Controller
 {
@@ -101,29 +104,28 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        $baseRules = [
+        $isPaid = $request->input('is_paid', $customer->is_paid);
+        
+        $rules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'mobile_number' => 'required|string|max:20',
             'email' => ['required', 'email', Rule::unique('customers')->ignore($customer->id)],
-            'is_paid' => 'sometimes|boolean',
+
+            'address' => 'nullable|string',
+            'gender' => 'nullable|in:male,female,other',
+            'date_of_birth' => 'nullable|date',
+            'place_of_birth' => 'nullable|string|max:255',
+            'nationality' => 'nullable|string|max:255',
+            'service_code' => 'nullable|string|max:255',
         ];
 
-        $paidRules = [
-            'address' => 'required|string',
-            'gender' => 'required|in:male,female,other',
-            'date_of_birth' => 'required|date',
-            'place_of_birth' => 'required|string|max:255',
-            'nationality' => 'required|string|max:255',
-            'payment_info_id' => 'required|numeric',
-            'service_code' => 'required|string|max:255',
-        ];
-
-        $isPaid = $request->input('is_paid', $customer->is_paid);
-
-        $rules = $baseRules;
         if ($isPaid) {
-            $rules = array_merge($rules, $paidRules);
+            $rules['address'] = 'required|string';
+            $rules['gender'] = 'required|in:male,female,other';
+            $rules['date_of_birth'] = 'required|date';
+            $rules['place_of_birth'] = 'required|string|max:255';
+            $rules['nationality'] = 'required|string|max:255';
         }
 
         $validator = Validator::make($request->all(), $rules);
@@ -133,18 +135,13 @@ class CustomerController extends Controller
         }
 
         $data = $validator->validated();
-        $data['is_paid'] = $request->has('is_paid') ? $request->input('is_paid') : $customer->is_paid;
 
-        if (!$data['is_paid']) {
-            $nullableFields = ['address', 'gender', 'date_of_birth', 'place_of_birth', 'nationality', 'payment_info_id', 'service_code'];
-            foreach ($nullableFields as $field) {
-                if (!isset($data[$field])) {
-                    $data[$field] = null;
-                }
-            }
-        }
+        $data['is_paid'] = $request->has('is_paid')
+            ? $request->input('is_paid')
+            : $customer->is_paid;
 
         $customer->update($data);
+
         return response()->json($customer);
     }
 
@@ -192,7 +189,7 @@ class CustomerController extends Controller
             
             // If customer exists but not paid, update their info
             $data = $validator->validated();
-            $data['registration_step'] = 1; // Reset to step 1
+            // $data['registration_step'] = 1; // Reset to step 1
             
             // If email is changing, validate it's unique
             if ($existingCustomer->email !== $request->email) {
@@ -210,7 +207,9 @@ class CustomerController extends Controller
             return response()->json([
                 'message' => 'Customer information updated successfully',
                 'customer' => $existingCustomer,
-                'next_step' => 'otp_verification'
+                // 'next_step' => 'otp_verification'
+                'registration_step' => $existingCustomer->registration_step,
+                'next_step' => $this->getNextStep($existingCustomer->registration_step)
             ], 200);
         }
         
@@ -277,6 +276,15 @@ class CustomerController extends Controller
         
         $customer->update($data);
 
+        $smsService = new SmsService();
+            $mobileNumber = $customer->mobile_number;
+            if (!empty($mobileNumber)) {
+
+                    $message = "Dear Customer, Your Passport Application is almost done! Complete process now to live your travel dreams. Click Now https://passportsuvidha.com/apply-passport";
+
+                    $response = $smsService->sendSms($mobileNumber, $message);
+                }
+
         return response()->json([
             'message' => 'Additional information saved successfully',
             'customer' => $customer,
@@ -290,77 +298,66 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // public function selectService(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'service_code' => 'required|string|max:255',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json(['errors' => $validator->errors()], 422);
-    //     }
-
-    //     // Get customer via auth
-    //     $customer = $request->user();
-
-    //     // Verify registration step
-    //     if ($customer->registration_step < 3) {
-    //         return response()->json([
-    //             'errors' => ['registration' => ['Please complete additional information first.']]
-    //         ], 422);
-    //     }
-
-    //     // Update customer with service selection
-    //     $data = $validator->validated();
-    //     $data['registration_step'] = 4; // Step 4: Service selection
-    //     $data['is_paid'] = false; // Not paid yet
-        
-    //     $customer->update($data);
-
-    //     return response()->json([
-    //         'message' => 'Service selected successfully',
-    //         'customer' => $customer,
-    //         'next_step' => 'payment'
-    //     ]);
-    // }
 
     public function selectService(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'service_code' => 'required|string|max:255',
-        'book_size' => 'required|string|max:10',
-        'passport_type' => 'required|string|max:10',
-        'nationality' => 'required|string|max:255',
-    ]);
+    {
+        $validator = Validator::make($request->all(), [
+            'book_size' => 'required|string|max:10',
+            'passport_type' => 'required|string|max:10',
+            'nationality' => 'required|string|max:255',
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 422);
-    }
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
-    // Get customer via auth
-    $customer = $request->user();
+        $customer = $request->user();
 
-    // Verify registration step
-    if ($customer->registration_step < 3) {
+        if ($customer->registration_step < 3) {
+            return response()->json([
+                'errors' => ['registration' => ['Please complete additional information first.']]
+            ], 422);
+        }
+
+        $passportType = strtolower($request->passport_type);
+        $bookSize = $request->book_size;
+
+        $serviceCode = match (true) {
+            $passportType === 'normal' && $bookSize == '36' => 'NP36',
+            $passportType === 'normal' && $bookSize == '60' => 'NP60',
+            $passportType === 'tatkal' && $bookSize == '36' => 'TP36',
+            $passportType === 'tatkal' && $bookSize == '60' => 'TP60',
+            default => null,
+        };
+
+        if (!$serviceCode) {
+            return response()->json([
+                'error' => 'Invalid selection'
+            ], 422);
+        }
+
+        $service = Service::where('service_code', $serviceCode)->first();
+
+        if (!$service) {
+            return response()->json([
+                'error' => 'Service not found'
+            ], 404);
+        }
+
+        $customer->update([
+            'service_id' => $service->id,
+            // 'book_size' => $bookSize,
+            // 'passport_type' => $passportType,
+            'nationality' => $request->nationality,
+            'registration_step' => 4,
+        ]);
+
         return response()->json([
-            'errors' => ['registration' => ['Please complete additional information first.']]
-        ], 422);
+            'message' => 'Service selected successfully',
+            'customer' => $customer,
+            'next_step' => 'payment'
+        ]);
     }
-
-    // Update customer with service selection and additional fields
-    $data = $validator->validated();
-    $data['registration_step'] = 4; // Step 4: Service selection
-    $data['is_paid'] = false; // Not paid yet
-    
-    $customer->update($data);
-
-    return response()->json([
-        'message' => 'Service selected successfully',
-        'customer' => $customer,
-        'next_step' => 'payment'
-    ]);
-}
-
     /**
      * Handle login request for customers 
      * 
@@ -387,12 +384,24 @@ class CustomerController extends Controller
                 'errors' => ['mobile_number' => ['Customer not found with this mobile number.']]
             ], 404);
         }
+
+        if ($customer->is_active == 0) {
+            return response()->json([
+                'errors' => ['account' => ['Your account is inactive.']]
+            ], 403);
+        }
         
         // Check if the customer has completed registration
         if ($customer->registration_step < 4) {
             return response()->json([
                 'errors' => ['registration' => ['Please complete your registration process first.']]
             ], 422);
+        }
+
+        if ($customer->deleted_at !== null) {
+            return response()->json([
+                'errors' => ['account' => ['Your account has been deleted. Please contact support.']]
+            ], 403);
         }
         
         // Return success response with next step to request OTP
@@ -405,5 +414,29 @@ class CustomerController extends Controller
             ],
             'next_step' => 'otp_verification'
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user && $user->currentAccessToken()) {
+            $user->currentAccessToken()->delete();
+        }
+
+        return response()->json([
+            'message' => 'Logged out successfully'
+        ]);
+    }
+
+    private function getNextStep($step)
+    {
+        return match ($step) {
+            1 => 'otp_verification',
+            2 => 'additional_information',
+            3 => 'service_selection',
+            4 => 'payment',
+            default => 'start',
+        };
     }
 }

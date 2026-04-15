@@ -16,6 +16,7 @@
         "laravel/ui": "^3.4",
         "maatwebsite/excel": "^3.1",
         "yajra/laravel-datatables-oracle": "^9.21"
+        "razorpay/razorpay": "^2.9"
     },
     "require-dev": {
         "deployer/deployer": "^7.5",

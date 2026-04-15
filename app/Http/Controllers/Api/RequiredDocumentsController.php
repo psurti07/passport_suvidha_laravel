@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Customer;
 
 class RequiredDocumentsController extends Controller
 {
@@ -144,7 +145,7 @@ class RequiredDocumentsController extends Controller
     public function download($document_type_id)
     {
         try {
-            $customer = Auth::user();
+            $customer = Auth::guard('customer')->user();
             
             $document = $customer->applicationDocuments()
                 ->where('document_type_id', $document_type_id)
