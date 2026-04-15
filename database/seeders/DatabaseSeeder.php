@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ServiceSeeder::class,
-            DocumentTypeSeeder::class,
+            AdminUserSeeder::class,
+            ApplicationStatusSeeder::class,
             // Add other seeders here if needed
         ]);
     }

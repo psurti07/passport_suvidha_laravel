@@ -9,6 +9,7 @@ use App\Models\ApplicationOrder;
 use App\Models\Invoice;
 use App\Models\InvoiceLog;
 use App\Models\ApplicationStatus;
+use App\Models\Service;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +28,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return view('admin.customers.index');
+        $services = Service::all();
+        return view('admin.customers.index', compact('services'));
     }
 
     public function data(Request $request)
@@ -35,8 +37,9 @@ class CustomerController extends Controller
         $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
-        $query = Customer::select([
+        $query = Customer::with('service')->select([
             'id',
+            'service_id',
             'first_name',
             'last_name',
             'email',
@@ -52,24 +55,38 @@ class CustomerController extends Controller
             ]);
         }
 
-        if ($request->status == "paid") {
-            $query->where('is_paid', 1);
+        if($request->service) {
+            $query->where('service_id', $request->service);
         }
 
-        if ($request->status == "lead") {
-            $query->where('is_paid', 0);
+        if ($request->filled('is_paid')) {
+            $query->where('is_paid', $request->is_paid);
         }
-
+        
         return DataTables::of($query)
 
             ->addIndexColumn()
+
+            ->addColumn('service', function ($row) {
+                if (!$row->service) {
+                    return '-';
+                }
+                $isTatkal = str_starts_with($row->service->service_code, 'TP');
+                return '<span>
+                    '.($isTatkal ? '🟢 ' : '⚪').$row->service->service_name.'
+                </span>';
+            })
 
             ->addColumn('name', function ($row) {
                 return $row->first_name . ' ' . $row->last_name;
             })
 
-            ->addColumn('status', function ($row) {
-                return $row->is_paid ? 'paid' : 'lead';
+            ->editColumn('is_paid', function ($row) {
+                if ($row->is_paid == '1') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Paid</span>';
+                }  else {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Lead</span>';
+                }
             })
 
             ->editColumn('created_at', function ($row) {
@@ -80,7 +97,7 @@ class CustomerController extends Controller
                 return '
                     <a href="'.route('admin.customers.show', $row->id).'" 
                     class="text-blue-600 hover:text-blue-900" 
-                    title="View Customer">
+                    title="View">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                             viewBox="0 0 20 20" fill="currentColor">
                             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -92,7 +109,7 @@ class CustomerController extends Controller
                 ';
             })
 
-            ->rawColumns(['status','actions'])
+            ->rawColumns(['service', 'is_paid', 'actions'])
 
             ->make(true);
     }
@@ -111,10 +128,13 @@ class CustomerController extends Controller
         $paidTodayCount  = (clone $baseQuery)->where('is_paid', 1)->count();
         $leadTodayCount  = (clone $baseQuery)->where('is_paid', 0)->count();
 
+        $services = Service::all();
+
         return view('admin.customers.today', compact(
             'totalTodayCount',
             'paidTodayCount',
-            'leadTodayCount'
+            'leadTodayCount',
+            'services'
         ));
     }
 
@@ -122,6 +142,7 @@ class CustomerController extends Controller
     {
         $query = Customer::select([
             'id',
+            'service_id',
             'first_name',
             'last_name',
             'email',
@@ -130,24 +151,38 @@ class CustomerController extends Controller
             'created_at'
         ])->whereDate('created_at', now());
 
-        if ($request->status == "paid") {
-            $query->where('is_paid', 1);
+        if($request->service) {
+            $query->where('service_id', $request->service);
         }
 
-        if ($request->status == "lead") {
-            $query->where('is_paid', 0);
+        if ($request->filled('is_paid')) {
+            $query->where('is_paid', $request->is_paid);
         }
 
         return DataTables::of($query)
 
             ->addIndexColumn()
 
+            ->addColumn('service', function ($row) {
+                if (!$row->service) {
+                    return '-';
+                }
+                $isTatkal = str_starts_with($row->service->service_code, 'TP');
+                return '<span>
+                            '.($isTatkal ? '🟢 ' : '⚪').$row->service->service_name.'
+                        </span>';
+            })
+
             ->addColumn('name', function ($row) {
                 return $row->first_name . ' ' . $row->last_name;
             })
 
-            ->addColumn('status', function ($row) {
-                return $row->is_paid ? 'paid' : 'lead';
+            ->editColumn('is_paid', function ($row) {
+                if ($row->is_paid == '1') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Paid</span>';
+                }  else {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Lead</span>';
+                }
             })
 
             ->editColumn('created_at', function ($row) {
@@ -170,7 +205,7 @@ class CustomerController extends Controller
                 ';
             })
 
-            ->rawColumns(['status','actions'])
+            ->rawColumns(['service', 'is_paid', 'actions'])
 
             ->make(true);
     }
@@ -185,6 +220,7 @@ class CustomerController extends Controller
         return view('admin.customers.create', [
             'cardNumber' => generateCardNumber(),
             'paymentId'   => generatePaymentId(),
+            'services' => Service::all()
         ]);
     }
 
@@ -205,6 +241,7 @@ class CustomerController extends Controller
         ];
 
         $paidRules = [
+            'service_id' => 'required|exists:services,id',
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',
             'city' => 'required|string|max:255',
@@ -213,7 +250,6 @@ class CustomerController extends Controller
             'date_of_birth' => 'required|date',
             'place_of_birth' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
-            'service_code' => 'required|string|max:50',
             'card_number' => 'nullable|string|size:16',
             'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
@@ -240,7 +276,6 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        // Prevent accessing details page for leads
         if (!$customer->is_paid) {
             return redirect()->back()
                              ->with('error', 'Cannot view details for a Lead customer.');
@@ -249,8 +284,15 @@ class CustomerController extends Controller
         $customer->load('applicationDocuments.documentType');
 
         $statuses = ApplicationStatus::orderBy('priority_no')->get();
+
+        $predefinedMessages = \App\Models\PreDefinedMessage::select(
+            'id',
+            'message_name',
+            'message_remarks',
+            'status_id' 
+        )->get();
         
-        return view('admin.customers.show', compact('customer', 'statuses'));
+        return view('admin.customers.show', compact('customer', 'statuses', 'predefinedMessages'));
     }
 
     /**
@@ -327,6 +369,7 @@ class CustomerController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
+            'service_id' => 'required|exists:services,id',
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',
             'city' => 'required|string|max:255',
@@ -335,7 +378,6 @@ class CustomerController extends Controller
             'date_of_birth' => 'required|date',
             'place_of_birth' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
-            'service_code' => 'required|string|max:50',
             'card_number' => 'nullable|string|size:16',
             'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
@@ -377,20 +419,8 @@ class CustomerController extends Controller
 
             $customerData['registration_step'] = $isPaid ? 4 : 1;
 
-            if ($isPaid) {
-                $customerData['password'] = Hash::make(Str::random(8));
-            }
-
-            $services = [
-                'NORMAL_36' => ['type' => 'normal', 'size' => 36],
-                'NORMAL_60' => ['type' => 'normal', 'size' => 60],
-                'TATKAL_36' => ['type' => 'tatkal', 'size' => 36],
-                'TATKAL_60' => ['type' => 'tatkal', 'size' => 60],
-            ];
-
-            if ($isPaid && isset($services[$validated['service_code']])) {
-                $customerData['passport_type'] = $services[$validated['service_code']]['type'];
-                $customerData['book_size'] = $services[$validated['service_code']]['size'];
+            if (!$isPaid) {
+                $customerData['service_id'] = 1;
             }
 
             if ($customer) {
@@ -421,20 +451,15 @@ class CustomerController extends Controller
 
             $order = ApplicationOrder::create([
                 'customer_id' => $customer->id,
-                'registration_date' => now()->toDateString(),
-                'expiry_date' => now()->addMonths(6),
                 'card_number' => $cardNumber,
                 'amount' => $totalAmount,
                 'payment_id' => $paymentId
             ]);
 
-            $invoiceNo = (DB::table('invoices')->max('inv_no') ?? 0) + 1;
-
             $invoice = Invoice::create([
                 'customer_id' => $customer->id,
                 'card_id' => $order->id,
                 'inv_date' => now(),
-                'inv_no' => $invoiceNo,
                 'net_amount' => $netAmount,
                 'cgst' => $cgst,
                 'sgst' => $sgst,
@@ -442,16 +467,43 @@ class CustomerController extends Controller
                 'total_amount' => $totalAmount
             ]);
 
+            $invoice->inv_no = 'INV_' . $invoice->id;
+            $invoice->save();
+
             InvoiceLog::create([
+                'invoice_id' => $invoice->id,
+                'user_id' => auth()->id(),
                 'log_detail' => $type === 'convert'
                     ? 'Convert Lead to Customer'
                     : 'Create New Customer',
-                'card_number' => $order->id,
-                'invoice_id' => $invoice->id,
-                'staff_id' => auth()->id()
+                'card_number' => $order->id
             ]);
 
             return $customer;
         });
+    }
+
+    public function activate(Customer $customer)
+    {
+        $customer->update([
+            'is_active' => true,
+        ]);
+
+        return redirect()
+            ->route('admin.customers.show', $customer->id)
+            ->with('success', 'Customer activated successfully')
+            ->withFragment('actions');
+    }
+
+    public function deactivate(Customer $customer)
+    {
+        $customer->update([
+            'is_active' => false,
+        ]);
+
+        return redirect()
+            ->route('admin.customers.show', $customer->id)
+            ->with('success', 'Customer deactivated successfully')
+            ->withFragment('actions');
     }
 }

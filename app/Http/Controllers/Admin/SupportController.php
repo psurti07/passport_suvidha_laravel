@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Ticket;
 use App\Models\TicketRemark;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class SupportController extends Controller
 {
@@ -17,10 +19,83 @@ class SupportController extends Controller
      */
     public function customerSupport()
     {
-        // Fetch tickets created by registered users (customer_id is not null)
-        $tickets = Ticket::whereNotNull('customer_id')->latest()->paginate(15); // Paginate results
-        
-        return view('admin.support.customer_support', compact('tickets'));
+        return view('admin.support.customer_support');
+    }
+
+    public function customerSupportData(Request $request)
+    {
+        $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
+        $to   = $request->to_date ?? now()->format('Y-m-d');
+
+        $query = Ticket::with('customer')->select([
+            'id',
+            'ticket_number',
+            'customer_id',
+            'name',
+            'email',
+            'subject',
+            'status',
+            'created_at',
+        ])
+        ->whereNotNull('customer_id') // Only tickets from registered customers
+        ->whereBetween('created_at', [
+            $from . ' 00:00:00',
+            $to . ' 23:59:59'
+        ]);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        return DataTables::of($query)
+
+            ->addIndexColumn()
+
+            ->addColumn('customer_name', function ($row) {
+                return $row->customer->first_name ?? $row->name;
+            })
+
+            ->editColumn('subject', function ($row) {
+                return Str::limit($row->subject, 50);
+            })
+            
+            ->editColumn('status', function ($row) {
+                if ($row->status == 'open') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Open</span>';
+                } elseif ($row->status == 'in_progress') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">In Progress</span>';
+                } else {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Closed</span>';
+                }
+            })
+
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at->format('d/m/Y H:i:s');
+            })
+
+            ->addColumn('actions', function ($row) {
+                return '
+                    <div class="flex items-center gap-2">
+                    
+                        <!-- View -->
+                        <a href="'.route('admin.support.tickets.show', $row->ticket_number).'" 
+                            class="text-blue-600 hover:text-blue-900" title="View">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                <path fill-rule="evenodd"
+                                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </a>
+
+                    </div>
+                ';
+            })
+
+            ->rawColumns(['status', 'actions'])
+
+            ->make(true);
     }
 
     /**
@@ -28,12 +103,92 @@ class SupportController extends Controller
      *
      * @return \Illuminate\View\View
      */
+    // public function guestSupport()
+    // {
+    //     // Fetch tickets created by guests (customer_id is null)
+    //     $tickets = Ticket::whereNull('customer_id')->latest()->paginate(15); // Paginate results
+        
+    //     return view('admin.support.guest_support', compact('tickets'));
+    // }
     public function guestSupport()
     {
-        // Fetch tickets created by guests (customer_id is null)
-        $tickets = Ticket::whereNull('customer_id')->latest()->paginate(15); // Paginate results
-        
-        return view('admin.support.guest_support', compact('tickets'));
+        return view('admin.support.guest_support');
+    }
+
+    public function guestSupportData(Request $request)
+    {
+        $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
+        $to   = $request->to_date ?? now()->format('Y-m-d');
+
+        $query = Ticket::with('customer')->select([
+            'id',
+            'ticket_number',
+            'customer_id',
+            'name',
+            'email',
+            'subject',
+            'status',
+            'created_at',
+        ])
+        ->whereNull('customer_id') // Only tickets from guests
+        ->whereBetween('created_at', [
+            $from . ' 00:00:00',
+            $to . ' 23:59:59'
+        ]);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        return DataTables::of($query)
+
+            ->addIndexColumn()
+
+            ->addColumn('customer_name', function ($row) {
+                return $row->customer->first_name ?? $row->name;
+            })
+
+            ->editColumn('subject', function ($row) {
+                return Str::limit($row->subject, 50);
+            })
+            
+            ->editColumn('status', function ($row) {
+                if ($row->status == 'open') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Open</span>';
+                } elseif ($row->status == 'in_progress') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">In Progress</span>';
+                } else {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Closed</span>';
+                }
+            })
+
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at->format('d/m/Y H:i:s');
+            })
+
+            ->addColumn('actions', function ($row) {
+                return '
+                    <div class="flex items-center gap-2">
+                    
+                        <!-- View -->
+                        <a href="'.route('admin.support.tickets.show', $row->ticket_number).'" 
+                            class="text-blue-600 hover:text-blue-900" title="View">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                <path fill-rule="evenodd"
+                                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </a>
+
+                    </div>
+                ';
+            })
+
+            ->rawColumns(['status', 'actions'])
+
+            ->make(true);
     }
 
     /**
@@ -45,7 +200,9 @@ class SupportController extends Controller
     public function show(Ticket $ticket)
     {
         // Eager load remarks and their associated user (staff)
-        $ticket->load(['ticketRemarks.user']);
+        $ticket->load(['ticketRemarks.user',
+            'customer.order'
+        ]);
 
         // Determine user type for display
         $userType = $ticket->customer_id ? 'Customer' : 'Guest';
@@ -53,6 +210,7 @@ class SupportController extends Controller
         // Eager load the customer if it exists
         if ($ticket->customer_id) {
             $ticket->load('customer'); // Ensure customer is loaded for card_no etc.
+
         }
 
         return view('admin.support.show', compact('ticket', 'userType'));

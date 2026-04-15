@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Customer; // Use Customer model
+use App\Models\Customer; 
+use App\Models\Service;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -29,6 +30,8 @@ class SearchController extends Controller
             'mobileNo' => $mobileNo,
             'cardNumber' => generateCardNumber(),
             'paymentId' => generatePaymentId(),
+            'services' => Service::all()
+            
         ]);
     }
 
@@ -60,6 +63,7 @@ class SearchController extends Controller
             'mobileNo' => $mobileNo,
             'cardNumber' => generateCardNumber(),
             'paymentId' => generatePaymentId(),
+            'services' => Service::all()
         ]);
     }
 } 

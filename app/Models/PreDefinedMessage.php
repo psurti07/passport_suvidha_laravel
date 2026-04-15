@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PreDefinedMessage extends Model
 {
@@ -20,12 +21,13 @@ class PreDefinedMessage extends Model
      *
      * @return string
      */
-    public function getRouteKeyName()
-    {
-        return 'id';
-    }
+    // public function getRouteKeyName()
+    // {
+    //     return 'id';
+    // }
 
-    public function status()
+    // Relationships
+    public function status(): BelongsTo
     {
         return $this->belongsTo(ApplicationStatus::class, 'status_id');
     }

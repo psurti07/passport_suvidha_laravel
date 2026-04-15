@@ -23,31 +23,24 @@ class FinalDetailController extends Controller
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
         $query = FinalDetail::with('customer', 'uploader')->select([
-                'final_details.id',
-                'final_details.customer_id',
-                'final_details.file_path',
-                'final_details.upload_date',
-                'final_details.uploaded_by',
-                'final_details.is_approved',
-                'final_details.approved_date',
-                'final_details.approved_by_role',
-                'final_details.approved_by',
-            ])
+            'final_details.id',
+            'final_details.customer_id',
+            'final_details.file_path',
+            'final_details.upload_date',
+            'final_details.uploaded_by',
+            'final_details.is_approved',
+            'final_details.approved_date',
+            'final_details.approved_by_role',
+            'final_details.approved_by',
+        ])
 
-            ->whereBetween('final_details.upload_date', [
-                $from . ' 00:00:00',
-                $to . ' 23:59:59'
-            ]);
+        ->whereBetween('final_details.upload_date', [
+            $from . ' 00:00:00',
+            $to . ' 23:59:59'
+        ]);
 
         if ($request->filled('is_approved')) {
-
-            if ($request->is_approved == '1') {
-                $query->where('final_details.is_approved', 1);
-            }
-
-            if ($request->is_approved == '0') {
-                $query->where('final_details.is_approved', 0);
-            }
+            $query->where('final_details.is_approved', $request->is_approved);
         }
 
         return DataTables::of($query)
@@ -67,10 +60,6 @@ class FinalDetailController extends Controller
                 ';
             })
 
-            ->editColumn('upload_date', function ($row) {
-                return $row->upload_date->format('d M Y, h:i A');
-            })
-
             ->addColumn('uploaded_by_name', function ($row) {
                 return $row->uploader->name ?? 'System';
             }) 
@@ -79,16 +68,28 @@ class FinalDetailController extends Controller
                 return $row->is_approved ? 1 : 0;
             })
 
+            ->addColumn('approved_by_name', function ($row) {
+                return $row->approver_name;
+            }) 
+
+            ->editColumn('upload_date', function ($row) {
+                return $row->upload_date->format('d M Y, h:i A');
+            })
+            
+            ->editColumn('is_approved', function ($row) {
+                if ($row->is_approved == '1') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Approved</span>';
+                }  else {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Pending</span>';
+                }
+            })
+
             ->editColumn('approved_date', function ($row) {
                 return $row->approved_date 
                     ? $row->approved_date->format('d M Y, h:i A') 
                     : 'N/A';
             })
 
-            ->addColumn('approved_by_name', function ($row) {
-                return $row->approver_name;
-            }) 
-            
             ->filterColumn('customer_name', function($query, $keyword) {
                 $query->whereHas('customer', function($q) use ($keyword) {
                     $q->where('first_name', 'like', "%{$keyword}%")
@@ -103,16 +104,13 @@ class FinalDetailController extends Controller
                 return '
                     <!-- View Document -->
                     <a href="'.$fileUrl.'" target="_blank"
-                        class="hover:underline inline-flex items-center text-blue-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        class="inline-flex items-center text-blue-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                         </svg>
-                        View
+                        View File
                     </a>
                 ';
             })
@@ -189,7 +187,7 @@ class FinalDetailController extends Controller
                 return $html;
             })
 
-        ->rawColumns(['customer_name', 'document', 'actions'])
+        ->rawColumns(['customer_name', 'is_approved', 'document', 'actions'])
 
         ->make(true);
     }

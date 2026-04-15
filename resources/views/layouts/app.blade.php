@@ -29,10 +29,10 @@
     <link rel="stylesheet" href="{{ asset('vendor/datatables/css/jquery.dataTables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/datatables/css/buttons.dataTables.min.css') }}">
 
-    <!-- Toastify --> 
+    <!-- Toastify -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
-    <!-- SweetAlert2 --> 
+    <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <!-- Alpine.js -->
@@ -652,11 +652,11 @@
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">CUSTOMER MANAGEMENT</div>
 
                 @php
-                    $isCustomerRoute = (
-                        request()->routeIs('admin.customer.search') ||
-                        request()->routeIs('admin.customer.search.form') ||
-                        request()->routeIs('admin.customers.*')
-                    ) && !request()->routeIs('admin.customers.today');
+                $isCustomerRoute = (
+                request()->routeIs('admin.customer.search') ||
+                request()->routeIs('admin.customer.search.form') ||
+                request()->routeIs('admin.customers.*')
+                ) && !request()->routeIs('admin.customers.today');
                 @endphp
                 <a href="{{ route('admin.customer.search.form') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ $isCustomerRoute ? 'active' : '' }}"
@@ -694,8 +694,7 @@
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.create') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Create An Account' : ''">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 4v16m8-8H4">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
                         </path>
                     </svg>
                     <span class="nav-link-text">Create An Account</span>
@@ -724,6 +723,19 @@
                     </svg>
                     <span class="nav-link-text">Tatkal Leads</span>
                 </a> -->
+
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">APPLICATION PROCESS</div>
+
+                <a href="{{ route('admin.application.status') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Application Status' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5h6m2 0a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2m2 0a2 2 0 104 0 2 2 0 00-4 0zm-1 9l2 2 4-4">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Application Status</span>
+                </a>
 
                 <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">ALL OFFER PAGES </div>
 
@@ -760,30 +772,6 @@
                     <span class="nav-link-text">Bumper Offer</span>
                 </a> -->
 
-                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">LOAN APPLICATION </div>
-
-                <a href="{{ route('admin.customers.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.*') && !request()->routeIs('admin.customers.today') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Customers' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text">Normal Application</span>
-                </a>
-
-                <a href="{{ route('admin.customers.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.*') && !request()->routeIs('admin.customers.today') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Customers' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text">Tatkal Application</span>
-                </a> -->
-
                 <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">REPORTS</div>
 
                 <a href="{{ route('admin.reports.gst') }}"
@@ -810,8 +798,55 @@
                     <span class="nav-link-text">GST Report</span>
                 </a> -->
 
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SYSTEM</div>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">OTP Management</span>
+                </a>
+
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">DND</div>
+
+                <a href="{{ route('admin.dnd.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.dnd.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'DND List' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5l14 14"></path>
+                    </svg>
+                    <span class="nav-link-text">DND List</span>
+                </a>
+
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">PAYMENT GATEWAY LOG</div>
+
+                <a href="{{ route('admin.razorpay-logs.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.razorpay-logs.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Razorpay Log' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2" stroke-width="2"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
+                    </svg>
+                    <span class="nav-link-text">Razorpay Log</span>
+                </a>
+
+                <a href="{{ route('admin.cashfree-logs.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.cashfree-logs.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Cashfree Log' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2" stroke-width="2"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
+                    </svg>
+                    <span class="nav-link-text">Cashfree Log</span>
+                </a>
+
                 {{-- Support Section --}}
-                <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SUPPORT</div>
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SUPPORT</div>
 
                 <a href="{{ route('admin.support.customer') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.support.customer') ? 'active' : '' }}"
@@ -835,7 +870,7 @@
                         </path>
                     </svg>
                     <span class="nav-link-text">Guest Support</span>
-                </a> -->
+                </a>
 
                 <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SMS</div>
 
@@ -871,19 +906,6 @@
                     </svg>
                     <span class="nav-link-text">Remarketing Log</span>
                 </a> -->
-
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SYSTEM</div>
-
-                <a href="{{ route('admin.otps.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text">OTP Management</span>
-                </a>
 
                 <!-- <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">DND LIST</div>
 
@@ -1055,7 +1077,7 @@
         </aside>
     </div>
 
-    <!-- Datatable --> 
+    <!-- Datatable -->
     <script src="{{ asset('vendor/datatables/js/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables/js/dataTables.buttons.min.js') }}"></script>
@@ -1065,12 +1087,12 @@
     <script src="{{ asset('vendor/datatables/js/pdfmake.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables/js/vfs_fonts.js') }}"></script>
 
-    <!-- Toastify --> 
+    <!-- Toastify -->
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="{{ asset('js/toast.js') }}"></script>
     @include('components.toast')
 
-    <!-- SweetAlert2 --> 
+    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/confirm-actions.js') }}"></script>
 

@@ -36,42 +36,38 @@ class UserController extends Controller
         $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
-        $query = User::with('creator')
-            ->where('role', 'staff')
-            ->select([
-                'id',
-                'name',
-                'email',
-                'is_active',
-                'created_at',
-                'updated_at',
-            ])
+        $query = User::with('creator')->where('role', 'staff')->select([
+            'id',
+            'name',
+            'email',
+            'is_active',
+            'created_at',
+            'updated_at',
+        ])
 
-            ->whereBetween('created_at', [
-                $from . ' 00:00:00',
-                $to . ' 23:59:59'
-            ]);
+        ->whereBetween('created_at', [
+            $from . ' 00:00:00',
+            $to . ' 23:59:59'
+        ]);
 
         if ($request->filled('is_active')) {
-            if ($request->is_active == '1') {
-                $query->where('is_active', 1);
-            }
-
-            if ($request->is_active == '0') {
-                $query->where('is_active', 0);
-            }
+            $query->where('is_active', $request->is_active);
         }
 
         return DataTables::of($query)
 
             ->addIndexColumn()
 
-            ->addColumn('is_active', function ($row) {
-                return $row->is_active ? 1 : 0;
-            })
-
             ->addColumn('created_by', function ($row) {
                 return optional($row->creator)->name ?? '-';
+            })
+
+            ->editColumn('is_active', function ($row) {
+                if ($row->is_active == '1') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Active</span>';
+                }  else {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Inactive</span>';
+                }
             })
 
             ->editColumn('created_at', function ($row) {
@@ -129,7 +125,7 @@ class UserController extends Controller
                 ';
             })
 
-            ->rawColumns(['actions'])
+            ->rawColumns(['is_active', 'actions'])
 
             ->make(true);
     }

@@ -203,27 +203,19 @@
                                             @enderror
                                         </div>
                                         <div>
-                                            <label for="service_code" class="block text-sm font-medium text-gray-700 mb-1">Service Code <span
+                                            <label for="service_id" class="block text-sm font-medium text-gray-700 mb-1">Service Name <span
                                                     class="text-red-500">*</span></label>
-                                            <select id="service_code" name="service_code" required
+                                            <select id="service_id" name="service_id" required
                                                 class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
-                                                <option value="" disabled selected>Select service code</option>
-                                                <option value="NORMAL_36"
-                                                    {{ old('service_code', $customer->service_code) == 'NORMAL_36' ? 'selected' : '' }}>NORMAL_36
-                                                </option>
-                                                <option value="NORMAL_60"
-                                                    {{ old('service_code', $customer->service_code) == 'NORMAL_60' ? 'selected' : '' }}>NORMAL_60
-                                                </option>
-                                                <option value="TATKAL_36"
-                                                    {{ old('service_code', $customer->service_code) == 'TATKAL_36' ? 'selected' : '' }}>TATKAL_36
-                                                </option>
-                                                <option value="TATKAL_60"
-                                                    {{ old('service_code', $customer->service_code) == 'TATKAL_60' ? 'selected' : '' }}>TATKAL_60
-                                                </option>
-                                        
-                                                {{-- Add other states --}}
+                                                <option value="" disabled selected>Select service name</option>
+                                                @foreach($services as $service)
+                                                    <option value="{{ $service->id }}"
+                                                        {{ old('service_id', $customer->service_id) == $service->id ? 'selected' : '' }}>
+                                                        {{ $service->service_name }} 
+                                                    </option>
+                                                @endforeach
                                             </select>
-                                            @error('service_code')
+                                            @error('service_id')
                                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
                                         </div>

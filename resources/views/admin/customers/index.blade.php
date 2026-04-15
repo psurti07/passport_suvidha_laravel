@@ -33,11 +33,23 @@
                         </div>
 
                         <div>
-                            <label class="text-sm">Status</label>
-                            <select id="status" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
+                            <label class="text-sm">Service</label>
+                            <select id="service" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
                                 <option value="">All</option>
-                                <option value="paid">Paid</option>
-                                <option value="lead">Lead</option>
+                                @foreach($services as $service)
+                                    <option value="{{ $service->id }}">
+                                        {{ $service->service_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="text-sm">Status</label>
+                            <select id="is_paid" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
+                                <option value="">All</option>
+                                <option value="1">Paid</option>
+                                <option value="0">Lead</option>
                             </select>
                         </div>
 
@@ -65,6 +77,8 @@
                             <tr>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ID</th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Service</th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Name</th>
 
@@ -119,13 +133,18 @@ $(function() {
             data: function(d) {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
-                d.status = $('#status').val();
+                d.service = $('#service').val();
+                d.is_paid = $('#is_paid').val();
             }
         },
 
         columns: [{
                 data: 'id',
                 name: 'id'
+            },
+            {
+                data: 'service',
+                name: 'service'
             },
             {
                 data: 'name',
@@ -140,13 +159,8 @@ $(function() {
                 name: 'mobile_number'
             },
             {
-                data: 'status',
-                name: 'is_paid',
-                render: function(data) {
-                    return data === 'paid' ?
-                        '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Paid</span>' :
-                        '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Lead</span>';
-                }
+                data: 'is_paid',
+                name: 'is_paid'
             },
             {
                 data: 'created_at',

@@ -23,14 +23,13 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-
     public function dashboard()
     {
         $charts = [
             'normalcust' => Customer::getDashboardData('normal',1),
             'normallead' => Customer::getDashboardData('normal',0),
-            'normal36p'  => Customer::getDashboardData(null,1,'NORMAL_36'),
-            'normal60p'  => Customer::getDashboardData(null,1,'NORMAL_60')
+            'normal36p'  => Customer::getDashboardData(null,1,'NP36'),
+            'normal60p'  => Customer::getDashboardData(null,1,'NP60')
         ];
 
         $data = [];
@@ -51,8 +50,8 @@ class AdminController extends Controller
         $charts = [
             'tatkalcust' => Customer::getDashboardData('tatkal',1),
             'tatkallead' => Customer::getDashboardData('tatkal',0),
-            'tatkal36p'  => Customer::getDashboardData(null,1,'TATKAL_36'),
-            'tatkal60p'  => Customer::getDashboardData(null,1,'TATKAL_60')
+            'tatkal36p'  => Customer::getDashboardData(null,1,'TP36'),
+            'tatkal60p'  => Customer::getDashboardData(null,1,'TP60')
         ];
 
         $data = [];
