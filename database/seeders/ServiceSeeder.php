@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Service;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ServiceSeeder extends Seeder
 {
@@ -15,7 +16,9 @@ class ServiceSeeder extends Seeder
     public function run()
     {
         // Clear existing services
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Service::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         
         // Normal Passport (36 pages)
         Service::create([
