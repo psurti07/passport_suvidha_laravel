@@ -43,7 +43,7 @@ class OfferOrderController extends Controller
             'x-client-secret' => env('CASHFREE_SECRET_KEY'),
             'x-api-version' => '2022-09-01',
             'Content-Type' => 'application/json',
-        ])->post('https://sandbox.cashfree.com/pg/orders', [
+        ])->post('https://api.cashfree.com/pg/order', [
             "order_id" => $orderId,
             "order_amount" => $amount,
             "order_currency" => "INR",
