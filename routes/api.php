@@ -9,7 +9,11 @@ use App\Http\Controllers\Api\ApplicationProgressController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\FinalDetailController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\InvoiceController;
+use App\Http\Controllers\Api\OfferOrderController;
 use App\Http\Controllers\Api\RequiredDocumentsController;
+use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\ServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +29,8 @@ use App\Http\Controllers\Api\RequiredDocumentsController;
 // Health check route
 Route::get('/health', [HealthController::class, 'check'])->name('api.health');
 
+Route::middleware('auth:sanctum')->post('/logout', [CustomerController::class, 'logout']);
+
 Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
     return $request->user();
 });
@@ -34,8 +40,10 @@ Route::post('/customers/create', [CustomerController::class, 'create'])->name('a
 
 // Customer login route
 Route::post('/customers/login', [CustomerController::class, 'login'])->name('api.customers.login');
+Route::middleware('auth:sanctum')
+     ->put('/customers/{customer}', [CustomerController::class, 'update']);
 
-// OTP routes
+// OTP 
 // STEP-1 : OTP Send
 Route::post('/otp/send', [OtpController::class, 'send']);
 // STEP-2 : OTP verification
@@ -62,7 +70,12 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
 
 
     // Application Progress Route - only the customer status endpoint
-    Route::get('/application-progress', [ApplicationProgressController::class, 'getCustomerApplicationStatus'])->name('api.application-progress.status');
+    // Route::get('/application-progress', [ApplicationProgressController::class, 'getCustomerApplicationStatus'])->name('api.application-progress.status');
+
+    Route::middleware('auth:sanctum')->get(
+    '/application-progress',
+    [ApplicationProgressController::class, 'getCustomerApplicationStatus']
+);
 
     // Application Review Routes
     Route::get('/application-review/summary', [FinalDetailController::class, 'getApplicationSummary'])->name('api.application-review.summary');
@@ -85,3 +98,21 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
         Route::delete('/{document_type_id}', [RequiredDocumentsController::class, 'delete'])->name('api.required-documents.delete');
     });
 });
+
+// support ticket route for public (no auth) - separate from authenticated routes to avoid confusion
+Route::post('/public/support/tickets', [SupportTicketController::class, 'storePublic']);
+
+Route::get('/services/passport', [ServiceController::class, 'passportServices']);
+
+// routes/api.php
+Route::middleware('auth:sanctum')->get('/application/details', [ApplicationProgressController::class, 'details']);
+Route::get('/invoice/{customer_id}', [InvoiceController::class, 'generateInvoice']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/create-order', [PaymentController::class, 'createOrder']);
+    Route::post('/verify-payment', [PaymentController::class, 'verifyPayment']);
+    });
+
+Route::post('/createOffer-order', [OfferOrderController::class, 'createOrder']);
+Route::get('/payment-success', [OfferOrderController::class, 'paymentSuccess']);
+Route::get('/check-payment-status', [OfferOrderController::class, 'checkPaymentStatus']);
