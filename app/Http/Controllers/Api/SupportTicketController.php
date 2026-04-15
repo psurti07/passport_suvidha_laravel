@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use App\Services\SmsService;
 use Illuminate\Support\Facades\Mail;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class SupportTicketController extends Controller
 {
@@ -52,10 +53,8 @@ class SupportTicketController extends Controller
      */
     public function store(Request $request)
     {
-        // Explicitly use the 'sanctum' guard
-        $customer = Auth::guard('sanctum')->user(); // Returns Customer instance or null
+        $customer = Auth::guard('sanctum')->user(); 
 
-        // Initialize rules and ticket data
         $rules = [
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
@@ -63,26 +62,21 @@ class SupportTicketController extends Controller
         $ticketData = [];
 
         if ($customer instanceof Customer) {
-            // Authenticated Customer
-            // No need for name/email rules, we'll use the customer's data
 
-            // Validate only subject and message for authenticated customers
             $validator = Validator::make($request->only(['subject', 'message']), $rules);
 
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 422);
             }
 
-            // Get validated subject and message
             $validatedData = $validator->validated();
 
-            // *** IMPORTANT: Assumes Ticket model has a 'customer_id' foreign key ***
-            $ticketData['customer_id'] = $customer->id; // <-- This line assigns the customer ID
+            $ticketData['customer_id'] = $customer->id; 
 
-            // Use Customer's full name
             $customerName = trim("{$customer->first_name} {$customer->last_name}");
+
             if (empty($customerName)) {
-                 // Fallback if name parts are empty/null
+
                  $emailParts = explode('@', $customer->email ?? '');
                  $customerName = $emailParts[0] ?: "Customer {$customer->id}";
             }
@@ -92,10 +86,10 @@ class SupportTicketController extends Controller
             $ticketData['message'] = $validatedData['message'];
 
         } else {
-           // Guest User (Not authenticated or not a Customer instance)
+
             $rules['name'] = 'required|string|max:255';
             $rules['email'] = 'required|email|max:255';
-            $rules['mobile_number'] = 'required|digits:10'; // ✅ ADD THIS
+            $rules['mobile_number'] = 'required|digits:10'; 
             
             $validator = Validator::make($request->all(), $rules);
             
@@ -111,28 +105,22 @@ class SupportTicketController extends Controller
             $ticketData['subject'] = $validatedData['subject'];
             $ticketData['message'] = $validatedData['message'];
             
-            // ✅ store mobile for SMS
+
             $mobileNumber = $validatedData['mobile_number'];
         }
             
-            //
-            // CREATE TICKET
-            //
+
             $ticket = Ticket::create($ticketData);
             
             $smsService = new SmsService();
             
             try {
             
-                // ✅ determine mobile + name for BOTH cases
                 if ($customer instanceof Customer) {
                     $mobileNumber = $customer->mobile_number;
                     $name = $ticketData['name'];
                 }
 
-                // =========================
-                // 📧 SEND EMAIL
-                // =========================
                 if (!empty($ticketData['email'])) {
                     Mail::raw(
                         "Hello $name,\n\nYour support ticket (#{$ticket->id}) has been created successfully.\n\nSubject: {$ticket->subject}\n\nWe will get back to you soon.\n\nThank you.",
@@ -143,22 +131,17 @@ class SupportTicketController extends Controller
                     );
                 }
 
-                // if (!empty($mobileNumber)) {
+                if (!empty($mobileNumber)) {
 
-        // ✅ FIXED message (no #, no undefined variable)
+                    $message = "Hello, 123456 is the OTP for logging into your Passport Suvidha account. Please don't share this with others. Thank you.";
 
-        // $message = "Hello, 123456 is the OTP for logging into your Passport Suvidha account. Please don't share this with others. Thank you.";
-
-        // $response = $smsService->sendSms($mobileNumber, $message);
-
-        // Log::info('TICKET SMS RESULT', $response);
-        //         }
+                    $response = $smsService->sendSms($mobileNumber, $message);
+                }
             
             } catch (\Exception $e) {
                 Log::error("SMS Failed: " . $e->getMessage());
             }
             
-            // Return response
             return new TicketResource($ticket);
     }
 
@@ -192,24 +175,116 @@ class SupportTicketController extends Controller
     {
         $customer = Auth::guard('sanctum')->user();
 
-        // Find the ticket by ticket_number first
         $ticket = Ticket::where('ticket_number', $ticket_number)->first();
 
-        // Check if ticket exists
         if (!$ticket) {
             return response()->json(['error' => 'Ticket not found.'], 404);
         }
 
-        // Check if authenticated user is a customer and owns the ticket
         if (!$customer instanceof Customer || $ticket->customer_id !== $customer->id) {
-            // Return 403 Forbidden if not authorized
+
             return response()->json(['error' => 'Unauthorized to view this ticket.'], 403);
         }
 
-        // Eager load the remarks and the user associated with each remark
         $ticket->load('ticketRemarks.user');
 
         // Return the ticket using TicketResource
         return new TicketResource($ticket);
+    }
+
+    public function storePublic(Request $request)
+    {
+        $customer = null;
+
+        if ($request->bearerToken()) {
+            $accessToken = PersonalAccessToken::findToken($request->bearerToken());
+
+            if ($accessToken && $accessToken->tokenable instanceof \App\Models\Customer) {
+                $customer = $accessToken->tokenable;
+            }
+        }
+        $rules = [
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+        ];
+
+        // Guest validation
+        if (!$customer) {
+            $rules['name'] = 'required|string|max:255';
+            $rules['email'] = 'required|email|max:255';
+            $rules['mobile_number'] = 'nullable|digits:10';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $validated = $validator->validated();
+
+        if ($customer) {
+
+            $name = trim("{$customer->first_name} {$customer->last_name}");
+
+            if (empty($name)) {
+                $name = explode('@', $customer->email)[0] ?? "Customer";
+            }
+
+            $ticketData = [
+                'customer_id' => $customer->id,
+                'name' => $name,
+                'email' => $customer->email,
+                'mobile_number' => $customer->mobile_number ?? $request->mobile_number,
+                'subject' => $validated['subject'],
+                'message' => $validated['message'],
+                'status' => 'open',
+            ];
+
+            $mobileNumber = $ticketData['mobile_number'];
+
+        } else {
+
+            $ticketData = [
+                'customer_id' => null,
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'mobile_number' => $validated['mobile_number'] ?? null,
+                'subject' => $validated['subject'],
+                'message' => $validated['message'],
+                'status' => 'open',
+            ];
+
+            $mobileNumber = $ticketData['mobile_number'];
+            $name = $validated['name'];
+        }
+
+        $ticket = Ticket::create($ticketData);
+
+        // try {
+        //     if (!empty($ticketData['email'])) {
+        //         Mail::raw(
+        //             "Hello $name,\n\nYour support ticket has been created successfully.\n\nTicket No: {$ticket->ticket_number}\nSubject: {$ticket->subject}\n\nWe will get back to you soon.\n\nThank you.",
+        //             function ($message) use ($ticketData) {
+        //                 $message->to($ticketData['email'])
+        //                         ->subject('Support Ticket Created');
+        //             }
+        //         );
+        //     }
+        // } catch (\Exception $e) {
+        //     Log::error("Mail Error: " . $e->getMessage());
+        // }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Ticket created successfully',
+            'data' => [
+                'ticket_number' => $ticket->ticket_number,
+                'status' => $ticket->status,
+            ]
+        ]);
     }
 } 

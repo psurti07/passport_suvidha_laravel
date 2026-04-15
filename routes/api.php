@@ -9,8 +9,11 @@ use App\Http\Controllers\Api\ApplicationProgressController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\FinalDetailController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\InvoiceController;
+use App\Http\Controllers\Api\OfferOrderController;
 use App\Http\Controllers\Api\RequiredDocumentsController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\ServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +28,8 @@ use App\Http\Controllers\Api\PaymentController;
 
 // Health check route
 Route::get('/health', [HealthController::class, 'check'])->name('api.health');
+
+Route::middleware('auth:sanctum')->post('/logout', [CustomerController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
     return $request->user();
@@ -94,8 +99,20 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
     });
 });
 
+// support ticket route for public (no auth) - separate from authenticated routes to avoid confusion
+Route::post('/public/support/tickets', [SupportTicketController::class, 'storePublic']);
+
+Route::get('/services/passport', [ServiceController::class, 'passportServices']);
+
+// routes/api.php
+Route::middleware('auth:sanctum')->get('/application/details', [ApplicationProgressController::class, 'details']);
+Route::get('/invoice/{customer_id}', [InvoiceController::class, 'generateInvoice']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/create-order', [PaymentController::class, 'createOrder']);
     Route::post('/verify-payment', [PaymentController::class, 'verifyPayment']);
-});
+    });
+
+Route::post('/createOffer-order', [OfferOrderController::class, 'createOrder']);
+Route::get('/payment-success', [OfferOrderController::class, 'paymentSuccess']);
+Route::get('/check-payment-status', [OfferOrderController::class, 'checkPaymentStatus']);

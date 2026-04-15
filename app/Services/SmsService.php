@@ -19,13 +19,13 @@ class SmsService
                 'user' => $username,
                 'password' => $password,
                 'senderid' => $senderId,
-                'mobiles' => '91' . $mobileNumber, // ✅ FIXED
+                'mobiles' => '91' . $mobileNumber, //  FIXED
                 'sms' => $message
             ]);
             
             $result = $response->body();
 
-            // ✅ Debug safely
+            //  Debug safely
             Log::info('SMS DEBUG', [
                 'response' => $result,
                 'username' => $username,

@@ -39,6 +39,7 @@ class Ticket extends Model
         'message',
         'status',
         'ticket_number',
+        'mobile_number',
     ];
 
     /**

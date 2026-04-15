@@ -31,6 +31,7 @@ class Customer extends Authenticatable
         'date_of_birth',
         'place_of_birth',
         'nationality',
+        'service_id',
         'payment_info_id',
         'service_code',
         'is_paid',

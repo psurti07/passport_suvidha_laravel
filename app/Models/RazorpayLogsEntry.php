@@ -11,14 +11,13 @@ class RazorpayLogsEntry extends Model
      protected $table = 'razorpay_logs_entry';
 
     protected $fillable = [
-        'entryfor',
-        'userid',
-        'orderid',
-        'orderamount',
-        'ordernote',
-        'referenceid',
-        'txstatus',
-        'paymentmode',
+        'customer_id',  
+        'order_id',
+        'order_amount',
+        'order_note',
+        'reference_id',
+        'tx_status',
+        'payment_mode',
     ];
 
 }
