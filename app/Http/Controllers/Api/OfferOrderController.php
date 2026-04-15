@@ -104,7 +104,7 @@ class OfferOrderController extends Controller
             'x-client-id' => env('CASHFREE_APP_ID'),
             'x-client-secret' => env('CASHFREE_SECRET_KEY'),
             'x-api-version' => '2022-09-01',
-        ])->get('https://sandbox.cashfree.com/pg/orders/' . $orderId . '/payments');
+        ])->get('https://api.cashfree.com/pg/orders' . $orderId . '/payments');
 
         if ($response->successful()) {
 
