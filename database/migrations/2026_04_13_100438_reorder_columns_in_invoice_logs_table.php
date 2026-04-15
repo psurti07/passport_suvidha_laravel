@@ -15,9 +15,13 @@ class ReorderColumnsInInvoiceLogsTable extends Migration
     {
         Schema::table('invoice_logs', function (Blueprint $table) {
             try {
-                $table->dropForeign(['invoice_id']);
-                $table->dropForeign(['staff_id']);
+                $table->dropForeign('invoice_logs_invoice_id_foreign');
             } catch (\Exception $e) {}
+
+            try {
+                $table->dropForeign('invoice_logs_staff_id_foreign');
+            } catch (\Exception $e) {}
+
             $table->dropColumn(['invoice_id', 'staff_id']);
         });
 
@@ -26,14 +30,14 @@ class ReorderColumnsInInvoiceLogsTable extends Migration
             $table->unsignedBigInteger('staff_id')->after('invoice_id');
 
             $table->foreign('invoice_id')
-                  ->references('id')
-                  ->on('invoices')
-                  ->onDelete('cascade');
+                ->references('id')
+                ->on('invoices')
+                ->onDelete('cascade');
 
             $table->foreign('staff_id')
-                  ->references('id')
-                  ->on('users')
-                  ->cascadeOnDelete('cascade');
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 
