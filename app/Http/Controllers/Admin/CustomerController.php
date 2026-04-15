@@ -471,12 +471,12 @@ class CustomerController extends Controller
             $invoice->save();
 
             InvoiceLog::create([
+                'invoice_id' => $invoice->id,
+                'user_id' => auth()->id(),
                 'log_detail' => $type === 'convert'
                     ? 'Convert Lead to Customer'
                     : 'Create New Customer',
-                'card_number' => $order->id,
-                'invoice_id' => $invoice->id,
-                'staff_id' => auth()->id()
+                'card_number' => $order->id
             ]);
 
             return $customer;

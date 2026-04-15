@@ -11,15 +11,15 @@ class InvoiceLog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'log_detail',
-        'card_number',
         'invoice_id',
-        'staff_id'
+        'user_id',
+        'log_detail',
+        'card_number'
     ];
 
     protected $casts = [
         'invoice_id' => 'integer',
-        'staff_id' => 'integer',
+        'user_id' => 'integer',
     ];
 
     // Relationships
@@ -30,6 +30,6 @@ class InvoiceLog extends Model
 
     public function staff(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'staff_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -40,6 +40,7 @@ class Ticket extends Model
         'customer_id',
         'name',
         'email',
+        'mobile_number',
         'subject',
         'message',
         'status',

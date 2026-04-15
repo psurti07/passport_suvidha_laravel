@@ -20,7 +20,7 @@ use App\Http\Controllers\Admin\DocumentTypeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ApplicationStatusController;
 use App\Http\Controllers\Admin\DndController;
-use App\Models\ApplicationStatus;               
+use App\Http\Controllers\Admin\RazorpayLogController;     
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +83,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dnd-data', [DndController::class, 'data'])->name('dnd.data'); 
     Route::post('dnd/upload', [DndController::class, 'upload'])->name('dnd.upload');
     Route::delete('dnd/{customer}/delete', [DndController::class, 'destroy'])->name('dnd.destroy');
+
+    // Razorpay Logs Routes
+    Route::get('/razorpay-logs', [RazorpayLogController::class, 'index'])->name('razorpay-logs.index');
+    Route::get('/razorpay-logs/data', [RazorpayLogController::class, 'data'])->name('razorpay-logs.data');
 
     // Support Routes
     Route::get('/support/customer', [SupportController::class, 'customerSupport'])->name('support.customer');
