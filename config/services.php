@@ -36,4 +36,9 @@ return [
         'sender_id' => env('SMS_API_SENDER_ID'),
     ],
 
+    'razorpay' => [
+        'key' => env('RAZORPAY_KEY'),
+        'secret' => env('RAZORPAY_SECRET'),
+    ],
+
 ];
