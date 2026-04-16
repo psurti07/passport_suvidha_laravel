@@ -36,15 +36,27 @@ class PaymentController extends Controller
             ], 400);
         }
 
-        $amount = (int) $service->service_total_amount;
+        // $amount = (int) $service->service_total_amount;
 
-        $testNumbers = explode(',', env('TEST_NUMBERS', ''));
+        // $testNumbers = explode(',', config('services.testnumbers.number', ''));
+
+        // if (in_array($request->mobile, $testNumbers)) {
+        //     $amount = 1;
+        // }
+
+        // $razorpayAmount = $amount * 100;
+
+        $amount = $service->service_total_amount;
+
+        $finalAmount = floor($amount);
+
+        $testNumbers = explode(',', config('services.testnumbers.number', ''));
 
         if (in_array($request->mobile, $testNumbers)) {
-            $amount = 1;
+            $finalAmount = 1;
         }
 
-        $razorpayAmount = $amount * 100;
+        $razorpayAmount = $finalAmount * 100;
 
         $order = $api->order->create([
             'receipt' => 'order_' . time(),
@@ -55,7 +67,7 @@ class PaymentController extends Controller
         RazorpayLog::create([
             'customer_id' => auth()->id() ?? 0,
             'order_id' => round(microtime(true) * 1000), 
-            'order_amount' => $razorpayAmount, 
+            'order_amount' => $finalAmount, 
             'order_note' => 'Passport Application',
             'reference_id' => $order['id'], 
             'tx_status' => 'pending',

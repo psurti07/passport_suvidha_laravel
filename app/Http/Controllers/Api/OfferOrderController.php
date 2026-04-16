@@ -21,7 +21,7 @@ class OfferOrderController extends Controller
             'mobile' => 'required',
         ]);
 
-        $testNumbers = explode(',', env('TEST_NUMBERS', ''));
+        $testNumbers = explode(',', config('services.testnumbers.number', ''));
 
         $amount = 199;
 
