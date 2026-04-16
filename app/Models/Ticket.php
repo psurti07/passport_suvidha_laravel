@@ -19,9 +19,14 @@ class Ticket extends Model
      */
     protected static function booted()
     {
+        // static::creating(function ($ticket) {
+        //     if (empty($ticket->ticket_number)) {
+        //         $ticket->ticket_number = date('mdHis');
+        //     }
+        // });
         static::creating(function ($ticket) {
             if (empty($ticket->ticket_number)) {
-                $ticket->ticket_number = date('mdHis');
+                $ticket->ticket_number = 'TKT' . now()->format('YmdHis') . rand(100, 999);
             }
         });
     }
@@ -35,6 +40,7 @@ class Ticket extends Model
         'customer_id',
         'name',
         'email',
+        'mobile_number',
         'subject',
         'message',
         'status',
@@ -42,17 +48,12 @@ class Ticket extends Model
         'mobile_number',
     ];
 
-    /**
-     * Get the customer that owns the ticket.
-     */
+    // Relationships
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }
 
-    /**
-     * Get the remarks (now ticketRemarks) for the ticket.
-     */
     public function ticketRemarks(): HasMany
     {
         return $this->hasMany(TicketRemark::class, 'ticket_number', 'ticket_number')->latest();

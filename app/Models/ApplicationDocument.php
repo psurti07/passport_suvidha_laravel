@@ -15,12 +15,15 @@ class ApplicationDocument extends Model
         'document_type_id',
         'is_submitted',
         'file_path',
+        'is_verified',
     ];
 
     protected $casts = [
         'is_submitted' => 'boolean',
+        'is_verified' => 'boolean',
     ];
 
+    // Relationships
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
@@ -30,4 +33,9 @@ class ApplicationDocument extends Model
     {
         return $this->belongsTo(DocumentType::class);
     }
+
+    // public function getFileUrlAttribute()
+    // {
+    //     return $this->file_path ? asset('storage/' . $this->file_path) : null;
+    // }
 } 

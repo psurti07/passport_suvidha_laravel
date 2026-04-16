@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\TicketRemark; // Import the renamed model
 
+use App\Models\TicketRemark;
+use App\Models\AppointmentLetter;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -46,41 +47,28 @@ class User extends Authenticatable
         'is_active' => 'boolean',
     ];
 
-    /**
-     * Check if user is an admin
-     */
-    public function isAdmin()
+    // Role check methods
+    public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
 
-    /**
-     * Check if user is a staff member
-     */
-    public function isStaff()
+    public function isStaff(): bool
     {
         return $this->role === 'staff';
     }
 
-    /**
-     * Get the admin who created this user
-     */
+    // Relationships
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    /**
-     * Get the remarks (now ticketRemarks) made by the user (admin/staff).
-     */
-    public function ticketRemarks(): HasMany // Renamed method and updated class reference
+    public function ticketRemarks(): HasMany
     {
         return $this->hasMany(TicketRemark::class);
     }
     
-    /**
-     * Get the appointment letters uploaded by the user.
-     */
     public function uploadedAppointmentLetters(): HasMany
     {
         return $this->hasMany(AppointmentLetter::class, 'uploaded_by');
