@@ -23,7 +23,7 @@ class PaymentController extends Controller
             'mobile' => 'required'
         ]);
 
-        $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
+        $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
 
         $service = DB::table('services')
             ->where('service_code', $request->service_code)
