@@ -138,7 +138,7 @@ class PaymentController extends Controller
                 'payment_mode' => $paymentMode
             ]);
 
-            $finalAmount = $log->order_amount / 100;
+            $finalAmount = $log->order_amount;
 
             // ADD HERE
             if ($finalAmount == 1) {
@@ -156,7 +156,7 @@ class PaymentController extends Controller
                 [
                     'customer_id' => $log->customer_id,
                     'card_number' => str_pad(mt_rand(0, 9999999999999999), 16, '0', STR_PAD_LEFT),
-                    'amount' => $log->order_amount / 100, // convert paise → ₹
+                    'amount' => $log->order_amount,
                     'payment_id' => $request->razorpay_payment_id,
                 ]
             );
