@@ -89,6 +89,12 @@ public function details(Request $request)
         ->latest()
         ->first();
 
+    $paymentLog = DB::table('razorpay_logs_entry')
+        ->where('customer_id', $customer->id)
+        ->where('tx_status', 'success')
+        ->latest()
+        ->first();
+
     $progress = DB::table('application_progress')
         ->where('customer_id', $customer->id)
         ->get();
@@ -135,6 +141,7 @@ public function details(Request $request)
         'customer' => $customer,
         'service' => $service,
         'invoice' => $invoice,
+        'payment' => $paymentLog,
         'progress' => [
             'percentage' => ($totalStages > 0) ? round(($completedCount / $totalStages) * 100) : 0,
             'stages' => $stages,

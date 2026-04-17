@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\ApplicationOrders;
+use App\Models\ApplicationOrder;
 use App\Models\Customer;
-use App\Models\Invoices;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Razorpay\Api\Api;
-use App\Models\RazorpayLogsEntry;
+use App\Models\RazorpayLog;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\SmsService;
@@ -23,7 +23,7 @@ class PaymentController extends Controller
             'mobile' => 'required'
         ]);
 
-        $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
+        $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
 
         $service = DB::table('services')
             ->where('service_code', $request->service_code)
@@ -36,15 +36,27 @@ class PaymentController extends Controller
             ], 400);
         }
 
-        $amount = (int) $service->service_total_amount;
+        // $amount = (int) $service->service_total_amount;
 
-        $testNumbers = explode(',', env('TEST_NUMBERS', ''));
+        // $testNumbers = explode(',', config('services.testnumbers.number', ''));
+
+        // if (in_array($request->mobile, $testNumbers)) {
+        //     $amount = 1;
+        // }
+
+        // $razorpayAmount = $amount * 100;
+
+        $amount = $service->service_total_amount;
+
+        $finalAmount = floor($amount);
+
+        $testNumbers = explode(',', config('services.testnumbers.number', ''));
 
         if (in_array($request->mobile, $testNumbers)) {
-            $amount = 1;
+            $finalAmount = 1;
         }
 
-        $razorpayAmount = $amount * 100;
+        $razorpayAmount = $finalAmount * 100;
 
         $order = $api->order->create([
             'receipt' => 'order_' . time(),
@@ -52,10 +64,10 @@ class PaymentController extends Controller
             'currency' => 'INR'
         ]);
 
-        RazorpayLogsEntry::create([
+        RazorpayLog::create([
             'customer_id' => auth()->id() ?? 0,
             'order_id' => round(microtime(true) * 1000), 
-            'order_amount' => $razorpayAmount, 
+            'order_amount' => $finalAmount, 
             'order_note' => 'Passport Application',
             'reference_id' => $order['id'], 
             'tx_status' => 'pending',
@@ -88,7 +100,7 @@ class PaymentController extends Controller
             $api->utility->verifyPaymentSignature($attributes);
 
 
-            $log = RazorpayLogsEntry::where('reference_id', $request->razorpay_order_id)->first();
+            $log = RazorpayLog::where('reference_id', $request->razorpay_order_id)->first();
 
             if (!$log) {
                 return response()->json([
@@ -139,7 +151,7 @@ class PaymentController extends Controller
                 ]);
             }
 
-            $order = ApplicationOrders::updateOrCreate(
+            $order = ApplicationOrder::updateOrCreate(
                 ['customer_id' => $log->customer_id],
                 [
                     'customer_id' => $log->customer_id,
@@ -176,7 +188,7 @@ class PaymentController extends Controller
                 $total = $netAmount + $igst;
             }
 
-            $invoice = Invoices::create([
+            $invoice = Invoice::create([
                 'customer_id' => $log->customer_id,
                 'card_id' => $order->id,
                 'inv_date' => now(),
@@ -222,7 +234,7 @@ class PaymentController extends Controller
                     $response = $smsService->sendSms($mobileNumber, $message);
                 }
 
-            RazorpayLogsEntry::create([
+            RazorpayLog::create([
                 'customer_id' => auth()->id() ?? 0,
                 'order_id' => time(),
                 'order_amount' => 0,

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use App\Models\OfferOrder;
-use App\Models\CashfreeLogsEntry;
+use App\Models\CashfreeLog;
 use Illuminate\Support\Str;
 
 class OfferOrderController extends Controller
@@ -21,7 +21,7 @@ class OfferOrderController extends Controller
             'mobile' => 'required',
         ]);
 
-        $testNumbers = explode(',', env('TEST_NUMBERS', ''));
+        $testNumbers = explode(',', config('services.testnumbers.number', ''));
 
         $amount = 199;
 
@@ -43,7 +43,7 @@ class OfferOrderController extends Controller
             'x-client-secret' => env('CASHFREE_SECRET_KEY'),
             'x-api-version' => '2022-09-01',
             'Content-Type' => 'application/json',
-        ])->post('https://api.cashfree.com/pg/order', [
+        ])->post('https://sandbox.cashfree.com/pg/orders', [
             "order_id" => $orderId,
             "order_amount" => $amount,
             "order_currency" => "INR",
@@ -59,7 +59,7 @@ class OfferOrderController extends Controller
 
             $orderLogId = round(microtime(true) * 1000);
 
-            CashfreeLogsEntry::create([
+            CashfreeLog::create([
                 'customer_id' => $order->id,
                 'order_id' => $orderLogId,
                 'order_amount' => $amount,
@@ -98,13 +98,13 @@ class OfferOrderController extends Controller
             return response()->json(["success" => false]);
         }
 
-        $log = CashfreeLogsEntry::where('reference_id', $orderId)->first();
+        $log = CashfreeLog::where('reference_id', $orderId)->first();
 
         $response = Http::withHeaders([
             'x-client-id' => env('CASHFREE_APP_ID'),
             'x-client-secret' => env('CASHFREE_SECRET_KEY'),
             'x-api-version' => '2022-09-01',
-        ])->get('https://sandbox.cashfree.com/pg/orders/' . $orderId . '/payments');
+        ])->get('https://api.cashfree.com/pg/orders' . $orderId . '/payments');
 
         if ($response->successful()) {
 
@@ -164,13 +164,13 @@ class OfferOrderController extends Controller
     {
         $orderId = $request->order_id;
 
-        $log = CashfreeLogsEntry::where('reference_id', $orderId)->first();
+        $log = CashfreeLog::where('reference_id', $orderId)->first();
 
         $response = Http::withHeaders([
             'x-client-id' => env('CASHFREE_APP_ID'),
             'x-client-secret' => env('CASHFREE_SECRET_KEY'),
             'x-api-version' => '2022-09-01',
-        ])->get("https://sandbox.cashfree.com/pg/orders/{$orderId}/payments");
+        ])->get("https://api.cashfree.com/pg/orders");
 
         if ($response->successful()) {
 
