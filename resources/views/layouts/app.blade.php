@@ -811,6 +811,19 @@
                     <span class="nav-link-text">OTP Management</span>
                 </a>
 
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">INVOICE</div>
+
+                <a href="{{ route('admin.invoices.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Invoice List</span>
+                </a>
+
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">DND</div>
 
                 <a href="{{ route('admin.dnd.index') }}"

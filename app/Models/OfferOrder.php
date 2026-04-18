@@ -14,6 +14,7 @@ class OfferOrder extends Model
         'mobile',
         'email',
         'card_number',
+        'offer_type',
         'amount',
         'payment_id',
         'created_at',

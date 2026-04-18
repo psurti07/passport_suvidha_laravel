@@ -39,19 +39,19 @@ class ApplicationStatusController extends Controller
 
             ->addIndexColumn()
 
-            ->addColumn('customer', function ($row) {
+            ->addColumn('customer_name', function ($row) {
                 return $row->customer->first_name . ' ' . $row->customer->last_name;
             })
 
-            ->addColumn('mobile', function ($row) {
+            ->addColumn('customer_mobile', function ($row) {
                 return $row->customer->mobile_number;
             })
 
-            ->addColumn('service', function ($row) {
+            ->addColumn('service_name', function ($row) {
                 return $row->customer->service->service_name ?? 'N/A';
             })
 
-            ->addColumn('status', function ($row) {
+            ->addColumn('status_name', function ($row) {
 
                 $status = $row->status->status_name ?? 'N/A';
                 $color = $row->status->colorclass ?? 'gray';
@@ -65,7 +65,7 @@ class ApplicationStatusController extends Controller
                 return $row->remark;
             })
 
-            ->addColumn('remarked_by', function ($row) {
+            ->addColumn('user_remarked_by', function ($row) {
                 return $row->remarkedByUser->name ?? 'N/A';
             })
 
@@ -73,20 +73,20 @@ class ApplicationStatusController extends Controller
                 return $row->status_date->format('d/m/Y');
             })
             
-            ->filterColumn('customer', function($query, $keyword) {
+            ->filterColumn('customer_name', function($query, $keyword) {
                 $query->whereHas('customer', function($q) use ($keyword) {
                     $q->where('first_name', 'like', "%{$keyword}%")
                     ->orWhere('last_name', 'like', "%{$keyword}%");
                 });
             })
 
-            ->filterColumn('mobile', function($query, $keyword) {
+            ->filterColumn('customer_mobile', function($query, $keyword) {
                 $query->whereHas('customer', function($q) use ($keyword) {
                     $q->where('mobile_number', 'like', "%{$keyword}%");
                 });
             })
 
-            ->filterColumn('service', function($query, $keyword) {
+            ->filterColumn('service_name', function($query, $keyword) {
                 $query->whereHas('customer.service', function($q) use ($keyword) {
                     $q->where('service_name', 'like', "%{$keyword}%");
                 });
@@ -96,7 +96,7 @@ class ApplicationStatusController extends Controller
                 $query->where('remark', 'like', "%{$keyword}%");
             })
 
-            ->filterColumn('remarked_by', function($query, $keyword) {
+            ->filterColumn('user_remarked_by', function($query, $keyword) {
                 $query->whereHas('remarkedByUser', function($q) use ($keyword) {
                     $q->where('name', 'like', "%{$keyword}%");
                 });
@@ -118,7 +118,7 @@ class ApplicationStatusController extends Controller
                 ';
             })
 
-            ->rawColumns(['status', 'actions'])
+            ->rawColumns(['status_name', 'actions'])
 
             ->make(true);
     }

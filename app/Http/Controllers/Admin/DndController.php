@@ -46,11 +46,11 @@ class DndController extends Controller
 
             ->addIndexColumn()
 
-            ->addColumn('service', function ($row) {
+            ->addColumn('service_name', function ($row) {
                 return $row->service ? $row->service->service_name : 'N/A';
             })
 
-            ->addColumn('name', function ($row) {
+            ->addColumn('customer_name', function ($row) {
                 return $row->first_name . ' ' . $row->last_name;
             })
 
@@ -80,7 +80,7 @@ class DndController extends Controller
                 
             })
 
-            ->rawColumns(['service', 'actions'])
+            ->rawColumns(['service_name', 'actions'])
 
             ->make(true);
     }

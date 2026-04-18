@@ -121,29 +121,29 @@ $(function() {
 
         columns: [{
                 data: 'id',
-                name: 'pre_defined_messages.id'
+                name: 'id'
             },
             {
                 data: 'status_name',
-                name: 'status.status_name'
+                name: 'status_name'
             },
             {
                 data: 'message_name',
-                name: 'pre_defined_messages.message_name'
+                name: 'message_name'
             },
             {
                 data: 'message_remarks',
-                name: 'pre_defined_messages.message_remarks',
+                name: 'message_remarks',
                 className: 'whitespace-normal break-words',
                 width: '300px'
             },
             {
                 data: 'created_at',
-                name: 'pre_defined_messages.created_at'
+                name: 'created_at'
             },
             {
                 data: 'updated_at',
-                name: 'pre_defined_messages.updated_at'
+                name: 'updated_at'
             },
             {
                 data: 'actions',

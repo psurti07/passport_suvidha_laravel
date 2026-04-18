@@ -225,7 +225,7 @@ class PaymentController extends Controller
 
             Log::error('PAYMENT VERIFY ERROR: ' . $e->getMessage());
 
-             $smsService = new SmsService();
+            $smsService = new SmsService();
             $mobileNumber = $customer->mobile_number;
             if (!empty($mobileNumber)) {
 
@@ -250,5 +250,5 @@ class PaymentController extends Controller
                 'error' => $e->getMessage()
             ], 400);
         }
-    }
+    }   
 }

@@ -129,16 +129,16 @@ $(function() {
                 name: 'id'
             },
             {
-                data: 'name',
-                name: 'name'
+                data: 'customer_name',
+                name: 'customer_name'
             },
             {
-                data: 'customer.email',
-                name: 'customer.email'
+                data: 'customer_email',
+                name: 'customer_email'
             },
             {
-                data: 'customer.mobile_number',
-                name: 'customer.mobile_number'
+                data: 'customer_mobile',
+                name: 'customer_mobile'
             },
             {
                 data: 'order_id',

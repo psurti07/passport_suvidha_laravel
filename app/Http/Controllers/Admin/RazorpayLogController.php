@@ -42,8 +42,16 @@ class RazorpayLogController extends Controller
 
             ->addIndexColumn()
 
-            ->addColumn('name', function ($row) {
+            ->addColumn('customer_name', function ($row) {
                 return $row->customer->first_name . ' ' . $row->customer->last_name;
+            })
+
+            ->addColumn('customer_email', function ($row) {
+                return $row->customer->email;
+            })
+
+            ->addColumn('customer_mobile_number', function ($row) {
+                return $row->customer->mobile_number;
             })
 
             ->editColumn('created_at', function ($row) {

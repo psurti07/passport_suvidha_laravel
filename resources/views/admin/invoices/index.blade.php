@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Final Details')
+@section('title', 'Invoices')
 
 @section('content')
 
@@ -13,12 +13,11 @@
             <form id="filterForm">
 
                 <div class="flex flex-col lg:flex-row justify-between items-center mb-6">
-                    <div class="flex items-center gap-4">
-                        <h2
-                            class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                            FINAL DETAILS
-                        </h2>
-                    </div>
+
+                    <h2
+                        class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                        INVOICES
+                    </h2>
                     <div class="flex flex-wrap gap-3">
 
                         <div>
@@ -31,15 +30,6 @@
                             <label class="text-sm">To</label>
                             <input type="date" id="to_date" value="{{ now()->format('Y-m-d') }}"
                                 class="border rounded-lg px-3 py-2 text-sm">
-                        </div>
-
-                        <div>
-                            <label class="text-sm">Status</label>
-                            <select id="is_approved" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
-                                <option value="">All</option>
-                                <option value="1">Approved</option>
-                                <option value="0">Pending</option>
-                            </select>
                         </div>
 
                         <div class="flex items-end">
@@ -57,9 +47,9 @@
 
 
             <div class="mt-4 overflow-x-auto">
-                <div class="text-sm text-gray-700">
+                <div class="whitespace-nowrap text-sm text-gray-700">
 
-                    <table id="final-details-table" class="min-w-full divide-y divide-gray-200 pt-5">
+                    <table id="invoice-table" class="min-w-full divide-y divide-gray-200 pt-5">
 
                         <thead class="bg-blue-50">
 
@@ -70,26 +60,22 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Customer
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Upload
-                                    Date
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Uploaded
-                                    By
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Invoice No
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Invoice Date
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Approved
-                                    Date
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Total Amount
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Approved
-                                    By
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment ID
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Document
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created At
                                 </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
@@ -118,7 +104,7 @@
 <script>
 $(function() {
 
-    let table = $('#final-details-table').DataTable({
+    let table = $('#invoice-table').DataTable({
 
         processing: true,
         serverSide: true,
@@ -128,11 +114,10 @@ $(function() {
         ],
 
         ajax: {
-            url: "{{ route('admin.final-details.data') }}",
+            url: "{{ route('admin.invoices.data') }}",
             data: function(d) {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
-                d.is_approved = $('#is_approved').val();
             }
         },
 
@@ -145,30 +130,28 @@ $(function() {
                 name: 'customer_name'
             },
             {
-                data: 'upload_date',
-                name: 'upload_date'
+                data: 'customer_mobile',
+                name: 'customer_mobile'
             },
             {
-                data: 'user_name',
-                name: 'user_name'
+                data: 'inv_no',
+                name: 'inv_no'
             },
             {
-                data: 'is_approved',
-                name: 'is_approved'
+                data: 'inv_date',
+                name: 'inv_date'
             },
             {
-                data: 'approved_date',
-                name: 'approved_date'
+                data: 'total_amount',
+                name: 'total_amount'
             },
             {
-                data: 'approved_by_name',
-                name: 'approved_by_name'
+                data: 'application_order_paymentid',
+                name: 'application_order_paymentid'
             },
             {
-                data: 'document',
-                name: 'document',
-                orderable: false,
-                searchable: false
+                data: 'created_at',
+                name: 'created_at'
             },
             {
                 data: 'actions',

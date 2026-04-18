@@ -60,7 +60,7 @@ class FinalDetailController extends Controller
                 ';
             })
 
-            ->addColumn('uploaded_by_name', function ($row) {
+            ->addColumn('user_name', function ($row) {
                 return $row->uploader->name ?? 'System';
             }) 
 

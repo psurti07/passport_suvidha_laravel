@@ -143,20 +143,20 @@ $(function() {
                 name: 'id'
             },
             {
-                data: 'service',
-                name: 'service'
+                data: 'service_name',
+                name: 'service_name'
             },
             {
-                data: 'name',
-                name: 'first_name'
+                data: 'customer_name',
+                name: 'customer_name'
             },
             {
                 data: 'email',
                 name: 'email'
             },
             {
-                data: 'mobile_number',
-                name: 'mobile_number'
+                name: 'mobile_number',
+                data: 'mobile_number'
             },
             {
                 data: 'is_paid',

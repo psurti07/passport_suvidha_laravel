@@ -60,7 +60,7 @@ class AppointmentLetterController extends Controller
                 ';
             })
 
-            ->addColumn('mobile', function ($row) {
+            ->addColumn('customer_mobile', function ($row) {
                 return $row->customer->mobile_number ?? '-';
             })
 
@@ -79,7 +79,7 @@ class AppointmentLetterController extends Controller
                 return '-';
             })
 
-            ->addColumn('name', function ($row) {
+            ->addColumn('user_name', function ($row) {
                 return $row->uploader->name ?? 'System';
             })  
             
