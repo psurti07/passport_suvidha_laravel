@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CashfreeLog extends Model
-{
+class ZaakpayLog extends Model
+{    
     use HasFactory;
 
-    protected $table = 'cashfree_logs_entry';
+    protected $table = 'zaakpay_logs_entry';
 
     protected $fillable = [
         'customer_id',
@@ -27,7 +27,7 @@ class CashfreeLog extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
-    }
+    }   
 
     public function getServiceTextAttribute()
     {

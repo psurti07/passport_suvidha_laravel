@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Razorpay Logs')
+@section('title', 'Invoices')
 
 @section('content')
 
@@ -13,12 +13,11 @@
             <form id="filterForm">
 
                 <div class="flex flex-col lg:flex-row justify-between items-center mb-6">
-                    <div class="flex items-center gap-4">
-                        <h2
-                            class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                            RAZORPAY LOGS
-                        </h2>
-                    </div>
+
+                    <h2
+                        class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                        INVOICES
+                    </h2>
                     <div class="flex flex-wrap gap-3">
 
                         <div>
@@ -31,16 +30,6 @@
                             <label class="text-sm">To</label>
                             <input type="date" id="to_date" value="{{ now()->format('Y-m-d') }}"
                                 class="border rounded-lg px-3 py-2 text-sm">
-                        </div>
-
-                        <div>
-                            <label class="text-sm">Status</label>
-                            <select id="tx_status" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
-                                <option value="">All</option>
-                                <option value="success">Success</option>
-                                <option value="failed">Failed</option>
-                                <option value="pending">Pending</option>
-                            </select>
                         </div>
 
                         <div class="flex items-end">
@@ -60,7 +49,7 @@
             <div class="mt-4 overflow-x-auto">
                 <div class="whitespace-nowrap text-sm text-gray-700">
 
-                    <table id="razorpay-logs-table" class="min-w-full divide-y divide-gray-200 pt-5">
+                    <table id="invoice-table" class="min-w-full divide-y divide-gray-200 pt-5">
 
                         <thead class="bg-blue-50">
 
@@ -74,28 +63,22 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Order
-                                    Amount</th>
-
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Order Note
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Invoice No
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Reference
-                                    ID</th>
-
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment
-                                    ID</th>
-
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">TX Status
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Invoice Date
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment
-                                    Mode</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Total Amount
+                                </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Type
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment ID
                                 </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created At
+                                </th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
                                 </th>
 
                             </tr>
@@ -121,7 +104,7 @@
 <script>
 $(function() {
 
-    let table = $('#razorpay-logs-table').DataTable({
+    let table = $('#invoice-table').DataTable({
 
         processing: true,
         serverSide: true,
@@ -131,11 +114,10 @@ $(function() {
         ],
 
         ajax: {
-            url: "{{ route('admin.razorpay-logs.data') }}",
+            url: "{{ route('admin.invoices.data') }}",
             data: function(d) {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
-                d.tx_status = $('#tx_status').val();
             }
         },
 
@@ -148,56 +130,62 @@ $(function() {
                 name: 'customer_name'
             },
             {
-                data: 'customer_mobile_number',
-                name: 'customer_mobile_number'
+                data: 'customer_mobile',
+                name: 'customer_mobile'
             },
             {
-                data: 'order_amount',
-                name: 'order_amount'
+                data: 'inv_no',
+                name: 'inv_no'
             },
             {
-                data: 'order_note',
-                name: 'order_note'
+                data: 'inv_date',
+                name: 'inv_date'
             },
             {
-                data: 'reference_id',
-                name: 'reference_id'
+                data: 'total_amount',
+                name: 'total_amount'
             },
             {
-                data: 'payment_id',
-                name: 'payment_id'
-            },
-            {
-                data: 'tx_status',
-                name: 'tx_status'
-            },
-            {
-                data: 'payment_mode',
-                name: 'payment_mode'
-            },
-            {
-                data: 'type',
-                name: 'type'
+                data: 'application_order_paymentid',
+                name: 'application_order_paymentid'
             },
             {
                 data: 'created_at',
                 name: 'created_at'
+            },
+            {
+                data: 'actions',
+                name: 'actions',
+                orderable: false,
+                searchable: false
             }
         ],
 
         dom: 'Blfrtip',
 
         buttons: [{
-                extend: 'copy'
+                extend: 'copy',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
             },
             {
-                extend: 'excel'
+                extend: 'excel',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
             },
             {
-                extend: 'csv'
+                extend: 'csv',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
             },
             {
-                extend: 'pdf'
+                extend: 'pdf',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
             }
         ],
 

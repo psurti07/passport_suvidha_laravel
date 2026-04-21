@@ -46,16 +46,29 @@ class DndController extends Controller
 
             ->addIndexColumn()
 
-            ->addColumn('service', function ($row) {
+            ->addColumn('service_name', function ($row) {
                 return $row->service ? $row->service->service_name : 'N/A';
             })
 
-            ->addColumn('name', function ($row) {
+            ->addColumn('customer_name', function ($row) {
                 return $row->first_name . ' ' . $row->last_name;
             })
 
             ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d/m/Y H:i:s');
+            })
+
+            ->filterColumn('service_name', function($query, $keyword) {
+                $query->whereHas('service', function($q) use ($keyword) {
+                    $q->where('service_name', 'like', "%{$keyword}%");
+                });
+            })
+
+            ->filterColumn('customer_name', function($query, $keyword) {
+                $query->where(function($q) use ($keyword) {
+                    $q->where('first_name', 'like', "%{$keyword}%")
+                    ->orWhere('last_name', 'like', "%{$keyword}%");
+                });
             })
 
             ->addColumn('actions', function ($row) {
@@ -80,7 +93,7 @@ class DndController extends Controller
                 
             })
 
-            ->rawColumns(['service', 'actions'])
+            ->rawColumns(['service_name', 'actions'])
 
             ->make(true);
     }

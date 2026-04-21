@@ -51,10 +51,6 @@ class SupportController extends Controller
 
             ->addIndexColumn()
 
-            ->addColumn('customer_name', function ($row) {
-                return $row->customer->first_name ?? $row->name;
-            })
-
             ->editColumn('subject', function ($row) {
                 return Str::limit($row->subject, 50);
             })
@@ -143,10 +139,6 @@ class SupportController extends Controller
         return DataTables::of($query)
 
             ->addIndexColumn()
-
-            ->addColumn('customer_name', function ($row) {
-                return $row->customer->first_name ?? $row->name;
-            })
 
             ->editColumn('subject', function ($row) {
                 return Str::limit($row->subject, 50);

@@ -149,8 +149,8 @@ $(function() {
                 name: 'upload_date'
             },
             {
-                data: 'uploaded_by_name',
-                name: 'uploader.name'
+                data: 'user_name',
+                name: 'user_name'
             },
             {
                 data: 'is_approved',

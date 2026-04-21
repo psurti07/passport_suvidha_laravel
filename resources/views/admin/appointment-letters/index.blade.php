@@ -128,8 +128,8 @@ $(function() {
                 name: 'customer_name'
             },
             {
-                data: 'mobile',
-                name: 'customer.mobile_number'
+                data: 'customer_mobile',
+                name: 'customer_mobile'
             },
             {
                 data: 'upload_date',
@@ -140,8 +140,8 @@ $(function() {
                 name: 'appointment_date'
             },
             {
-                data: 'name',
-                name: 'uploader.name'
+                data: 'user_name',
+                name: 'user_name'
             },
             {
                 data: 'actions',

@@ -67,7 +67,7 @@ class CustomerController extends Controller
 
             ->addIndexColumn()
 
-            ->addColumn('service', function ($row) {
+            ->addColumn('service_name', function ($row) {
                 if (!$row->service) {
                     return '-';
                 }
@@ -77,7 +77,7 @@ class CustomerController extends Controller
                 </span>';
             })
 
-            ->addColumn('name', function ($row) {
+            ->addColumn('customer_name', function ($row) {
                 return $row->first_name . ' ' . $row->last_name;
             })
 
@@ -109,7 +109,7 @@ class CustomerController extends Controller
                 ';
             })
 
-            ->rawColumns(['service', 'is_paid', 'actions'])
+            ->rawColumns(['service_name', 'is_paid', 'actions'])
 
             ->make(true);
     }
@@ -163,7 +163,7 @@ class CustomerController extends Controller
 
             ->addIndexColumn()
 
-            ->addColumn('service', function ($row) {
+            ->addColumn('service_name', function ($row) {
                 if (!$row->service) {
                     return '-';
                 }
@@ -173,7 +173,7 @@ class CustomerController extends Controller
                         </span>';
             })
 
-            ->addColumn('name', function ($row) {
+            ->addColumn('customer_name', function ($row) {
                 return $row->first_name . ' ' . $row->last_name;
             })
 
@@ -205,7 +205,7 @@ class CustomerController extends Controller
                 ';
             })
 
-            ->rawColumns(['service', 'is_paid', 'actions'])
+            ->rawColumns(['service_name', 'is_paid', 'actions'])
 
             ->make(true);
     }
@@ -458,7 +458,8 @@ class CustomerController extends Controller
 
             $invoice = Invoice::create([
                 'customer_id' => $customer->id,
-                'card_id' => $order->id,
+                'service_id' => $customer->service_id,
+                'order_id' => $order->id,
                 'inv_date' => now(),
                 'net_amount' => $netAmount,
                 'cgst' => $cgst,

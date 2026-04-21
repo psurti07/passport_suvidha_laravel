@@ -137,20 +137,20 @@ $(function() {
                 name: 'id'
             },
             {
-                data: 'customer',
-                name: 'customer'
+                data: 'customer_name',
+                name: 'customer_name'
             },
             {
-                data: 'mobile',
-                name: 'mobile'
+                data: 'customer_mobile',
+                name: 'customer_mobile'
             },
             {
-                data: 'service',
-                name: 'service'
+                data: 'service_name',
+                name: 'service_name'
             },
             {
-                data: 'status',
-                name: 'status'
+                data: 'status_name',
+                name: 'status_name'
             },
             {
                 data: 'status_date',
@@ -161,8 +161,8 @@ $(function() {
                 name: 'remark'
             },
             {
-                data: 'remarked_by',
-                name: 'remarked_by'
+                data: 'user_remarked_by',
+                name: 'user_remarked_by'
             },
             {
                 data: 'actions',

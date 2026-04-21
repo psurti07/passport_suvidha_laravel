@@ -21,7 +21,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ApplicationStatusController;
 use App\Http\Controllers\Admin\DndController;
 use App\Http\Controllers\Admin\RazorpayLogController;     
-use App\Http\Controllers\Admin\CashfreeLogController;     
+use App\Http\Controllers\Admin\CashfreeLogController;    
+use App\Http\Controllers\Admin\InvoiceController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -78,6 +79,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Otp Routes
     Route::get('otps', [OtpController::class, 'index'])->name('otps.index');
     Route::get('/otps-data', [OtpController::class, 'data'])->name('otps.data'); 
+
+    // Invoice Routes
+    Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
+    Route::get('/invoices-data', [InvoiceController::class, 'data'])->name('invoices.data');
 
     // DND Routes
     Route::get('dnd', [DndController::class, 'index'])->name('dnd.index');

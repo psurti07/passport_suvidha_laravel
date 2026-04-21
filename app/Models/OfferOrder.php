@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class OfferOrder extends Model
 {
     use HasFactory;
+
     protected $table = 'offer_order';
+    
     protected $fillable = [
         'full_name',
         'mobile',
@@ -16,6 +18,7 @@ class OfferOrder extends Model
         'card_number',
         'amount',
         'payment_id',
+        'offer_type',
         'created_at',
         'updated_at',
     ];

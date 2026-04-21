@@ -60,7 +60,7 @@ class AppointmentLetterController extends Controller
                 ';
             })
 
-            ->addColumn('mobile', function ($row) {
+            ->addColumn('customer_mobile', function ($row) {
                 return $row->customer->mobile_number ?? '-';
             })
 
@@ -79,7 +79,7 @@ class AppointmentLetterController extends Controller
                 return '-';
             })
 
-            ->addColumn('name', function ($row) {
+            ->addColumn('user_name', function ($row) {
                 return $row->uploader->name ?? 'System';
             })  
             
@@ -89,6 +89,12 @@ class AppointmentLetterController extends Controller
                     ->orWhere('last_name', 'like', "%{$keyword}%")
                     ->orWhere('email', 'like', "%{$keyword}%")
                     ->orWhere('mobile_number', 'like', "%{$keyword}%");
+                });
+            })
+
+            ->filterColumn('user_name', function($query, $keyword) {
+                $query->whereHas('uploader', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
                 });
             })
 

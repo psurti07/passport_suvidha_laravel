@@ -190,7 +190,7 @@ class PaymentController extends Controller
 
             $invoice = Invoice::create([
                 'customer_id' => $log->customer_id,
-                'card_id' => $order->id,
+                'order_id' => $order->id,
                 'inv_date' => now(),
                 'net_amount' => $netAmount,
                 'cgst' => $cgst,
@@ -225,9 +225,9 @@ class PaymentController extends Controller
 
             Log::error('PAYMENT VERIFY ERROR: ' . $e->getMessage());
 
-             $smsService = new SmsService();
-             if (isset($customer) && !empty($customer->mobile_number)) {
-                 $mobileNumber = $customer->mobile_number;
+            $smsService = new SmsService();
+            $mobileNumber = $customer->mobile_number;
+            if (!empty($mobileNumber)) {
 
                     $message = "Sorry, your payment for Passport Consulting application was not successful. We request you to try another payment method {#var#} Passport Suvidha";
 
@@ -250,5 +250,5 @@ class PaymentController extends Controller
                 // 'error' => $e->getMessage()
             ], 400);
         }
-    }
+    }   
 }
