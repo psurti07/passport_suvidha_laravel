@@ -97,6 +97,12 @@ class FinalDetailController extends Controller
                 });
             })
 
+            ->filterColumn('user_name', function($query, $keyword) {
+                $query->whereHas('uploader', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
+            })
+
             ->addColumn('document', function ($row) {
 
                 $fileUrl = $row->file_path ? asset('storage/' . $row->file_path) : '#';

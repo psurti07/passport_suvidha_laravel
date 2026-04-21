@@ -14,7 +14,7 @@ class AddOfferTypeToOfferOrderTable extends Migration
     public function up()
     {
         Schema::table('offer_order', function (Blueprint $table) {
-            $table->string('offer_type')->nullable()->after('card_number');
+            $table->string('offer_type')->nullable()->after('payment_id')->comment('1=Card Offer, 2=Star Offer');
         });
     }
 

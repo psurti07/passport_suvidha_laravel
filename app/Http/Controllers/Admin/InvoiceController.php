@@ -73,6 +73,14 @@ class InvoiceController extends Controller
                 return $row->created_at->format('d/m/Y H:i:s');
             })
 
+            ->filterColumn('customer_name', function($query, $keyword) {
+                $query->whereHas('customer', function($q) use ($keyword) {
+                    $q->where('first_name', 'like', "%{$keyword}%")
+                    ->orWhere('last_name', 'like', "%{$keyword}%")
+                    ->orWhere('mobile_number', 'like', "%{$keyword}%");
+                });
+            })
+
             ->addColumn('actions', function ($row) {
                 return '
                     <a href="'.route('admin.customers.show', $row->customer->id).'#info" 

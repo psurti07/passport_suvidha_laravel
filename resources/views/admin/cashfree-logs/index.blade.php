@@ -33,6 +33,16 @@
                                 class="border rounded-lg px-3 py-2 text-sm">
                         </div>
 
+                        <div>
+                            <label class="text-sm">Status</label>
+                            <select id="tx_status" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
+                                <option value="">All</option>
+                                <option value="success">Success</option>
+                                <option value="failed">Failed</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+
                         <div class="flex items-end">
                             <button type="button" id="filter"
                                 class="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
@@ -61,12 +71,7 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Customer
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Email</th>
-
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile
-                                </th>
-
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Order ID
                                 </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Order
@@ -79,7 +84,16 @@
                                     ID</th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment
+                                    ID</th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">TX Status
+                                </th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment
                                     Mode</th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Type
+                                </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created At
                                 </th>
@@ -121,6 +135,7 @@ $(function() {
             data: function(d) {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
+                d.tx_status = $('#tx_status').val();
             }
         },
 
@@ -133,16 +148,8 @@ $(function() {
                 name: 'customer_name'
             },
             {
-                data: 'customer_email',
-                name: 'customer_email'
-            },
-            {
-                data: 'customer_mobile',
-                name: 'customer_mobile'
-            },
-            {
-                data: 'order_id',
-                name: 'order_id'
+                data: 'customer_mobile_number',
+                name: 'customer_mobile_number'
             },
             {
                 data: 'order_amount',
@@ -157,8 +164,20 @@ $(function() {
                 name: 'reference_id'
             },
             {
+                data: 'payment_id',
+                name: 'payment_id'
+            },
+            {
+                data: 'tx_status',
+                name: 'tx_status'
+            },
+            {
                 data: 'payment_mode',
                 name: 'payment_mode'
+            },
+            {
+                data: 'type',
+                name: 'type'
             },
             {
                 data: 'created_at',

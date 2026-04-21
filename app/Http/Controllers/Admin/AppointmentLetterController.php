@@ -92,6 +92,12 @@ class AppointmentLetterController extends Controller
                 });
             })
 
+            ->filterColumn('user_name', function($query, $keyword) {
+                $query->whereHas('uploader', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
+            })
+
             ->addColumn('actions', function ($row) {
                 return '
                     <div class="flex items-center gap-2">

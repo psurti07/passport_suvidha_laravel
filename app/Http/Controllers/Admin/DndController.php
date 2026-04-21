@@ -58,6 +58,19 @@ class DndController extends Controller
                 return $row->created_at->format('d/m/Y H:i:s');
             })
 
+            ->filterColumn('service_name', function($query, $keyword) {
+                $query->whereHas('service', function($q) use ($keyword) {
+                    $q->where('service_name', 'like', "%{$keyword}%");
+                });
+            })
+
+            ->filterColumn('customer_name', function($query, $keyword) {
+                $query->where(function($q) use ($keyword) {
+                    $q->where('first_name', 'like', "%{$keyword}%")
+                    ->orWhere('last_name', 'like', "%{$keyword}%");
+                });
+            })
+
             ->addColumn('actions', function ($row) {
                 return '
                     <!-- Delete -->
