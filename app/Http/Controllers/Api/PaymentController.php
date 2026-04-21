@@ -190,7 +190,7 @@ class PaymentController extends Controller
 
             $invoice = Invoice::create([
                 'customer_id' => $log->customer_id,
-                'card_id' => $order->id,
+                'order_id' => $order->id,
                 'inv_date' => now(),
                 'net_amount' => $netAmount,
                 'cgst' => $cgst,

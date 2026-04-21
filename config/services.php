@@ -44,4 +44,20 @@ return [
     'testnumbers' => [
         'number' => env('TEST_NUMBERS'),
     ],
+
+    'cashfree' => [
+        'key' => env('CASHFREE_KEY'),
+        'secret' => env('CASHFREE_SECRET'),
+        'mode' => env('CASHFREE_MODE')
+    ],
+ 
+    'zaakpay' => [
+        'merchant_identifier' => env('ZAAKPAY_MERCHANT_IDENTIFIER'),
+        'secret_key' => env('ZAAKPAY_SECRET_KEY'),
+        'mode' =>env('ZAAKPAY_MODE')
+    ],
+ 
+    'app' => [
+        'url' => env('APP_URL')
+    ]
 ];

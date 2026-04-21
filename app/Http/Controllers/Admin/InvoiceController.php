@@ -23,7 +23,7 @@ class InvoiceController extends Controller
             'id',
             'customer_id',
             'service_id',
-            'card_id',
+            'order_id',
             'inv_date',
             'inv_no',
             'net_amount',

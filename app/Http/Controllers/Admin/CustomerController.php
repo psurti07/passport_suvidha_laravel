@@ -459,7 +459,7 @@ class CustomerController extends Controller
             $invoice = Invoice::create([
                 'customer_id' => $customer->id,
                 'service_id' => $customer->service_id,
-                'card_id' => $order->id,
+                'order_id' => $order->id,
                 'inv_date' => now(),
                 'net_amount' => $netAmount,
                 'cgst' => $cgst,
