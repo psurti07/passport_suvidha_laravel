@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Application Status')
+@section('title', 'Zaakpay Logs')
 
 @section('content')
 
@@ -13,11 +13,12 @@
             <form id="filterForm">
 
                 <div class="flex flex-col lg:flex-row justify-between items-center mb-6">
-
-                    <h2
-                        class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                        APPLICATION STATUS
-                    </h2>
+                    <div class="flex items-center gap-4">
+                        <h2
+                            class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                            ZAAKPAY LOGS
+                        </h2>
+                    </div>
                     <div class="flex flex-wrap gap-3">
 
                         <div>
@@ -34,11 +35,11 @@
 
                         <div>
                             <label class="text-sm">Status</label>
-                            <select id="status" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
+                            <select id="tx_status" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
                                 <option value="">All</option>
-                                @foreach($statuses as $status)
-                                <option value="{{ $status->id }}">{{ $status->status_name }}</option>
-                                @endforeach
+                                <option value="success">Success</option>
+                                <option value="failed">Failed</option>
+                                <option value="pending">Pending</option>
                             </select>
                         </div>
 
@@ -59,7 +60,7 @@
             <div class="mt-4 overflow-x-auto">
                 <div class="whitespace-nowrap text-sm text-gray-700">
 
-                    <table id="application-status-table" class="min-w-full divide-y divide-gray-200 pt-5">
+                    <table id="zaakpay-logs-table" class="min-w-full divide-y divide-gray-200 pt-5">
 
                         <thead class="bg-blue-50">
 
@@ -73,24 +74,28 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Service
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Order
+                                    Amount</th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Order Note
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Reference
+                                    ID</th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment
+                                    ID</th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">TX Status
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
-                                    Date
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment
+                                    Mode</th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Type
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Remark
-                                </th>
-
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Remarked
-                                    By
-                                </th>
-
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created At
                                 </th>
 
                             </tr>
@@ -116,7 +121,7 @@
 <script>
 $(function() {
 
-    let table = $('#application-status-table').DataTable({
+    let table = $('#zaakpay-logs-table').DataTable({
 
         processing: true,
         serverSide: true,
@@ -126,11 +131,11 @@ $(function() {
         ],
 
         ajax: {
-            url: "{{ route('admin.application.status.data') }}",
+            url: "{{ route('admin.zaakpay-logs.data') }}",
             data: function(d) {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
-                d.status = $('#status').val();
+                d.tx_status = $('#tx_status').val();
             }
         },
 
@@ -143,62 +148,56 @@ $(function() {
                 name: 'customer_name'
             },
             {
-                data: 'customer_mobile',
-                name: 'customer_mobile'
+                data: 'customer_mobile_number',
+                name: 'customer_mobile_number'
             },
             {
-                data: 'service_name',
-                name: 'service_name'
+                data: 'order_amount',
+                name: 'order_amount'
             },
             {
-                data: 'status_name',
-                name: 'status_name'
+                data: 'order_note',
+                name: 'order_note'
             },
             {
-                data: 'status_date',
-                name: 'status_date'
+                data: 'reference_id',
+                name: 'reference_id'
             },
             {
-                data: 'remark',
-                name: 'remark'
+                data: 'payment_id',
+                name: 'payment_id'
             },
             {
-                data: 'user_remarked_by',
-                name: 'user_remarked_by'
+                data: 'tx_status',
+                name: 'tx_status'
             },
             {
-                data: 'actions',
-                name: 'actions',
-                orderable: false,
-                searchable: false
+                data: 'payment_mode',
+                name: 'payment_mode'
+            },
+            {
+                data: 'type',
+                name: 'type'
+            },
+            {
+                data: 'created_at',
+                name: 'created_at'
             }
         ],
 
         dom: 'Blfrtip',
 
         buttons: [{
-                extend: 'copy',
-                exportOptions: {
-                    columns: ':not(:last-child)'
-                }
+                extend: 'copy'
             },
             {
-                extend: 'excel',
-                exportOptions: {
-                    columns: ':not(:last-child)'
-                }
+                extend: 'excel'
             },
             {
-                extend: 'csv',
-                exportOptions: {
-                    columns: ':not(:last-child)'
-                }
+                extend: 'csv'
             },
             {
-                extend: 'pdf',
-                exportOptions: {
-                    columns: ':not(:last-child)'
-                }
+                extend: 'pdf'
             }
         ],
 

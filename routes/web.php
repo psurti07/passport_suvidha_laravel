@@ -22,7 +22,8 @@ use App\Http\Controllers\Admin\ApplicationStatusController;
 use App\Http\Controllers\Admin\DndController;
 use App\Http\Controllers\Admin\RazorpayLogController;     
 use App\Http\Controllers\Admin\CashfreeLogController;    
-use App\Http\Controllers\Admin\InvoiceController; 
+use App\Http\Controllers\Admin\InvoiceController;
+use App\Http\Controllers\Admin\ZaakpayLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +98,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Cashfree Logs Routes
     Route::get('/cashfree-logs', [CashfreeLogController::class, 'index'])->name('cashfree-logs.index');
     Route::get('/cashfree-logs/data', [CashfreeLogController::class, 'data'])->name('cashfree-logs.data');
+
+    //Zaakpay Logs Routes
+    Route::get('/zaakpay-logs', [ZaakpayLogController::class, 'index'])->name('zaakpay-logs.index');
+    Route::get('/zaakpay-logs/data', [ZaakpayLogController::class, 'data'])->name('zaakpay-logs.data');
 
     // Support Routes
     Route::get('/support/customer', [SupportController::class, 'customerSupport'])->name('support.customer');
