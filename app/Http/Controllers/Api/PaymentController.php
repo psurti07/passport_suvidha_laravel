@@ -62,8 +62,8 @@ class PaymentController extends Controller
             'order_note' => 'Passport Application',
             'reference_id' => $order['id'], // Razorpay order_id
             'tx_status' => null, // no pending
-            'payment_mode' => 'razorpay',
-            'entry_for' => $request->service_code
+            // 'payment_mode' => 'razorpay',
+            "service_type" => $request->service_code,
         ]);
 
         return response()->json([
@@ -256,43 +256,27 @@ class PaymentController extends Controller
             ], 400);
         }
     }
+
+    public function paymentFailed(Request $request)
+    {
+        $request->validate([
+            'razorpay_order_id' => 'required'
+        ]);
+
+        $log = RazorpayLog::where('reference_id', $request->razorpay_order_id)->first();
+
+        if ($log && $log->tx_status !== 'success') {
+            $log->update([
+                'tx_status' => 'failed'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Payment marked as failed'
+        ]);
+    }
     
 }
-// Cashfree Order Response: {
-//     "cf_order_id": 2207239698,
-//     "created_at": "2026-04-20T11:01:36+05:30",
-//     "customer_details": {
-//         "customer_id": "15",
-//         "customer_name": "Ishita Ghanva",
-//         "customer_email": "verloop.dev8@gmail.com",
-//         "customer_phone": "7984756152",
-//         "customer_uid": null
-//     },
-//     "entity": "order",
-//     "order_amount": 199.0,
-//     "order_currency": "INR",
-//     "order_expiry_time": "2026-05-20T11:01:36+05:30",
-//     "order_id": "order_15_oIFw2Q",
-//     "order_meta": {
-//         "return_url": null,
-//         "notify_url": "https://amplifier-shower-blemish.ngrok-free.dev/api/cashfree/webhook",
-//         "payment_methods": null
-//     },
-//     "order_note": null,
-//     "order_splits": [],
-//     "order_status": "ACTIVE",
-//     "order_tags": null,
-//     "payment_session_id": "session_Q64u7WSBSm8GQp6QjD4ejhMOyeat4mdJYArbSxfnLR0f8tLJSYuRJpagbC0jEsQtk0XvzJdCGyiJUiohMqoUHMrYgFToCduV1NhRgQRMBlUOZ_7JTPj3ZWZhpzr5Vgpaymentpayment",
-//     "payments": {
-//         "url": "https://sandbox.cashfree.com/pg/orders/order_15_oIFw2Q/payments"
-//     },
-//     "refunds": {
-//         "url": "https://sandbox.cashfree.com/pg/orders/order_15_oIFw2Q/refunds"
-//     },
-//     "settlements": {
-//         "url": "https://sandbox.cashfree.com/pg/orders/order_15_oIFw2Q/settlements"
-//     },
-//     "terminal_data": null
-// }
 
 
