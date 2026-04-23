@@ -77,7 +77,10 @@ class OfferOrderController extends Controller
 
         $orderId = "order_" . $order->id . "_" . Str::random(6);
 
-        $response = Http::withHeaders([
+        // $response = Http::withHeaders([
+        $response = Http::withOptions([
+            'verify' => false
+        ])->withHeaders([
             'x-client-id' => config('services.cashfree.key'),
             'x-client-secret' => config('services.cashfree.secret'),
             'x-api-version' => '2022-09-01',
@@ -92,18 +95,11 @@ class OfferOrderController extends Controller
                 "customer_phone" => $request->mobile,
             ],
             "order_meta" => [
-                "notify_url" => config("services.app.url") . "/api/cashfree/webhook",
-                // "notify_url" => "https://amplifier-shower-blemish.ngrok-free.dev/api/cashfree/webhook",
+                // "notify_url" => config("services.app.url") . "/api/cashfree/webhook",
+                "notify_url" => "https://kite-next-treachery.ngrok-free.dev/api/cashfree/webhook",
 
             ]
         ]);
-
-        // if (!$response->successful()) {
-        //     return response()->json([
-        //         "success" => false,
-        //         "message" => $response->body()
-        //     ]);
-        // }
 
         CashfreeLog::create([
             // 'customer_id'  => $order->id,
