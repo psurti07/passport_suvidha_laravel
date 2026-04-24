@@ -19,8 +19,9 @@ class OfferOrder extends Model
         'amount',
         'payment_id',
         'offer_type',
+        'is_customer',
         'created_at',
         'updated_at',
     ];
-
+    
 }

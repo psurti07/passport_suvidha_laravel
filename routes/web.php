@@ -6,7 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TodayStatisticsController;
 use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\CustomerController;
-use App\Http\Controllers\Admin\CommonController;
+use App\Http\Controllers\Admin\PincodeLocationController;
 use App\Http\Controllers\Admin\ApplicationDocumentController;
 use App\Http\Controllers\Admin\ApplicationProgressController;
 use App\Http\Controllers\Admin\LeadController;
@@ -20,10 +20,12 @@ use App\Http\Controllers\Admin\DocumentTypeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ApplicationStatusController;
 use App\Http\Controllers\Admin\DndController;
-use App\Http\Controllers\Admin\RazorpayLogController;     
-use App\Http\Controllers\Admin\CashfreeLogController;    
+use App\Http\Controllers\Admin\RazorpayLogController;
+use App\Http\Controllers\Admin\CashfreeLogController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\ZaakpayLogController;
+use App\Http\Controllers\Admin\CardOfferController;
+use App\Http\Controllers\Admin\StarOfferController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +50,7 @@ Auth::routes();
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
     // Common Routes
-    Route::post('/pincode-location', [CommonController::class, 'getPincodeLocation'])->name('pincode.location');
+    Route::post('/pincode-location', [PincodeLocationController::class, 'getPincodeLocation'])->name('pincode.location');
 
     // Dashboard Routes
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -63,7 +65,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/customers/today', [CustomerController::class, 'today'])->name('customers.today');
     Route::get('/customers/today/data', [CustomerController::class, 'todayData'])->name('customers.today.data');
     Route::resource('customers', CustomerController::class);
-    Route::get('/customers-data', [CustomerController::class,'data'])->name('customers.data');
+    Route::get('/customers-data', [CustomerController::class, 'data'])->name('customers.data');
     Route::put('/customers/{customer}/convert', [CustomerController::class, 'convertToCustomer'])->name('customers.convert');
     Route::patch('customers/{customer}/activate', [CustomerController::class, 'activate'])->name('customers.activate');
     Route::patch('customers/{customer}/deactivate', [CustomerController::class, 'deactivate'])->name('customers.deactivate');
@@ -72,14 +74,26 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('application-documents', ApplicationDocumentController::class)->only(['store', 'destroy']);
     Route::post('/documents/update-all', [ApplicationDocumentController::class, 'updateAll'])->name('documents.updateAll');
     Route::get('/documents/toggle/{id}', [ApplicationDocumentController::class, 'toggleVerify'])->name('documents.toggleVerify');
-    
+
     // Application Status Routes
     Route::get('/application-status', [ApplicationStatusController::class, 'index'])->name('application.status');
     Route::get('/application-status/data', [ApplicationStatusController::class, 'data'])->name('application.status.data');
 
     // Otp Routes
     Route::get('otps', [OtpController::class, 'index'])->name('otps.index');
-    Route::get('/otps-data', [OtpController::class, 'data'])->name('otps.data'); 
+    Route::get('/otps-data', [OtpController::class, 'data'])->name('otps.data');
+
+    // Card Offer Routes
+    Route::get('card-offers', [CardOfferController::class, 'index'])->name('card-offers.index');
+    Route::get('/card-offers-data', [CardOfferController::class, 'data'])->name('card-offers.data');
+    Route::patch('card-offers/{cardOffer}/customer', [CardOfferController::class, 'customer'])->name('card-offers.customer');
+    Route::patch('card-offers/{cardOffer}/lead', [CardOfferController::class, 'lead'])->name('card-offers.lead');
+
+    // Star Offers Routes
+    Route::get('star-offers', [StarOfferController::class, 'index'])->name('star-offers.index');
+    Route::get('/star-offers-data', [StarOfferController::class, 'data'])->name('star-offers.data');
+    Route::patch('star-offers/{starOffer}/customer', [StarOfferController::class, 'customer'])->name('star-offers.customer');
+    Route::patch('star-offers/{starOffer}/lead', [StarOfferController::class, 'lead'])->name('star-offers.lead');
 
     // Invoice Routes
     Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
@@ -87,7 +101,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // DND Routes
     Route::get('dnd', [DndController::class, 'index'])->name('dnd.index');
-    Route::get('/dnd-data', [DndController::class, 'data'])->name('dnd.data'); 
+    Route::get('/dnd-data', [DndController::class, 'data'])->name('dnd.data');
     Route::post('dnd/upload', [DndController::class, 'upload'])->name('dnd.upload');
     Route::delete('dnd/{customer}/delete', [DndController::class, 'destroy'])->name('dnd.destroy');
 
@@ -116,7 +130,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('final-details/{finalDetail}/approve', [FinalDetailController::class, 'approve'])->name('final-details.approve');
     Route::patch('final-details/{finalDetail}/unapprove', [FinalDetailController::class, 'unapprove'])->name('final-details.unapprove');
     Route::resource('final-details', FinalDetailController::class)->except(['create', 'store', 'destroy']);
-    Route::get('/final-details-data', [FinalDetailController::class, 'data'])->name('final-details.data'); 
+    Route::get('/final-details-data', [FinalDetailController::class, 'data'])->name('final-details.data');
 
     // Appointment Letter Routes
     Route::get('appointment-letters/{appointmentLetter}/download', [AppointmentLetterController::class, 'download'])->name('appointment-letters.download');
@@ -126,20 +140,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Predefined Messages Routes
     Route::resource('predefined-messages', PreDefinedMessageController::class);
-    Route::get('/predefined-messages-data', [PreDefinedMessageController::class, 'data'])->name('predefined-messages.data'); 
+    Route::get('/predefined-messages-data', [PreDefinedMessageController::class, 'data'])->name('predefined-messages.data');
 
     // Document Types Routes
     Route::resource('document-types', DocumentTypeController::class);
-    Route::get('/document-types-data', [DocumentTypeController::class, 'data'])->name('document-types.data'); 
+    Route::get('/document-types-data', [DocumentTypeController::class, 'data'])->name('document-types.data');
 
     // Users Routes
-    Route::resource('users', UserController::class);  
-    Route::get('/users-data', [UserController::class, 'data'])->name('users.data'); 
+    Route::resource('users', UserController::class);
+    Route::get('/users-data', [UserController::class, 'data'])->name('users.data');
 
 
 
 
-    
+
 
 
 
@@ -151,13 +165,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('application-progress', ApplicationProgressController::class);
 
     // Leads Routes
-    Route::match(['get','post'],'/leads/normal',[LeadController::class,'normalLeads'])->name('leads.normal');
-    Route::match(['get','post'],'/leads/tatkal',[LeadController::class,'tatkalLeads'])->name('leads.tatkal');
-    Route::get('/lead/{customer}',[LeadController::class,'show'])->name('lead.show');
+    Route::match(['get', 'post'], '/leads/normal', [LeadController::class, 'normalLeads'])->name('leads.normal');
+    Route::match(['get', 'post'], '/leads/tatkal', [LeadController::class, 'tatkalLeads'])->name('leads.tatkal');
+    Route::get('/lead/{customer}', [LeadController::class, 'show'])->name('lead.show');
 
     // Report Routes
     Route::get('/reports/gst', [ReportController::class, 'gstReport'])->name('reports.gst');
-    
-     
-
 });
