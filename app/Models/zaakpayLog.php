@@ -5,19 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RazorpayLogsEntry extends Model
+class zaakpayLog extends Model
 {
     use HasFactory;
-     protected $table = 'razorpay_logs_entry';
+
+    protected $table = 'zaakpay_logs_entry';
 
     protected $fillable = [
-        'customer_id',  
+        'customer_id',
         'order_id',
         'order_amount',
         'order_note',
+        'payment_id',
+        'offer_type',
         'reference_id',
         'tx_status',
         'payment_mode',
+        'service_type'
     ];
-
 }

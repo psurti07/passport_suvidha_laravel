@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\OfferOrderController;
 use App\Http\Controllers\Api\RequiredDocumentsController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\ZaakpayController;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,8 +112,14 @@ Route::get('/invoice/{customer_id}', [InvoiceController::class, 'generateInvoice
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/create-order', [PaymentController::class, 'createOrder']);
     Route::post('/verify-payment', [PaymentController::class, 'verifyPayment']);
-    });
+    Route::post('/payment-failed', [PaymentController::class, 'paymentFailed']);
+});
 
-Route::post('/createOffer-order', [OfferOrderController::class, 'createOrder']);
-Route::get('/payment-success', [OfferOrderController::class, 'paymentSuccess']);
+// Route::post('/createOffer-order', [OfferOrderController::class, 'createOrder']);
+// Route::get('/payment-success', [OfferOrderController::class, 'paymentSuccess']);
+// Route::get('/check-payment-status', [OfferOrderController::class, 'checkPaymentStatus']);
+
+Route::post('/create-payment', [OfferOrderController::class, 'createPayment']);
+Route::post('/cashfree/webhook', [OfferOrderController::class, 'cashfreeWebhook'])->name('cashfree.webhook');
+Route::post('/zaakpay/callback', [OfferOrderController::class, 'zaakpayCallback'])->name('zaakpay.callback');
 Route::get('/check-payment-status', [OfferOrderController::class, 'checkPaymentStatus']);
