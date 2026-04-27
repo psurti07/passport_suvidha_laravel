@@ -11,34 +11,50 @@
     <!-- Statistics Charts -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- Normal Passport Customer Registrations -->
-        <div class="card p-6">
+        <div class="card p-6 bg-white rounded-lg">
             <h2 class="text-lg font-medium text-primary-blue mb-6">Normal Passport - Customer Registrations</h2>
             <div class="h-[400px]">
                 <canvas id="normalCustChart"></canvas>
             </div>
         </div>
 
-        <!-- Normal Passport Customer Leads -->
-        <div class="card p-6">
-            <h2 class="text-lg font-medium text-primary-blue mb-6">Normal Passport - Customer Leads</h2>
+        <!-- Tatkal Passport Customer Registrations -->
+        <div class="card p-6 bg-white rounded-lg">
+            <h2 class="text-lg font-medium text-primary-blue mb-6">Tatkal Passport - Customer Registrations</h2>
             <div class="h-[400px]">
-                <canvas id="normalLeadChart"></canvas>
+                <canvas id="tatkalCustChart"></canvas>
             </div>
         </div>
 
         <!-- Normal Passport 36 Page -->
-        <div class="card p-6">
+        <div class="card p-6 bg-white rounded-lg">
             <h2 class="text-lg font-medium text-primary-blue mb-6">Normal Passport - 36 Pages</h2>
             <div class="h-[400px]">
                 <canvas id="normal36Chart"></canvas>
             </div>
         </div>
 
+        <!-- Tatkal Passport 36 Page -->
+        <div class="card p-6 bg-white rounded-lg">
+            <h2 class="text-lg font-medium text-primary-blue mb-6">Tatkal Passport - 36 Pages</h2>
+            <div class="h-[400px]">
+                <canvas id="tatkal36Chart"></canvas>
+            </div>
+        </div>
+
         <!-- Normal Passport 60 Page -->
-        <div class="card p-6">
+        <div class="card p-6 bg-white rounded-lg">
             <h2 class="text-lg font-medium text-primary-blue mb-6">Normal Passport - 60 Pages</h2>
             <div class="h-[400px]">
                 <canvas id="normal60Chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Tatkal Passport 60 Page -->
+        <div class="card p-6 bg-white rounded-lg">
+            <h2 class="text-lg font-medium text-primary-blue mb-6">Tatkal Passport - 60 Pages</h2>
+            <div class="h-[400px]">
+                <canvas id="tatkal60Chart"></canvas>
             </div>
         </div>
     </div>
@@ -71,13 +87,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 ticks: {
                     padding: 10,
                     color: textGray || defaultColor,
-                    // Optional: format ticks if numbers get large
+                    stepSize: 1,
+                    precision: 0,
                     callback: function(value) {
-                        if (value >= 1000) {
-                            return (value / 1000) + 'k';
-                        }
-                        return value;
+                        return value; // no decimal formatting
                     }
+                    // Optional: format ticks if numbers get large
+                    // callback: function(value) {
+                    //     if (value >= 1000) {
+                    //         return (value / 1000) + 'k';
+                    //     }
+                    //     return value;
+                    // }
                 }
             },
             x: {
@@ -115,12 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
             data: @json($normalcustdata)
         },
         {
-            id: 'normalLeadChart',
-            label: 'Normal Leads',
-            labels: @json($normalleadlabel),
-            data: @json($normalleaddata)
-        },
-        {
             id: 'normal36Chart',
             label: 'Normal 36p',
             labels: @json($normal36plabel),
@@ -131,6 +146,24 @@ document.addEventListener('DOMContentLoaded', function() {
             label: 'Normal 60p',
             labels: @json($normal60plabel),
             data: @json($normal60pdata)
+        },
+        {
+            id: 'tatkalCustChart',
+            label: 'Tatkal Registrations',
+            labels: @json($tatkalcustlabel),
+            data: @json($tatkalcustdata)
+        },
+        {
+            id: 'tatkal36Chart',
+            label: 'Tatkal 36p',
+            labels: @json($tatkal36plabel),
+            data: @json($tatkal36pdata)
+        },
+        {
+            id: 'tatkal60Chart',
+            label: 'Tatkal 60p',
+            labels: @json($tatkal60plabel),
+            data: @json($tatkal60pdata)
         }
     ];
 
@@ -139,6 +172,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const ctx = document.getElementById(chart.id).getContext('2d');
 
+        const isTatkal = chart.id.includes('tatkal');
+
         new Chart(ctx, {
             type: 'bar',
             data: {
@@ -146,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets: [{
                     label: chart.label,
                     data: chart.data,
-                    backgroundColor: primaryBlue,
+                    backgroundColor: isTatkal ? secondaryBlue : primaryBlue,
                     borderRadius: 4
                 }]
             },

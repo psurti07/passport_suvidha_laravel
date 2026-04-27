@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'DND Customers')
+@section('title', 'DND')
 
 @section('content')
 
@@ -14,7 +14,7 @@
                 <div class="flex items-center gap-4">
                     <h2
                         class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                        DND Customers
+                        DND LIST
                     </h2>
                     <form method="POST" action="{{ route('admin.dnd.upload') }}" enctype="multipart/form-data">
                         @csrf
