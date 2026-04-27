@@ -54,8 +54,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Dashboard Routes
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-    Route::get('/dashboard/tatkal', [AdminController::class, 'tatkalDashboard'])->name('dashboard.tatkal');
-
+    
     // Statistics Routes
     Route::get('/todaystatistics', [TodayStatisticsController::class, 'index'])->name('todaystatistics');
 
