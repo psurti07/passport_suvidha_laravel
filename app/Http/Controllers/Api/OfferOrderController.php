@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\OfferOrder;
 use App\Models\CashfreeLog;
 use App\Models\Customer;
+use App\Models\Service;
 use App\Models\ZaakpayLog;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Log;
@@ -21,7 +22,8 @@ class OfferOrderController extends Controller
             'fullName' => 'required',
             'email' => 'required|email',
             'mobile' => 'required',
-            'offer_type' => 'required'
+            'offer_type' => 'required',
+            'service_code'=>'required',
         ]);
 
         $customer = Customer::where('mobile_number',$request->mobile)->first();
@@ -31,6 +33,15 @@ class OfferOrderController extends Controller
                 "message"=>"You are already registered customer"
             ],200);
         }
+
+        $service = Service::where('service_code',$request->service_code)->first();
+        if(!$service){      
+            return response()->json([
+                "success"=>false,
+                "message"=>"Invalid service code"
+            ],200);
+        }
+        $amount = $service->service_total_amount;
 
         $gateway = $this->getGatewayByOffer($request->offer_type);
 
@@ -59,7 +70,6 @@ class OfferOrderController extends Controller
             ], 200);
         }
 
-        $amount = 199;
         $finalAmount = floor($amount);
 
         $testNumbers = array_map('trim', explode(',', config('services.testnumbers.number', '')));
@@ -306,7 +316,7 @@ class OfferOrderController extends Controller
 
             $checksum = hash_hmac('sha256', $encRequest, $secret);
 
-            $amount = 199;
+            $amount = $order->amount;
             $finalAmount = floor($amount);
 
             $testNumbers = explode(',', config('services.testnumbers.number', ''));
