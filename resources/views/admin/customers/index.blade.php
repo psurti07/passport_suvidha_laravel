@@ -37,19 +37,10 @@
                             <select id="service" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
                                 <option value="">All</option>
                                 @foreach($services as $service)
-                                    <option value="{{ $service->id }}">
-                                        {{ $service->service_name }}
-                                    </option>
+                                <option value="{{ $service->id }}">
+                                    {{ $service->service_name }}
+                                </option>
                                 @endforeach
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="text-sm">Status</label>
-                            <select id="is_paid" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
-                                <option value="">All</option>
-                                <option value="1">Paid</option>
-                                <option value="0">Lead</option>
                             </select>
                         </div>
 
@@ -78,7 +69,8 @@
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ID</th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Service</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Service
+                                </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Name</th>
 
@@ -134,7 +126,6 @@ $(function() {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
                 d.service = $('#service').val();
-                d.is_paid = $('#is_paid').val();
             }
         },
 
@@ -179,25 +170,57 @@ $(function() {
         buttons: [{
                 extend: 'copy',
                 exportOptions: {
-                    columns: ':not(:last-child)'
+                    columns: ':not(:last-child)',
+                    format: {
+                        body: function(data, row, column, node) {
+                            if (column === 1) {
+                                return $(node).text().replace('🟢', '').replace('⚪', '').trim();
+                            }
+                            return $(node).text();
+                        }
+                    }
                 }
             },
             {
                 extend: 'excel',
                 exportOptions: {
-                    columns: ':not(:last-child)'
+                    columns: ':not(:last-child)',
+                    format: {
+                        body: function(data, row, column, node) {
+                            if (column === 1) {
+                                return $(node).text().replace('🟢', '').replace('⚪', '').trim();
+                            }
+                            return $(node).text();
+                        }
+                    }
                 }
             },
             {
                 extend: 'csv',
                 exportOptions: {
-                    columns: ':not(:last-child)'
+                    columns: ':not(:last-child)',
+                    format: {
+                        body: function(data, row, column, node) {
+                            if (column === 1) {
+                                return $(node).text().replace('🟢', '').replace('⚪', '').trim();
+                            }
+                            return $(node).text();
+                        }
+                    }
                 }
             },
             {
                 extend: 'pdf',
                 exportOptions: {
-                    columns: ':not(:last-child)'
+                    columns: ':not(:last-child)',
+                    format: {
+                        body: function(data, row, column, node) {
+                            if (column === 1) {
+                                return $(node).text().replace('🟢', '').replace('⚪', '').trim();
+                            }
+                            return $(node).text();
+                        }
+                    }
                 }
             }
         ],

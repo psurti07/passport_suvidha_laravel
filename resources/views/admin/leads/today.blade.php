@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Customers')
+@section('title', 'Leads')
 
 @section('content')
 
@@ -14,7 +14,7 @@
 
                 <h2
                     class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                    TODAY'S CUSTOMERS
+                    TODAY'S LEADS
                 </h2>
                 <div class="flex flex-wrap gap-3">
 
@@ -104,7 +104,7 @@ $(function() {
         ],
 
         ajax: {
-            url: "{{ route('admin.customers.today.data') }}",
+            url: "{{ route('admin.leads.today.data') }}",
             data: function(d) {
                 d.service = $('#service').val();
             }

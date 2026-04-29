@@ -30,8 +30,7 @@ class InvoiceController extends Controller
             'cgst',
             'sgst',
             'igst',
-            'total_amount',
-            'created_at'
+            'total_amount'
         )->latest('inv_date');
         
         if ($request->from_date && $request->to_date) {
@@ -58,7 +57,7 @@ class InvoiceController extends Controller
             })
 
             ->editColumn('inv_date', function ($row) {
-                return $row->inv_date->format('d/m/Y H:i:s');
+                return $row->inv_date->format('d/m/Y');
             })
 
             ->addcolumn('total_amount', function ($row) {
@@ -67,10 +66,6 @@ class InvoiceController extends Controller
 
             ->addColumn('application_order_paymentid', function ($row) {
                 return $row->order->payment_id ?? 'N/A';
-            })
-
-            ->editColumn('created_at', function ($row) {
-                return $row->created_at->format('d/m/Y H:i:s');
             })
 
             ->filterColumn('customer_name', function($query, $keyword) {

@@ -390,7 +390,7 @@
                                     View
                                 </a>
                                 @if($document->is_verified)
-                                <a href="{{ route('admin.documents.toggleVerify', $document->id) }}"
+                                <a href="{{ route('admin.documents.toggleVerify', ['id' => $document->id,'redirect' => 'show']) }}"
                                     class="text-red-600 hover:text-red-800 text-sm font-medium inline-flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0"
                                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -400,7 +400,7 @@
                                     Click to Unverify
                                 </a>
                                 @else
-                                <a href="{{ route('admin.documents.toggleVerify', $document->id) }}"
+                                <a href="{{ route('admin.documents.toggleVerify', ['id' => $document->id,'redirect' => 'show']) }}"
                                     class="text-green-600 hover:text-green-800 text-sm font-medium inline-flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 flex-shrink-0"
                                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -414,10 +414,11 @@
                                 <form id="delete-document-{{ $document->id }}"
                                     action="{{ route('admin.application-documents.destroy', $document->id) }}"
                                     method="POST" class="inline">
+                                    <input type="hidden" name="redirect" value="show">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button"
-                                        onclick="confirmDelete('{{ $document->documentType->name }} document', this.form)"
+                                        onclick="confirmDelete('{{ $document->documentType->name }} Document', this.form)"
                                         class="text-red-500 hover:text-red-700 text-sm font-medium inline-flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -880,7 +881,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ $progress->status_date ? $progress->status_date->format('Y-m-d') : 'N/A' }}
+                                    {{ $progress->status_date ? $progress->status_date->format('Y-m-d H:i A') : 'N/A' }}
                                 </td>
                                 <td class="px-6 py-4">{{ $progress->remark }}</td>
                                 <td class="px-6 py-4">
@@ -911,7 +912,7 @@
                                         <input type="hidden" name="redirect"
                                             value="{{ route('admin.customers.show', $customer->id) }}#application-process">
                                         <button type="button"
-                                            onclick="confirmDelete('{{ str_replace('_', ' ', ucfirst($progress->status->status_name ?? 'N/A')) }} remark', this.form)"
+                                            onclick="confirmDelete('{{ str_replace('_', ' ', ucfirst($progress->status->status_name ?? 'N/A')) }} Remark', this.form)"
                                             class="text-red-600 hover:text-red-900" title="Delete">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
                                                 fill="currentColor">
@@ -1044,7 +1045,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="button"
-                                    onclick="confirmDelete('{{ $customer->first_name }} customer', this.form)"
+                                    onclick="confirmDelete('{{ $customer->first_name }} Customer', this.form)"
                                     class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">

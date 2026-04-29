@@ -108,7 +108,7 @@
                     @csrf
                     @method('DELETE')
                     <button type="button"
-                        onclick="confirmDelete('{{ $preDefinedMessage->status->status_name ?? '-' }} predefined message', this.form)"
+                        onclick="confirmDelete('{{ $preDefinedMessage->status->status_name ?? '-' }} Predefined Message', this.form)"
                         class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">

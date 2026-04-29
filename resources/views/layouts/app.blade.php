@@ -626,6 +626,32 @@
 
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">CUSTOMER MANAGEMENT</div>
 
+                <a href="{{ route('admin.leads.today') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.leads.today') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Today\'s Leads' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6" stroke-width="2"></line>
+                        <line x1="8" y1="2" x2="8" y2="6" stroke-width="2"></line>
+                        <line x1="3" y1="10" x2="21" y2="10" stroke-width="2"></line>
+                        <circle cx="12" cy="15" r="2" stroke-width="2"></circle>
+                        <path stroke-width="2" d="M8 20c1.5-2 6.5-2 8 0"></path>
+                    </svg>
+                    <span class="nav-link-text">Today's Leads</span>
+                </a>
+
+                <a href="{{ route('admin.leads.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.leads.index') && !request()->routeIs('admin.leads.today') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Leads' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="9" cy="8" r="3" stroke-width="2"></circle>
+                        <circle cx="17" cy="8" r="3" stroke-width="2"></circle>
+                        <path stroke-width="2" d="M5 20c0-3 4-4 4-4s4 1 4 4"></path>
+                        <path stroke-width="2" d="M13 20c0-3 4-4 4-4s4 1 4 4"></path>
+                    </svg>
+                    <span class="nav-link-text">Leads</span>
+                </a>
+
                 <a href="{{ route('admin.customers.today') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.today') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Today\'s Customers' : ''">
@@ -659,16 +685,28 @@
                 </a>
 
                 {{-- Documents Section --}}
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">APPLICATION</div>
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">DOCUMENTS</div>
 
-                <a href="{{ route('admin.final-details.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.final-details.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Final Details' : ''">
+                <a href="{{ route('admin.application-documents.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application-documents.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Application Documents' : ''">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                         </path>
+                    </svg>
+                    <span class="nav-link-text">Application Docu-</br>ments</span>
+                </a>
+
+                <a href="{{ route('admin.final-details.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.final-details.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Final Details' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="9" y="2" width="6" height="4" rx="1" ry="1" stroke-width="2"></rect>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 4H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-2" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6M9 16h6" />
                     </svg>
                     <span class="nav-link-text">Final Details</span>
                 </a>
@@ -676,22 +714,25 @@
                 <a href="{{ route('admin.appointment-letters.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.appointment-letters.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Appointment Letters' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text">Appointment Letters</span>
-                </a>
-
-                <a href="{{ route('admin.application.status') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Application Status' : ''">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 5h6m2 0a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2m2 0a2 2 0 104 0 2 2 0 00-4 0zm-1 9l2 2 4-4">
                         </path>
+                    </svg>
+                    <span class="nav-link-text">Appointment Lett-</br>ers</span>
+                </a>
+
+                {{-- Application Section --}}
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">APPLICATION</div>
+
+                <a href="{{ route('admin.application.status') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Application Status' : ''">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                     </svg>
                     <span class="nav-link-text">Application Status</span>
                 </a>
@@ -862,7 +903,7 @@
                             d="M7 8h10M7 12h4m1 8l-5-5h11.5a2.5 2.5 0 002.5-2.5V7.5a2.5 2.5 0 00-2.5-2.5H5.5A2.5 2.5 0 003 7.5v7.008A2.492 2.492 0 005.5 17H7z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Predefined Messages</span>
+                    <span class="nav-link-text">Predefined Mess-</br>ages</span>
                 </a>
 
                 <a href="{{ route('admin.document-types.index') }}"

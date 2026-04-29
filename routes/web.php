@@ -61,6 +61,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Customers Routes
     Route::get('/search-customer', [SearchController::class, 'showSearchForm'])->name('customer.search.form');
     Route::post('/search-customer', [SearchController::class, 'searchCustomer'])->name('customer.search');
+    Route::get('/leads/today', [LeadController::class, 'today'])->name('leads.today');
+    Route::get('/leads/today/data', [LeadController::class, 'todayData'])->name('leads.today.data');
+    Route::get('leads', [LeadController::class, 'index'])->name('leads.index');
+    Route::get('/leads-data', [LeadController::class, 'data'])->name('leads.data');
     Route::get('/customers/today', [CustomerController::class, 'today'])->name('customers.today');
     Route::get('/customers/today/data', [CustomerController::class, 'todayData'])->name('customers.today.data');
     Route::resource('customers', CustomerController::class);
@@ -70,9 +74,22 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('customers/{customer}/deactivate', [CustomerController::class, 'deactivate'])->name('customers.deactivate');
 
     // Application Documents Routes
-    Route::resource('application-documents', ApplicationDocumentController::class)->only(['store', 'destroy']);
+    Route::resource('application-documents', ApplicationDocumentController::class);
+    Route::get('/application-documents-data', [ApplicationDocumentController::class, 'data'])->name('application-documents.data');
     Route::post('/documents/update-all', [ApplicationDocumentController::class, 'updateAll'])->name('documents.updateAll');
     Route::get('/documents/toggle/{id}', [ApplicationDocumentController::class, 'toggleVerify'])->name('documents.toggleVerify');
+
+    // Final Details Routes
+    Route::patch('final-details/{finalDetail}/approve', [FinalDetailController::class, 'approve'])->name('final-details.approve');
+    Route::patch('final-details/{finalDetail}/unapprove', [FinalDetailController::class, 'unapprove'])->name('final-details.unapprove');
+    Route::resource('final-details', FinalDetailController::class)->except(['create', 'store', 'destroy']);
+    Route::get('/final-details-data', [FinalDetailController::class, 'data'])->name('final-details.data');
+
+    // Appointment Letter Routes
+    Route::get('appointment-letters/{appointmentLetter}/download', [AppointmentLetterController::class, 'download'])->name('appointment-letters.download');
+    Route::get('appointment-letters/{appointmentLetter}/preview', [AppointmentLetterController::class, 'preview'])->name('appointment-letters.preview');
+    Route::resource('appointment-letters', AppointmentLetterController::class);
+    Route::get('/appointment-letters-data', [AppointmentLetterController::class, 'data'])->name('appointment-letters.data');
 
     // Application Status Routes
     Route::get('/application-status', [ApplicationStatusController::class, 'index'])->name('application.status');
@@ -81,6 +98,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Otp Routes
     Route::get('otps', [OtpController::class, 'index'])->name('otps.index');
     Route::get('/otps-data', [OtpController::class, 'data'])->name('otps.data');
+
+    // Invoice Routes
+    Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
+    Route::get('/invoices-data', [InvoiceController::class, 'data'])->name('invoices.data');
+
+    // DND Routes
+    Route::get('dnd', [DndController::class, 'index'])->name('dnd.index');
+    Route::get('/dnd-data', [DndController::class, 'data'])->name('dnd.data');
+    Route::post('dnd/upload', [DndController::class, 'upload'])->name('dnd.upload');
+    Route::delete('dnd/{customer}/delete', [DndController::class, 'destroy'])->name('dnd.destroy');
 
     // Card Offer Routes
     Route::get('card-offers', [CardOfferController::class, 'index'])->name('card-offers.index');
@@ -93,16 +120,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/star-offers-data', [StarOfferController::class, 'data'])->name('star-offers.data');
     Route::patch('star-offers/{starOffer}/customer', [StarOfferController::class, 'customer'])->name('star-offers.customer');
     Route::patch('star-offers/{starOffer}/lead', [StarOfferController::class, 'lead'])->name('star-offers.lead');
-
-    // Invoice Routes
-    Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
-    Route::get('/invoices-data', [InvoiceController::class, 'data'])->name('invoices.data');
-
-    // DND Routes
-    Route::get('dnd', [DndController::class, 'index'])->name('dnd.index');
-    Route::get('/dnd-data', [DndController::class, 'data'])->name('dnd.data');
-    Route::post('dnd/upload', [DndController::class, 'upload'])->name('dnd.upload');
-    Route::delete('dnd/{customer}/delete', [DndController::class, 'destroy'])->name('dnd.destroy');
 
     // Razorpay Logs Routes
     Route::get('/razorpay-logs', [RazorpayLogController::class, 'index'])->name('razorpay-logs.index');
@@ -124,18 +141,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/support/tickets/{ticket}', [SupportController::class, 'show'])->name('support.tickets.show');
     Route::post('/support/tickets/{ticket}/remarks', [SupportController::class, 'storeRemark'])->name('support.tickets.remarks.store');
     Route::patch('/support/tickets/{ticket}/status', [SupportController::class, 'updateStatus'])->name('support.tickets.status.update');
-
-    // Final Details Routes
-    Route::patch('final-details/{finalDetail}/approve', [FinalDetailController::class, 'approve'])->name('final-details.approve');
-    Route::patch('final-details/{finalDetail}/unapprove', [FinalDetailController::class, 'unapprove'])->name('final-details.unapprove');
-    Route::resource('final-details', FinalDetailController::class)->except(['create', 'store', 'destroy']);
-    Route::get('/final-details-data', [FinalDetailController::class, 'data'])->name('final-details.data');
-
-    // Appointment Letter Routes
-    Route::get('appointment-letters/{appointmentLetter}/download', [AppointmentLetterController::class, 'download'])->name('appointment-letters.download');
-    Route::get('appointment-letters/{appointmentLetter}/preview', [AppointmentLetterController::class, 'preview'])->name('appointment-letters.preview');
-    Route::resource('appointment-letters', AppointmentLetterController::class);
-    Route::get('/appointment-letters-data', [AppointmentLetterController::class, 'data'])->name('appointment-letters.data');
 
     // Predefined Messages Routes
     Route::resource('predefined-messages', PreDefinedMessageController::class);
