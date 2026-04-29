@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Invoices')
+@section('title', 'Application Documents')
 
 @section('content')
 
@@ -13,11 +13,12 @@
             <form id="filterForm">
 
                 <div class="flex flex-col lg:flex-row justify-between items-center mb-6">
-
-                    <h2
-                        class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                        INVOICES
-                    </h2>
+                    <div class="flex items-center gap-4">
+                        <h2
+                            class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                            APPLICATION DOCUMENTS
+                        </h2>
+                    </div>
                     <div class="flex flex-wrap gap-3">
 
                         <div>
@@ -47,9 +48,9 @@
 
 
             <div class="mt-4 overflow-x-auto">
-                <div class="whitespace-nowrap text-sm text-gray-700">
+                <div class="text-sm text-gray-700">
 
-                    <table id="invoice-table" class="min-w-full divide-y divide-gray-200 pt-5">
+                    <table id="application-documents-table" class="min-w-full divide-y divide-gray-200 pt-5">
 
                         <thead class="bg-blue-50">
 
@@ -63,16 +64,16 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Invoice No
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Document Name
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Invoice Date
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Document
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Total Amount
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment ID
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created
                                 </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
@@ -101,7 +102,7 @@
 <script>
 $(function() {
 
-    let table = $('#invoice-table').DataTable({
+    let table = $('#application-documents-table').DataTable({
 
         processing: true,
         serverSide: true,
@@ -111,7 +112,7 @@ $(function() {
         ],
 
         ajax: {
-            url: "{{ route('admin.invoices.data') }}",
+            url: "{{ route('admin.application-documents.data') }}",
             data: function(d) {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
@@ -131,20 +132,22 @@ $(function() {
                 name: 'customer_mobile'
             },
             {
-                data: 'inv_no',
-                name: 'inv_no'
+                data: 'document_type_name',
+                name: 'document_type_name'
             },
             {
-                data: 'inv_date',
-                name: 'inv_date'
+                data: 'document',
+                name: 'document',
+                orderable: false,
+                searchable: false
             },
             {
-                data: 'total_amount',
-                name: 'total_amount'
+                data: 'is_verified',
+                name: 'is_verified'
             },
             {
-                data: 'application_order_paymentid',
-                name: 'application_order_paymentid'
+                data: 'created_at',
+                name: 'created_at'
             },
             {
                 data: 'actions',

@@ -46,7 +46,7 @@ class CustomerController extends Controller
             'mobile_number',
             'is_paid',
             'created_at'
-        ]);
+        ])->where('is_paid', 1);
 
         if ($request->from_date && $request->to_date) {
             $query->whereBetween('created_at', [
@@ -57,10 +57,6 @@ class CustomerController extends Controller
 
         if($request->service) {
             $query->where('service_id', $request->service);
-        }
-
-        if ($request->filled('is_paid')) {
-            $query->where('is_paid', $request->is_paid);
         }
         
         return DataTables::of($query)
@@ -84,9 +80,7 @@ class CustomerController extends Controller
             ->editColumn('is_paid', function ($row) {
                 if ($row->is_paid == '1') {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Paid</span>';
-                }  else {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Lead</span>';
-                }
+                } 
             })
 
             ->editColumn('created_at', function ($row) {
@@ -122,20 +116,8 @@ class CustomerController extends Controller
      */
     public function today()
     {
-        $baseQuery = Customer::whereDate('created_at', Carbon::today());
-
-        $totalTodayCount = $baseQuery->count();
-        $paidTodayCount  = (clone $baseQuery)->where('is_paid', 1)->count();
-        $leadTodayCount  = (clone $baseQuery)->where('is_paid', 0)->count();
-
         $services = Service::all();
-
-        return view('admin.customers.today', compact(
-            'totalTodayCount',
-            'paidTodayCount',
-            'leadTodayCount',
-            'services'
-        ));
+        return view('admin.customers.today', compact('services'));
     }
 
     public function todayData(Request $request)
@@ -149,14 +131,10 @@ class CustomerController extends Controller
             'mobile_number',
             'is_paid',
             'created_at'
-        ])->whereDate('created_at', now());
+        ])->whereDate('created_at', now())->where('is_paid', 1);
 
         if($request->service) {
             $query->where('service_id', $request->service);
-        }
-
-        if ($request->filled('is_paid')) {
-            $query->where('is_paid', $request->is_paid);
         }
 
         return DataTables::of($query)
@@ -180,9 +158,7 @@ class CustomerController extends Controller
             ->editColumn('is_paid', function ($row) {
                 if ($row->is_paid == '1') {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Paid</span>';
-                }  else {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Lead</span>';
-                }
+                } 
             })
 
             ->editColumn('created_at', function ($row) {

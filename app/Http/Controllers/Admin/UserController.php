@@ -109,7 +109,7 @@ class UserController extends Controller
                             '.csrf_field().'
                             '.method_field('DELETE').'
                             <button type="button" 
-                                onclick="confirmDelete(\''.$row->name.' user\', this.form)"
+                                onclick="confirmDelete(\''.$row->name.' User\', this.form)"
                                 class="text-red-600 hover:text-red-900" 
                                 title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"

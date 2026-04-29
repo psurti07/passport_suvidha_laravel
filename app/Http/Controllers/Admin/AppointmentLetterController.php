@@ -102,9 +102,9 @@ class AppointmentLetterController extends Controller
                 return '
                     <div class="flex items-center gap-2">
                     
-                        <!-- View -->
+                        <!-- Preview -->
                         <a href="'.route('admin.appointment-letters.preview', $row->id).'" 
-                            class="text-blue-600 hover:text-blue-900" target="_blank" title="View">
+                            class="text-blue-600 hover:text-blue-900" target="_blank" title="Preview">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round"

@@ -70,6 +70,9 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Customer
                                 </th>
 
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Document
+                                </th>
+
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Upload
                                     Date
                                 </th>
@@ -87,9 +90,6 @@
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Approved
                                     By
-                                </th>
-
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Document
                                 </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
@@ -145,6 +145,12 @@ $(function() {
                 name: 'customer_name'
             },
             {
+                data: 'document',
+                name: 'document',
+                orderable: false,
+                searchable: false
+            },
+            {
                 data: 'upload_date',
                 name: 'upload_date'
             },
@@ -163,12 +169,6 @@ $(function() {
             {
                 data: 'approved_by_name',
                 name: 'approved_by_name'
-            },
-            {
-                data: 'document',
-                name: 'document',
-                orderable: false,
-                searchable: false
             },
             {
                 data: 'actions',
