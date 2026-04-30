@@ -11,7 +11,7 @@
 @section('content')
 <div class="mb-6 flex justify-between items-center">
     <div>
-        <h1 class="text-3xl font-bold text-gray-800 mt-2">CUSTOMER DETAILS</h1>
+        <h1 class="text-2xl font-bold text-gray-800 mt-2">CUSTOMER DETAILS</h1>
         <p class="text-xl text-gray-700 font-medium mt-1">{{ strtoupper($customer->first_name ?? 'N/A') }} -
             {{ $customer->mobile_number ?? 'N/A' }}</p>
     </div>
@@ -880,8 +880,8 @@
                                         {{ str_replace('_', ' ', ucfirst($progress->status->status_name ?? 'N/A')) }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4">
-                                    {{ $progress->status_date ? $progress->status_date->format('Y-m-d H:i A') : 'N/A' }}
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ $progress->status_date ? $progress->status_date->format('d M Y, h:i A') : 'N/A' }}
                                 </td>
                                 <td class="px-6 py-4">{{ $progress->remark }}</td>
                                 <td class="px-6 py-4">

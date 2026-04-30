@@ -8,7 +8,7 @@
         <div class="p-4 sm:p-6 lg:p-8">
             <div class="flex justify-between items-center mb-6">
                 <h2
-                    class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                    class="text-xl sm:text-2xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                     Create New Predefined Message
                 </h2>
                 <a href="{{ route('admin.predefined-messages.index') }}"

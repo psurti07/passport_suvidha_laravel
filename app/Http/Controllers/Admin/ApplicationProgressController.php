@@ -22,25 +22,25 @@ class ApplicationProgressController extends Controller
     public function index(Request $request)
     {
         $query = ApplicationProgress::with(['customer', 'remarkedByUser']);
-        
+
         if ($request->has('customer_id')) {
             $query->where('customer_id', $request->customer_id);
         }
-        
+
         if ($request->has('status_id')) {
             $query->where('status_id', $request->status_id);
         }
-        
+
         if ($request->has('search')) {
             $search = $request->search;
-            $query->whereHas('customer', function($q) use ($search) {
+            $query->whereHas('customer', function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('mobile_number', 'like', "%{$search}%");
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('mobile_number', 'like', "%{$search}%");
             });
         }
-        
+
         $applicationProgress = $query->latest()->paginate(15);
         return view('admin.application-progress.index', compact('applicationProgress'));
     }
@@ -62,7 +62,7 @@ class ApplicationProgressController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    
+
     public function store(Request $request)
     {
         $status = ApplicationStatus::find($request->status_id);
@@ -123,7 +123,6 @@ class ApplicationProgressController extends Controller
 
                 $data['file_type'] = 'final_details';
                 $data['file'] = $finalDetail->id;
-
             } elseif (in_array($slug, [
                 'appointment_scheduled',
                 'appointment_rescheduled1',
@@ -155,7 +154,7 @@ class ApplicationProgressController extends Controller
                 ]);
             }
         }
-        
+
         if ($request->has('redirect')) {
             return redirect($request->redirect)
                 ->with('success', 'Application progress entry created successfully.');
@@ -196,7 +195,7 @@ class ApplicationProgressController extends Controller
      * @param  \App\Models\ApplicationProgress  $applicationProgress
      * @return \Illuminate\Http\Response
      */
-    
+
     public function update(Request $request, ApplicationProgress $applicationProgress)
     {
         $status = ApplicationStatus::find($request->status_id);
@@ -259,7 +258,6 @@ class ApplicationProgressController extends Controller
 
                 $data['file_type'] = 'final_details';
                 $data['file'] = $finalDetail->id;
-
             } elseif (in_array($slug, [
                 'appointment_scheduled',
                 'appointment_rescheduled1',
@@ -305,19 +303,19 @@ class ApplicationProgressController extends Controller
     {
         $customerId = $applicationProgress->customer_id;
         $applicationProgress->delete();
-        
+
         // If the request is coming from the customer show page, redirect back there
         if ($request->has('redirect')) {
             return redirect($request->redirect)
                 ->with('success', 'Application progress entry deleted successfully.');
         }
-        
+
         // Otherwise, if we were in a customer view page, redirect to that customer
         if ($customerId && $request->has('from_customer') && $request->from_customer) {
             return redirect()->route('admin.customers.show', $customerId)
                 ->with('success', 'Application progress entry deleted successfully.');
         }
-        
+
         return redirect()->route('admin.application-progress.index')
             ->with('success', 'Application progress entry deleted successfully.');
     }
@@ -334,7 +332,7 @@ class ApplicationProgressController extends Controller
             ->with('remarkedByUser')
             ->orderBy('status_date', 'desc')
             ->get();
-            
+
         return view('admin.application-progress.history', compact('customer', 'history'));
     }
-} 
+}
