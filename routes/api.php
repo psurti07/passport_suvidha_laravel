@@ -83,6 +83,7 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
     Route::get('/application-review/preview', [FinalDetailController::class, 'preview'])->name('api.application-review.preview');
     Route::get('/application-review/download', [FinalDetailController::class, 'download'])->name('api.application-review.download');
     Route::post('/application-review/verify', [FinalDetailController::class, 'verifyApplication'])->name('api.application-review.verify');
+    Route::get('/application-progress/status', [ApplicationProgressController::class, 'getApplicationProgress']);
 
     // Appointment Letter Routes     
     Route::prefix('appointment-letters')->group(function () {
@@ -97,8 +98,9 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
         Route::post('/upload/{document_type_id}', [RequiredDocumentsController::class, 'upload'])->name('api.required-documents.upload');
         Route::get('/download/{document_type_id}', [RequiredDocumentsController::class, 'download'])->name('api.required-documents.download');
         Route::delete('/{document_type_id}', [RequiredDocumentsController::class, 'delete'])->name('api.required-documents.delete');
+        });
+
     });
-});
 
 // support ticket route for public (no auth) - separate from authenticated routes to avoid confusion
 Route::post('/public/support/tickets', [SupportTicketController::class, 'storePublic']);

@@ -61,4 +61,14 @@ class ApplicationProgress extends Model
 
         return null;
     }
+
+    public function finalDetail()
+    {
+        return $this->belongsTo(FinalDetail::class, 'file');
+    }
+
+    public function appointmentLetter()
+    {
+        return $this->belongsTo(AppointmentLetter::class, 'file');
+    }
 } 

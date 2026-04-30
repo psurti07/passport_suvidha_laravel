@@ -55,6 +55,26 @@ class InvoiceController extends Controller
             ?? $order->payment_id 
             ?? 'N/A';
 
+        $customer_state = strtoupper($customer->state);
+        $is_gujarat = ($customer_state == 'GUJARAT');
+
+        $gov_amount = $service->service_gov_amount ?? 0;
+        $service_charges = $service->service_charges ?? 0;
+
+        $gst_rate = 18;
+
+        if($is_gujarat) {
+            $cgst = round($service_charges * ($gst_rate / 2) / 100, 2);
+            $sgst = round($service_charges * ($gst_rate / 2) / 100, 2);
+            $igst = 0;
+        } else {
+            $cgst = 0;
+            $sgst = 0;
+            $igst = round($service_charges * ($gst_rate / 100), 2);
+        } 
+        
+        $grand_total = $gov_amount + $service_charges + $cgst + $sgst + $igst;
+
         $pdf = PDF::loadView('invoice.passport_invoice', [
             'customer'       => $customer,
             'service'        => $service,
@@ -62,6 +82,14 @@ class InvoiceController extends Controller
             'payment_amount' => $payment_amount,
             'payment_mode'   => $payment_mode,
             'payment_id'     => $payment_id,
+            'gov_amount'      => $gov_amount,
+            'service_charges' => $service_charges,
+            'cgst'           => $cgst,
+            'sgst'           => $sgst,  
+            'igst'           => $igst,
+            'grand_total'    => $grand_total,
+            'is_gujarat'     => $is_gujarat,
+            'gst_rate'       => $gst_rate,
         ]);
         
         $fileName = "Invoice_" . ($invoice->inv_no ?? time()) . ".pdf";

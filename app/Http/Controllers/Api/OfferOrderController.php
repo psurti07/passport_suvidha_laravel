@@ -118,7 +118,9 @@ class OfferOrderController extends Controller
     |--------------------------------------------------------------------------
     */
     private function processCashfree($order, $request)
+
     {
+        Log::info('Processing Zaakpay payment', ['request process' => $request->all()]);
         $baseUrl = $this->getCashfreeBaseUrl();
 
         $orderId = "order_" . $order->id . "_" . Str::random(6);
@@ -157,7 +159,8 @@ class OfferOrderController extends Controller
             'order_note'   => 'Card Offer Payment', 
             'reference_id' => $orderId,
             'tx_status'    => 'pending',
-            'payment_mode'=> 'cashfree'
+            'payment_mode'=> 'cashfree',
+            'service_type' => $request->service_code ?? null,
         ]);
 
         return response()->json([
@@ -280,6 +283,7 @@ class OfferOrderController extends Controller
     */
     public function processZaakpay($order, $request)
     {
+      
         try {
             $merchantId = config('services.zaakpay.merchant_identifier');
             $secret = hex2bin(config('services.zaakpay.secret_key'));
@@ -331,7 +335,8 @@ class OfferOrderController extends Controller
                 'order_amount'  => $finalAmount,
                 'order_id'      => $order->id,
                 'reference_id'  => $orderId,
-                'tx_status'     => 'pending'
+                'tx_status'     => 'pending',
+                'service_type' => $request->service_code ?? null,
             ]);
 
             return response()->json([
