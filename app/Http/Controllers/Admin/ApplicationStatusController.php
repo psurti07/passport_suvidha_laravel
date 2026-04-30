@@ -16,13 +16,46 @@ class ApplicationStatusController extends Controller
         return view('admin.application-status.index', compact('statuses'));
     }
 
+    public function new()
+    {
+        $statuses = ApplicationStatus::orderBy('priority_no')->get();
+
+        return view('admin.application-status.index', [
+            'statuses' => $statuses,
+            'type' => 'new',
+            'title' => 'NEW'
+        ]);
+    }
+
+    public function current()
+    {
+        $statuses = ApplicationStatus::orderBy('priority_no')->get();
+
+        return view('admin.application-status.index', [
+            'statuses' => $statuses,
+            'type' => 'current',
+            'title' => 'CURRENT'
+        ]);
+    }
+
+    public function completed()
+    {
+        $statuses = ApplicationStatus::orderBy('priority_no')->get();
+
+        return view('admin.application-status.index', [
+            'statuses' => $statuses,
+            'type' => 'completed',
+            'title' => 'COMPLETED'
+        ]);
+    }
+
     public function data(Request $request)
     {
         $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
         $query = ApplicationProgress::with(['customer', 'status', 'remarkedByUser'])
-        ->latest('status_date');
+            ->latest('status_date');
 
         if ($request->from_date && $request->to_date) {
             $query->whereBetween('status_date', [
@@ -33,6 +66,35 @@ class ApplicationStatusController extends Controller
 
         if ($request->status) {
             $query->where('status_id', $request->status);
+        }
+
+        if ($request->type == 'new') {
+            $query->whereHas('status', function ($q) {
+                $q->where('status_name', 'Documents Submitted');
+            });
+        }
+
+        if ($request->type == 'current') {
+            $query->whereHas('status', function ($q) {
+                $q->whereIn('status_name', [
+                    'In Process',
+                    'Details Verification',
+                    'Appointment Scheduled',
+                    'Appointment Rescheduled 1',
+                    'Appointment Rescheduled 2',
+                    'Appointment Rescheduled 3'
+                ]);
+            });
+        }
+
+        if ($request->type == 'completed') {
+            $query->whereHas('status', function ($q) {
+                $q->whereIn('status_name', [
+                    'POV Success',
+                    'POV Failed',
+                    'POV Insufficient Documents'
+                ]);
+            });
         }
 
         return DataTables::of($query)
@@ -56,8 +118,8 @@ class ApplicationStatusController extends Controller
                 $status = $row->status->status_name ?? 'N/A';
                 $color = $row->status->colorclass ?? 'gray';
 
-                return '<span class="px-2 py-1 text-xs rounded bg-'.$color.'-100 text-'.$color.'-800">'
-                        .$status.
+                return '<span class="px-2 py-1 text-xs rounded bg-' . $color . '-100 text-' . $color . '-800">'
+                    . $status .
                     '</span>';
             })
 
@@ -70,41 +132,41 @@ class ApplicationStatusController extends Controller
             })
 
             ->editColumn('status_date', function ($row) {
-                return $row->status_date->format('d/m/Y');
+                return $row->status_date->format('d M Y');
             })
-            
-            ->filterColumn('customer_name', function($query, $keyword) {
-                $query->whereHas('customer', function($q) use ($keyword) {
+
+            ->filterColumn('customer_name', function ($query, $keyword) {
+                $query->whereHas('customer', function ($q) use ($keyword) {
                     $q->where('first_name', 'like', "%{$keyword}%")
-                    ->orWhere('last_name', 'like', "%{$keyword}%");
+                        ->orWhere('last_name', 'like', "%{$keyword}%");
                 });
             })
 
-            ->filterColumn('customer_mobile', function($query, $keyword) {
-                $query->whereHas('customer', function($q) use ($keyword) {
+            ->filterColumn('customer_mobile', function ($query, $keyword) {
+                $query->whereHas('customer', function ($q) use ($keyword) {
                     $q->where('mobile_number', 'like', "%{$keyword}%");
                 });
             })
 
-            ->filterColumn('service_name', function($query, $keyword) {
-                $query->whereHas('customer.service', function($q) use ($keyword) {
+            ->filterColumn('service_name', function ($query, $keyword) {
+                $query->whereHas('customer.service', function ($q) use ($keyword) {
                     $q->where('service_name', 'like', "%{$keyword}%");
                 });
             })
 
-            ->filterColumn('remark', function($query, $keyword) {
+            ->filterColumn('remark', function ($query, $keyword) {
                 $query->where('remark', 'like', "%{$keyword}%");
             })
 
-            ->filterColumn('user_remarked_by', function($query, $keyword) {
-                $query->whereHas('remarkedByUser', function($q) use ($keyword) {
+            ->filterColumn('user_remarked_by', function ($query, $keyword) {
+                $query->whereHas('remarkedByUser', function ($q) use ($keyword) {
                     $q->where('name', 'like', "%{$keyword}%");
                 });
             })
 
             ->addColumn('actions', function ($row) {
                 return '
-                    <a href="'.route('admin.customers.show', $row->customer->id).'#application-process" 
+                    <a href="' . route('admin.customers.show', $row->customer->id) . '#application-process" 
                     class="text-blue-600 hover:text-blue-900" 
                     title="View">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"

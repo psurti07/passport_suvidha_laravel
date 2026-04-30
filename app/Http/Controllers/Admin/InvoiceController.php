@@ -57,7 +57,7 @@ class InvoiceController extends Controller
             })
 
             ->editColumn('inv_date', function ($row) {
-                return $row->inv_date->format('d/m/Y');
+                return $row->inv_date->format('d M Y');
             })
 
             ->addcolumn('total_amount', function ($row) {

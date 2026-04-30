@@ -65,16 +65,16 @@ class AppointmentLetterController extends Controller
             })
 
             ->editColumn('upload_date', function ($row) {
-                return $row->upload_date->format('d/m/Y');
+                return $row->upload_date->format('d M Y');
             })
 
             ->addColumn('appointment_date_time', function ($row) {
                 if ($row->appointment_date && $row->appointment_time) {
 
-                    $date = date('d/m/Y', strtotime($row->appointment_date));
+                    $date = date('d M Y', strtotime($row->appointment_date));
                     $time = date('h:i A', strtotime($row->appointment_time));
 
-                    return $date . ' at ' . $time;
+                    return $date . ', ' . $time;
                 }
                 return '-';
             })

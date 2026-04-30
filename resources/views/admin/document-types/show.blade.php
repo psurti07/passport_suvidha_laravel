@@ -8,7 +8,7 @@
         <div class="p-4 sm:p-6 lg:p-8">
             <div class="flex justify-between items-center mb-6">
                 <h2
-                    class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                    class="text-xl sm:text-2xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                     View Document Type
                 </h2>
                 <div class="flex items-center space-x-3">
@@ -39,10 +39,10 @@
                         #{{ $documentType->id }}
                     </span>
                     <div class="ml-4">
-                        <p class="text-xs text-gray-500">Created: {{ $documentType->created_at->format('d/m/Y H:i:s') }}
+                        <p class="text-xs text-gray-500">Created: {{ $documentType->created_at->format('d M Y, h:i A') }}
                         </p>
                         <p class="text-xs text-gray-500">Last Updated:
-                            {{ $documentType->updated_at->format('d/m/Y H:i:s') }}</p>
+                            {{ $documentType->updated_at->format('d M Y, h:i A') }}</p>
                     </div>
                 </div>
 

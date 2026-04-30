@@ -196,7 +196,7 @@ class ZaakpayLogController extends Controller
             })
 
             ->editColumn('created_at', function ($row) {
-                return $row->created_at->format('d/m/Y H:i:s');
+                return $row->created_at->format('d M Y, h:i A');
             })
 
             ->rawColumns(['customer_name', 'tx_status'])

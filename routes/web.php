@@ -94,6 +94,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Application Status Routes
     Route::get('/application-status', [ApplicationStatusController::class, 'index'])->name('application.status');
     Route::get('/application-status/data', [ApplicationStatusController::class, 'data'])->name('application.status.data');
+    Route::get('/application-status/new', [ApplicationStatusController::class, 'new'])->name('application.status.new');
+    Route::get('/application-status/current', [ApplicationStatusController::class, 'current'])->name('application.status.current');
+    Route::get('/application-status/completed', [ApplicationStatusController::class, 'completed'])->name('application.status.completed');
 
     // Otp Routes
     Route::get('otps', [OtpController::class, 'index'])->name('otps.index');

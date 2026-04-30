@@ -26,7 +26,7 @@ $fileSize = $bytes . ' bytes';
             <div class="flex flex-wrap justify-between items-center mb-6">
                 <div>
                     <h2
-                        class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                        class="text-xl sm:text-2xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                         Appointment Letter Details
                     </h2>
                     <p class="text-gray-500 text-sm mt-1">Viewing details for appointment letter

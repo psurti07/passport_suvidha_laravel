@@ -727,14 +727,47 @@
 
                 <a href="{{ route('admin.application.status') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Application Status' : ''">
-
+                    x-bind:title="sidebarCollapsed ? 'All Applications' : ''">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                            d="M9 12h6m-6 4h6m-6-8h6M5 4h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" />
                     </svg>
-                    <span class="nav-link-text">Application Status</span>
+                    <span class="nav-link-text">All Applications</span>
+                </a>
+
+                <a href="{{ route('admin.application.status.new') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.new') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'New Applications' : ''">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4h16v16H4V4z" />
+                    </svg>
+                    <span class="nav-link-text">New Applications</span>
+                </a>
+
+                <a href="{{ route('admin.application.status.current') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.current') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Current Applications' : ''">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3" />
+                        <circle cx="12" cy="12" r="9" stroke-width="2" />
+                    </svg>
+                    <span class="nav-link-text">Current Applica-</br>tions</span>
+                </a>
+
+                <a href="{{ route('admin.application.status.completed') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.completed') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Completed Applications' : ''">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 5h6m2 0a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h2z" />
+                    </svg>
+                    <span class="nav-link-text">Completed Appli-</br>cations</span>
                 </a>
 
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SYSTEM</div>
