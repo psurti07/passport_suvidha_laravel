@@ -109,6 +109,14 @@
                         Registration on: <strong
                             class="text-gray-800 font-semibold">{{ $customer->created_at ? $customer->created_at->format('d M Y, H:i A') : 'N/A' }}</strong>
                     </p>
+                    @if($invoice)
+                    <a href="{{ route('admin.invoices.download', $invoice->id) }}"
+                        class="inline-flex items-center text-sm px-4 py-2 w-full md:w-auto bg-gradient-to-r from-green-500 to-green-600 font-medium rounded-lg border border-white text-white hover:from-green-600 hover:to-green-700">
+                        Download Invoice
+                    </a>
+                    @else
+                    <span class="text-gray-400 text-sm">No Invoice Found</span>
+                    @endif
                 </div>
 
                 {{-- Form Fields --}}

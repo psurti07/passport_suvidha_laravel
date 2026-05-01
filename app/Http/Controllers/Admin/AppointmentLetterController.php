@@ -36,10 +36,10 @@ class AppointmentLetterController extends Controller
             'appointment_letters.uploaded_by',
         ])
 
-        ->whereBetween('appointment_letters.upload_date', [
-            $from . ' 00:00:00',
-            $to . ' 23:59:59'
-        ]);
+            ->whereBetween('appointment_letters.upload_date', [
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
+            ]);
 
         return DataTables::of($query)
 
@@ -54,8 +54,8 @@ class AppointmentLetterController extends Controller
 
                 return '
                     <div>
-                        <div class="font-semibold text-gray-900">'.($fullName ?: '-').'</div>
-                        <div class="text-xs text-gray-500">'.$email.'</div>
+                        <div class="font-semibold text-gray-900">' . ($fullName ?: '-') . '</div>
+                        <div class="text-xs text-gray-500">' . $email . '</div>
                     </div>
                 ';
             })
@@ -81,19 +81,19 @@ class AppointmentLetterController extends Controller
 
             ->addColumn('user_name', function ($row) {
                 return $row->uploader->name ?? 'System';
-            })  
-            
-            ->filterColumn('customer_name', function($query, $keyword) {
-                $query->whereHas('customer', function($q) use ($keyword) {
+            })
+
+            ->filterColumn('customer_name', function ($query, $keyword) {
+                $query->whereHas('customer', function ($q) use ($keyword) {
                     $q->where('first_name', 'like', "%{$keyword}%")
-                    ->orWhere('last_name', 'like', "%{$keyword}%")
-                    ->orWhere('email', 'like', "%{$keyword}%")
-                    ->orWhere('mobile_number', 'like', "%{$keyword}%");
+                        ->orWhere('last_name', 'like', "%{$keyword}%")
+                        ->orWhere('email', 'like', "%{$keyword}%")
+                        ->orWhere('mobile_number', 'like', "%{$keyword}%");
                 });
             })
 
-            ->filterColumn('user_name', function($query, $keyword) {
-                $query->whereHas('uploader', function($q) use ($keyword) {
+            ->filterColumn('user_name', function ($query, $keyword) {
+                $query->whereHas('uploader', function ($q) use ($keyword) {
                     $q->where('name', 'like', "%{$keyword}%");
                 });
             })
@@ -103,7 +103,7 @@ class AppointmentLetterController extends Controller
                     <div class="flex items-center gap-2">
                     
                         <!-- Preview -->
-                        <a href="'.route('admin.appointment-letters.preview', $row->id).'" 
+                        <a href="' . route('admin.appointment-letters.preview', $row->id) . '" 
                             class="text-blue-600 hover:text-blue-900" target="_blank" title="Preview">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -116,7 +116,7 @@ class AppointmentLetterController extends Controller
                         </a>
 
                         <!-- Edit -->
-                        <a href="'.route('admin.appointment-letters.edit', $row->id).'" 
+                        <a href="' . route('admin.appointment-letters.edit', $row->id) . '" 
                             class="text-yellow-600 hover:text-yellow-900" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -127,7 +127,7 @@ class AppointmentLetterController extends Controller
                         </a>
 
                         <!-- Download -->
-                        <a href="'.route('admin.appointment-letters.download', $row->id).'" 
+                        <a href="' . route('admin.appointment-letters.download', $row->id) . '" 
                             class="text-green-600 hover:text-green-900" title="Download">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -138,11 +138,11 @@ class AppointmentLetterController extends Controller
                         </a>
 
                         <!-- Delete -->
-                        <form action="'.route('admin.appointment-letters.destroy', $row->id).'" method="POST" class="inline">
-                            '.csrf_field().'
-                            '.method_field('DELETE').'
+                        <form action="' . route('admin.appointment-letters.destroy', $row->id) . '" method="POST" class="inline">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
                             <button type="button" 
-                                onclick="confirmDelete(\''.$row->customer->first_name.' Appointment Letter\', this.form)"
+                                onclick="confirmDelete(\'' . $row->customer->first_name . ' Appointment Letter\', this.form)"
                                 class="text-red-600 hover:text-red-900" 
                                 title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
@@ -304,13 +304,13 @@ class AppointmentLetterController extends Controller
         if (!Storage::disk('public')->exists($appointmentLetter->file_path)) {
             return redirect()->back()->with('error', 'File not found.');
         }
-        
+
         $fullPath = storage_path('app/public/' . $appointmentLetter->file_path);
         $fileName = basename($appointmentLetter->file_path);
-        
+
         return response()->download($fullPath, $fileName);
     }
-    
+
     /**
      * Preview the appointment letter file.
      *
@@ -322,10 +322,10 @@ class AppointmentLetterController extends Controller
         if (!Storage::disk('public')->exists($appointmentLetter->file_path)) {
             return redirect()->back()->with('error', 'File not found.');
         }
-        
+
         $fullPath = storage_path('app/public/' . $appointmentLetter->file_path);
         $contentType = mime_content_type($fullPath);
-        
+
         return response()->file($fullPath, ['Content-Type' => $contentType]);
     }
 }

@@ -54,7 +54,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Dashboard Routes
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-    
+
     // Statistics Routes
     Route::get('/todaystatistics', [TodayStatisticsController::class, 'index'])->name('todaystatistics');
 
@@ -105,6 +105,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Invoice Routes
     Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
     Route::get('/invoices-data', [InvoiceController::class, 'data'])->name('invoices.data');
+    Route::get('invoices/download/{invoice_id}', [InvoiceController::class, 'download'])->name('invoices.download');
 
     // DND Routes
     Route::get('dnd', [DndController::class, 'index'])->name('dnd.index');
