@@ -14,7 +14,7 @@ class Invoice extends Model
     protected $fillable = [
         'customer_id',
         'service_id',
-        'card_id',
+        'order_id',
         'inv_date',
         'inv_no',
         'net_amount',
@@ -41,7 +41,7 @@ class Invoice extends Model
 
     public function order(): BelongsTo
     {
-        return $this->belongsTo(ApplicationOrder::class, 'card_id');
+        return $this->belongsTo(ApplicationOrder::class, 'order_id');
     }
 
     public function service(): BelongsTo

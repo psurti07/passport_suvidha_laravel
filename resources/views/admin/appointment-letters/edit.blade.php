@@ -8,7 +8,7 @@
         <div class="p-4 sm:p-6 lg:p-8">
             <div class="flex justify-between items-center mb-6">
                 <h2
-                    class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                    class="text-xl sm:text-2xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                     Edit Appointment Letter
                 </h2>
                 <a href="{{ route('admin.appointment-letters.index') }}"
@@ -95,7 +95,7 @@
                             <label for="appointment_time"
                                 class="block text-sm font-medium text-gray-700 mb-1">Appointment Time</label>
                             <input type="time" id="appointment_time" name="appointment_time" required
-                                value="{{ old('appointment_time', $appointmentLetter->appointment_time ? $appointmentLetter->appointment_time->format('H:i') : '') }}"
+                                value="{{ old('appointment_time', $appointmentLetter->appointment_time) }}"
                                 class="w-full border border-gray-300 rounded-lg text-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm @error('appointment_time') border-red-500 @enderror">
                             @error('appointment_time')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

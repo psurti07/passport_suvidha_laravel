@@ -50,11 +50,11 @@ class DocumentTypeController extends Controller
             })
 
             ->editColumn('created_at', function ($row) {
-                return $row->created_at->format('d/m/Y H:i:s');
+                return $row->created_at->format('d M Y, h:i A');
             })
 
             ->editColumn('updated_at', function ($row) {
-                return $row->updated_at->format('d/m/Y H:i:s');
+                return $row->updated_at->format('d M Y, h:i A');
             })
 
             ->addColumn('actions', function ($row) {
@@ -88,7 +88,7 @@ class DocumentTypeController extends Controller
                             '.csrf_field().'
                             '.method_field('DELETE').'
                             <button type="button" 
-                                onclick="confirmDelete(\''.$row->name.' document type\', this.form)"
+                                onclick="confirmDelete(\''.$row->name.' Document Type\', this.form)"
                                 class="text-red-600 hover:text-red-900" 
                                 title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"

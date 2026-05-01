@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="py-2 lg:py-8">
-    <div class="max-w-3xl mx-auto sm:px-1 lg:px-8">
+    <div class="mx-auto sm:px-1 lg:px-8">
         <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
             <div class="px-8 py-4 lg:py-6 bg-gray-50 border-b border-gray-200">
                 <h2 class="text-2xl font-bold text-gray-900">Create New Staff User</h2>

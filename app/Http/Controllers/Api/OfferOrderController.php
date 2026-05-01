@@ -118,9 +118,7 @@ class OfferOrderController extends Controller
     |--------------------------------------------------------------------------
     */
     private function processCashfree($order, $request)
-
     {
-        Log::info('Processing Zaakpay payment', ['request process' => $request->all()]);
         $baseUrl = $this->getCashfreeBaseUrl();
 
         $orderId = "order_" . $order->id . "_" . Str::random(6);

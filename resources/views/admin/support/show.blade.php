@@ -9,7 +9,7 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         {{-- Updated Title Style --}}
         <h1
-            class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+            class="text-xl sm:text-2xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
             SUPPORT REQUEST TICKET DETAILS
         </h1>
         <div class="flex items-center space-x-3 flex-shrink-0">
@@ -69,7 +69,7 @@
                     </div>
                     <div class="flex justify-between">
                         <dt class="text-sm font-medium text-gray-500">Request Date</dt>
-                        <dd class="text-sm text-gray-900">{{ $ticket->created_at->format('d/m/Y H:i') }}</dd>
+                        <dd class="text-sm text-gray-900">{{ $ticket->created_at->format('d M Y, h:i A') }}</dd>
                     </div>
                     <div class="flex justify-between">
                         <dt class="text-sm font-medium text-gray-500">User Type</dt>
@@ -152,7 +152,7 @@
                         <p class="text-sm text-gray-800 whitespace-pre-wrap">{{ $remark->comment }}</p>
                         <p class="text-xs text-gray-500 mt-1.5">
                             By: <span class="font-medium">{{ $remark->user->name ?? 'Staff' }}</span>
-                            on <span class="font-medium">{{ $remark->created_at->format('d/m/Y H:i') }}</span>
+                            on <span class="font-medium">{{ $remark->created_at->format('d M Y, h:i A') }}</span>
                         </p>
                     </div>
                     @empty

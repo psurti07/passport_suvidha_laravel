@@ -13,7 +13,7 @@
             <div class="flex flex-col lg:flex-row justify-between items-center mb-6">
 
                 <h2
-                    class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                    class="text-xl sm:text-2xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                     TODAY'S CUSTOMERS
                 </h2>
                 <div class="flex flex-wrap gap-3">
@@ -23,39 +23,20 @@
                         <select id="service" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
                             <option value="">All</option>
                             @foreach($services as $service)
-                                <option value="{{ $service->id }}">
-                                    {{ $service->service_name }}
-                                </option>
+                            <option value="{{ $service->id }}">
+                                {{ $service->service_name }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
 
-                    <div>
-                        <label class="text-sm">Status</label>
-                        <select id="is_paid" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
-                            <option value="">All</option>
-                            <option value="1">Paid</option>
-                            <option value="0">Lead</option>
-                        </select>
+                    <div class="flex items-end">
+                        <button type="button" id="filter"
+                            class="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                            Show Results
+                        </button>
                     </div>
 
-                    <span
-                        class="inline-flex items-center px-3 py-1 rounded-md shadow-sm font-medium bg-blue-100 text-blue-800 text-sm">
-                        Total:
-                        <span class="font-bold ml-2">{{ $totalTodayCount }}</span>
-                    </span>
-
-                    <span
-                        class="inline-flex items-center px-3 py-1 rounded-md shadow-sm font-medium bg-green-100 text-green-800 text-sm">
-                        Paid:
-                        <span class="font-bold ml-2">{{ $paidTodayCount }}</span>
-                    </span>
-
-                    <span
-                        class="inline-flex items-center px-3 py-1 rounded-md shadow-sm font-medium bg-yellow-100 text-yellow-800 text-sm">
-                        Leads:
-                        <span class="font-bold ml-2">{{ $leadTodayCount }}</span>
-                    </span>
                 </div>
 
             </div>
@@ -71,7 +52,8 @@
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ID</th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Service</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Service
+                                </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Name</th>
 
@@ -125,7 +107,6 @@ $(function() {
             url: "{{ route('admin.customers.today.data') }}",
             data: function(d) {
                 d.service = $('#service').val();
-                d.is_paid = $('#is_paid').val();
             }
         },
 
@@ -134,12 +115,12 @@ $(function() {
                 name: 'id'
             },
             {
-                data: 'service',
-                name: 'service'
+                data: 'service_name',
+                name: 'service_name'
             },
             {
-                data: 'name',
-                name: 'first_name'
+                data: 'customer_name',
+                name: 'customer_name'
             },
             {
                 data: 'email',
@@ -170,25 +151,57 @@ $(function() {
         buttons: [{
                 extend: 'copy',
                 exportOptions: {
-                    columns: ':not(:last-child)'
+                    columns: ':not(:last-child)',
+                    format: {
+                        body: function(data, row, column, node) {
+                            if (column === 1) {
+                                return $(node).text().replace('🟢', '').replace('⚪', '').trim();
+                            }
+                            return $(node).text();
+                        }
+                    }
                 }
             },
             {
                 extend: 'excel',
                 exportOptions: {
-                    columns: ':not(:last-child)'
+                    columns: ':not(:last-child)',
+                    format: {
+                        body: function(data, row, column, node) {
+                            if (column === 1) {
+                                return $(node).text().replace('🟢', '').replace('⚪', '').trim();
+                            }
+                            return $(node).text();
+                        }
+                    }
                 }
             },
             {
                 extend: 'csv',
                 exportOptions: {
-                    columns: ':not(:last-child)'
+                    columns: ':not(:last-child)',
+                    format: {
+                        body: function(data, row, column, node) {
+                            if (column === 1) {
+                                return $(node).text().replace('🟢', '').replace('⚪', '').trim();
+                            }
+                            return $(node).text();
+                        }
+                    }
                 }
             },
             {
                 extend: 'pdf',
                 exportOptions: {
-                    columns: ':not(:last-child)'
+                    columns: ':not(:last-child)',
+                    format: {
+                        body: function(data, row, column, node) {
+                            if (column === 1) {
+                                return $(node).text().replace('🟢', '').replace('⚪', '').trim();
+                            }
+                            return $(node).text();
+                        }
+                    }
                 }
             }
         ],
@@ -197,7 +210,7 @@ $(function() {
 
     });
 
-    $('#service,#is_paid').change(function() {
+    $('#filter').click(function() {
         table.draw();
     });
 

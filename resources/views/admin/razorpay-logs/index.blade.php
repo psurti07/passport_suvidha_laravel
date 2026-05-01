@@ -15,7 +15,7 @@
                 <div class="flex flex-col lg:flex-row justify-between items-center mb-6">
                     <div class="flex items-center gap-4">
                         <h2
-                            class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                            class="text-xl sm:text-2xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                             RAZORPAY LOGS
                         </h2>
                     </div>
@@ -31,6 +31,16 @@
                             <label class="text-sm">To</label>
                             <input type="date" id="to_date" value="{{ now()->format('Y-m-d') }}"
                                 class="border rounded-lg px-3 py-2 text-sm">
+                        </div>
+
+                        <div>
+                            <label class="text-sm">Status</label>
+                            <select id="tx_status" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
+                                <option value="">All</option>
+                                <option value="success">Success</option>
+                                <option value="failed">Failed</option>
+                                <option value="pending">Pending</option>
+                            </select>
                         </div>
 
                         <div class="flex items-end">
@@ -61,12 +71,7 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Customer
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Email</th>
-
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile
-                                </th>
-
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Order ID
                                 </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Order
@@ -79,7 +84,16 @@
                                     ID</th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment
+                                    ID</th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">TX Status
+                                </th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment
                                     Mode</th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Type
+                                </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created At
                                 </th>
@@ -121,6 +135,7 @@ $(function() {
             data: function(d) {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
+                d.tx_status = $('#tx_status').val();
             }
         },
 
@@ -129,20 +144,12 @@ $(function() {
                 name: 'id'
             },
             {
-                data: 'name',
-                name: 'name'
+                data: 'customer_name',
+                name: 'customer_name'
             },
             {
-                data: 'customer.email',
-                name: 'customer.email'
-            },
-            {
-                data: 'customer.mobile_number',
-                name: 'customer.mobile_number'
-            },
-            {
-                data: 'order_id',
-                name: 'order_id'
+                data: 'customer_mobile_number',
+                name: 'customer_mobile_number'
             },
             {
                 data: 'order_amount',
@@ -157,8 +164,20 @@ $(function() {
                 name: 'reference_id'
             },
             {
+                data: 'payment_id',
+                name: 'payment_id'
+            },
+            {
+                data: 'tx_status',
+                name: 'tx_status'
+            },
+            {
                 data: 'payment_mode',
                 name: 'payment_mode'
+            },
+            {
+                data: 'type',
+                name: 'type'
             },
             {
                 data: 'created_at',

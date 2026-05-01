@@ -60,26 +60,26 @@ class AppointmentLetterController extends Controller
                 ';
             })
 
-            ->addColumn('mobile', function ($row) {
+            ->addColumn('customer_mobile', function ($row) {
                 return $row->customer->mobile_number ?? '-';
             })
 
             ->editColumn('upload_date', function ($row) {
-                return $row->upload_date->format('d/m/Y');
+                return $row->upload_date->format('d M Y');
             })
 
             ->addColumn('appointment_date_time', function ($row) {
                 if ($row->appointment_date && $row->appointment_time) {
 
-                    $date = date('d/m/Y', strtotime($row->appointment_date));
+                    $date = date('d M Y', strtotime($row->appointment_date));
                     $time = date('h:i A', strtotime($row->appointment_time));
 
-                    return $date . ' at ' . $time;
+                    return $date . ', ' . $time;
                 }
                 return '-';
             })
 
-            ->addColumn('name', function ($row) {
+            ->addColumn('user_name', function ($row) {
                 return $row->uploader->name ?? 'System';
             })  
             
@@ -92,13 +92,19 @@ class AppointmentLetterController extends Controller
                 });
             })
 
+            ->filterColumn('user_name', function($query, $keyword) {
+                $query->whereHas('uploader', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
+            })
+
             ->addColumn('actions', function ($row) {
                 return '
                     <div class="flex items-center gap-2">
                     
-                        <!-- View -->
+                        <!-- Preview -->
                         <a href="'.route('admin.appointment-letters.preview', $row->id).'" 
-                            class="text-blue-600 hover:text-blue-900" target="_blank" title="View">
+                            class="text-blue-600 hover:text-blue-900" target="_blank" title="Preview">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round"

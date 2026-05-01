@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Services\LocationService;
 
-class CommonController extends Controller
+class PincodeLocationController extends Controller
 {
     public function getPincodeLocation(Request $request)
     {

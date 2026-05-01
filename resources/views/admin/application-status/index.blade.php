@@ -15,8 +15,12 @@
                 <div class="flex flex-col lg:flex-row justify-between items-center mb-6">
 
                     <h2
-                        class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                        class="text-xl sm:text-2xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                        @if(empty($type))
                         APPLICATION STATUS
+                        @else
+                        APPLICATION STATUS - {{ $title }}
+                        @endif
                     </h2>
                     <div class="flex flex-wrap gap-3">
 
@@ -32,6 +36,7 @@
                                 class="border rounded-lg px-3 py-2 text-sm">
                         </div>
 
+                        @if(empty($type))
                         <div>
                             <label class="text-sm">Status</label>
                             <select id="status" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
@@ -41,6 +46,7 @@
                                 @endforeach
                             </select>
                         </div>
+                        @endif
 
                         <div class="flex items-end">
                             <button type="button" id="filter"
@@ -79,13 +85,15 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status Date
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
+                                    Date
                                 </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Remark
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Remarked By
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Remarked
+                                    By
                                 </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
@@ -128,7 +136,10 @@ $(function() {
             data: function(d) {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
-                d.status = $('#status').val();
+                if ($('#status').length) {
+                    d.status = $('#status').val();
+                }
+                d.type = "{{ $type ?? '' }}";
             }
         },
 
@@ -137,20 +148,20 @@ $(function() {
                 name: 'id'
             },
             {
-                data: 'customer',
-                name: 'customer'
+                data: 'customer_name',
+                name: 'customer_name'
             },
             {
-                data: 'mobile',
-                name: 'mobile'
+                data: 'customer_mobile',
+                name: 'customer_mobile'
             },
             {
-                data: 'service',
-                name: 'service'
+                data: 'service_name',
+                name: 'service_name'
             },
             {
-                data: 'status',
-                name: 'status'
+                data: 'status_name',
+                name: 'status_name'
             },
             {
                 data: 'status_date',
@@ -158,11 +169,16 @@ $(function() {
             },
             {
                 data: 'remark',
-                name: 'remark'
+                name: 'remark',
+                render: function(data) {
+                    return `<div class="whitespace-normal break-words" style="max-width:450px;">
+                                ${data ?? '-'}
+                            </div>`;
+                }
             },
             {
-                data: 'remarked_by',
-                name: 'remarked_by'
+                data: 'user_remarked_by',
+                name: 'user_remarked_by'
             },
             {
                 data: 'actions',
@@ -171,6 +187,11 @@ $(function() {
                 searchable: false
             }
         ],
+
+        columnDefs: [{
+            targets: 6,
+            className: 'whitespace-normal break-words'
+        }],
 
         dom: 'Blfrtip',
 

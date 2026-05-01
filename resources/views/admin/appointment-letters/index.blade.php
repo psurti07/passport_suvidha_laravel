@@ -15,7 +15,7 @@
                 <div class="flex flex-col lg:flex-row justify-between items-center mb-6">
                     <div class="flex items-center gap-4">
                         <h2
-                            class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                            class="text-xl sm:text-2xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                             APPOINTMENT LETTERS
                         </h2>
                     </div>
@@ -128,8 +128,8 @@ $(function() {
                 name: 'customer_name'
             },
             {
-                data: 'mobile',
-                name: 'customer.mobile_number'
+                data: 'customer_mobile',
+                name: 'customer_mobile'
             },
             {
                 data: 'upload_date',
@@ -140,8 +140,8 @@ $(function() {
                 name: 'appointment_date'
             },
             {
-                data: 'name',
-                name: 'uploader.name'
+                data: 'user_name',
+                name: 'user_name'
             },
             {
                 data: 'actions',

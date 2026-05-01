@@ -11,7 +11,7 @@
 @section('content')
 <div class="mb-6 flex justify-between items-center">
     <div>
-        <h1 class="text-3xl font-bold text-gray-800 mt-2">CUSTOMER DETAILS</h1>
+        <h1 class="text-2xl font-bold text-gray-800 mt-2">CUSTOMER DETAILS</h1>
         <p class="text-xl text-gray-700 font-medium mt-1">{{ strtoupper($customer->first_name ?? 'N/A') }} -
             {{ $customer->mobile_number ?? 'N/A' }}</p>
     </div>
@@ -390,7 +390,7 @@
                                     View
                                 </a>
                                 @if($document->is_verified)
-                                <a href="{{ route('admin.documents.toggleVerify', $document->id) }}"
+                                <a href="{{ route('admin.documents.toggleVerify', ['id' => $document->id,'redirect' => 'show']) }}"
                                     class="text-red-600 hover:text-red-800 text-sm font-medium inline-flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0"
                                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -400,7 +400,7 @@
                                     Click to Unverify
                                 </a>
                                 @else
-                                <a href="{{ route('admin.documents.toggleVerify', $document->id) }}"
+                                <a href="{{ route('admin.documents.toggleVerify', ['id' => $document->id,'redirect' => 'show']) }}"
                                     class="text-green-600 hover:text-green-800 text-sm font-medium inline-flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 flex-shrink-0"
                                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -414,10 +414,11 @@
                                 <form id="delete-document-{{ $document->id }}"
                                     action="{{ route('admin.application-documents.destroy', $document->id) }}"
                                     method="POST" class="inline">
+                                    <input type="hidden" name="redirect" value="show">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button"
-                                        onclick="confirmDelete('{{ $document->documentType->name }} document', this.form)"
+                                        onclick="confirmDelete('{{ $document->documentType->name }} Document', this.form)"
                                         class="text-red-500 hover:text-red-700 text-sm font-medium inline-flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -879,8 +880,8 @@
                                         {{ str_replace('_', ' ', ucfirst($progress->status->status_name ?? 'N/A')) }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4">
-                                    {{ $progress->status_date ? $progress->status_date->format('Y-m-d') : 'N/A' }}
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ $progress->status_date ? $progress->status_date->format('d M Y, h:i A') : 'N/A' }}
                                 </td>
                                 <td class="px-6 py-4">{{ $progress->remark }}</td>
                                 <td class="px-6 py-4">
@@ -911,10 +912,10 @@
                                         <input type="hidden" name="redirect"
                                             value="{{ route('admin.customers.show', $customer->id) }}#application-process">
                                         <button type="button"
-                                            onclick="confirmDelete('{{ str_replace('_', ' ', ucfirst($progress->status->status_name ?? 'N/A')) }} remark', this.form)"
+                                            onclick="confirmDelete('{{ str_replace('_', ' ', ucfirst($progress->status->status_name ?? 'N/A')) }} Remark', this.form)"
                                             class="text-red-600 hover:text-red-900" title="Delete">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                                viewBox="0 0 20 20" fill="currentColor">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                                fill="currentColor">
                                                 <path fill-rule="evenodd"
                                                     d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
                                                     clip-rule="evenodd" />
@@ -942,31 +943,15 @@
             <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 space-y-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-gray-800 mb-0">Account Actions</h2>
-                    @if($customer->is_active == true)
-                    <form action="{{ route('admin.customers.destroy', $customer) }}" method="POST"
-                        class="inline delete-document-type-form">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button" onclick="confirmDelete('{{ $customer->first_name }} customer', this.form)"
-                            class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                            Delete Customer Account
-                        </button>
-                    </form>
-                    @endif
                 </div>
 
                 {{-- Deactivate Account Section --}}
                 <div class="pt-6 border-t border-gray-200">
                     @if($customer->is_active == true)
-                    <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
                         <div class="flex flex-col md:flex-row justify-between md:items-center">
                             <div class="mb-3 md:mb-0">
-                                <h3 class="text-lg font-medium text-red-800 flex items-center">
+                                <h3 class="text-lg font-medium text-yellow-800 flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0"
                                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -974,7 +959,7 @@
                                     </svg>
                                     Deactivate Account
                                 </h3>
-                                <p class="text-sm text-red-700 mt-1 max-w-xl pl-7">
+                                <p class="text-sm text-yellow-700 mt-1 max-w-xl pl-7">
                                     Prevent the user from logging in. This action requires confirmation and should be
                                     used with caution.
                                 </p>
@@ -984,10 +969,10 @@
                                 @csrf
                                 @method('PATCH')
                                 <button type="submit" class="inline-flex items-center text-sm px-4 py-2 w-full md:w-auto 
-                                        bg-red-600
+                                         bg-gradient-to-r from-yellow-500 to-yellow-600
                                                font-medium rounded-lg border border-white text-white
-                                               hover:bg-red-500
-                                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 
+                                                hover:from-yellow-600 hover:to-yellow-700
+                                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 
                                                transition ease-in-out duration-150">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -1000,16 +985,16 @@
                         </div>
                     </div>
                     @else
-                    <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
                         <div class="flex flex-col md:flex-row justify-between md:items-center">
                             <div class="mb-3 md:mb-0">
-                                <h3 class="text-lg font-medium text-red-800 flex items-center">
+                                <h3 class="text-lg font-medium text-yellow-800 flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0"
                                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                     </svg>
-                                    <p class="text-sm text-red-700 max-w-xl">
+                                    <p class="text-sm text-yellow-700 max-w-xl">
                                         <strong>Customer account is not activated.</strong> You can activate user
                                         account from action
                                         panel.
@@ -1034,6 +1019,45 @@
                         </div>
                     </div>
                     @endif
+                </div>
+                {{-- Delete Account Section --}}
+                <div class="border-gray-200">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                        <div class="flex flex-col md:flex-row justify-between md:items-center">
+                            <div class="mb-3 md:mb-0">
+                                <h3 class="text-lg font-medium text-red-800 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    Delete Account
+                                </h3>
+                                <p class="text-sm text-red-700 mt-1 max-w-xl pl-7">
+                                    By clicking this button, you will permanently delete this customer account and all
+                                    associated records. This action cannot be undone and should be used with extreme
+                                    caution.
+                                </p>
+                            </div>
+                            @if($customer->is_active == true)
+                            <form action="{{ route('admin.customers.destroy', $customer) }}" method="POST"
+                                class="inline delete-document-type-form">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button"
+                                    onclick="confirmDelete('{{ $customer->first_name }} Customer', this.form)"
+                                    class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    Delete Customer Account
+                                </button>
+                            </form>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

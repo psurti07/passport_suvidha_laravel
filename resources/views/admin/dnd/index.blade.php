@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'DND Customers')
+@section('title', 'DND')
 
 @section('content')
 
@@ -13,8 +13,8 @@
             <div class="flex flex-col lg:flex-row justify-between items-center mb-6">
                 <div class="flex items-center gap-4">
                     <h2
-                        class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                        DND Customers
+                        class="text-xl sm:text-2xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                        DND LIST
                     </h2>
                     <form method="POST" action="{{ route('admin.dnd.upload') }}" enctype="multipart/form-data">
                         @csrf
@@ -154,12 +154,12 @@ $(function() {
                 name: 'id'
             },
             {
-                data: 'service',
-                name: 'service'
+                data: 'service_name',
+                name: 'service_name'
             },
             {
-                data: 'name',
-                name: 'first_name'
+                data: 'customer_name',
+                name: 'customer_name'
             },
             {
                 data: 'mobile_number',

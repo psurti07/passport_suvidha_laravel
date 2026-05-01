@@ -27,8 +27,8 @@ class RazorpayLog extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
-    }  
- 
+    }   
+
     public function getServiceTextAttribute()
     {
         return match($this->service_type) {
@@ -39,7 +39,6 @@ class RazorpayLog extends Model
             default => $this->service_type ?? 'N/A',
         };
     }
- 
     public function getOfferTextAttribute()
     {
         return match($this->offer_type) {

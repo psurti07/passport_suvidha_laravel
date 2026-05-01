@@ -125,3 +125,4 @@ Route::post('/create-payment', [OfferOrderController::class, 'createPayment']);
 Route::post('/cashfree/webhook', [OfferOrderController::class, 'cashfreeWebhook'])->name('cashfree.webhook');
 Route::post('/zaakpay/callback', [OfferOrderController::class, 'zaakpayCallback'])->name('zaakpay.callback');
 Route::get('/check-payment-status', [OfferOrderController::class, 'checkPaymentStatus']);
+Route::post('/mark-payment-failed', [OfferOrderController::class, 'markPaymentFailed']);

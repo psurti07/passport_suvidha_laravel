@@ -4,27 +4,27 @@ if (!function_exists('generateCardNumber')) {
     function generateCardNumber()
     {
         $number = '';
- 
+
         for ($i = 0; $i < 15; $i++) {
             $number .= random_int(0, 9);
         }
- 
+
         $sum = 0;
         for ($i = 0; $i < 15; $i++) {
             $digit = (int) $number[$i];
- 
+
             if ($i % 2 == 0) {
                 $digit *= 2;
                 if ($digit > 9) {
                     $digit -= 9;
                 }
             }
- 
+
             $sum += $digit;
         }
- 
+
         $checkDigit = (10 - ($sum % 10)) % 10;
- 
+
         return $number . $checkDigit;
     }
 }

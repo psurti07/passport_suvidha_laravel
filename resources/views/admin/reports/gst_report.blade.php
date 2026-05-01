@@ -36,7 +36,7 @@
                 <form id="filterForm" action="{{ route('admin.reports.gst') }}" method="GET">
                     <div class="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
                         <div class="flex items-center gap-4">
-                            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                            <h2 class="text-xl sm:text-2xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                                 GST REPORT
                             </h2>                                                    
                         </div>

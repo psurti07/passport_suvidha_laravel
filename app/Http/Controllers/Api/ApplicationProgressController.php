@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ApplicationProgressController extends Controller
-{     
-   
+{
+
     /**
      * Get a structured view of the customer's application progress for the frontend.
      *

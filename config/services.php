@@ -35,31 +35,33 @@ return [
         'password' => env('SMS_API_PASSWORD'),
         'sender_id' => env('SMS_API_SENDER_ID'),
     ],
- 
-    'razorpay' => [
-        'key' => env('RAZORPAY_KEY'),
-        'secret' => env('RAZORPAY_SECRET'),
+
+    'app' => [
+        'env' => env('APP_ENV'),
+        'url' => env('APP_URL'),
+        'ngrok_url' => env('NGROK_URL'),
     ],
- 
+    
     'testnumbers' => [
         'number' => env('TEST_NUMBERS'),
     ],
 
+    'razorpay' => [
+        'mode' => env('RAZORPAY_MODE'),
+        'key' => env('RAZORPAY_KEY'),
+        'secret' => env('RAZORPAY_SECRET')
+    ],
+
     'cashfree' => [
+        'mode' => env('CASHFREE_MODE'),
         'key' => env('CASHFREE_KEY'),
-        'secret' => env('CASHFREE_SECRET'),
-        'mode' => env('CASHFREE_MODE')
+        'secret' => env('CASHFREE_SECRET')
     ],
-
+ 
     'zaakpay' => [
+        'mode' =>env('ZAAKPAY_MODE'),
         'merchant_identifier' => env('ZAAKPAY_MERCHANT_IDENTIFIER'),
-        'secret_key' => env('ZAAKPAY_SECRET_KEY'),
-        'mode' =>env('ZAAKPAY_MODE')
+        'secret_key' => env('ZAAKPAY_SECRET_KEY')
     ],
 
-    'app' => [
-        'url' => env('APP_URL'),
-        'ngrok_url' => env('NGROK_URL'),
-        'env'=>env('APP_ENV')
-    ],
 ];

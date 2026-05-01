@@ -60,7 +60,7 @@ class FinalDetailController extends Controller
                 ';
             })
 
-            ->addColumn('uploaded_by_name', function ($row) {
+            ->addColumn('user_name', function ($row) {
                 return $row->uploader->name ?? 'System';
             }) 
 
@@ -94,6 +94,12 @@ class FinalDetailController extends Controller
                 $query->whereHas('customer', function($q) use ($keyword) {
                     $q->where('first_name', 'like', "%{$keyword}%")
                     ->orWhere('last_name', 'like', "%{$keyword}%");
+                });
+            })
+
+            ->filterColumn('user_name', function($query, $keyword) {
+                $query->whereHas('uploader', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
                 });
             })
 

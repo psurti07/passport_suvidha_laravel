@@ -43,7 +43,7 @@ class OtpController extends Controller
             ->addIndexColumn()
 
             ->editColumn('sent_at', function ($row) {
-                return $row->sent_at->format('d/m/Y H:i:s');
+                return $row->sent_at->format('d M Y, h:i A');
             })
 
             ->editColumn('is_verified', function ($row) {
