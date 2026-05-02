@@ -794,6 +794,17 @@
                     <span class="nav-link-text">Invoice List</span>
                 </a>
 
+                <a href="{{ route('admin.gst.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.gst.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'GST Data' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-width="2" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <path stroke-width="2" d="M14 2v6h6" />
+                        <path stroke-width="2" d="M8 17v-4M12 17v-6M16 17v-2" />
+                    </svg>
+                    <span class="nav-link-text">GST Data</span>
+                </a>
+
                 <a href="{{ route('admin.dnd.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.dnd.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'DND List' : ''">

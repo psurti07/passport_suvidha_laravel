@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Invoices')
+@section('title', 'GST Data')
 
 @section('content')
 
@@ -16,7 +16,7 @@
 
                     <h2
                         class="text-xl sm:text-2xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                        INVOICES
+                        GST DATA
                     </h2>
                     <div class="flex flex-wrap gap-3">
 
@@ -49,7 +49,7 @@
             <div class="mt-4 overflow-x-auto">
                 <div class="whitespace-nowrap text-sm text-gray-700">
 
-                    <table id="invoice-table" class="min-w-full divide-y divide-gray-200 pt-5">
+                    <table id="gst-table" class="min-w-full divide-y divide-gray-200 pt-5">
 
                         <thead class="bg-blue-50">
 
@@ -63,6 +63,12 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile
                                 </th>
 
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">City
+                                </th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">State
+                                </th>
+
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Invoice No
                                 </th>
 
@@ -70,14 +76,22 @@
                                     Date
                                 </th>
 
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Net
+                                </th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">CGST
+                                </th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">SGST
+                                </th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">IGST
+                                </th>
+
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Total
-                                    Amount
                                 </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment ID
-                                </th>
-
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
                                 </th>
 
                             </tr>
@@ -103,7 +117,7 @@
 <script>
 $(function() {
 
-    let table = $('#invoice-table').DataTable({
+    let table = $('#gst-table').DataTable({
 
         processing: true,
         serverSide: true,
@@ -113,7 +127,7 @@ $(function() {
         ],
 
         ajax: {
-            url: "{{ route('admin.invoices.data') }}",
+            url: "{{ route('admin.gst.data') }}",
             data: function(d) {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
@@ -133,6 +147,14 @@ $(function() {
                 name: 'customer_mobile'
             },
             {
+                data: 'customer_city',
+                name: 'customer_city'
+            },
+            {
+                data: 'customer_state',
+                name: 'customer_state'
+            },
+            {
                 data: 'inv_no',
                 name: 'inv_no'
             },
@@ -141,46 +163,44 @@ $(function() {
                 name: 'inv_date'
             },
             {
+                data: 'net_amount',
+                name: 'net_amount'
+            },
+            {
+                data: 'cgst',
+                name: 'cgst'
+            },
+            {
+                data: 'sgst',
+                name: 'sgst'
+            },
+            {
+                data: 'igst',
+                name: 'igst'
+            },
+            {
                 data: 'total_amount',
                 name: 'total_amount'
             },
             {
                 data: 'application_order_paymentid',
                 name: 'order.payment_id'
-            },
-            {
-                data: 'actions',
-                name: 'actions',
-                orderable: false,
-                searchable: false
             }
         ],
 
         dom: 'Blfrtip',
 
         buttons: [{
-                extend: 'copy',
-                exportOptions: {
-                    columns: ':not(:last-child)'
-                }
+                extend: 'copy'
             },
             {
-                extend: 'excel',
-                exportOptions: {
-                    columns: ':not(:last-child)'
-                }
+                extend: 'excel'
             },
             {
-                extend: 'csv',
-                exportOptions: {
-                    columns: ':not(:last-child)'
-                }
+                extend: 'csv'
             },
             {
-                extend: 'pdf',
-                exportOptions: {
-                    columns: ':not(:last-child)'
-                }
+                extend: 'pdf'
             }
         ],
 

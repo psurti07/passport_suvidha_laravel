@@ -106,6 +106,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
     Route::get('/invoices-data', [InvoiceController::class, 'data'])->name('invoices.data');
     Route::get('invoices/download/{invoice_id}', [InvoiceController::class, 'download'])->name('invoices.download');
+    Route::get('/gst-reports', [InvoiceController::class, 'gstIndex'])->name('gst.index');
+    Route::get('/gst-reports/data', [InvoiceController::class, 'gstData'])->name('gst.data');
 
     // DND Routes
     Route::get('dnd', [DndController::class, 'index'])->name('dnd.index');

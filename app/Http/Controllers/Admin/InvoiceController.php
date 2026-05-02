@@ -54,7 +54,7 @@ class InvoiceController extends Controller
                 return $row->customer->mobile_number;
             })
 
-            ->addColumn('inv_no', function ($row) {
+            ->editColumn('inv_no', function ($row) {
                 return $row->inv_no ?? 'N/A';
             })
 
@@ -76,6 +76,10 @@ class InvoiceController extends Controller
                         ->orWhere('last_name', 'like', "%{$keyword}%")
                         ->orWhere('mobile_number', 'like', "%{$keyword}%");
                 });
+            })
+
+            ->filterColumn('total_amount', function ($query, $keyword) {
+                $query->where('total_amount', 'like', "%{$keyword}%");
             })
 
             ->addColumn('actions', function ($row) {
@@ -191,5 +195,151 @@ class InvoiceController extends Controller
         $fileName = "Invoice_" . ($invoice->inv_no ?? $invoice->id) . ".pdf";
 
         return $pdf->download($fileName);
+    }
+
+    public function gstIndex()
+    {
+        return view('admin.gst.index');
+    }
+
+    public function gstData(Request $request)
+    {
+        $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
+        $to   = $request->to_date ?? now()->format('Y-m-d');
+
+        $query = Invoice::with(['customer', 'order'])->select(
+            'id',
+            'customer_id',
+            'service_id',
+            'order_id',
+            'inv_date',
+            'inv_no',
+            'net_amount',
+            'cgst',
+            'sgst',
+            'igst',
+            'total_amount'
+        )->latest('inv_date');
+
+        if ($request->from_date && $request->to_date) {
+            $query->whereBetween('inv_date', [
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
+            ]);
+        }
+
+        return DataTables::of($query)
+
+            ->addIndexColumn()
+
+            ->addColumn('customer_name', function ($row) {
+                $firstName = $row->customer->first_name ?? '';
+                $lastName  = $row->customer->last_name ?? '';
+                $email     = $row->customer->email ?? '';
+
+                $fullName = trim($firstName . ' ' . $lastName);
+
+                return '
+                    <div>
+                        <div class="font-semibold text-gray-900">' . ($fullName ?: '-') . '</div>
+                        <div class="text-xs text-gray-500">' . $email . '</div>
+                    </div>
+                ';
+            })
+
+            ->addColumn('customer_mobile', function ($row) {
+                return $row->customer->mobile_number;
+            })
+
+            ->addColumn('customer_city', function ($row) {
+                return $row->customer->city;
+            })
+
+            ->addColumn('customer_state', function ($row) {
+                return $row->customer->state;
+            })
+
+            ->editColumn('inv_no', function ($row) {
+                return $row->inv_no ?? 'N/A';
+            })
+
+            ->editColumn('inv_date', function ($row) {
+                return $row->inv_date->format('d M Y');
+            })
+
+            ->addColumn('net_amount', function ($row) {
+                return '₹' . number_format($row->net_amount, 2);
+            })
+
+            ->addColumn('cgst', function ($row) {
+                return '₹' . number_format($row->cgst, 2);
+            })
+
+            ->addColumn('sgst', function ($row) {
+                return '₹' . number_format($row->sgst, 2);
+            })
+
+            ->addColumn('igst', function ($row) {
+                return '₹' . number_format($row->igst, 2);
+            })
+
+            ->addcolumn('total_amount', function ($row) {
+                return '₹' . number_format($row->total_amount, 2);
+            })
+
+            ->addColumn('application_order_paymentid', function ($row) {
+                return $row->order->payment_id ?? 'N/A';
+            })
+
+            ->filterColumn('customer_name', function ($query, $keyword) {
+                $query->whereHas('customer', function ($q) use ($keyword) {
+                    $q->where('first_name', 'like', "%{$keyword}%")
+                        ->orWhere('last_name', 'like', "%{$keyword}%")
+                        ->orWhere('email', 'like', "%{$keyword}%")
+                        ->orWhere('mobile_number', 'like', "%{$keyword}%");
+                });
+            })
+
+            ->filterColumn('customer_mobile', function ($query, $keyword) {
+                $query->whereHas('customer', function ($q) use ($keyword) {
+                    $q->where('mobile_number', 'like', "%{$keyword}%");
+                });
+            })
+
+            ->filterColumn('customer_city', function ($query, $keyword) {
+                $query->whereHas('customer', function ($q) use ($keyword) {
+                    $q->where('city', 'like', "%{$keyword}%");
+                });
+            })
+
+            ->filterColumn('customer_state', function ($query, $keyword) {
+                $query->whereHas('customer', function ($q) use ($keyword) {
+                    $q->where('state', 'like', "%{$keyword}%");
+                });
+            })
+
+            ->filterColumn('net_amount', function ($query, $keyword) {
+                $query->where('net_amount', 'like', "%{$keyword}%");
+            })
+
+            ->filterColumn('cgst', function ($query, $keyword) {
+                $query->where('cgst', 'like', "%{$keyword}%");
+            })
+
+            ->filterColumn('sgst', function ($query, $keyword) {
+                $query->where('sgst', 'like', "%{$keyword}%");
+            })
+
+            ->filterColumn('igst', function ($query, $keyword) {
+                $query->where('igst', 'like', "%{$keyword}%");
+            })
+
+            ->filterColumn('total_amount', function ($query, $keyword) {
+                $query->where('total_amount', 'like', "%{$keyword}%");
+            })
+
+            ->rawColumns(['customer_name'])
+
+            ->make(true);
     }
 }
