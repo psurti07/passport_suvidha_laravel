@@ -314,7 +314,7 @@
                     </div>
                     {{-- Save Button --}}
                     <div class="pt-6 mt-4 border-t border-gray-200 flex justify-end">
-                        <button type="submit" class="btn-primary px-8 py-2.5">SAVE</button>
+                        <button type="submit" onclick="this.disabled=true; this.innerText='Processing...'; this.form.submit();" class="btn-primary px-8 py-2.5">SAVE</button>
                     </div>
                 </form>
             </div>

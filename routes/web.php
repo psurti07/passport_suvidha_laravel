@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\ZaakpayLogController;
 use App\Http\Controllers\Admin\CardOfferController;
 use App\Http\Controllers\Admin\StarOfferController;
+use App\Http\Controllers\Admin\SiteOptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -156,6 +157,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('document-types', DocumentTypeController::class);
     Route::get('/document-types-data', [DocumentTypeController::class, 'data'])->name('document-types.data');
 
+    // Site Options Routes
+    Route::get('/site-options', [SiteOptionController::class, 'index'])->name('site-options');
+    Route::post('/site-options/update', [SiteOptionController::class, 'update'])->name('site-options.update');
+    
     // Users Routes
     Route::resource('users', UserController::class);
     Route::get('/users-data', [UserController::class, 'data'])->name('users.data');
@@ -163,10 +168,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 
 
-
-
-
-
+    
 
 
     // Application Progress Routes
