@@ -772,7 +772,7 @@
                                         class="block text-sm font-medium text-gray-700 mb-1">Appointment Date <span
                                             class="text-red-500">*</span></label>
                                     <input type="date" name="appointment_date" id="appointment_date"
-                                        :required="showAppointmentFields"
+                                        :required="showAppointmentFields" min="{{ date('Y-m-d') }}"
                                         class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
                                             @error('appointment_date') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
                                     @error('appointment_date')
