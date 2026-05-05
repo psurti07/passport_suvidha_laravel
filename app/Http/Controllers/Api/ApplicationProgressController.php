@@ -85,9 +85,13 @@ class ApplicationProgressController extends Controller
             'stages' => $stages,
             'current_stage' => $lastCompletedStage,
 
-            'created_at' => optional($firstEntry?->created_at)->toISOString(),
+            'created_at' => $firstEntry && $firstEntry->created_at 
+                ? $firstEntry->created_at->toISOString() 
+                : null,
 
-            'updated_at' => optional($finalStage?->updated_at)->toISOString(),
+            'updated_at' => $finalStage && $finalStage->updated_at 
+                ? $finalStage->updated_at->toISOString() 
+                : null,
         ]);
     }
 
@@ -245,5 +249,109 @@ class ApplicationProgressController extends Controller
             'status' => true,
             'data'   => $data
         ]);
+    }
+
+    // show all status
+    // public function getStatusByMobile(Request $request){
+    //     Log::info('Received request to get application status by mobile', ['mobile' => $request->toArray()]); 
+    //     $mobile = $request['mobile'];    
+    //     $customer = Customer::where('mobile_number', $mobile)->first();
+    
+    //     if (!$customer) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Customer not found'
+    //         ], 404);
+    //     }
+    
+    //     $name = "$customer->first_name $customer->last_name";
+
+    //     $progressEntries = ApplicationProgress::with('status')
+    //         ->where('customer_id', $customer->id)
+    //         ->orderBy('status_date', 'asc')
+    //         ->get();
+    
+    //     $stages = [];
+    //     foreach ($progressEntries as $entry) {
+    //         $stages[] = [
+    //             'title' => $entry->status->slug ?? null,
+    //             'description' => $entry->remark ?? null,
+    //             'date' => optional($entry->status_date)->toISOString(),
+    //             'formatted_date' => optional($entry->status_date)->format('F d, Y'),
+    //             'completed' => true,
+    //         ];
+    //     }
+    
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'data' => [
+    //             'customer_name' => $name,
+    //             'mobile' => $customer->mobile_number,
+    //             'stages' => $stages
+    //         ]
+    //     ], 200);
+    // }
+
+    public function getStatusByMobile(Request $request)
+    {
+        $mobile = $request['mobile'];    
+        $customer = Customer::where('mobile_number', $mobile)->first();
+
+        if (!$customer) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Customer not found'
+            ], 404);
+        }
+
+        $name = $customer->first_name . ' ' . $customer->last_name;
+
+        $statuses = DB::table('application_statuses')
+            ->orderBy('step') // important!
+            ->get();
+
+        $progress = DB::table('application_progress')
+            ->where('customer_id', $customer->id)
+            ->get();
+
+        $currentStage = null;
+
+        foreach ($statuses as $status) {
+            $stageData = $progress->firstWhere('status_id', $status->id);
+
+            if (!$stageData) {
+                $currentStage = [
+                    'title' => $status->slug,
+                    'description' => null,
+                    'date' => null,
+                    'formatted_date' => null,
+                    'completed' => false,
+                ];
+                break;
+            }
+        }
+
+        if (!$currentStage && $progress->count() > 0) {
+            $last = $progress->sortByDesc('status_date')->first();
+
+            $status = $statuses->firstWhere('id', $last->status_id);
+
+            $currentStage = [
+                'title' => $status->slug ?? null,
+                'description' => $last->remark ?? null,
+                'date' => optional($last->status_date)->toISOString(),
+                'formatted_date' => optional($last->status_date)->format('F d, Y'),
+                'completed' => true,
+            ];
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'customer_name' => $name,
+                'mobile' => $customer->mobile_number,
+                'current_stage' => $currentStage
+            ]
+        ], 200);
     }
 } 

@@ -186,12 +186,9 @@ class CustomerController extends Controller
                     'errors' => ['mobile_number' => ['Customer already registered with this mobile number.']]
                 ], 422);
             }
-            
-            // If customer exists but not paid, update their info
+
             $data = $validator->validated();
-            // $data['registration_step'] = 1; // Reset to step 1
-            
-            // If email is changing, validate it's unique
+
             if ($existingCustomer->email !== $request->email) {
                 $emailValidator = Validator::make(['email' => $request->email], [
                     'email' => 'required|email|unique:customers,email'
@@ -213,10 +210,8 @@ class CustomerController extends Controller
             ], 200);
         }
         
-        // Create new customer
         $data = $validator->validated();
         
-        // Validate unique email for new customer
         $emailValidator = Validator::make(['email' => $request->email], [
             'email' => 'unique:customers,email'
         ]);
@@ -225,7 +220,7 @@ class CustomerController extends Controller
             return response()->json(['errors' => $emailValidator->errors()], 422);
         }
         
-        $data['registration_step'] = 1; // Step 1: Basic information
+        $data['registration_step'] = 1;
         
         $customer = Customer::create($data);
 
@@ -392,7 +387,7 @@ class CustomerController extends Controller
         }
         
         // Check if the customer has completed registration
-        if ($customer->registration_step < 4) {
+        if ($customer->registration_step < 4 || $customer->is_paid == 0) {
             return response()->json([
                 'errors' => ['registration' => ['Please complete your registration process first.']]
             ], 422);

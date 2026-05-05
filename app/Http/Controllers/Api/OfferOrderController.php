@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\ApplicationOrder;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\OfferOrder;
@@ -84,6 +86,7 @@ class OfferOrderController extends Controller
             'email'       => $request->email,
             'offer_type'  => $offer_type, 
             'amount'      => $finalAmount,
+            'service_code' => $request->service_code,
         ]);
 
         return $this->processPayment($gateway, $order, $request);
@@ -229,6 +232,8 @@ class OfferOrderController extends Controller
                     ]);
                 }
 
+                // $this->handleSuccessfulPayment($order);
+                
                 $log->update([
                     'payment_id' => $cfPaymentId,
                     'tx_status' => 'success',
@@ -388,6 +393,7 @@ class OfferOrderController extends Controller
         }
 
         $order = OfferOrder::find($log->order_id);
+        
 
         if (($response['responseCode'] ?? '') == '100') {
 
@@ -395,6 +401,8 @@ class OfferOrderController extends Controller
                 'card_number' => generateCardNumber(),
                 'payment_id' => $response['pgTransId'] ?? null
             ]);
+
+            // $this->handleSuccessfulPayment($order);
 
             $log->update([
                 'payment_id' => $response['pgTransId'] ?? null,
@@ -406,6 +414,7 @@ class OfferOrderController extends Controller
                 "message" => "Payment successful"
             ]);
         }
+
 
         $log->update(['tx_status' => 'failed']);
 
@@ -514,5 +523,72 @@ class OfferOrderController extends Controller
 
         return response()->json(['status' => 'pending']);
     }
+
+    // private function handleSuccessfulPayment($order)
+    // {
+    //     if (!$order) {
+    //     Log::info("Order not found");
+    //     return;
+    // }
+
+    // if (!$order->card_number) {
+    //     Log::info("Card number missing");
+    //     return;
+    // }
+    //     if (!$order) return;
+
+    //     $alreadyProcessed = ApplicationOrder::where('card_id', $order->card_number)->exists();
+
+    //     if ($alreadyProcessed) {
+    //         return;
+    //     }
+
+    //     $customer = Customer::where('mobile_number', $order->mobile)->first();
+
+    //     if (!$customer) return;
+
+    //     if ($customer->is_paid) return;
+
+        
+    //     $service = Service::where('service_code', $order->service_code)->first();
+        
+    //     $customer->update([
+    //         'is_paid' => 1,
+    //         'registration_step' => 4,  
+    //         'service_id' => $service->id ?? null,
+    //         'nationality' => 'India',
+    //     ]);
+    //     // =========================
+    //     // APPLICATION ORDER (MODEL)
+    //     // =========================
+    //     ApplicationOrder::create([
+    //         'customer_id' => $customer->id,
+    //         'amount'      => $order->amount,
+    //         'payment_id'  => $order->payment_id,
+    //         'card_number'     => $order->card_number,
+    //     ]);
+
+    //     // =========================
+    //     // INVOICE (MODEL)
+    //     // =========================
+    //     $invNo = 'INV-' . time();
+
+    //     $amount = $order->amount;
+    //     $cgst = $amount * 0.09;
+    //     $sgst = $amount * 0.09;
+
+    //     Invoice::create([
+    //         'customer_id' => $customer->id,
+    //         'service_id' => $customer->service_id,
+    //         'order_id' => $order->card_number,
+    //         'inv_date'    => now(),
+    //         'inv_no'      => $invNo,
+    //         'net_amount'  => $amount,
+    //         'cgst'        => $cgst,
+    //         'sgst'        => $sgst,
+    //         'igst'        => 0,
+    //         'total_amount'=> $amount + $cgst + $sgst,
+    //     ]);
+    // }
 
 }

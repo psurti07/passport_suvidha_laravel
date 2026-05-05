@@ -184,7 +184,7 @@ class PaymentController extends Controller
 
             $cgst = $sgst = $igst = 0;
 
-            if (strtoupper($customer->state) == 'Gujarat') {
+            if (strtoupper($customer->state) == 'GUJARAT') {
                 $cgst = round($serviceCharges * 0.09, 2);
                 $sgst = round($serviceCharges * 0.09, 2);
                 $total = $netAmount + $cgst + $sgst;
@@ -195,7 +195,7 @@ class PaymentController extends Controller
 
             $invoice = Invoice::create([
                 'customer_id' => $log->customer_id,
-                'card_id' => $order->id,
+                'order_id' => $order->id,
                 'inv_date' => now(),
                 'net_amount' => $netAmount,
                 'cgst' => $cgst,
@@ -295,7 +295,7 @@ class PaymentController extends Controller
             $log->update([
                 'tx_status' => 'failed',
                 'payment_id' => $request->razorpay_payment_id ?? null,
-                'payment_mode' => $paymentMode // ✅ FIX
+                'payment_mode' => $paymentMode 
             ]);
         }
 
