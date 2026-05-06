@@ -35,3 +35,10 @@ if (!function_exists('generatePaymentId')) {
         return 'cash_' . \Illuminate\Support\Str::upper(\Illuminate\Support\Str::random(10));
     }
 }
+
+if (!function_exists('getOption')) {
+    function getOption($key)
+    {
+        return \App\Models\SiteOption::where('option_key', $key)->value('option_value');
+    }
+}

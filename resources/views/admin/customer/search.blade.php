@@ -21,7 +21,9 @@
             </div>
 
             <div class="flex items-center justify-start pt-2">
-                <button type="submit" class="btn-primary px-6 py-2.5">
+                <button type="submit"
+                    onclick="this.disabled=true; this.innerText='Searching...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                    class="btn-primary px-6 py-2.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -276,7 +278,9 @@
 
                         {{-- Form Buttons --}}
                         <div class="pt-5 mt-4 border-t border-gray-200 flex justify-end gap-3">
-                            <button type="submit" class="btn-primary px-8 py-2">Create An Account</button>
+                            <button type="submit"
+                                onclick="this.disabled=true; this.innerText='Creating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                                class="btn-primary px-8 py-2">Create An Account</button>
                         </div>
                     </form>
                 </div>

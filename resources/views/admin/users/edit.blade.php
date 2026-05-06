@@ -156,6 +156,7 @@
                             Back to List
                         </a>
                         <button type="submit"
+                            onclick="this.disabled=true; this.innerText='Updating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
                             class="inline-flex items-center px-6 py-2 border border-transparent rounded-xl shadow-sm text-sm font-medium text-gray-900 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

@@ -362,10 +362,10 @@
                                         @error('service_id') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
                                         <option value="" disabled selected>Select service name</option>
                                         @foreach($services as $service)
-                                            <option value="{{ $service->id }}"
-                                                {{ old('service_id') == $service->id ? 'selected' : '' }}>
-                                                {{ $service->service_name }} 
-                                            </option>
+                                        <option value="{{ $service->id }}"
+                                            {{ old('service_id') == $service->id ? 'selected' : '' }}>
+                                            {{ $service->service_name }}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -447,6 +447,7 @@
                             Back to List
                         </a>
                         <button type="submit"
+                            onclick="this.disabled=true; this.innerText='Creating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
                             class="inline-flex items-center px-6 py-2 border border-transparent rounded-xl shadow-sm text-sm font-medium text-gray-900 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

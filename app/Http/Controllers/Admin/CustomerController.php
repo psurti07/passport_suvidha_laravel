@@ -14,11 +14,12 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Carbon; 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+
 class CustomerController extends Controller
 {
     /**
@@ -55,10 +56,10 @@ class CustomerController extends Controller
             ]);
         }
 
-        if($request->service) {
+        if ($request->service) {
             $query->where('service_id', $request->service);
         }
-        
+
         return DataTables::of($query)
 
             ->addIndexColumn()
@@ -69,7 +70,7 @@ class CustomerController extends Controller
                 }
                 $isTatkal = str_starts_with($row->service->service_code, 'TP');
                 return '<span>
-                    '.($isTatkal ? '🟢 ' : '⚪').$row->service->service_name.'
+                    ' . ($isTatkal ? '🟢 ' : '⚪') . $row->service->service_name . '
                 </span>';
             })
 
@@ -80,7 +81,7 @@ class CustomerController extends Controller
             ->editColumn('is_paid', function ($row) {
                 if ($row->is_paid == '1') {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Paid</span>';
-                } 
+                }
             })
 
             ->editColumn('created_at', function ($row) {
@@ -89,7 +90,7 @@ class CustomerController extends Controller
 
             ->addColumn('actions', function ($row) {
                 return '
-                    <a href="'.route('admin.customers.show', $row->id).'" 
+                    <a href="' . route('admin.customers.show', $row->id) . '" 
                     class="text-blue-600 hover:text-blue-900" 
                     title="View">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
@@ -133,7 +134,7 @@ class CustomerController extends Controller
             'created_at'
         ])->whereDate('created_at', now())->where('is_paid', 1);
 
-        if($request->service) {
+        if ($request->service) {
             $query->where('service_id', $request->service);
         }
 
@@ -147,7 +148,7 @@ class CustomerController extends Controller
                 }
                 $isTatkal = str_starts_with($row->service->service_code, 'TP');
                 return '<span>
-                            '.($isTatkal ? '🟢 ' : '⚪').$row->service->service_name.'
+                            ' . ($isTatkal ? '🟢 ' : '⚪') . $row->service->service_name . '
                         </span>';
             })
 
@@ -158,7 +159,7 @@ class CustomerController extends Controller
             ->editColumn('is_paid', function ($row) {
                 if ($row->is_paid == '1') {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Paid</span>';
-                } 
+                }
             })
 
             ->editColumn('created_at', function ($row) {
@@ -167,7 +168,7 @@ class CustomerController extends Controller
 
             ->addColumn('actions', function ($row) {
                 return '
-                    <a href="'.route('admin.customers.show', $row->id).'" 
+                    <a href="' . route('admin.customers.show', $row->id) . '" 
                     class="text-blue-600 hover:text-blue-900" 
                     title="View Customer">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
@@ -211,7 +212,7 @@ class CustomerController extends Controller
         $baseRules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'mobile_number' => ['required','regex:/^[6-9][0-9]{9}$/','unique:customers,mobile_number'],
+            'mobile_number' => ['required', 'regex:/^[6-9][0-9]{9}$/', 'unique:customers,mobile_number'],
             'email' => 'required|email|unique:customers,email',
             'is_paid' => 'sometimes|boolean',
         ];
@@ -254,10 +255,12 @@ class CustomerController extends Controller
     {
         if (!$customer->is_paid) {
             return redirect()->back()
-                             ->with('error', 'Cannot view details for a Lead customer.');
+                ->with('error', 'Cannot view details for a Lead customer.');
         }
 
         $customer->load('applicationDocuments.documentType');
+
+        $invoice = $customer->invoices()->latest()->first();
 
         $statuses = ApplicationStatus::orderBy('priority_no')->get();
 
@@ -265,10 +268,10 @@ class CustomerController extends Controller
             'id',
             'message_name',
             'message_remarks',
-            'status_id' 
+            'status_id'
         )->get();
-        
-        return view('admin.customers.show', compact('customer', 'statuses', 'predefinedMessages'));
+
+        return view('admin.customers.show', compact('customer', 'statuses', 'predefinedMessages', 'invoice'));
     }
 
     /**
@@ -320,7 +323,7 @@ class CustomerController extends Controller
 
         $customer->update($validatedData);
 
-        return redirect()->back()->with('success', 'Customer updated successfully');       
+        return redirect()->back()->with('success', 'Customer updated successfully');
     }
 
     /**
@@ -337,7 +340,7 @@ class CustomerController extends Controller
 
     /**
      * Handle both creating new customer and converting lead to customer
-    */
+     */
     public function convertToCustomer(Request $request, Customer $customer)
     {
         if ($customer->is_paid) {
@@ -366,7 +369,7 @@ class CustomerController extends Controller
                 ->withInput()
                 ->with([
                     'mobileNo' => $customer->mobile_number,
-                    'customer_id' => $customer->id 
+                    'customer_id' => $customer->id
                 ]);
         }
 

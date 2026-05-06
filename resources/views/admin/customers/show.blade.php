@@ -109,6 +109,14 @@
                         Registration on: <strong
                             class="text-gray-800 font-semibold">{{ $customer->created_at ? $customer->created_at->format('d M Y, H:i A') : 'N/A' }}</strong>
                     </p>
+                    @if($invoice)
+                    <a href="{{ route('admin.invoices.download', $invoice->id) }}"
+                        class="inline-flex items-center text-sm px-4 py-2 w-full md:w-auto bg-gradient-to-r from-green-500 to-green-600 font-medium rounded-lg border border-white text-white hover:from-green-600 hover:to-green-700">
+                        Download Invoice
+                    </a>
+                    @else
+                    <span class="text-gray-400 text-sm">No Invoice Found</span>
+                    @endif
                 </div>
 
                 {{-- Form Fields --}}
@@ -306,7 +314,9 @@
                     </div>
                     {{-- Save Button --}}
                     <div class="pt-6 mt-4 border-t border-gray-200 flex justify-end">
-                        <button type="submit" class="btn-primary px-8 py-2.5">SAVE</button>
+                        <button type="submit"
+                            onclick="this.disabled=true; this.innerText='Updating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                            class="btn-primary px-8 py-2.5">SAVE</button>
                     </div>
                 </form>
             </div>
@@ -330,6 +340,7 @@
 
                         @if($allVerified)
                         <button
+                            onclick="this.disabled=true; this.innerText='Unverifying...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
                             class="bg-red-100 text-red-700 px-4 py-2 rounded-md text-sm font-medium inline-flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -340,6 +351,7 @@
                         </button>
                         @else
                         <button
+                            onclick="this.disabled=true; this.innerText='Verifying...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
                             class="bg-green-100 text-green-700 px-4 py-2 rounded-md text-sm font-medium inline-flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 flex-shrink-0" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -549,7 +561,9 @@
                         </div>
 
                         <div class="flex justify-end">
-                            <button type="submit" class="btn-primary inline-flex items-center px-5 py-2">
+                            <button type="submit"
+                                onclick="this.disabled=true; this.innerText='Uploading...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                                class="btn-primary inline-flex items-center px-5 py-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -764,7 +778,7 @@
                                         class="block text-sm font-medium text-gray-700 mb-1">Appointment Date <span
                                             class="text-red-500">*</span></label>
                                     <input type="date" name="appointment_date" id="appointment_date"
-                                        :required="showAppointmentFields"
+                                        :required="showAppointmentFields" min="{{ date('Y-m-d') }}"
                                         class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
                                             @error('appointment_date') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
                                     @error('appointment_date')
@@ -968,7 +982,9 @@
                                 class="flex-shrink-0 mt-3 md:mt-0 md:ml-4">
                                 @csrf
                                 @method('PATCH')
-                                <button type="submit" class="inline-flex items-center text-sm px-4 py-2 w-full md:w-auto 
+                                <button type="submit"
+                                    onclick="this.disabled=true; this.innerText='Deactivating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                                    class="inline-flex items-center text-sm px-4 py-2 w-full md:w-auto 
                                          bg-gradient-to-r from-yellow-500 to-yellow-600
                                                font-medium rounded-lg border border-white text-white
                                                 hover:from-yellow-600 hover:to-yellow-700
@@ -1006,6 +1022,7 @@
                                 @csrf
                                 @method('PATCH')
                                 <button type="submit"
+                                    onclick="this.disabled=true; this.innerText='Activating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
                                     class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg text-sm font-medium hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">

@@ -163,6 +163,7 @@
 
                 <div class="flex justify-end pt-6 border-t border-gray-200 mt-6">
                     <button type="submit"
+                        onclick="this.disabled=true; this.innerText='Updating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
                         class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg text-sm font-medium shadow-sm hover:from-blue-700 hover:to-blue-900 transition-all duration-200 transform hover:-translate-y-0.5">
                         Update Appointment Letter
                     </button>

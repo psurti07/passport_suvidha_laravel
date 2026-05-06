@@ -6,117 +6,117 @@
     <title>Invoice - Passport Suvidha Service</title>
 
     <style>
-        body {
-            font-family: DejaVu Sans, Arial, sans-serif;
-            font-size: 12px;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+    body {
+        font-family: DejaVu Sans, Arial, sans-serif;
+        font-size: 12px;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
 
-        .container {
-            width: 95%;
-            padding: 2.5%;
-        }
+    .container {
+        width: 95%;
+        padding: 2.5%;
+    }
 
-        /* HEADER TABLE (DomPDF Safe) */
-        .header-table {
-            width: 100%;
-            margin-bottom: 15px;
-        }
+    /* HEADER TABLE (DomPDF Safe) */
+    .header-table {
+        width: 100%;
+        margin-bottom: 15px;
+    }
 
-        .company-info {
-            width: 65%;
-            vertical-align: top;
-        }
+    .company-info {
+        width: 65%;
+        vertical-align: top;
+    }
 
-        .invoice-info {
-            width: 35%;
-            text-align: right;
-            vertical-align: top;
-        }
+    .invoice-info {
+        width: 35%;
+        text-align: right;
+        vertical-align: top;
+    }
 
-        .company-info h2 {
-            margin: 0 0 5px 0;
-            font-size: 18px;
-        }
+    .company-info h2 {
+        margin: 0 0 5px 0;
+        font-size: 18px;
+    }
 
-        .company-info p {
-            margin: 2px 0;
-        }
+    .company-info p {
+        margin: 2px 0;
+    }
 
-        /* BILL TO */
-        .bill-to {
-            margin-top: 10px;
-        }
+    /* BILL TO */
+    .bill-to {
+        margin-top: 10px;
+    }
 
-        .bill-to strong {
-            display: block;
-            margin-bottom: 3px;
-        }
+    .bill-to strong {
+        display: block;
+        margin-bottom: 3px;
+    }
 
-        /* INVOICE TITLE */
-        .invoice-title {
-            font-size: 22px;
-            margin: 0 0 10px 0;
-        }
+    /* INVOICE TITLE */
+    .invoice-title {
+        font-size: 22px;
+        margin: 0 0 10px 0;
+    }
 
-        /* TABLE */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
+    /* TABLE */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
 
-        th {
-            background: #333;
-            color: #fff;
-            padding: 10px;
-        }
+    th {
+        background: #333;
+        color: #fff;
+        padding: 10px;
+    }
 
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
+    td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
 
-        /* TOTAL */
-        .total-section {
-            width: 100%;
-            margin-top: 10px;
-        }
+    /* TOTAL */
+    .total-section {
+        width: 100%;
+        margin-top: 10px;
+    }
 
-        .total-table {
-            width: 300px;
-            margin-left: auto;
-        }
+    .total-table {
+        width: 300px;
+        margin-left: auto;
+    }
 
-        .total-table td {
-            border: none;
-            padding: 5px 0;
-        }
+    .total-table td {
+        border: none;
+        padding: 5px 0;
+    }
 
-        .total-table .grand {
-            border-top: 1px solid #ddd;
-            font-weight: bold;
-            font-size: 14px;
-        }
+    .total-table .grand {
+        border-top: 1px solid #ddd;
+        font-weight: bold;
+        font-size: 14px;
+    }
 
-        /* PAYMENT */
-        .payment-info {
-            margin-top: 15px;
-        }
+    /* PAYMENT */
+    .payment-info {
+        margin-top: 15px;
+    }
 
-        .payment-info p {
-            margin: 3px 0;
-        }
+    .payment-info p {
+        margin: 3px 0;
+    }
 
-        /* FOOTER */
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 11px;
-            color: #666;
-        }
+    /* FOOTER */
+    .footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 11px;
+        color: #666;
+    }
     </style>
 </head>
 
@@ -166,17 +166,17 @@
             </thead>
             <tbody>
                 @if ($service)
-                    <tr>
-                        <td>{{ $service->service_name ?? 'Service' }}</td>
-                        <td align="right">1</td>
-                        <td align="right">{{ number_format($payment_amount, 2) }}</td>
-                    </tr>
+                <tr>
+                    <td>{{ $service->service_name ?? 'Service' }}</td>
+                    <td align="right">1</td>
+                    <td align="right">{{ number_format($payment_amount, 2) }}</td>
+                </tr>
                 @else
-                    <tr>
-                        <td>No Service Found</td>
-                        <td>-</td>
-                        <td>0.00</td>
-                    </tr>
+                <tr>
+                    <td>No Service Found</td>
+                    <td>-</td>
+                    <td>0.00</td>
+                </tr>
                 @endif
             </tbody>
         </table>
@@ -196,19 +196,19 @@
                 </tr>
 
                 @if ($is_gujarat)
-                    <tr>
-                        <td>CGST ({{ $gst_rate / 2 }}%):</td>
-                        <td align="right">₹{{ number_format($cgst, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td>SGST ({{ $gst_rate / 2 }}%):</td>
-                        <td align="right">₹{{ number_format($sgst, 2) }}</td>
-                    </tr>
+                <tr>
+                    <td>CGST ({{ $gst_rate / 2 }}%):</td>
+                    <td align="right">₹{{ number_format($cgst, 2) }}</td>
+                </tr>
+                <tr>
+                    <td>SGST ({{ $gst_rate / 2 }}%):</td>
+                    <td align="right">₹{{ number_format($sgst, 2) }}</td>
+                </tr>
                 @else
-                    <tr>
-                        <td>IGST ({{ $gst_rate }}%):</td>
-                        <td align="right">₹{{ number_format($igst, 2) }}</td>
-                    </tr>
+                <tr>
+                    <td>IGST ({{ $gst_rate }}%):</td>
+                    <td align="right">₹{{ number_format($igst, 2) }}</td>
+                </tr>
                 @endif
                 <tr>
                     <td></td>
