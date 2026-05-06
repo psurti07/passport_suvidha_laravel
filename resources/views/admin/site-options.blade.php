@@ -42,7 +42,8 @@
                                 class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm">
 
                             <button type="submit"
-                                onclick="this.disabled=true; this.innerText='Updating...'; this.form.submit();" class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
+                                onclick="this.disabled=true; this.innerText='Updating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                                class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
                                 rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 
                                 transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap">
                                 Update
@@ -84,7 +85,8 @@
                                 class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm">
 
                             <button type="submit"
-                                onclick="this.disabled=true; this.innerText='Updating...'; this.form.submit();" class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
+                                onclick="this.disabled=true; this.innerText='Updating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                                class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
                                 rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 
                                 transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap">
                                 Update
@@ -125,7 +127,8 @@
                                 class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm">
 
                             <button type="submit"
-                                onclick="this.disabled=true; this.innerText='Updating...'; this.form.submit();" class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
+                                onclick="this.disabled=true; this.innerText='Updating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                                class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
                                 rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 
                                 transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap">
                                 Update
@@ -154,7 +157,8 @@
                         class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm">{{ getOption($key) }}</textarea>
 
                     <button type="submit"
-                        onclick="this.disabled=true; this.innerText='Updating...'; this.form.submit();" class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
+                        onclick="this.disabled=true; this.innerText='Updating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                        class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
                                 rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 
                                 transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap">
                         Update
@@ -180,7 +184,8 @@
                         class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm">{{ getOption($key) }}</textarea>
 
                     <button type="submit"
-                        onclick="this.disabled=true; this.innerText='Updating...'; this.form.submit();" class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
+                        onclick="this.disabled=true; this.innerText='Updating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                        class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
                                 rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 
                                 transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap">
                         Update
@@ -243,7 +248,7 @@
 
                             {{-- Button --}}
                             <button type="submit"
-                                onclick="this.disabled=true; this.innerText='Updating...'; this.form.submit();" class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
+                                onclick="this.disabled=true; this.innerText='Updating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();" class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
                                 rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 
                                 transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap">
                                 Update

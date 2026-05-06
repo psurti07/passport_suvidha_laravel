@@ -175,6 +175,7 @@
                     @csrf
                     @method('PATCH')
                     <button type="submit"
+                        onclick="this.disabled=true; this.innerText='Approving...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
                         class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg text-sm font-medium hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
@@ -189,6 +190,7 @@
                     @csrf
                     @method('PATCH')
                     <button type="submit"
+                        onclick="this.disabled=true; this.innerText='Unapproving...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
                         class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg text-sm font-medium hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 shadow-md hover:shadow-lg">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">

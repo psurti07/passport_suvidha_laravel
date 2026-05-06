@@ -215,13 +215,13 @@ class ApplicationProgressController extends Controller
         $data = $data->map(function ($item) {
 
             $filePath = null;
-            Log::info('Processing application progress item', [
-                'id' => $item->id,
-                'file_type' => $item->file_type,
-                'file' => $item->file,
-                'finalDetail' => $item->finalDetail ? $item->finalDetail->toArray() : null,
-                'appointmentLetter' => $item->appointmentLetter ? $item->appointmentLetter->toArray() : null,
-            ]);
+            // Log::info('Processing application progress item', [
+            //     'id' => $item->id,
+            //     'file_type' => $item->file_type,
+            //     'file' => $item->file,
+            //     'finalDetail' => $item->finalDetail ? $item->finalDetail->toArray() : null,
+            //     'appointmentLetter' => $item->appointmentLetter ? $item->appointmentLetter->toArray() : null,
+            // ]);
             if ($item->file_type === 'final_details' && $item->finalDetail) {
                 $filePath = $item->finalDetail->file_path;
             } elseif ($item->file_type === 'appointment_letters' && $item->appointmentLetter) {

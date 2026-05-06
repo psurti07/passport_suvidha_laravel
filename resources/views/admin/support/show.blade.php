@@ -116,6 +116,7 @@
                             <option value="closed" {{ $ticket->status == 'closed' ? 'selected' : '' }}>Closed</option>
                         </select>
                         <button type="submit"
+                            onclick="this.disabled=true; this.innerText='Updating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
                             class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors duration-150 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 whitespace-nowrap">
                             Update
                         </button>
@@ -286,6 +287,7 @@
                     </div>
                     <div class="mt-3 flex justify-end">
                         <button type="submit"
+                            onclick="this.disabled=true; this.innerText='Adding...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
                             class="inline-flex items-center px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
                             Add Remark
                         </button>
