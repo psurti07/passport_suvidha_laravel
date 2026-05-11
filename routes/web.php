@@ -83,7 +83,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Final Details Routes
     Route::patch('final-details/{finalDetail}/approve', [FinalDetailController::class, 'approve'])->name('final-details.approve');
     Route::patch('final-details/{finalDetail}/unapprove', [FinalDetailController::class, 'unapprove'])->name('final-details.unapprove');
-    Route::resource('final-details', FinalDetailController::class)->except(['create', 'store', 'destroy']);
+    // Route::resource('final-details', FinalDetailController::class)->except(['create', 'store', 'destroy']);
+    Route::resource('final-details', FinalDetailController::class);
     Route::get('/final-details-data', [FinalDetailController::class, 'data'])->name('final-details.data');
 
     // Appointment Letter Routes
@@ -109,6 +110,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('invoices/download/{invoice_id}', [InvoiceController::class, 'download'])->name('invoices.download');
     Route::get('/gst-reports', [InvoiceController::class, 'gstIndex'])->name('gst.index');
     Route::get('/gst-reports/data', [InvoiceController::class, 'gstData'])->name('gst.data');
+    Route::delete('/invoices/{invoice}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
 
     // DND Routes
     Route::get('dnd', [DndController::class, 'index'])->name('dnd.index');
@@ -148,6 +150,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/support/tickets/{ticket}', [SupportController::class, 'show'])->name('support.tickets.show');
     Route::post('/support/tickets/{ticket}/remarks', [SupportController::class, 'storeRemark'])->name('support.tickets.remarks.store');
     Route::patch('/support/tickets/{ticket}/status', [SupportController::class, 'updateStatus'])->name('support.tickets.status.update');
+    Route::delete('/support/tickets/{ticket}', [SupportController::class, 'destroy'])->name('support.tickets.destroy');
 
     // Predefined Messages Routes
     Route::resource('predefined-messages', PreDefinedMessageController::class);
@@ -160,7 +163,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Site Options Routes
     Route::get('/site-options', [SiteOptionController::class, 'index'])->name('site-options');
     Route::post('/site-options/update', [SiteOptionController::class, 'update'])->name('site-options.update');
-    
+
     // Users Routes
     Route::resource('users', UserController::class);
     Route::get('/users-data', [UserController::class, 'data'])->name('users.data');
@@ -168,7 +171,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 
 
-    
+
 
 
     // Application Progress Routes

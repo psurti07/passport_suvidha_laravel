@@ -37,11 +37,11 @@ class SupportController extends Controller
             'status',
             'created_at',
         ])
-        ->whereNotNull('customer_id') // Only tickets from registered customers
-        ->whereBetween('created_at', [
-            $from . ' 00:00:00',
-            $to . ' 23:59:59'
-        ]);
+            ->whereNotNull('customer_id') // Only tickets from registered customers
+            ->whereBetween('created_at', [
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
+            ]);
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -54,7 +54,7 @@ class SupportController extends Controller
             ->editColumn('subject', function ($row) {
                 return Str::limit($row->subject, 50);
             })
-            
+
             ->editColumn('status', function ($row) {
                 if ($row->status == 'open') {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Open</span>';
@@ -74,7 +74,7 @@ class SupportController extends Controller
                     <div class="flex items-center gap-2">
                     
                         <!-- View -->
-                        <a href="'.route('admin.support.tickets.show', $row->ticket_number).'" 
+                        <a href="' . route('admin.support.tickets.show', $row->ticket_number) . '" 
                             class="text-blue-600 hover:text-blue-900" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
@@ -84,6 +84,23 @@ class SupportController extends Controller
                                     clip-rule="evenodd" />
                             </svg>
                         </a>
+
+                        <!-- Delete -->
+                        <form action="' . route('admin.support.tickets.destroy', $row->ticket_number) . '" method="POST" class="inline">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
+                            <button type="button" 
+                                onclick="confirmDelete(\'' . $row->name . ' Ticket\', this.form)"
+                                class="text-red-600 hover:text-red-900" 
+                                title="Delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                    viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </form>
 
                     </div>
                 ';
@@ -103,7 +120,7 @@ class SupportController extends Controller
     // {
     //     // Fetch tickets created by guests (customer_id is null)
     //     $tickets = Ticket::whereNull('customer_id')->latest()->paginate(15); // Paginate results
-        
+
     //     return view('admin.support.guest_support', compact('tickets'));
     // }
     public function guestSupport()
@@ -126,11 +143,11 @@ class SupportController extends Controller
             'status',
             'created_at',
         ])
-        ->whereNull('customer_id') // Only tickets from guests
-        ->whereBetween('created_at', [
-            $from . ' 00:00:00',
-            $to . ' 23:59:59'
-        ]);
+            ->whereNull('customer_id') // Only tickets from guests
+            ->whereBetween('created_at', [
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
+            ]);
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -143,7 +160,7 @@ class SupportController extends Controller
             ->editColumn('subject', function ($row) {
                 return Str::limit($row->subject, 50);
             })
-            
+
             ->editColumn('status', function ($row) {
                 if ($row->status == 'open') {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Open</span>';
@@ -163,7 +180,7 @@ class SupportController extends Controller
                     <div class="flex items-center gap-2">
                     
                         <!-- View -->
-                        <a href="'.route('admin.support.tickets.show', $row->ticket_number).'" 
+                        <a href="' . route('admin.support.tickets.show', $row->ticket_number) . '" 
                             class="text-blue-600 hover:text-blue-900" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
@@ -173,6 +190,23 @@ class SupportController extends Controller
                                     clip-rule="evenodd" />
                             </svg>
                         </a>
+
+                        <!-- Delete -->
+                        <form action="' . route('admin.support.tickets.destroy', $row->ticket_number) . '" method="POST" class="inline">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
+                            <button type="button" 
+                                onclick="confirmDelete(\'' . $row->name . ' Ticket\', this.form)"
+                                class="text-red-600 hover:text-red-900" 
+                                title="Delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                    viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </form>
 
                     </div>
                 ';
@@ -192,7 +226,8 @@ class SupportController extends Controller
     public function show(Ticket $ticket)
     {
         // Eager load remarks and their associated user (staff)
-        $ticket->load(['ticketRemarks.user',
+        $ticket->load([
+            'ticketRemarks.user',
             'customer.order'
         ]);
 
@@ -230,8 +265,8 @@ class SupportController extends Controller
 
         // Optionally, update ticket status if needed, e.g., to 'in_progress'
         if ($ticket->status === 'open') {
-             $ticket->status = 'in_progress';
-             $ticket->save();
+            $ticket->status = 'in_progress';
+            $ticket->save();
         }
 
         // Load the user relationship for the response
@@ -255,7 +290,7 @@ class SupportController extends Controller
         }
 
         return redirect()->route('admin.support.tickets.show', $ticket->ticket_number)
-                         ->with('success', 'Remark added successfully.');
+            ->with('success', 'Remark added successfully.');
     }
 
     /**
@@ -283,7 +318,7 @@ class SupportController extends Controller
         $remark->save();
 
         return redirect()->route('admin.support.tickets.show', $ticket->ticket_number)
-                         ->with('success', 'Ticket status updated successfully.');
+            ->with('success', 'Ticket status updated successfully.');
     }
 
     public function showCustomerTickets()
@@ -293,4 +328,13 @@ class SupportController extends Controller
 
         return view('admin.support.customer', compact('tickets'));
     }
-} 
+
+    public function destroy(Ticket $ticket)
+    {
+        $ticket->ticketRemarks()->delete();
+
+        $ticket->delete();
+
+        return back()->with('success', 'Ticket deleted successfully.');
+    }
+}

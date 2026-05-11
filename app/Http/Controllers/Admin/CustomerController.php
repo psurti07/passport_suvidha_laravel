@@ -332,10 +332,66 @@ class CustomerController extends Controller
      * @param  Customer $customer
      * @return \Illuminate\Http\Response
      */
+    // public function destroy(Customer $customer)
+    // {
+    //     $customer->delete();
+    //     return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully');
+    // }
+    // public function destroy(Customer $customer)
+    // {
+    //     $customer = Customer::findOrFail($customer->id);
+
+    //     DB::transaction(function () use ($customer) {
+
+    //         $customer->applicationOrders()->delete();
+    //         $customer->applicationDocuments()->delete();
+    //         $customer->applicationProgress()->delete();
+    //         $customer->appointmentLetters()->delete();
+    //         $customer->finalDetails()->delete();
+    //         $customer->tickets()->delete();
+
+    //         $customer->delete();
+    //     });
+
+    //     return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully');
+    // }
     public function destroy(Customer $customer)
     {
-        $customer->delete();
-        return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully');
+        DB::transaction(function () use ($customer) {
+
+            // application documents
+            $customer->applicationDocuments()->delete();
+
+            // application orders
+            $customer->applicationOrders()->delete();
+
+            // progress
+            $customer->applicationProgress()->delete();
+
+            // appointment letters
+            $customer->appointmentLetters()->delete();
+
+            // final details
+            $customer->finalDetails()->delete();
+
+            // tickets
+            $customer->tickets()->delete();
+
+            // invoices + invoice logs
+            foreach ($customer->invoices as $invoice) {
+
+                $invoice->logs()->delete();
+
+                $invoice->delete();
+            }
+
+            // customer
+            $customer->delete();
+        });
+
+        return redirect()
+            ->route('admin.customers.index')
+            ->with('success', 'Customer deleted successfully.');
     }
 
     /**

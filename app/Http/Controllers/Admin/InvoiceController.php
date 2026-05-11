@@ -108,6 +108,23 @@ class InvoiceController extends Controller
                                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>
                         </a>
+
+                        <!-- Delete -->
+                        <form action="'.route('admin.invoices.destroy', $row->id).'" method="POST" class="inline">
+                            '.csrf_field().'
+                            '.method_field('DELETE').'
+                            <button type="button" 
+                                onclick="confirmDelete(\''.$row->customer->first_name.' '.$row->customer->last_name.' Invoice\', this.form)"
+                                class="text-red-600 hover:text-red-900" 
+                                title="Delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                    viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </form>
                     </div>
                 ';
             })
@@ -341,5 +358,17 @@ class InvoiceController extends Controller
             ->rawColumns(['customer_name'])
 
             ->make(true);
+    }
+
+    public function destroy(Invoice $invoice)
+    {
+        DB::transaction(function () use ($invoice) {
+
+            $invoice->logs()->delete();
+
+            $invoice->delete();
+        });
+
+        return back()->with('success', 'Invoice deleted successfully.');
     }
 }

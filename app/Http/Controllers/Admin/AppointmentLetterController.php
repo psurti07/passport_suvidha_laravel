@@ -282,9 +282,9 @@ class AppointmentLetterController extends Controller
     public function destroy(AppointmentLetter $appointmentLetter)
     {
         // Delete the associated file
-        if (Storage::disk('public')->exists($appointmentLetter->file_path)) {
-            Storage::disk('public')->delete($appointmentLetter->file_path);
-        }
+        // if (Storage::disk('public')->exists($appointmentLetter->file_path)) {
+        //     Storage::disk('public')->delete($appointmentLetter->file_path);
+        // }
 
         // Delete the record
         $appointmentLetter->delete();

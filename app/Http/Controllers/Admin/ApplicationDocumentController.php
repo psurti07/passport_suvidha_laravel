@@ -223,9 +223,9 @@ class ApplicationDocumentController extends Controller
         $customerId = $applicationDocument->customer_id;
 
         // Delete the file from storage
-        if ($applicationDocument->file_path && Storage::disk('public')->exists($applicationDocument->file_path)) {
-            Storage::disk('public')->delete($applicationDocument->file_path);
-        }
+        // if ($applicationDocument->file_path && Storage::disk('public')->exists($applicationDocument->file_path)) {
+        //     Storage::disk('public')->delete($applicationDocument->file_path);
+        // }
 
         // Delete the record
         $applicationDocument->delete();

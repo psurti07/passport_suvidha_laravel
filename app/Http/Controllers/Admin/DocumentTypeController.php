@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\DocumentType;
+use App\Models\ApplicationDocument;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -28,10 +29,10 @@ class DocumentTypeController extends Controller
             'updated_at',
         ])
 
-        ->whereBetween('created_at', [
-            $from . ' 00:00:00',
-            $to . ' 23:59:59'
-        ]);
+            ->whereBetween('created_at', [
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
+            ]);
 
         if ($request->filled('is_mandatory')) {
             $query->where('is_mandatory', $request->is_mandatory);
@@ -44,7 +45,7 @@ class DocumentTypeController extends Controller
             ->editColumn('is_mandatory', function ($row) {
                 if ($row->is_mandatory == '1') {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Mandatory</span>';
-                }  else {
+                } else {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Optional</span>';
                 }
             })
@@ -62,7 +63,7 @@ class DocumentTypeController extends Controller
                     <div class="flex items-center gap-2">
                     
                         <!-- View -->
-                        <a href="'.route('admin.document-types.show', $row->id).'" 
+                        <a href="' . route('admin.document-types.show', $row->id) . '" 
                             class="text-blue-600 hover:text-blue-900" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
@@ -74,7 +75,7 @@ class DocumentTypeController extends Controller
                         </a>
 
                         <!-- Edit -->
-                        <a href="'.route('admin.document-types.edit', $row->id).'" 
+                        <a href="' . route('admin.document-types.edit', $row->id) . '" 
                             class="text-yellow-600 hover:text-yellow-900" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
@@ -84,11 +85,11 @@ class DocumentTypeController extends Controller
                         </a>
 
                         <!-- Delete -->
-                        <form action="'.route('admin.document-types.destroy', $row->id).'" method="POST" class="inline">
-                            '.csrf_field().'
-                            '.method_field('DELETE').'
+                        <form action="' . route('admin.document-types.destroy', $row->id) . '" method="POST" class="inline">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
                             <button type="button" 
-                                onclick="confirmDelete(\''.$row->name.' Document Type\', this.form)"
+                                onclick="confirmDelete(\'' . $row->name . ' Document Type\', this.form)"
                                 class="text-red-600 hover:text-red-900" 
                                 title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
@@ -152,11 +153,30 @@ class DocumentTypeController extends Controller
             ->with('success', 'Document type updated successfully.');
     }
 
+    // public function destroy(DocumentType $documentType)
+    // {
+    //     $documentType->delete();
+
+    //     return redirect()->route('admin.document-types.index')
+    //         ->with('success', 'Document type deleted successfully.');
+    // }
     public function destroy(DocumentType $documentType)
     {
+        $isUsed = ApplicationDocument::where(
+            'document_type_id',
+            $documentType->id
+        )->exists();
+
+        if ($isUsed) {
+            return redirect()
+                ->route('admin.document-types.index')
+                ->with('error', 'This document type is already used.');
+        }
+
         $documentType->delete();
 
-        return redirect()->route('admin.document-types.index')
+        return redirect()
+            ->route('admin.document-types.index')
             ->with('success', 'Document type deleted successfully.');
     }
-} 
+}

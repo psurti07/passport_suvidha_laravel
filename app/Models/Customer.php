@@ -15,6 +15,8 @@ class Customer extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens, SoftDeletes;
 
+    protected $dates = ['deleted_at'];
+
     protected $table = "customers";
 
     protected $fillable = [
@@ -97,6 +99,11 @@ class Customer extends Authenticatable
     }
 
     public function order()
+    {
+        return $this->hasOne(ApplicationOrder::class);
+    }
+
+    public function applicationOrders()
     {
         return $this->hasOne(ApplicationOrder::class);
     }
