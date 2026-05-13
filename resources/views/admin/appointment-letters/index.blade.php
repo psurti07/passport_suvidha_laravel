@@ -100,93 +100,93 @@
 
 @push('scripts')
 <script>
-$(function() {
+    $(function() {
 
-    let table = $('#appointment-letters-table').DataTable({
+        let table = $('#appointment-letters-table').DataTable({
 
-        processing: true,
-        serverSide: true,
+            processing: true,
+            serverSide: true,
 
-        order: [
-            [0, 'desc']
-        ],
+            order: [
+                [0, 'desc']
+            ],
 
-        ajax: {
-            url: "{{ route('admin.appointment-letters.data') }}",
-            data: function(d) {
-                d.from_date = $('#from_date').val();
-                d.to_date = $('#to_date').val();
-            }
-        },
-
-        columns: [{
-                data: 'id',
-                name: 'id'
-            },
-            {
-                data: 'customer_name',
-                name: 'customer_name'
-            },
-            {
-                data: 'customer_mobile',
-                name: 'customer_mobile'
-            },
-            {
-                data: 'upload_date',
-                name: 'upload_date'
-            },
-            {
-                data: 'appointment_date_time',
-                name: 'appointment_date'
-            },
-            {
-                data: 'user_name',
-                name: 'user_name'
-            },
-            {
-                data: 'actions',
-                name: 'actions',
-                orderable: false,
-                searchable: false
-            }
-        ],
-
-        dom: 'Blfrtip',
-
-        buttons: [{
-                extend: 'copy',
-                exportOptions: {
-                    columns: ':not(:last-child)'
+            ajax: {
+                url: "{{ route('admin.appointment-letters.data') }}",
+                data: function(d) {
+                    d.from_date = $('#from_date').val();
+                    d.to_date = $('#to_date').val();
                 }
             },
-            {
-                extend: 'excel',
-                exportOptions: {
-                    columns: ':not(:last-child)'
-                }
-            },
-            {
-                extend: 'csv',
-                exportOptions: {
-                    columns: ':not(:last-child)'
-                }
-            },
-            {
-                extend: 'pdf',
-                exportOptions: {
-                    columns: ':not(:last-child)'
-                }
-            }
-        ],
 
-        pageLength: 10
+            columns: [{
+                    data: 'id',
+                    name: 'id'
+                },
+                {
+                    data: 'customer_name',
+                    name: 'customer_name'
+                },
+                {
+                    data: 'customer_mobile',
+                    name: 'customer_mobile'
+                },
+                {
+                    data: 'upload_date',
+                    name: 'upload_date'
+                },
+                {
+                    data: 'appointment_date_time',
+                    name: 'appointment_date'
+                },
+                {
+                    data: 'user_name',
+                    name: 'user_name'
+                },
+                {
+                    data: 'actions',
+                    name: 'actions',
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+
+            dom: 'Blfrtip',
+
+            buttons: [{
+                    extend: 'copy',
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
+                },
+                {
+                    extend: 'excel',
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
+                },
+                {
+                    extend: 'csv',
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
+                }
+            ],
+
+            pageLength: 10
+
+        });
+
+        $('#filter').click(function() {
+            table.draw();
+        });
 
     });
-
-    $('#filter').click(function() {
-        table.draw();
-    });
-
-});
 </script>
 @endpush

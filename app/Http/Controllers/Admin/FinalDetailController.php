@@ -34,10 +34,10 @@ class FinalDetailController extends Controller
             'final_details.approved_by',
         ])
 
-        ->whereBetween('final_details.upload_date', [
-            $from . ' 00:00:00',
-            $to . ' 23:59:59'
-        ]);
+            ->whereBetween('final_details.upload_date', [
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
+            ]);
 
         if ($request->filled('is_approved')) {
             $query->where('final_details.is_approved', $request->is_approved);
@@ -55,14 +55,14 @@ class FinalDetailController extends Controller
 
                 return '
                     <div>
-                        <div class="text-gray-900">'.($fullName ?: '-').'</div>
+                        <div class="text-gray-900">' . ($fullName ?: '-') . '</div>
                     </div>
                 ';
             })
 
             ->addColumn('user_name', function ($row) {
                 return $row->uploader->name ?? 'System';
-            }) 
+            })
 
             ->addColumn('is_approved', function ($row) {
                 return $row->is_approved ? 1 : 0;
@@ -70,35 +70,35 @@ class FinalDetailController extends Controller
 
             ->addColumn('approved_by_name', function ($row) {
                 return $row->approver_name;
-            }) 
+            })
 
             ->editColumn('upload_date', function ($row) {
                 return $row->upload_date->format('d M Y, h:i A');
             })
-            
+
             ->editColumn('is_approved', function ($row) {
                 if ($row->is_approved == '1') {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Approved</span>';
-                }  else {
+                } else {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Pending</span>';
                 }
             })
 
             ->editColumn('approved_date', function ($row) {
-                return $row->approved_date 
-                    ? $row->approved_date->format('d M Y, h:i A') 
+                return $row->approved_date
+                    ? $row->approved_date->format('d M Y, h:i A')
                     : 'N/A';
             })
 
-            ->filterColumn('customer_name', function($query, $keyword) {
-                $query->whereHas('customer', function($q) use ($keyword) {
+            ->filterColumn('customer_name', function ($query, $keyword) {
+                $query->whereHas('customer', function ($q) use ($keyword) {
                     $q->where('first_name', 'like', "%{$keyword}%")
-                    ->orWhere('last_name', 'like', "%{$keyword}%");
+                        ->orWhere('last_name', 'like', "%{$keyword}%");
                 });
             })
 
-            ->filterColumn('user_name', function($query, $keyword) {
-                $query->whereHas('uploader', function($q) use ($keyword) {
+            ->filterColumn('user_name', function ($query, $keyword) {
+                $query->whereHas('uploader', function ($q) use ($keyword) {
                     $q->where('name', 'like', "%{$keyword}%");
                 });
             })
@@ -109,7 +109,7 @@ class FinalDetailController extends Controller
 
                 return '
                     <!-- View Document -->
-                    <a href="'.$fileUrl.'" target="_blank"
+                    <a href="' . $fileUrl . '" target="_blank"
                         class="inline-flex items-center text-blue-600">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -126,7 +126,7 @@ class FinalDetailController extends Controller
                     <div class="flex items-center gap-2">
                     
                         <!-- View -->
-                        <a href="'.route('admin.final-details.show', $row->id).'" 
+                        <a href="' . route('admin.final-details.show', $row->id) . '" 
                             class="text-blue-600 hover:text-blue-900" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -140,7 +140,7 @@ class FinalDetailController extends Controller
                         </a>
 
                         <!-- Edit -->
-                        <a href="'.route('admin.final-details.edit', $row->id).'" 
+                        <a href="' . route('admin.final-details.edit', $row->id) . '" 
                             class="text-yellow-600 hover:text-yellow-900" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -169,10 +169,10 @@ class FinalDetailController extends Controller
                     ';
                 if (!$row->is_approved) {
                     $html .= '
-                        <form action="'.route('admin.final-details.approve', $row->id).'"
+                        <form action="' . route('admin.final-details.approve', $row->id) . '"
                             method="POST" class="inline">
-                            '.csrf_field().'
-                            '.method_field('PATCH').'
+                            ' . csrf_field() . '
+                            ' . method_field('PATCH') . '
                             <button type="submit"
                                 class="text-green-600 hover:text-green-900 flex"
                                 title="Approve">
@@ -187,10 +187,10 @@ class FinalDetailController extends Controller
                     ';
                 } else {
                     $html .= '
-                        <form action="'.route('admin.final-details.unapprove', $row->id).'"
+                        <form action="' . route('admin.final-details.unapprove', $row->id) . '"
                             method="POST" class="inline">
-                            '.csrf_field().'
-                            '.method_field('PATCH').'
+                            ' . csrf_field() . '
+                            ' . method_field('PATCH') . '
                             <button type="submit"
                                 class="text-yellow-600 hover:text-yellow-900 flex"
                                 title="Unapprove">
@@ -210,9 +210,9 @@ class FinalDetailController extends Controller
                 return $html;
             })
 
-        ->rawColumns(['customer_name', 'is_approved', 'document', 'actions'])
+            ->rawColumns(['customer_name', 'is_approved', 'document', 'actions'])
 
-        ->make(true);
+            ->make(true);
     }
 
     public function create()
@@ -255,7 +255,7 @@ class FinalDetailController extends Controller
             if ($finalDetail->file_path && Storage::disk('public')->exists($finalDetail->file_path)) {
                 Storage::disk('public')->delete($finalDetail->file_path);
             }
-            
+
             $file = $request->file('file');
             $data['file_path'] = $file->store('final-details', 'public');
             $data['upload_date'] = now();
@@ -265,14 +265,14 @@ class FinalDetailController extends Controller
         // Handle approval status changes
         if ($request->has('is_approved')) {
             $isApproved = (bool) $request->input('is_approved');
-            
+
             // If approving and it wasn't approved before
             if ($isApproved && !$finalDetail->is_approved) {
                 $data['approved_date'] = now();
                 $data['approved_by_role'] = 'user'; // Staff/admin is approving
                 $data['approved_by'] = auth()->id(); // Set current user as approver
             }
-            
+
             // If un-approving
             if (!$isApproved && $finalDetail->is_approved) {
                 $data['approved_date'] = null;

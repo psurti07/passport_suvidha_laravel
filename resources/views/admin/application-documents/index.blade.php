@@ -64,7 +64,8 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile
                                 </th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Document Name
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Document
+                                    Name
                                 </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Document

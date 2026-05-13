@@ -110,11 +110,11 @@ class InvoiceController extends Controller
                         </a>
 
                         <!-- Delete -->
-                        <form action="'.route('admin.invoices.destroy', $row->id).'" method="POST" class="inline">
-                            '.csrf_field().'
-                            '.method_field('DELETE').'
+                        <form action="' . route('admin.invoices.destroy', $row->id) . '" method="POST" class="inline">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
                             <button type="button" 
-                                onclick="confirmDelete(\''.$row->customer->first_name.' '.$row->customer->last_name.' Invoice\', this.form)"
+                                onclick="confirmDelete(\'' . $row->customer->first_name . ' ' . $row->customer->last_name . ' Invoice\', this.form)"
                                 class="text-red-600 hover:text-red-900" 
                                 title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"

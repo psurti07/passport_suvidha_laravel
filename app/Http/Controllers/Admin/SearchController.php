@@ -41,6 +41,27 @@ class SearchController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View
      */
+    public function searchCustomer(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'mobile_no' => 'required|digits:10',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('admin.customer.search.form')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $mobileNo = $request->mobile_no;
+        $customer = Customer::where('mobile_number', $mobileNo)->first();
+
+        return redirect()->route('admin.customer.search.form')->with([
+            'customer_id' => $customer?->id,
+            'mobileNo' => $mobileNo
+        ]);
+    }
+
     // public function searchCustomer(Request $request)
     // {
     //     $validator = Validator::make($request->all(), [
@@ -66,24 +87,4 @@ class SearchController extends Controller
     //         'services' => Service::all()
     //     ]);
     // }
-    public function searchCustomer(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'mobile_no' => 'required|digits:10',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->route('admin.customer.search.form')
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        $mobileNo = $request->mobile_no;
-        $customer = Customer::where('mobile_number', $mobileNo)->first();
-
-        return redirect()->route('admin.customer.search.form')->with([
-            'customer_id' => $customer?->id,
-            'mobileNo' => $mobileNo
-        ]);
-    }
 }

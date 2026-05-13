@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CashfreeLog extends Model
 {
     use HasFactory;
- 
-    protected $table = 'cashfree_logs_entry';
- 
+  
     protected $fillable = [
         'customer_id',
         'order_id',
@@ -28,6 +26,7 @@ class CashfreeLog extends Model
     {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
+
     public function getServiceTextAttribute()
     {
         return match($this->service_type) {
@@ -38,6 +37,7 @@ class CashfreeLog extends Model
             default => $this->service_type ?? 'N/A',
         };
     }
+
     public function getOfferTextAttribute()
     {
         return match($this->offer_type) {

@@ -83,7 +83,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Final Details Routes
     Route::patch('final-details/{finalDetail}/approve', [FinalDetailController::class, 'approve'])->name('final-details.approve');
     Route::patch('final-details/{finalDetail}/unapprove', [FinalDetailController::class, 'unapprove'])->name('final-details.unapprove');
-    // Route::resource('final-details', FinalDetailController::class)->except(['create', 'store', 'destroy']);
     Route::resource('final-details', FinalDetailController::class);
     Route::get('/final-details-data', [FinalDetailController::class, 'data'])->name('final-details.data');
 
@@ -167,12 +166,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Users Routes
     Route::resource('users', UserController::class);
     Route::get('/users-data', [UserController::class, 'data'])->name('users.data');
-
-
-
-
-
-
 
     // Application Progress Routes
     Route::get('customers/{customer}/application-progress', [ApplicationProgressController::class, 'customerHistory'])

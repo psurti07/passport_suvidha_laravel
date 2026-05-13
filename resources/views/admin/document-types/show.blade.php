@@ -39,7 +39,8 @@
                         #{{ $documentType->id }}
                     </span>
                     <div class="ml-4">
-                        <p class="text-xs text-gray-500">Created: {{ $documentType->created_at->format('d M Y, h:i A') }}
+                        <p class="text-xs text-gray-500">Created:
+                            {{ $documentType->created_at->format('d M Y, h:i A') }}
                         </p>
                         <p class="text-xs text-gray-500">Last Updated:
                             {{ $documentType->updated_at->format('d M Y, h:i A') }}</p>
@@ -73,7 +74,8 @@
                         </div>
                         <div class="ml-7">
                             <div
-                                class="bg-gray-50 p-4 rounded-lg border border-gray-100 whitespace-pre-wrap text-gray-800">{{ $documentType->description }}</div>
+                                class="bg-gray-50 p-4 rounded-lg border border-gray-100 whitespace-pre-wrap text-gray-800">
+                                {{ $documentType->description }}</div>
                         </div>
                     </div>
 

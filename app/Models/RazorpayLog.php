@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class RazorpayLog extends Model
 {    
     use HasFactory;
- 
-    protected $table = 'razorpay_logs_entry';
- 
+  
     protected $fillable = [
         'customer_id',
         'order_id',
@@ -39,6 +37,7 @@ class RazorpayLog extends Model
             default => $this->service_type ?? 'N/A',
         };
     }
+    
     public function getOfferTextAttribute()
     {
         return match($this->offer_type) {

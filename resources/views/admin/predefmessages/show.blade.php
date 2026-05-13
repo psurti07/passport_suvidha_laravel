@@ -94,7 +94,8 @@
                         </div>
                         <div class="ml-7">
                             <div
-                                class="bg-gray-50 p-4 rounded-lg border border-gray-100 whitespace-pre-wrap text-gray-800">{{ $preDefinedMessage->message_remarks }}</div>
+                                class="bg-gray-50 p-4 rounded-lg border border-gray-100 whitespace-pre-wrap text-gray-800">
+                                {{ $preDefinedMessage->message_remarks }}</div>
                         </div>
                     </div>
                 </div>

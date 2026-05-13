@@ -17,16 +17,6 @@ class PreDefinedMessage extends Model
         'message_remarks',
     ];
 
-    /**
-     * Get the route key name for Laravel's route model binding.
-     *
-     * @return string
-     */
-    // public function getRouteKeyName()
-    // {
-    //     return 'id';
-    // }
-
     // Relationships
     public function status(): BelongsTo
     {

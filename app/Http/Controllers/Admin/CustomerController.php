@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use App\Services\SmsService;
 
 class CustomerController extends Controller
 {
@@ -332,29 +333,6 @@ class CustomerController extends Controller
      * @param  Customer $customer
      * @return \Illuminate\Http\Response
      */
-    // public function destroy(Customer $customer)
-    // {
-    //     $customer->delete();
-    //     return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully');
-    // }
-    // public function destroy(Customer $customer)
-    // {
-    //     $customer = Customer::findOrFail($customer->id);
-
-    //     DB::transaction(function () use ($customer) {
-
-    //         $customer->applicationOrders()->delete();
-    //         $customer->applicationDocuments()->delete();
-    //         $customer->applicationProgress()->delete();
-    //         $customer->appointmentLetters()->delete();
-    //         $customer->finalDetails()->delete();
-    //         $customer->tickets()->delete();
-
-    //         $customer->delete();
-    //     });
-
-    //     return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully');
-    // }
     public function destroy(Customer $customer)
     {
         DB::transaction(function () use ($customer) {
@@ -393,6 +371,29 @@ class CustomerController extends Controller
             ->route('admin.customers.index')
             ->with('success', 'Customer deleted successfully.');
     }
+    // public function destroy(Customer $customer)
+    // {
+    //     $customer->delete();
+    //     return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully');
+    // }
+    // public function destroy(Customer $customer)
+    // {
+    //     $customer = Customer::findOrFail($customer->id);
+
+    //     DB::transaction(function () use ($customer) {
+
+    //         $customer->applicationOrders()->delete();
+    //         $customer->applicationDocuments()->delete();
+    //         $customer->applicationProgress()->delete();
+    //         $customer->appointmentLetters()->delete();
+    //         $customer->finalDetails()->delete();
+    //         $customer->tickets()->delete();
+
+    //         $customer->delete();
+    //     });
+
+    //     return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully');
+    // }
 
     /**
      * Handle both creating new customer and converting lead to customer
@@ -514,6 +515,14 @@ class CustomerController extends Controller
                     : 'Create New Customer',
                 'card_number' => $order->id
             ]);
+
+            if (isset($customer) && !empty($customer->mobile_number)) {
+                $smsService = new SmsService();
+
+                $message = "Congrats, Your Passport Application is submitted successfully! Our Company Executive will contact you within 24-48 hours to proceed. Thanks, PassportSuvidha";
+
+                $smsService->sendSms($customer->mobile_number, $message);
+            }
 
             return $customer;
         });

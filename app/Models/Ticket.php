@@ -19,16 +19,16 @@ class Ticket extends Model
      */
     protected static function booted()
     {
-        // static::creating(function ($ticket) {
-        //     if (empty($ticket->ticket_number)) {
-        //         $ticket->ticket_number = date('mdHis');
-        //     }
-        // });
         static::creating(function ($ticket) {
             if (empty($ticket->ticket_number)) {
                 $ticket->ticket_number = 'TKT' . now()->format('YmdHis') . rand(100, 999);
             }
         });
+        // static::creating(function ($ticket) {
+        //     if (empty($ticket->ticket_number)) {
+        //         $ticket->ticket_number = date('mdHis');
+        //     }
+        // });
     }
 
     /**

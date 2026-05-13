@@ -30,7 +30,7 @@ class DndController extends Controller
             'is_dnd',
             'created_at'
         ])->where('is_dnd', 1);
-        
+
         if ($request->from_date && $request->to_date) {
             $query->whereBetween('created_at', [
                 $from . ' 00:00:00',
@@ -38,10 +38,10 @@ class DndController extends Controller
             ]);
         }
 
-        if($request->service) {
+        if ($request->service) {
             $query->where('service_id', $request->service);
         }
-        
+
         return DataTables::of($query)
 
             ->addIndexColumn()
@@ -58,27 +58,27 @@ class DndController extends Controller
                 return $row->created_at->format('d M Y, h:i A');
             })
 
-            ->filterColumn('service_name', function($query, $keyword) {
-                $query->whereHas('service', function($q) use ($keyword) {
+            ->filterColumn('service_name', function ($query, $keyword) {
+                $query->whereHas('service', function ($q) use ($keyword) {
                     $q->where('service_name', 'like', "%{$keyword}%");
                 });
             })
 
-            ->filterColumn('customer_name', function($query, $keyword) {
-                $query->where(function($q) use ($keyword) {
+            ->filterColumn('customer_name', function ($query, $keyword) {
+                $query->where(function ($q) use ($keyword) {
                     $q->where('first_name', 'like', "%{$keyword}%")
-                    ->orWhere('last_name', 'like', "%{$keyword}%");
+                        ->orWhere('last_name', 'like', "%{$keyword}%");
                 });
             })
 
             ->addColumn('actions', function ($row) {
                 return '
                     <!-- Delete -->
-                    <form action="'.route('admin.dnd.destroy', $row->id).'" method="POST" class="inline">
-                        '.csrf_field().'
-                        '.method_field('DELETE').'
+                    <form action="' . route('admin.dnd.destroy', $row->id) . '" method="POST" class="inline">
+                        ' . csrf_field() . '
+                        ' . method_field('DELETE') . '
                         <button type="button" 
-                            onclick="confirmDelete(\''.$row->first_name.' Customer\', this.form)"
+                            onclick="confirmDelete(\'' . $row->first_name . ' Customer\', this.form)"
                             class="text-red-600 hover:text-red-900" 
                             title="Delete">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
@@ -90,7 +90,6 @@ class DndController extends Controller
                         </button>
                     </form>
                 ';
-                
             })
 
             ->rawColumns(['service_name', 'actions'])

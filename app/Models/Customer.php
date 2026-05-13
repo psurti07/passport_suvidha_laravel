@@ -17,8 +17,6 @@ class Customer extends Authenticatable
 
     protected $dates = ['deleted_at'];
 
-    protected $table = "customers";
-
     protected $fillable = [
         'service_id',
         'first_name',

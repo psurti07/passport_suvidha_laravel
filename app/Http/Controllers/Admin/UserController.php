@@ -45,10 +45,10 @@ class UserController extends Controller
             'updated_at',
         ])
 
-        ->whereBetween('created_at', [
-            $from . ' 00:00:00',
-            $to . ' 23:59:59'
-        ]);
+            ->whereBetween('created_at', [
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
+            ]);
 
         if ($request->filled('is_active')) {
             $query->where('is_active', $request->is_active);
@@ -65,7 +65,7 @@ class UserController extends Controller
             ->editColumn('is_active', function ($row) {
                 if ($row->is_active == '1') {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Active</span>';
-                }  else {
+                } else {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Inactive</span>';
                 }
             })
@@ -83,7 +83,7 @@ class UserController extends Controller
                     <div class="flex items-center gap-2">
                     
                         <!-- View -->
-                        <a href="'.route('admin.users.show', $row->id).'" 
+                        <a href="' . route('admin.users.show', $row->id) . '" 
                             class="text-blue-600 hover:text-blue-900" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
@@ -95,7 +95,7 @@ class UserController extends Controller
                         </a>
 
                         <!-- Edit -->
-                        <a href="'.route('admin.users.edit', $row->id).'" 
+                        <a href="' . route('admin.users.edit', $row->id) . '" 
                             class="text-yellow-600 hover:text-yellow-900" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
@@ -105,11 +105,11 @@ class UserController extends Controller
                         </a>
 
                         <!-- Delete -->
-                        <form action="'.route('admin.users.destroy', $row->id).'" method="POST" class="inline">
-                            '.csrf_field().'
-                            '.method_field('DELETE').'
+                        <form action="' . route('admin.users.destroy', $row->id) . '" method="POST" class="inline">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
                             <button type="button" 
-                                onclick="confirmDelete(\''.$row->name.' User\', this.form)"
+                                onclick="confirmDelete(\'' . $row->name . ' User\', this.form)"
                                 class="text-red-600 hover:text-red-900" 
                                 title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
@@ -143,7 +143,7 @@ class UserController extends Controller
         if (!auth()->user()->isAdmin()) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -167,7 +167,7 @@ class UserController extends Controller
         if (!auth()->user()->isAdmin()) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         if ($user->role !== 'staff') {
             abort(404);
         }
@@ -179,7 +179,7 @@ class UserController extends Controller
         if (!auth()->user()->isAdmin()) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         if ($user->role !== 'staff') {
             abort(404);
         }
@@ -191,7 +191,7 @@ class UserController extends Controller
         if (!auth()->user()->isAdmin()) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         if ($user->role !== 'staff') {
             abort(404);
         }
@@ -217,7 +217,7 @@ class UserController extends Controller
         if (!auth()->user()->isAdmin()) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         if ($user->role !== 'staff') {
             abort(404);
         }

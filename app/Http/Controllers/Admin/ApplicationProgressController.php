@@ -309,7 +309,7 @@ class ApplicationProgressController extends Controller
             return redirect($request->redirect)
                 ->with('success', 'Application progress entry deleted successfully.');
         }
-        
+
         // Otherwise, if we were in a customer view page, redirect to that customer
         if ($customerId && $request->has('from_customer') && $request->from_customer) {
             return redirect()->route('admin.customers.show', $customerId)

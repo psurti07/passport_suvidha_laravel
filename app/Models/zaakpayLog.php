@@ -9,8 +9,6 @@ class ZaakpayLog extends Model
 {    
     use HasFactory;
 
-    protected $table = 'zaakpay_logs_entry';
-
     protected $fillable = [
         'customer_id',
         'order_id',

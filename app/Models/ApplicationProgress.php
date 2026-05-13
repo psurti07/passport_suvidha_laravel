@@ -12,8 +12,6 @@ class ApplicationProgress extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'application_progress';
-
     protected $fillable = [
         'customer_id',
         'status_id',

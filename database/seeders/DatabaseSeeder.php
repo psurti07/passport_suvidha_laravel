@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             AdminUserSeeder::class,
             ApplicationStatusSeeder::class,
+            MetaKeywordSeeder::class,
             // Add other seeders here if needed
         ]);
     }

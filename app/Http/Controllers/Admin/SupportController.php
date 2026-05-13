@@ -116,13 +116,6 @@ class SupportController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    // public function guestSupport()
-    // {
-    //     // Fetch tickets created by guests (customer_id is null)
-    //     $tickets = Ticket::whereNull('customer_id')->latest()->paginate(15); // Paginate results
-
-    //     return view('admin.support.guest_support', compact('tickets'));
-    // }
     public function guestSupport()
     {
         return view('admin.support.guest_support');

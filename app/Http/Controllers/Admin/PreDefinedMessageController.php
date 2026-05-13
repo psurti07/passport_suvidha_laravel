@@ -33,10 +33,10 @@ class PreDefinedMessageController extends Controller
             'pre_defined_messages.updated_at',
         ])
 
-        ->whereBetween('pre_defined_messages.created_at', [
-            $from . ' 00:00:00',
-            $to . ' 23:59:59'
-        ]);
+            ->whereBetween('pre_defined_messages.created_at', [
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
+            ]);
 
         return DataTables::of($query)
 
@@ -59,7 +59,7 @@ class PreDefinedMessageController extends Controller
                     <div class="flex items-center gap-2">
                     
                         <!-- View -->
-                        <a href="'.route('admin.predefined-messages.show', $row->id).'" 
+                        <a href="' . route('admin.predefined-messages.show', $row->id) . '" 
                             class="text-blue-600 hover:text-blue-900" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
@@ -71,7 +71,7 @@ class PreDefinedMessageController extends Controller
                         </a>
 
                         <!-- Edit -->
-                        <a href="'.route('admin.predefined-messages.edit', $row->id).'" 
+                        <a href="' . route('admin.predefined-messages.edit', $row->id) . '" 
                             class="text-yellow-600 hover:text-yellow-900" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 viewBox="0 0 20 20" fill="currentColor">
@@ -81,11 +81,11 @@ class PreDefinedMessageController extends Controller
                         </a>
 
                         <!-- Delete -->
-                        <form action="'.route('admin.predefined-messages.destroy', $row->id).'" method="POST" class="inline">
-                            '.csrf_field().'
-                            '.method_field('DELETE').'
+                        <form action="' . route('admin.predefined-messages.destroy', $row->id) . '" method="POST" class="inline">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
                             <button type="button" 
-                                onclick="confirmDelete(\''.$row->status->status_name.' Predefined Message\', this.form)"
+                                onclick="confirmDelete(\'' . $row->status->status_name . ' Predefined Message\', this.form)"
                                 class="text-red-600 hover:text-red-900" 
                                 title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
@@ -112,7 +112,7 @@ class PreDefinedMessageController extends Controller
     public function create()
     {
         $statuses = ApplicationStatus::orderBy('priority_no')->get();
-        return view('admin.predefmessages.create', compact('statuses')); 
+        return view('admin.predefmessages.create', compact('statuses'));
         // return redirect()->route('admin.predefined-messages.index')->with('warning', 'Create form not implemented yet.'); // Placeholder removed
     }
 
@@ -131,14 +131,14 @@ class PreDefinedMessageController extends Controller
             PreDefinedMessage::create($validatedData);
 
             return redirect()->route('admin.predefined-messages.index')
-                             ->with('success', 'Predefined message created successfully.');
+                ->with('success', 'Predefined message created successfully.');
         } catch (\Exception $e) {
             // Log the error (optional but recommended)
             // Log::error('Error creating predefined message: ' . $e->getMessage());
-            
+
             return redirect()->back()
-                             ->withInput() 
-                             ->with('error', 'Error creating message. Please try again.');
+                ->withInput()
+                ->with('error', 'Error creating message. Please try again.');
         }
     }
 
@@ -157,7 +157,7 @@ class PreDefinedMessageController extends Controller
     public function edit(PreDefinedMessage $predefined_message)
     {
         $statuses = ApplicationStatus::orderBy('priority_no')->get();
-        return view('admin.predefmessages.edit', ['preDefinedMessage' => $predefined_message,'statuses' => $statuses]);
+        return view('admin.predefmessages.edit', ['preDefinedMessage' => $predefined_message, 'statuses' => $statuses]);
     }
 
     /**
@@ -172,17 +172,17 @@ class PreDefinedMessageController extends Controller
             'message_name' => 'required|string|max:255|unique:pre_defined_messages,message_name,' . $predefined_message->id,
             'message_remarks' => 'required|string',
         ]);
-        
+
         try {
             $predefined_message->update($validatedData);
 
             return redirect()->route('admin.predefined-messages.index')
-                             ->with('success', 'Predefined message updated successfully.');
+                ->with('success', 'Predefined message updated successfully.');
         } catch (\Exception $e) {
             Log::error('Error updating predefined message: ' . $e->getMessage());
             return redirect()->back()
-                             ->withInput()
-                             ->with('error', 'Error updating message: ' . $e->getMessage());
+                ->withInput()
+                ->with('error', 'Error updating message: ' . $e->getMessage());
         }
     }
 

@@ -153,13 +153,6 @@ class DocumentTypeController extends Controller
             ->with('success', 'Document type updated successfully.');
     }
 
-    // public function destroy(DocumentType $documentType)
-    // {
-    //     $documentType->delete();
-
-    //     return redirect()->route('admin.document-types.index')
-    //         ->with('success', 'Document type deleted successfully.');
-    // }
     public function destroy(DocumentType $documentType)
     {
         $isUsed = ApplicationDocument::where(
@@ -179,4 +172,12 @@ class DocumentTypeController extends Controller
             ->route('admin.document-types.index')
             ->with('success', 'Document type deleted successfully.');
     }
+
+    // public function destroy(DocumentType $documentType)
+    // {
+    //     $documentType->delete();
+
+    //     return redirect()->route('admin.document-types.index')
+    //         ->with('success', 'Document type deleted successfully.');
+    // }
 }
