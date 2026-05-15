@@ -25,39 +25,39 @@ class OfferOrderController extends Controller
             'email' => 'required|email',
             'mobile' => 'required',
             'offer_type' => 'required',
-            'service_code'=>'required',
+            'service_code' => 'required',
         ]);
 
-        $customer = Customer::where('mobile_number',$request->mobile)->first();
-        if($customer && $customer->is_paid === true){
+        $customer = Customer::where('mobile_number', $request->mobile)->first();
+        if ($customer && $customer->is_paid === true) {
             return response()->json([
                 "success" => false,
-                "message"=>"You are already registered customer"
-            ],200);
+                "message" => "You are already registered customer"
+            ], 200);
         }
 
-        $service = Service::where('service_code',$request->service_code)->first();
-        if(!$service){      
+        $service = Service::where('service_code', $request->service_code)->first();
+        if (!$service) {
             return response()->json([
-                "success"=>false,
-                "message"=>"Invalid service code"
-            ],200);
+                "success" => false,
+                "message" => "Invalid service code"
+            ], 200);
         }
         $amount = $service->service_total_amount;
 
         $gateway = $this->getGatewayByOffer($request->offer_type);
 
         $offer_map = [
-            'card_offer'=>1,
-            'star_offer'=>2,
+            'card_offer' => 1,
+            'star_offer' => 2,
         ];
 
-        $offer_type = $offer_map[$request->offer_type]??null;
-        if(!$offer_type){
+        $offer_type = $offer_map[$request->offer_type] ?? null;
+        if (!$offer_type) {
             return response()->json([
-                "success"=>false,
-                "message"=>"Invalid offer type",
-            ],422);
+                "success" => false,
+                "message" => "Invalid offer type",
+            ], 422);
         }
 
         $existingOrder = OfferOrder::where('mobile', $request->mobile)
@@ -84,7 +84,7 @@ class OfferOrderController extends Controller
             'full_name'   => $request->fullName,
             'mobile'      => $request->mobile,
             'email'       => $request->email,
-            'offer_type'  => $offer_type, 
+            'offer_type'  => $offer_type,
             'amount'      => $finalAmount,
             'service_code' => $request->service_code,
         ]);
@@ -141,26 +141,26 @@ class OfferOrderController extends Controller
                 "customer_phone" => $request->mobile,
             ],
             "order_meta" => [
-                "notify_url" => $this->getWebhookUrl(). '/api/cashfree/webhook',
+                "notify_url" => $this->getWebhookUrl() . '/api/cashfree/webhook',
             ]
-        
+
         ]);
-        if(!$response->successful()){       
+        if (!$response->successful()) {
             return response()->json([
-                "success"=>false,
-                "message"=>'payment gateway failed'
-            ],200);
+                "success" => false,
+                "message" => 'payment gateway failed'
+            ], 200);
         }
 
         CashfreeLog::create([
             // 'customer_id'  => $order->id,
-            'offer_type' => 1,
+            'offer_type' => $order->offer_type,
             'order_id'     => $order->id,
             'order_amount' => $order->amount,
-            'order_note'   => 'Card Offer Payment', 
+            'order_note'   => 'Card Offer Payment',
             'reference_id' => $orderId,
             'tx_status'    => 'pending',
-            'payment_mode'=> 'cashfree',
+            'payment_mode' => null,
             'service_type' => $request->service_code ?? null,
         ]);
 
@@ -174,54 +174,64 @@ class OfferOrderController extends Controller
 
     public function cashfreeWebhook(Request $request)
     {
-        $data = $request->all();
+        try {
 
-        $orderId = $data['data']['order']['order_id']
-            ?? $data['order']['order_id']
-            ?? null;
+            // Log::info('CASHFREE WEBHOOK', $request->all());
 
-        if (!$orderId) {
-            return response()->json(['status' => 'invalid']);
-        }
+            $data = $request->all();
 
-        $paymentStatus = $data['data']['payment']['payment_status']
-            ?? $data['payment']['payment_status']
-            ?? null;
+            $orderId = $data['data']['order']['order_id']
+                ?? $data['order']['order_id']
+                ?? null;
 
-        $paymentStatus = strtoupper($paymentStatus);
+            if (!$orderId) {
+                return response()->json([
+                    'status' => 'invalid'
+                ], 400);
+            }
 
-        $log = CashfreeLog::where('reference_id', $orderId)->first();
-
-        if (!$log) {
-            return response()->json(['status' => 'not_found']);
-        }
-
-        // =========================
-        // SUCCESS
-        // =========================
-        if ($paymentStatus === 'SUCCESS') {
-
-            $paymentMode = $data['data']['payment']['payment_group']
-                ?? $data['payment']['payment_group']
-                ?? 'unknown';
+            $paymentStatus = strtoupper(
+                $data['data']['payment']['payment_status']
+                    ?? $data['payment']['payment_status']
+                    ?? 'PENDING'
+            );
 
             $cfPaymentId = $data['data']['payment']['cf_payment_id']
                 ?? $data['payment']['cf_payment_id']
                 ?? null;
 
+            $paymentMode = $data['data']['payment']['payment_group']
+                ?? $data['payment']['payment_group']
+                ?? 'unknown';
+
+            $log = CashfreeLog::where(
+                'reference_id',
+                $orderId
+            )->first();
+
+            if (!$log) {
+
+                // Log::error('Cashfree log not found', [
+                //     'order_id' => $orderId
+                // ]);
+
+                return response()->json([
+                    'status' => 'not_found'
+                ], 404);
+            }
+
+            // prevent duplicate success processing
+            if (
+                $log->tx_status === 'success'
+                && $paymentStatus === 'SUCCESS'
+            ) {
+                return response()->json([
+                    'status' => 'already_processed'
+                ]);
+            }
+
+
             if ($paymentStatus === 'SUCCESS') {
-
-                if ($log->tx_status === 'success') {
-                    return response()->json(['status' => 'ok']);
-                }
-
-                $paymentMode = $data['data']['payment']['payment_group']
-                    ?? $data['payment']['payment_group']
-                    ?? 'unknown';
-
-                $cfPaymentId = $data['data']['payment']['cf_payment_id']
-                    ?? $data['payment']['cf_payment_id']
-                    ?? null;
 
                 $order = OfferOrder::find($log->order_id);
 
@@ -231,43 +241,56 @@ class OfferOrderController extends Controller
                         'card_number' => generateCardNumber(),
                     ]);
                 }
+                // Log::info('PAYMENT SUCCESS WEBHOOK', [
+                //     'order_id' => $orderId,
+                //     'payment_id' => $cfPaymentId,
+                // ]);
 
-                // $this->handleSuccessfulPayment($order);
-                
                 $log->update([
                     'payment_id' => $cfPaymentId,
                     'tx_status' => 'success',
                     'payment_mode' => $paymentMode
                 ]);
 
-                return response()->json(['status' => 'ok']);
+                return response()->json([
+                    'status' => 'success'
+                ]);
             }
 
-            $log->update([
-                'payment_id' => $cfPaymentId,
-                'tx_status' => 'success',
-                'payment_mode' => $paymentMode
+            if (
+                in_array(
+                    $paymentStatus,
+                    ['FAILED', 'NOT_ATTEMPTED', 'USER_DROPPED', 'CANCELLED']
+                )
+            ) {
+                // Log::info('PAYMENT FAILED WEBHOOK', [
+                //     'order_id' => $orderId,
+                //     'status' => $paymentStatus,
+                // ]);
+
+                $log->update([
+                    'tx_status' => 'failed'
+                ]);
+
+                return response()->json([
+                    'status' => 'failed'
+                ]);
+            }
+
+            return response()->json([
+                'status' => 'pending'
             ]);
+        } catch (\Exception $e) {
 
-            return response()->json(['status' => 'ok']);
+            // Log::error('CASHFREE WEBHOOK ERROR', [
+            //     'message' => $e->getMessage(),
+            //     'line' => $e->getLine(),
+            // ]);
+
+            return response()->json([
+                'status' => 'error'
+            ], 500);
         }
-
-        // =========================
-        // FAILED
-        // =========================
-        if (in_array($paymentStatus, ['FAILED', 'NOT_ATTEMPTED', 'USER_DROPPED', 'CANCELLED'])) {
-
-            $log->update([
-                'tx_status' => 'failed'
-            ]);
-
-            return response()->json(['status' => 'ok']);
-        }
-
-        // =========================
-        // DEFAULT
-        // =========================
-        return response()->json(['status' => 'pending']);
     }
 
     private function getWebhookUrl()
@@ -275,8 +298,150 @@ class OfferOrderController extends Controller
         if (config('services.app.env') === 'local') {
             return config('services.app.ngrok_url');
         }
- 
+
         return config('services.app.url');
+    }
+
+    public function checkPaymentStatus(Request $request)
+    {
+        try {
+
+            // Log::info('CHECK PAYMENT STATUS', $request->all());
+
+            $request->validate([
+                'order_id' => 'required'
+            ]);
+
+            $log = CashfreeLog::where(
+                'reference_id',
+                $request->order_id
+            )->first();
+
+            if (!$log) {
+
+                return response()->json([
+                    'status' => 'not_found'
+                ], 404);
+            }
+
+            if ($log->tx_status === 'success') {
+
+                return response()->json([
+                    'status' => 'success'
+                ]);
+            }
+
+            $baseUrl = $this->getCashfreeBaseUrl();
+
+            $response = Http::withHeaders([
+                'x-client-id'     => config('services.cashfree.key'),
+                'x-client-secret' => config('services.cashfree.secret'),
+                'x-api-version'   => '2022-09-01',
+            ])->get(
+                $baseUrl . "/orders/{$request->order_id}/payments"
+            );
+
+            // Log::info('CASHFREE STATUS RESPONSE', [
+            //     'response' => $response->json()
+            // ]);
+
+            if (!$response->successful()) {
+
+                return response()->json([
+                    'status' => 'pending'
+                ]);
+            }
+
+            $payments = $response->json();
+
+            if (empty($payments)) {
+
+                return response()->json([
+                    'status' => 'pending'
+                ]);
+            }
+
+            $successPayment = collect($payments)->firstWhere(
+                'payment_status',
+                'SUCCESS'
+            );
+
+            if ($successPayment) {
+
+                $cfPaymentId = $successPayment['cf_payment_id'] ?? null;
+
+                $order = OfferOrder::find($log->order_id);
+
+                if ($order && !$order->payment_id) {
+
+                    $order->update([
+                        'payment_id' => $cfPaymentId,
+                        'card_number' => generateCardNumber(),
+                    ]);
+                }
+
+                $log->update([
+                    'payment_id' => $cfPaymentId,
+                    'tx_status'  => 'success',
+                ]);
+
+                return response()->json([
+                    'status' => 'success'
+                ]);
+            }
+
+            $latestPayment = collect($payments)
+                ->sortByDesc('cf_payment_id')
+                ->first();
+
+            $status = strtoupper(
+                $latestPayment['payment_status'] ?? 'PENDING'
+            );
+
+
+            if (
+                in_array(
+                    $status,
+                    ['FAILED', 'CANCELLED', 'USER_DROPPED', 'NOT_ATTEMPTED']
+                )
+            ) {
+
+                $log->update([
+                    'tx_status' => 'failed'
+                ]);
+
+                return response()->json([
+                    'status' => 'failed'
+                ]);
+            }
+
+            return response()->json([
+                'status' => 'pending'
+            ]);
+        } catch (\Exception $e) {
+
+            // Log::error('CHECK PAYMENT STATUS ERROR', [
+            //     'message' => $e->getMessage(),
+            //     'line'    => $e->getLine(),
+            // ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong'
+            ], 500);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | ENV
+    |--------------------------------------------------------------------------
+    */
+    private function getCashfreeBaseUrl()
+    {
+        return config("services.cashfree.mode") === 'production'
+            ? 'https://api.cashfree.com/pg'
+            : 'https://sandbox.cashfree.com/pg';
     }
 
     /*
@@ -286,7 +451,7 @@ class OfferOrderController extends Controller
     */
     public function processZaakpay($order, $request)
     {
-      
+
         try {
             $merchantId = config('services.zaakpay.merchant_identifier');
             $secret = hex2bin(config('services.zaakpay.secret_key'));
@@ -295,23 +460,23 @@ class OfferOrderController extends Controller
             $baseUrl = $this->getWebhookUrl();
 
             // $returnUrl =  config("services.app.url") .'/api/zaakpay/callback';
-            $returnUrl =  $baseUrl.'/api/zaakpay/callback';
+            $returnUrl =  $baseUrl . '/api/zaakpay/callback';
 
             $queryString = implode('|', [
-                $merchantId,                        
-                $orderId,                           
-                (int) ($order->amount * 100),       
-                "INR",                              
-                $returnUrl,                         
-                $request->email,                    
-                $request->fullName,                 
-                "NA",                               
-                "NA",                               
-                "NA",                               
-                "NA",                               
-                "India",                            
-                "395006",                           
-                $request->mobile                    
+                $merchantId,
+                $orderId,
+                (int) ($order->amount * 100),
+                "INR",
+                $returnUrl,
+                $request->email,
+                $request->fullName,
+                "NA",
+                "NA",
+                "NA",
+                "NA",
+                "India",
+                "395006",
+                $request->mobile
             ]);
 
             $encRequest = base64_encode(openssl_encrypt(
@@ -334,7 +499,7 @@ class OfferOrderController extends Controller
 
             ZaakpayLog::create([
                 'order_note'    => 'star offer page',
-                'offer_type'    => 2,
+                'offer_type'    => $order->offer_type,
                 'order_amount'  => $finalAmount,
                 'order_id'      => $order->id,
                 'reference_id'  => $orderId,
@@ -350,7 +515,6 @@ class OfferOrderController extends Controller
                 "merchantIdentifier" => $merchantId,
                 "checksum" => $checksum
             ]);
-
         } catch (\Exception $e) {
 
             return response()->json([
@@ -393,7 +557,7 @@ class OfferOrderController extends Controller
         }
 
         $order = OfferOrder::find($log->order_id);
-        
+
 
         if (($response['responseCode'] ?? '') == '100') {
 
@@ -442,153 +606,4 @@ class OfferOrderController extends Controller
 
         return rtrim($decrypted, "\x00..\x1F"); // clean padding
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | ENV
-    |--------------------------------------------------------------------------
-    */
-    private function getCashfreeBaseUrl()
-    {
-        return config("services.cashfree.mode") === 'production'
-            ? 'https://api.cashfree.com/pg'
-            : 'https://sandbox.cashfree.com/pg';
-    }
-
-    public function checkPaymentStatus(Request $request)
-    {
-        $request->validate([
-            'order_id' => 'required'
-        ]);
-
-        $log = CashfreeLog::where('reference_id', $request->order_id)->first();
-
-        if (!$log) {
-            return response()->json(['status' => 'not_found']);
-        }
-
-        if ($log->tx_status !== 'pending') {
-            return response()->json(['status' => $log->tx_status]);
-        }
-
-        $baseUrl = $this->getCashfreeBaseUrl();
-
-        $response = Http::withHeaders([
-            'x-client-id' => config('services.cashfree.key'),
-            'x-client-secret' => config('services.cashfree.secret'),
-            'x-api-version' => '2022-09-01',
-        ])->get($baseUrl . "/orders/{$request->order_id}/payments");
-
-        if (!$response->successful()) {
-            return response()->json(['status' => 'pending']);
-        }
-
-        $payments = $response->json();
-
-        if (empty($payments)) {
-            return response()->json(['status' => 'pending']);
-        }
-
-        $payment = collect($payments)->last();
-
-        $status = strtoupper($payment['payment_status'] ?? 'PENDING');
-
-        if ($status === 'SUCCESS') {
-
-            $order = OfferOrder::find($log->order_id);
-
-            if ($order && !$order->payment_id) {
-                $order->update([
-                    'payment_id' => $payment['cf_payment_id'] ?? null,
-                    'card_number' => generateCardNumber(),
-                ]);
-            }
-
-            $log->update([
-                'payment_id' => $payment['cf_payment_id'] ?? null,
-                'tx_status' => 'success',
-            ]);
-
-            return response()->json(['status' => 'success']);
-        }
-
-        if (in_array($status, ['FAILED', 'CANCELLED', 'USER_DROPPED'])) {
-
-            $log->update([
-                'tx_status' => 'failed'
-            ]);
-
-            return response()->json(['status' => 'failed']);
-        }
-
-        return response()->json(['status' => 'pending']);
-    }
-
-    // private function handleSuccessfulPayment($order)
-    // {
-    //     if (!$order) {
-    //     Log::info("Order not found");
-    //     return;
-    // }
-
-    // if (!$order->card_number) {
-    //     Log::info("Card number missing");
-    //     return;
-    // }
-    //     if (!$order) return;
-
-    //     $alreadyProcessed = ApplicationOrder::where('card_id', $order->card_number)->exists();
-
-    //     if ($alreadyProcessed) {
-    //         return;
-    //     }
-
-    //     $customer = Customer::where('mobile_number', $order->mobile)->first();
-
-    //     if (!$customer) return;
-
-    //     if ($customer->is_paid) return;
-
-        
-    //     $service = Service::where('service_code', $order->service_code)->first();
-        
-    //     $customer->update([
-    //         'is_paid' => 1,
-    //         'registration_step' => 4,  
-    //         'service_id' => $service->id ?? null,
-    //         'nationality' => 'India',
-    //     ]);
-    //     // =========================
-    //     // APPLICATION ORDER (MODEL)
-    //     // =========================
-    //     ApplicationOrder::create([
-    //         'customer_id' => $customer->id,
-    //         'amount'      => $order->amount,
-    //         'payment_id'  => $order->payment_id,
-    //         'card_number'     => $order->card_number,
-    //     ]);
-
-    //     // =========================
-    //     // INVOICE (MODEL)
-    //     // =========================
-    //     $invNo = 'INV-' . time();
-
-    //     $amount = $order->amount;
-    //     $cgst = $amount * 0.09;
-    //     $sgst = $amount * 0.09;
-
-    //     Invoice::create([
-    //         'customer_id' => $customer->id,
-    //         'service_id' => $customer->service_id,
-    //         'order_id' => $order->card_number,
-    //         'inv_date'    => now(),
-    //         'inv_no'      => $invNo,
-    //         'net_amount'  => $amount,
-    //         'cgst'        => $cgst,
-    //         'sgst'        => $sgst,
-    //         'igst'        => 0,
-    //         'total_amount'=> $amount + $cgst + $sgst,
-    //     ]);
-    // }
-
 }
