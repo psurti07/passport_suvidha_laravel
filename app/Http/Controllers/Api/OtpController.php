@@ -123,86 +123,133 @@ class OtpController extends Controller
         }
     }
 
-    public function verify(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'mobile_number' => 'required|string|min:10|max:15',
-            'otp' => 'required|string|digits:4',
-            'purpose' => 'required|in:registration,login',
-        ]);
+public function verify(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'mobile_number' => 'required|string|min:10|max:15',
+        'otp' => 'required|string|digits:4',
+        'purpose' => 'required|in:registration,login',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $validated = $validator->validated();
-        $mobileNumber = $validated['mobile_number'];
-        $inputOtp = $validated['otp'];
-        $purpose = $validated['purpose'];
-
-        $customer = Customer::where('mobile_number', $mobileNumber)->first();
-
-        if (!$customer) {
-            return response()->json(['errors' => ['mobile_number' => ['Customer not found.']]], 404);
-        }
-
-        $otpRecord = Otp::where('mobile_number', $mobileNumber)
-            ->where('otp', (int) $inputOtp)
-            ->where('purpose', $purpose)
-            ->where('is_verified', false)
-            ->where('sent_at', '>=', Carbon::now()->subMinutes(10))
-            ->latest('sent_at')
-            ->first();
-
-        if (!$otpRecord) {
-            return response()->json([
-                'errors' => ['otp' => ['Invalid or expired OTP. Please request a new one.']]
-            ], 401);
-        }
-
-        $otpRecord->update(['is_verified' => true]);
-
-
-        if ($purpose === 'login') {
-
-            if ($customer->registration_step < 4) {
-                return response()->json([
-                    'errors' => ['registration' => ['Please complete your registration process first.']]
-                ], 422);
-            }
-            
-            $customer->tokens()->delete();
-            
-            $token = $customer->createToken('customer-login-token')->plainTextToken;
-            
-            return response()->json([
-                'message' => 'Login successful.',
-                'customer' => $customer,
-                'token' => $token,
-                'token_type' => 'Bearer'
-            ]);
-        }
-    
-        if ($purpose === 'registration') {
-
-            if ($customer->registration_step < 2) {
-                $customer->update(['registration_step' => 2]);
-            }
-            
-            $customer->tokens()->delete();
-
-            $token = $customer->createToken('customer-registration-token')->plainTextToken;
-            
-            return response()->json([
-                'message' => 'OTP verified successfully.',
-                'customer' => $customer,
-                'token' => $token,
-                'registration_step' => $customer->registration_step,
-                'next_step' => $this->getNextStep($customer->registration_step),
-                'token_type' => 'Bearer',
-            ]);
-        }
+    if ($validator->fails()) {
+        return response()->json([
+            'errors' => $validator->errors()
+        ], 422);
     }
+
+    $validated = $validator->validated();
+
+    $mobileNumber = $validated['mobile_number'];
+    $inputOtp = $validated['otp'];
+    $purpose = $validated['purpose'];
+
+    // Find customer
+    $customer = Customer::where('mobile_number', $mobileNumber)->first();
+
+    if (!$customer) {
+        return response()->json([
+            'errors' => [
+                'mobile_number' => ['Customer not found.']
+            ]
+        ], 404);
+    }
+
+    // Get latest OTP record
+    $otpRecord = Otp::where('mobile_number', $mobileNumber)
+        ->where('purpose', $purpose)
+        ->where('is_verified', false)
+        ->where('sent_at', '>=', Carbon::now()->subMinutes(10))
+        ->latest('sent_at')
+        ->first();
+
+    // OTP not found or expired
+    if (!$otpRecord) {
+        return response()->json([
+            'errors' => [
+                'otp' => ['Invalid or expired OTP. Please request a new one.']
+            ]
+        ], 401);
+    }
+
+    // Wrong OTP
+    if ($otpRecord->otp != (int) $inputOtp) {
+
+        $otpRecord->increment('attempts');
+
+        return response()->json([
+            'errors' => [
+                'otp' => ['Incorrect OTP.']
+            ],
+            'attempts' => $otpRecord->attempts
+        ], 401);
+    }
+
+    // Correct OTP
+    $otpRecord->update([
+        'is_verified' => true,
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | LOGIN FLOW
+    |--------------------------------------------------------------------------
+    */
+    if ($purpose === 'login') {
+
+        if ($customer->registration_step < 4) {
+            return response()->json([
+                'errors' => [
+                    'registration' => [
+                        'Please complete your registration process first.'
+                    ]
+                ]
+            ], 422);
+        }
+
+        // Remove old tokens
+        $customer->tokens()->delete();
+
+        // Create new token
+        $token = $customer->createToken('customer-login-token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful.',
+            'customer' => $customer,
+            'token' => $token,
+            'token_type' => 'Bearer',
+        ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | REGISTRATION FLOW
+    |--------------------------------------------------------------------------
+    */
+    if ($purpose === 'registration') {
+
+        // Update registration step
+        if ($customer->registration_step < 2) {
+            $customer->update([
+                'registration_step' => 2
+            ]);
+        }
+
+        // Remove old tokens
+        $customer->tokens()->delete();
+
+        // Create new token
+        $token = $customer->createToken('customer-registration-token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'OTP verified successfully.',
+            'customer' => $customer,
+            'token' => $token,
+            'registration_step' => $customer->registration_step,
+            'next_step' => $this->getNextStep($customer->registration_step),
+            'token_type' => 'Bearer',
+        ]);
+    }
+}
 
     private function getNextStep($step)
     {

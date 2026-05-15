@@ -50,48 +50,72 @@ class FinalDetailController extends Controller
     /**
      * Preview the application summary PDF
      */
-    public function preview()
-    {
-        $customer = Auth::guard('customer')->user();
-        $finalDetail = FinalDetail::where('customer_id', $customer->id)
-            ->latest()
-            ->first();
-        
-        if (!$finalDetail) {
-            return response()->json(['message' => 'No application summary found'], 404);
-        }
+public function preview()
+{
+    $customer = Auth::guard('customer')->user();
 
-        $filePath = storage_path('app/public/' . $finalDetail->file_path);
-        
-        if (!file_exists($filePath)) {
-            return response()->json(['message' => 'File not found'], 404);
-        }
+    $finalDetail = FinalDetail::where('customer_id', $customer->id)
+        ->latest()
+        ->first();
 
-        return response()->file($filePath);
+    if (!$finalDetail) {
+        return response()->json([
+            'message' => 'No application summary found'
+        ], 404);
     }
+
+    $filePath = storage_path('app/public/' . $finalDetail->file_path);
+
+    if (!file_exists($filePath)) {
+        return response()->json([
+            'message' => 'File not found'
+        ], 404);
+    }
+
+    $mimeType = mime_content_type($filePath);
+
+    return response()->file($filePath, [
+        'Content-Type' => $mimeType,
+    ]);
+}
 
     /**
      * Download the application summary PDF
      */
-    public function download()
-    {
-        $customer = Auth::guard('customer')->user();
-        $finalDetail = FinalDetail::where('customer_id', $customer->id)
-            ->latest()
-            ->first();
-        
-        if (!$finalDetail) {
-            return response()->json(['message' => 'No application summary found'], 404);
-        }
+public function download()
+{
+    $customer = Auth::guard('customer')->user();
 
-        $filePath = storage_path('app/public/' . $finalDetail->file_path);
-        
-        if (!file_exists($filePath)) {
-            return response()->json(['message' => 'File not found'], 404);
-        }
+    $finalDetail = FinalDetail::where('customer_id', $customer->id)
+        ->latest()
+        ->first();
 
-        return response()->download($filePath, 'Application_Summary.pdf');
+    if (!$finalDetail) {
+        return response()->json([
+            'message' => 'No application summary found'
+        ], 404);
     }
+
+    $filePath = storage_path('app/public/' . $finalDetail->file_path);
+
+    if (!file_exists($filePath)) {
+        return response()->json([
+            'message' => 'File not found'
+        ], 404);
+    }
+
+    $mimeType = mime_content_type($filePath);
+
+    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+    return response()->download(
+        $filePath,
+        'Application_Summary.' . $extension,
+        [
+            'Content-Type' => $mimeType,
+        ]
+    );
+}
 
     /**
      * Verify application summary
