@@ -94,12 +94,6 @@ class LeadController extends Controller
             ->make(true);
     }
 
-    /**
-     * Display a listing of today's customers.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function today()
     {
         $services = Service::all();

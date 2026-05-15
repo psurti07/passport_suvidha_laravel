@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AppointmentLetter;
 use App\Models\Customer;
+use App\Models\ApplicationProgress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -12,11 +13,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AppointmentLetterController extends Controller
 {
-    /**
-     * Display a listing of appointment letters.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return view('admin.appointment-letters.index');
@@ -162,23 +159,12 @@ class AppointmentLetterController extends Controller
             ->make(true);
     }
 
-    /**
-     * Show the form for creating a new appointment letter.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $customers = Customer::orderBy('first_name')->get();
         return view('admin.appointment-letters.create', compact('customers'));
     }
 
-    /**
-     * Store a newly created appointment letter in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -205,37 +191,18 @@ class AppointmentLetterController extends Controller
             ->with('success', 'Appointment letter uploaded successfully.');
     }
 
-    /**
-     * Display the specified appointment letter.
-     *
-     * @param  \App\Models\AppointmentLetter  $appointmentLetter
-     * @return \Illuminate\Http\Response
-     */
     public function show(AppointmentLetter $appointmentLetter)
     {
         $appointmentLetter->load(['customer', 'uploader']);
         return view('admin.appointment-letters.show', compact('appointmentLetter'));
     }
 
-    /**
-     * Show the form for editing the specified appointment letter.
-     *
-     * @param  \App\Models\AppointmentLetter  $appointmentLetter
-     * @return \Illuminate\Http\Response
-     */
     public function edit(AppointmentLetter $appointmentLetter)
     {
         $customers = Customer::orderBy('first_name')->get();
         return view('admin.appointment-letters.edit', compact('appointmentLetter', 'customers'));
     }
 
-    /**
-     * Update the specified appointment letter in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\AppointmentLetter  $appointmentLetter
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, AppointmentLetter $appointmentLetter)
     {
         $request->validate([
@@ -245,19 +212,15 @@ class AppointmentLetterController extends Controller
             'appointment_time' => 'required',
         ]);
 
-        // Update customer ID
         $appointmentLetter->customer_id = $request->customer_id;
         $appointmentLetter->appointment_date = $request->appointment_date;
         $appointmentLetter->appointment_time = $request->appointment_time;
 
-        // Update file if provided
         if ($request->hasFile('appointment_letter')) {
-            // Delete old file
             if (Storage::disk('public')->exists($appointmentLetter->file_path)) {
                 Storage::disk('public')->delete($appointmentLetter->file_path);
             }
 
-            // Upload new file
             $file = $request->file('appointment_letter');
             $fileName = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('appointment_letters', $fileName, 'public');
@@ -273,32 +236,30 @@ class AppointmentLetterController extends Controller
             ->with('success', 'Appointment letter updated successfully.');
     }
 
-    /**
-     * Remove the specified appointment letter from storage.
-     *
-     * @param  \App\Models\AppointmentLetter  $appointmentLetter
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(AppointmentLetter $appointmentLetter)
     {
-        // Delete the associated file
-        // if (Storage::disk('public')->exists($appointmentLetter->file_path)) {
-        //     Storage::disk('public')->delete($appointmentLetter->file_path);
-        // }
+        $isUsed = ApplicationProgress::where('file_type', 'appointment_letters')
+            ->where('file', $appointmentLetter->id)
+            ->whereNull('deleted_at')
+            ->exists();
 
-        // Delete the record
+        if ($isUsed) {
+            return back()->with(
+                'error',
+                'Please delete the related application progress entry first.'
+            );
+        }
+
+        if (Storage::disk('public')->exists($appointmentLetter->file_path)) {
+            Storage::disk('public')->delete($appointmentLetter->file_path);
+        }
+
         $appointmentLetter->delete();
 
         return redirect()->route('admin.appointment-letters.index')
             ->with('success', 'Appointment letter deleted successfully.');
     }
 
-    /**
-     * Download the appointment letter file.
-     *
-     * @param  \App\Models\AppointmentLetter  $appointmentLetter
-     * @return \Illuminate\Http\Response
-     */
     public function download(AppointmentLetter $appointmentLetter)
     {
         if (!Storage::disk('public')->exists($appointmentLetter->file_path)) {
@@ -311,12 +272,6 @@ class AppointmentLetterController extends Controller
         return response()->download($fullPath, $fileName);
     }
 
-    /**
-     * Preview the appointment letter file.
-     *
-     * @param  \App\Models\AppointmentLetter  $appointmentLetter
-     * @return \Illuminate\Http\Response
-     */
     public function preview(AppointmentLetter $appointmentLetter)
     {
         if (!Storage::disk('public')->exists($appointmentLetter->file_path)) {

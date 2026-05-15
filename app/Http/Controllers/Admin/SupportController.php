@@ -12,11 +12,6 @@ use Illuminate\Support\Str;
 
 class SupportController extends Controller
 {
-    /**
-     * Display the customer support page with tickets from registered users.
-     *
-     * @return \Illuminate\View\View
-     */
     public function customerSupport()
     {
         return view('admin.support.customer_support');
@@ -111,11 +106,6 @@ class SupportController extends Controller
             ->make(true);
     }
 
-    /**
-     * Display the guest user support page with tickets from guests.
-     *
-     * @return \Illuminate\View\View
-     */
     public function guestSupport()
     {
         return view('admin.support.guest_support');
@@ -210,12 +200,6 @@ class SupportController extends Controller
             ->make(true);
     }
 
-    /**
-     * Display the specified ticket.
-     *
-     * @param  \App\Models\Ticket  $ticket
-     * @return \Illuminate\View\View
-     */
     public function show(Ticket $ticket)
     {
         // Eager load remarks and their associated user (staff)
@@ -236,13 +220,6 @@ class SupportController extends Controller
         return view('admin.support.show', compact('ticket', 'userType'));
     }
 
-    /**
-     * Store a new remark for the specified ticket.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Ticket  $ticket
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function storeRemark(Request $request, Ticket $ticket)
     {
         $validated = $request->validate([
@@ -286,13 +263,6 @@ class SupportController extends Controller
             ->with('success', 'Remark added successfully.');
     }
 
-    /**
-     * Update the status of the specified ticket.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Ticket  $ticket
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function updateStatus(Request $request, Ticket $ticket)
     {
         $validated = $request->validate([

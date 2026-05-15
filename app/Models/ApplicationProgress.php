@@ -44,7 +44,7 @@ class ApplicationProgress extends Model
 
     /**
      * Get the related file based on file_type.
-     */
+    */
     public function getRelatedFileAttribute()
     {
         if (!$this->file_type || !$this->file) {

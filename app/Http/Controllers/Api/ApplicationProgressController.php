@@ -106,7 +106,7 @@ class ApplicationProgressController extends Controller
             ->latest()
             ->first();
 
-        $paymentLog = DB::table('razorpay_logs_entry')
+        $paymentLog = DB::table('razorpay_logs')
             ->where('customer_id', $customer->id)
             ->where('tx_status', 'success')
             ->latest()

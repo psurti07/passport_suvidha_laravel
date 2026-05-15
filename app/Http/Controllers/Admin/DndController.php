@@ -114,9 +114,8 @@ class DndController extends Controller
             while (($row = fgetcsv($handle, 1000, ",")) !== false) {
 
                 $rowNumber++;
-
-                // Skip header
-                if ($rowNumber == 1) {
+                
+                if ($rowNumber == 1) { // Skip header
                     continue;
                 }
 

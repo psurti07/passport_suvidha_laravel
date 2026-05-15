@@ -11,11 +11,6 @@ use Illuminate\Support\Str;
 
 class SearchController extends Controller
 {
-    /**
-     * Display the customer search form.
-     *
-     * @return \Illuminate\View\View
-     */
     public function showSearchForm()
     {
         $customer = null;
@@ -35,12 +30,6 @@ class SearchController extends Controller
         ]);
     }
 
-    /**
-     * Handle the customer search request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View
-     */
     public function searchCustomer(Request $request)
     {
         $validator = Validator::make($request->all(), [

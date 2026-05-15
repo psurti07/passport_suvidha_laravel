@@ -85,7 +85,7 @@ class TodayStatisticsController extends Controller
         // ================= PAYMENT STATS =================
 
         // Razorpay → Services
-        $razorpayServices = DB::table('razorpay_logs_entry')
+        $razorpayServices = DB::table('razorpay_logs')
             ->select('service_type', DB::raw('COUNT(*) as total'))
             ->whereDate('created_at', $today)
             ->where('tx_status', 'success')
@@ -103,14 +103,14 @@ class TodayStatisticsController extends Controller
             );
 
         // Cashfree → Card Offer
-        $cashfreeCardOffer = DB::table('cashfree_logs_entry')
+        $cashfreeCardOffer = DB::table('cashfree_logs')
             ->whereDate('created_at', $today)
             ->where('tx_status', 'success')
             ->where('offer_type', 1)
             ->count();
 
         // Zaakpay → Star Offer
-        $zaakpayStarOffer = DB::table('zaakpay_logs_entry')
+        $zaakpayStarOffer = DB::table('zaakpay_logs')
             ->whereDate('created_at', $today)
             ->where('tx_status', 'success')
             ->where('offer_type', 2)

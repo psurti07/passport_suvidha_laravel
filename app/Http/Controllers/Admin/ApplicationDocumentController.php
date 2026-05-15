@@ -13,11 +13,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ApplicationDocumentController extends Controller
 {
-    /**
-     * Display a listing of appointment documents.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         return view('admin.application-documents.index');
@@ -156,12 +151,6 @@ class ApplicationDocumentController extends Controller
             ->make(true);
     }
 
-    /**
-     * Store a newly created application document in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -212,22 +201,14 @@ class ApplicationDocumentController extends Controller
             ->with('success', 'Document uploaded successfully.');
     }
 
-    /**
-     * Remove the specified application document from storage.
-     *
-     * @param  \App\Models\ApplicationDocument  $applicationDocument
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request, ApplicationDocument $applicationDocument)
     {
         $customerId = $applicationDocument->customer_id;
 
-        // Delete the file from storage
-        // if ($applicationDocument->file_path && Storage::disk('public')->exists($applicationDocument->file_path)) {
-        //     Storage::disk('public')->delete($applicationDocument->file_path);
-        // }
+        if ($applicationDocument->file_path && Storage::disk('public')->exists($applicationDocument->file_path)) {
+            Storage::disk('public')->delete($applicationDocument->file_path);
+        }
 
-        // Delete the record
         $applicationDocument->delete();
 
         if ($request->redirect === 'list') {
@@ -236,7 +217,6 @@ class ApplicationDocumentController extends Controller
                 ->with('success', 'Document deleted successfully.');
         }
 
-        // Redirect back to the customer detail page with documents tab active
         return redirect()->route('admin.customers.show', $customerId)
             ->with('success', 'Document deleted successfully.')
             ->withFragment('documents');

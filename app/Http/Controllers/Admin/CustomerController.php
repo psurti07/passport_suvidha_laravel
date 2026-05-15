@@ -23,11 +23,6 @@ use App\Services\SmsService;
 
 class CustomerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $services = Service::all();
@@ -110,12 +105,6 @@ class CustomerController extends Controller
             ->make(true);
     }
 
-    /**
-     * Display a listing of today's customers.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function today()
     {
         $services = Service::all();
@@ -188,11 +177,6 @@ class CustomerController extends Controller
             ->make(true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('admin.customers.create', [
@@ -202,12 +186,6 @@ class CustomerController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $baseRules = [
@@ -246,12 +224,6 @@ class CustomerController extends Controller
         return back()->with('success', 'Customer created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  Customer $customer
-     * @return \Illuminate\Http\Response
-     */
     public function show(Customer $customer)
     {
         if (!$customer->is_paid) {
@@ -275,12 +247,6 @@ class CustomerController extends Controller
         return view('admin.customers.show', compact('customer', 'statuses', 'predefinedMessages', 'invoice'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  Customer $customer
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Customer $customer)
     {
         return view('admin.customers.edit', [
@@ -290,13 +256,6 @@ class CustomerController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Customer $customer
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Customer $customer)
     {
         $rules = [
@@ -327,43 +286,22 @@ class CustomerController extends Controller
         return redirect()->back()->with('success', 'Customer updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  Customer $customer
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Customer $customer)
     {
         DB::transaction(function () use ($customer) {
 
-            // application documents
             $customer->applicationDocuments()->delete();
-
-            // application orders
             $customer->applicationOrders()->delete();
-
-            // progress
             $customer->applicationProgress()->delete();
-
-            // appointment letters
             $customer->appointmentLetters()->delete();
-
-            // final details
             $customer->finalDetails()->delete();
-
-            // tickets
             $customer->tickets()->delete();
 
-            // invoices + invoice logs
             foreach ($customer->invoices as $invoice) {
-
                 $invoice->logs()->delete();
-
                 $invoice->delete();
             }
 
-            // customer
             $customer->delete();
         });
 
@@ -371,33 +309,7 @@ class CustomerController extends Controller
             ->route('admin.customers.index')
             ->with('success', 'Customer deleted successfully.');
     }
-    // public function destroy(Customer $customer)
-    // {
-    //     $customer->delete();
-    //     return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully');
-    // }
-    // public function destroy(Customer $customer)
-    // {
-    //     $customer = Customer::findOrFail($customer->id);
 
-    //     DB::transaction(function () use ($customer) {
-
-    //         $customer->applicationOrders()->delete();
-    //         $customer->applicationDocuments()->delete();
-    //         $customer->applicationProgress()->delete();
-    //         $customer->appointmentLetters()->delete();
-    //         $customer->finalDetails()->delete();
-    //         $customer->tickets()->delete();
-
-    //         $customer->delete();
-    //     });
-
-    //     return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully');
-    // }
-
-    /**
-     * Handle both creating new customer and converting lead to customer
-     */
     public function convertToCustomer(Request $request, Customer $customer)
     {
         if ($customer->is_paid) {

@@ -155,7 +155,7 @@ class InvoiceController extends Controller
         $paymentLog = null;
 
         if ($order) {
-            $paymentLog = DB::table('razorpay_logs_entry')
+            $paymentLog = DB::table('razorpay_logs')
                 ->where('order_id', $order->id)
                 ->latest()
                 ->first();

@@ -29,10 +29,10 @@ class OtpController extends Controller
             'purpose'
         ])
 
-        ->whereBetween('sent_at', [
-            $from . ' 00:00:00',
-            $to . ' 23:59:59'
-        ]);
+            ->whereBetween('sent_at', [
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
+            ]);
 
         if ($request->filled('is_verified')) {
             $query->where('is_verified', $request->is_verified);
@@ -49,7 +49,7 @@ class OtpController extends Controller
             ->editColumn('is_verified', function ($row) {
                 if ($row->is_verified == '1') {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Verified</span>';
-                }  else {
+                } else {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Pending</span>';
                 }
             })

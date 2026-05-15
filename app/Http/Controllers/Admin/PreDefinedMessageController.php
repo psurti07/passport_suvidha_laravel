@@ -11,9 +11,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class PreDefinedMessageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return view('admin.predefmessages.index');
@@ -106,9 +103,6 @@ class PreDefinedMessageController extends Controller
             ->make(true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $statuses = ApplicationStatus::orderBy('priority_no')->get();
@@ -116,9 +110,6 @@ class PreDefinedMessageController extends Controller
         // return redirect()->route('admin.predefined-messages.index')->with('warning', 'Create form not implemented yet.'); // Placeholder removed
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -135,34 +126,25 @@ class PreDefinedMessageController extends Controller
         } catch (\Exception $e) {
             // Log the error (optional but recommended)
             // Log::error('Error creating predefined message: ' . $e->getMessage());
-
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Error creating message. Please try again.');
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(PreDefinedMessage $predefined_message)
     {
         $predefined_message->load('status');
         return view('admin.predefmessages.show', ['preDefinedMessage' => $predefined_message]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(PreDefinedMessage $predefined_message)
     {
         $statuses = ApplicationStatus::orderBy('priority_no')->get();
         return view('admin.predefmessages.edit', ['preDefinedMessage' => $predefined_message, 'statuses' => $statuses]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, PreDefinedMessage $predefined_message)
     {
         // Validate the incoming request data
@@ -186,9 +168,6 @@ class PreDefinedMessageController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(PreDefinedMessage $predefined_message)
     {
         try {

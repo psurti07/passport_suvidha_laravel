@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\FinalDetail;
+use App\Models\ApplicationProgress;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -290,6 +291,22 @@ class FinalDetailController extends Controller
     public function destroy(FinalDetail $finalDetail)
     {
         // abort(403, 'Delete functionality has been disabled');
+        $isUsed = ApplicationProgress::where('file_type', 'final_details')
+            ->where('file', $finalDetail->id)
+            ->whereNull('deleted_at')
+            ->exists();
+
+        if ($isUsed) {
+            return back()->with(
+                'error',
+                'Please delete the related application progress entry first.'
+            );
+        }
+
+        if (Storage::disk('public')->exists($finalDetail->file_path)) {
+            Storage::disk('public')->delete($finalDetail->file_path);
+        }
+
         $finalDetail->delete();
 
         return back()->with('success', 'Final detail deleted successfully.');

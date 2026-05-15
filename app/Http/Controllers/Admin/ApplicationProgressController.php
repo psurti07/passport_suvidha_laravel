@@ -14,11 +14,6 @@ use App\Models\ApplicationStatus;
 
 class ApplicationProgressController extends Controller
 {
-    /**
-     * Display a listing of application progress entries.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         $query = ApplicationProgress::with(['customer', 'remarkedByUser']);
@@ -45,23 +40,11 @@ class ApplicationProgressController extends Controller
         return view('admin.application-progress.index', compact('applicationProgress'));
     }
 
-    /**
-     * Show the form for creating a new application progress entry.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $customers = Customer::all();
         return view('admin.application-progress.create', compact('customers'));
     }
-
-    /**
-     * Store a newly created application progress entry in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
 
     public function store(Request $request)
     {
@@ -164,37 +147,17 @@ class ApplicationProgressController extends Controller
             ->with('success', 'Application progress entry created successfully.');
     }
 
-    /**
-     * Display the specified application progress entry.
-     *
-     * @param  \App\Models\ApplicationProgress  $applicationProgress
-     * @return \Illuminate\Http\Response
-     */
     public function show(ApplicationProgress $applicationProgress)
     {
         $applicationProgress->load(['customer', 'remarkedByUser']);
         return view('admin.application-progress.show', compact('applicationProgress'));
     }
 
-    /**
-     * Show the form for editing the specified application progress entry.
-     *
-     * @param  \App\Models\ApplicationProgress  $applicationProgress
-     * @return \Illuminate\Http\Response
-     */
     public function edit(ApplicationProgress $applicationProgress)
     {
         $customers = Customer::all();
         return view('admin.application-progress.edit', compact('applicationProgress', 'customers'));
     }
-
-    /**
-     * Update the specified application progress entry in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ApplicationProgress  $applicationProgress
-     * @return \Illuminate\Http\Response
-     */
 
     public function update(Request $request, ApplicationProgress $applicationProgress)
     {
@@ -293,24 +256,17 @@ class ApplicationProgressController extends Controller
         return redirect()->route('admin.application-progress.index')
             ->with('success', 'Application progress entry updated successfully.');
     }
-    /**
-     * Remove the specified application progress entry from storage.
-     *
-     * @param  \App\Models\ApplicationProgress  $applicationProgress
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(ApplicationProgress $applicationProgress, Request $request)
     {
         $customerId = $applicationProgress->customer_id;
         $applicationProgress->delete();
 
-        // If the request is coming from the customer show page, redirect back there
         if ($request->has('redirect')) {
             return redirect($request->redirect)
                 ->with('success', 'Application progress entry deleted successfully.');
         }
 
-        // Otherwise, if we were in a customer view page, redirect to that customer
         if ($customerId && $request->has('from_customer') && $request->from_customer) {
             return redirect()->route('admin.customers.show', $customerId)
                 ->with('success', 'Application progress entry deleted successfully.');
@@ -320,12 +276,6 @@ class ApplicationProgressController extends Controller
             ->with('success', 'Application progress entry deleted successfully.');
     }
 
-    /**
-     * Display application progress history for a specific customer.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
     public function customerHistory(Customer $customer)
     {
         $history = $customer->applicationProgress()

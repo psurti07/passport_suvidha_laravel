@@ -54,7 +54,6 @@ class Customer extends Authenticatable
         'deleted_at' => 'datetime',
     ];
 
-    // Get full name attribute
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
