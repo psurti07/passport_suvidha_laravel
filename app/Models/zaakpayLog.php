@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ZaakpayLog extends Model
-{    
+{
     use HasFactory;
 
     protected $fillable = [
@@ -25,11 +25,11 @@ class ZaakpayLog extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
-    }   
+    }
 
     public function getServiceTextAttribute()
     {
-        return match($this->service_type) {
+        return match ($this->service_type) {
             'NP36' => 'New Passport - 36 Pages',
             'NP60' => 'New Passport - 60 Pages',
             'TP36' => 'Tatkal Passport - 36 Pages',
@@ -40,7 +40,7 @@ class ZaakpayLog extends Model
 
     public function getOfferTextAttribute()
     {
-        return match($this->offer_type) {
+        return match ($this->offer_type) {
             1 => 'Card Offer',
             2 => 'Star Offer',
             default => 'Direct',
