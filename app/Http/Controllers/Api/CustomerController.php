@@ -204,9 +204,9 @@ class CustomerController extends Controller
             return response()->json([
                 'message' => 'Customer information updated successfully',
                 'customer' => $existingCustomer,
-                // 'next_step' => 'otp_verification'
+                'next_step' => 'otp_verification',
                 'registration_step' => $existingCustomer->registration_step,
-                'next_step' => $this->getNextStep($existingCustomer->registration_step)
+                // 'next_step' => $this->getNextStep($existingCustomer->registration_step)
             ], 200);
         }
         

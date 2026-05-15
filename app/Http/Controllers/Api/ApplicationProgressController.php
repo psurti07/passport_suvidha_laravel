@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\ApplicationDocument;
 use App\Models\ApplicationProgress;
+use App\Models\ApplicationStatus;
 use App\Models\Customer;
+use App\Models\Invoice;
+use App\Models\RazorpayLog;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ApplicationProgressController extends Controller
@@ -37,9 +41,9 @@ class ApplicationProgressController extends Controller
         //     ->get();
 
         $progressEntries = ApplicationProgress::with('status')
-        ->where('customer_id', $userId)
-        ->orderBy('status_date', 'asc')
-        ->get();
+            ->where('customer_id', $userId)
+            ->orderBy('status_date', 'asc')
+            ->get();
 
         $stages = [];
         $lastCompletedStage = null;
@@ -73,9 +77,9 @@ class ApplicationProgressController extends Controller
                 $estimatedCompletionDate = $finalStage->status_date->format('F d, Y');
             } else {
                 $estimatedCompletionDate = $finalStage->status_date
-                ->copy()
-                ->addDays(10)
-                ->format('F d, Y');
+                    ->copy()
+                    ->addDays(10)
+                    ->format('F d, Y');
             }
         }
 
@@ -85,12 +89,12 @@ class ApplicationProgressController extends Controller
             'stages' => $stages,
             'current_stage' => $lastCompletedStage,
 
-            'created_at' => $firstEntry && $firstEntry->created_at 
-                ? $firstEntry->created_at->toISOString() 
+            'created_at' => $firstEntry && $firstEntry->created_at
+                ? $firstEntry->created_at->toISOString()
                 : null,
 
-            'updated_at' => $finalStage && $finalStage->updated_at 
-                ? $finalStage->updated_at->toISOString() 
+            'updated_at' => $finalStage && $finalStage->updated_at
+                ? $finalStage->updated_at->toISOString()
                 : null,
         ]);
     }
@@ -101,26 +105,21 @@ class ApplicationProgressController extends Controller
 
         $customer = Customer::find($user->id);
 
-        $service = DB::table('services')
-            ->where('id', $customer->service_id)
-            ->first();
+        if (!$customer) {
+            return response()->json([
+                'message' => 'Customer not found'
+            ], 404);
+        }
 
-        $invoice = DB::table('invoices')
-            ->where('customer_id', $customer->id)
-            ->latest()
-            ->first();
+        $service = $customer->service;
 
-        $paymentLog = DB::table('razorpay_logs_entry')
-            ->where('customer_id', $customer->id)
-            ->where('tx_status', 'success')
-            ->latest()
-            ->first();
+        $invoice = Invoice::where('customer_id', $customer->id)->latest()->first();
 
-        $progress = DB::table('application_progress')
-            ->where('customer_id', $customer->id)
-            ->get();
+        $paymentLog = RazorpayLog::where('customer_id', $customer->id)->where('tx_status', 'success')->latest()->first();
 
-        $statuses = DB::table('application_statuses')->orderBy('id')->get();
+        $progress = ApplicationProgress::where('customer_id', $customer->id)->get();
+
+        $statuses = ApplicationStatus::orderBy('id')->get();
 
         // map stages
         $stages = [];
@@ -169,8 +168,8 @@ class ApplicationProgressController extends Controller
                 'current_stage' => $currentStage
             ]
         ]);
-    }   
-    
+    }
+
     // public function getApplicationProgress()
     // {
     //     $customerId = auth()->id();
@@ -204,10 +203,10 @@ class ApplicationProgressController extends Controller
         $customerId = auth()->id();
 
         $data = ApplicationProgress::with([
-                'status',
-                'finalDetail',
-                'appointmentLetter'
-            ])
+            'status',
+            'finalDetail',
+            'appointmentLetter'
+        ])
             ->where('customer_id', $customerId)
             ->whereNotNull('remark')
             ->where('remark', '!=', '')
@@ -256,21 +255,21 @@ class ApplicationProgressController extends Controller
     //     Log::info('Received request to get application status by mobile', ['mobile' => $request->toArray()]); 
     //     $mobile = $request['mobile'];    
     //     $customer = Customer::where('mobile_number', $mobile)->first();
-    
+
     //     if (!$customer) {
     //         return response()->json([
     //             'status' => 'error',
     //             'message' => 'Customer not found'
     //         ], 404);
     //     }
-    
+
     //     $name = "$customer->first_name $customer->last_name";
 
     //     $progressEntries = ApplicationProgress::with('status')
     //         ->where('customer_id', $customer->id)
     //         ->orderBy('status_date', 'asc')
     //         ->get();
-    
+
     //     $stages = [];
     //     foreach ($progressEntries as $entry) {
     //         $stages[] = [
@@ -281,7 +280,7 @@ class ApplicationProgressController extends Controller
     //             'completed' => true,
     //         ];
     //     }
-    
+
     //     return response()->json([
     //         'status' => 'success',
     //         'data' => [
@@ -294,7 +293,8 @@ class ApplicationProgressController extends Controller
 
     public function getStatusByMobile(Request $request)
     {
-        $mobile = $request['mobile'];    
+        $mobile = $request['mobile'];
+
         $customer = Customer::where('mobile_number', $mobile)->first();
 
         if (!$customer) {
@@ -306,41 +306,21 @@ class ApplicationProgressController extends Controller
 
         $name = $customer->first_name . ' ' . $customer->last_name;
 
-        $statuses = DB::table('application_statuses')
-            ->orderBy('step') // important!
-            ->get();
-
-        $progress = DB::table('application_progress')
-            ->where('customer_id', $customer->id)
-            ->get();
-
+        $latestProgress = ApplicationProgress::where('customer_id', $customer->id)->orderByDesc('id')->first();
         $currentStage = null;
 
-        foreach ($statuses as $status) {
-            $stageData = $progress->firstWhere('status_id', $status->id);
+        if ($latestProgress) {
 
-            if (!$stageData) {
-                $currentStage = [
-                    'title' => $status->slug,
-                    'description' => null,
-                    'date' => null,
-                    'formatted_date' => null,
-                    'completed' => false,
-                ];
-                break;
-            }
-        }
-
-        if (!$currentStage && $progress->count() > 0) {
-            $last = $progress->sortByDesc('status_date')->first();
-
-            $status = $statuses->firstWhere('id', $last->status_id);
+            $status = ApplicationStatus::where('id', $latestProgress->status_id)->first();
 
             $currentStage = [
                 'title' => $status->slug ?? null,
-                'description' => $last->remark ?? null,
-                'date' => optional($last->status_date)->toISOString(),
-                'formatted_date' => optional($last->status_date)->format('F d, Y'),
+                'description' => $latestProgress->remark ?? null,
+                'date' => $latestProgress->status_date,
+                'formatted_date' => $latestProgress->status_date
+                    ? \Carbon\Carbon::parse($latestProgress->status_date)
+                    ->format('F d, Y')
+                    : null,
                 'completed' => true,
             ];
         }
@@ -354,4 +334,4 @@ class ApplicationProgressController extends Controller
             ]
         ], 200);
     }
-} 
+}

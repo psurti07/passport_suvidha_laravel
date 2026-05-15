@@ -15,6 +15,9 @@ use App\Http\Controllers\Api\RequiredDocumentsController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\ZaakpayController;
+use App\Http\Controllers\Api\SiteOptionController;
+// use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\MetaKeywordsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +41,7 @@ Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
 Route::post('/customers/create', [CustomerController::class, 'create'])->name('api.customers.create');
 Route::post('/customers/login', [CustomerController::class, 'login'])->name('api.customers.login');
 Route::middleware('auth:sanctum')
-     ->put('/customers/{customer}', [CustomerController::class, 'update']);
+    ->put('/customers/{customer}', [CustomerController::class, 'update']);
 
 Route::post('/otp/send', [OtpController::class, 'send']);
 Route::post('/otp/verify', [OtpController::class, 'verify']);
@@ -74,7 +77,6 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
         Route::get('/download/{document_type_id}', [RequiredDocumentsController::class, 'download'])->name('api.required-documents.download');
         Route::delete('/{document_type_id}', [RequiredDocumentsController::class, 'delete'])->name('api.required-documents.delete');
     });
-
 });
 
 Route::post('/check-status-by-mobile', [ApplicationProgressController::class, 'getStatusByMobile'])->name('api.application-progress.status-by-mobile');
@@ -102,3 +104,15 @@ Route::post('/cashfree/webhook', [OfferOrderController::class, 'cashfreeWebhook'
 Route::post('/zaakpay/callback', [OfferOrderController::class, 'zaakpayCallback'])->name('zaakpay.callback');
 Route::get('/check-payment-status', [OfferOrderController::class, 'checkPaymentStatus']);
 Route::post('/mark-payment-failed', [OfferOrderController::class, 'markPaymentFailed']);
+Route::post('/payment-cancelled', [OfferOrderController::class, 'paymentCancelled']);
+
+// welcome message
+Route::get('/welcome-message', [SiteOptionController::class, 'getWelcomeMessage']);
+
+// SEO Meta keywords
+Route::get('/seo/{slug}', [MetaKeywordsController::class, 'show']);
+
+// locations
+// Route::get('/locations', [LocationController::class, 'getPoliceStations']);
+
+Route::get('/cardoffer-response', [OfferOrderController::class, 'paymentResponse']);

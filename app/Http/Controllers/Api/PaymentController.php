@@ -9,6 +9,7 @@ use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Razorpay\Api\Api;
 use App\Models\RazorpayLog;
+use App\Models\Service;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\SmsService;
@@ -25,9 +26,7 @@ class PaymentController extends Controller
 
         $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
 
-        $service = DB::table('services')
-            ->where('service_code', $request->service_code)
-            ->first();
+        $service = Service::where('service_code', $request->service_code)->first();
 
         if (!$service) {
             return response()->json([
@@ -53,16 +52,14 @@ class PaymentController extends Controller
             'currency' => 'INR'
         ]);
 
-        // Store ONLY Razorpay order_id here
         RazorpayLog::create([
             'customer_id' => auth()->id() ?? 0,
-            'order_id' => null, // will be updated later
+            'order_id' => null,
             'payment_id' => null,
             'order_amount' => $finalAmount,
             'order_note' => 'Passport Application',
-            'reference_id' => $order['id'], // Razorpay order_id
-            'tx_status' => null, // no pending
-            // 'payment_mode' => 'razorpay',
+            'reference_id' => $order['id'],
+            'tx_status' => null,
             "service_type" => $request->service_code,
         ]);
 
@@ -91,7 +88,6 @@ class PaymentController extends Controller
 
             $api->utility->verifyPaymentSignature($attributes);
 
-            // Find log using Razorpay order_id
             $log = RazorpayLog::where('reference_id', $request->razorpay_order_id)->first();
 
             if (!$log) {
@@ -110,7 +106,6 @@ class PaymentController extends Controller
                 ], 400);
             }
 
-            // Prevent duplicate payment
             if ($customer->is_paid == 1) {
                 return response()->json([
                     'success' => false,
@@ -118,7 +113,6 @@ class PaymentController extends Controller
                 ], 400);
             }
 
-            // Fetch payment
             $payment = $api->payment->fetch($request->razorpay_payment_id);
 
             $paymentMode = $payment->method;
@@ -127,7 +121,6 @@ class PaymentController extends Controller
 
             $finalAmount = $log->order_amount;
 
-            // Skip order creation for test ₹1
             if ($finalAmount == 1) {
 
                 $log->update([
@@ -136,7 +129,7 @@ class PaymentController extends Controller
                     'payment_id' => $request->razorpay_payment_id
                 ]);
 
-                  $customer->update([
+                $customer->update([
                     'is_paid' => 1,
                     'is_active' => 1
                 ]);
@@ -149,7 +142,6 @@ class PaymentController extends Controller
                 ]);
             }
 
-            // Create or update order
             $order = ApplicationOrder::updateOrCreate(
                 ['customer_id' => $log->customer_id],
                 [
@@ -160,7 +152,6 @@ class PaymentController extends Controller
                 ]
             );
 
-            // Update log with FINAL values
             $log->update([
                 'tx_status' => 'success',
                 'payment_mode' => $paymentMode,
@@ -168,14 +159,12 @@ class PaymentController extends Controller
                 'order_id' => $order->id
             ]);
 
-            // Update customer
             $customer->update([
                 'is_paid' => 1,
                 'is_active' => 1
             ]);
 
-            // Invoice logic
-            $service = DB::table('services')->where('id', $customer->service_id)->first();
+            $service = $customer->service;
 
             $govAmount = $service->service_gov_amount ?? 0;
             $serviceCharges = $service->service_charges ?? 0;
@@ -211,7 +200,6 @@ class PaymentController extends Controller
 
             DB::commit();
 
-            // SMS Success
             if (!empty($customer->mobile_number)) {
                 $smsService = new SmsService();
 
@@ -224,7 +212,6 @@ class PaymentController extends Controller
                 'success' => true,
                 'message' => 'Payment verified successfully'
             ]);
-
         } catch (\Exception $e) {
 
             DB::rollBack();
@@ -233,7 +220,6 @@ class PaymentController extends Controller
 
             $paymentMode = null;
 
-            // Try fetching payment mode if payment_id exists
             if (!empty($request->razorpay_payment_id)) {
                 try {
                     $payment = $api->payment->fetch($request->razorpay_payment_id);
@@ -249,11 +235,10 @@ class PaymentController extends Controller
                 $log->update([
                     'tx_status' => 'failed',
                     'payment_id' => $request->razorpay_payment_id ?? null,
-                    'payment_mode' => $paymentMode 
+                    'payment_mode' => $paymentMode
                 ]);
             }
 
-            // SMS Failure
             if (isset($customer) && !empty($customer->mobile_number)) {
                 $smsService = new SmsService();
 
@@ -295,7 +280,7 @@ class PaymentController extends Controller
             $log->update([
                 'tx_status' => 'failed',
                 'payment_id' => $request->razorpay_payment_id ?? null,
-                'payment_mode' => $paymentMode 
+                'payment_mode' => $paymentMode
             ]);
         }
 
@@ -304,7 +289,4 @@ class PaymentController extends Controller
             'message' => 'Payment marked as failed'
         ]);
     }
-    
 }
-
-
