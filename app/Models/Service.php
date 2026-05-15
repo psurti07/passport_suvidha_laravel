@@ -25,6 +25,7 @@ class Service extends Model
         'service_total_amount' => 'decimal:2',
     ];
 
+    // Relationships
     public function invoices()
     {
         return $this->hasMany(Invoice::class);

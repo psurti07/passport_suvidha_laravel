@@ -853,7 +853,9 @@
                         <div class="pt-5 mt-4 border-t border-gray-200 flex justify-end gap-3">
                             <button type="button" @click="showRemarkForm = false; selectedMessage = ''; remarks = ''"
                                 class="btn-secondary px-6 py-2">CANCEL</button>
-                            <button type="submit" class="btn-primary px-8 py-2">ADD</button>
+                            <button type="submit"
+                                onclick="this.disabled=true; this.innerText='Adding...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                                class="btn-primary px-8 py-2">ADD</button>
                         </div>
                     </form>
                 </div>

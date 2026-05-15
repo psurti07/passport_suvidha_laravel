@@ -139,7 +139,9 @@ $(function() {
             },
             {
                 data: 'description',
-                name: 'description'
+                name: 'description',
+                className: 'whitespace-normal break-words',
+                width: '500px'
             },
             {
                 data: 'is_mandatory',
