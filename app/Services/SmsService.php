@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Services;
 
+use App\Models\SiteOption;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -12,9 +14,9 @@ class SmsService
             $username = config('services.sms.username');
             $password = config('services.sms.password');
             $senderId = config('services.sms.sender_id');
-            
+
             $url = "http://m.onlinebusinessbazaar.in/sendsms.jsp";
-            
+
             $response = Http::get($url, [
                 'user' => $username,
                 'password' => $password,
@@ -22,7 +24,7 @@ class SmsService
                 'mobiles' => '91' . $mobileNumber, //  FIXED
                 'sms' => $message
             ]);
-            
+
             $result = $response->body();
 
             //  Debug safely
@@ -36,7 +38,6 @@ class SmsService
                 'success' => !str_contains(strtolower($result), 'error'),
                 'response' => $result
             ];
-
         } catch (\Exception $e) {
             return [
                 'success' => false,
@@ -44,5 +45,40 @@ class SmsService
             ];
         }
     }
+
+    public function smsMessage($slug)
+    {
+        try {
+
+            $data = SiteOption::where('option_key', $slug)->first();
+
+            if (!$data) {
+                return [
+                    'success' => false,
+                    'message' => 'sms template not found',
+                ];
+            }
+
+            // Log::info("message sms: ", [
+            //     'slug' => $slug,
+            //     "message" => $data->option_value
+            // ]);
+
+            return [
+                'success' => true,
+                'message' => $data->option_value
+            ];
+        } catch (\Exception $e) {
+
+            // Log::error("sms message error: ", [
+            //     'slug' => $slug,
+            //     'error' => $e->getMessage()
+            // ]);
+
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+    }
 }
-?>

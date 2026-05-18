@@ -202,8 +202,15 @@ class PaymentController extends Controller
 
             if (!empty($customer->mobile_number)) {
                 $smsService = new SmsService();
+                $smsMessage = $smsService->smsMessage('complete-process-sms');
+                if (!$smsMessage['success']) {
+                    return response([
+                        'success' => false,
+                        'message' => "SMS template not found"
+                    ]);
+                }
 
-                $message = "Congrats, Your Passport Application is submitted successfully! Our Company Executive will contact you within 24-48 hours to proceed. Thanks, PassportSuvidha";
+                $message = $smsMessage['message'];
 
                 $smsService->sendSms($customer->mobile_number, $message);
             }
@@ -242,7 +249,16 @@ class PaymentController extends Controller
             if (isset($customer) && !empty($customer->mobile_number)) {
                 $smsService = new SmsService();
 
-                $message = "Sorry, your payment failed. Please try again. Passport Suvidha";
+                $smsMessage = $smsService->smsMessage('payment-failed-sms');
+
+                if (!$smsMessage['success']) {
+                    return response([
+                        'success' => false,
+                        'message' => "SMS template not found"
+                    ]);
+                }
+
+                $message = str_replace('{#var#}', $paymentMode ?? 'UPI', $smsMessage['message']);
 
                 $smsService->sendSms($customer->mobile_number, $message);
             }
@@ -282,6 +298,25 @@ class PaymentController extends Controller
                 'payment_id' => $request->razorpay_payment_id ?? null,
                 'payment_mode' => $paymentMode
             ]);
+
+            $customer = Customer::find($log->customer_id);
+            if ($customer && !empty($customer->mobile_number)) {
+
+                $mobileNumber = $customer->mobile_number;
+
+                $smsService = new SmsService();
+                $smsMessage = $smsService->smsMessage('payment-failed-sms');
+
+                if (!$smsMessage['success']) {
+                    return response([
+                        'success' => false,
+                        'message' => "SMS template not found"
+                    ]);
+                }
+
+                $message = str_replace('{#var#}', $paymentMode ?? '', $smsMessage['message']);
+                $smsService->sendSms($mobileNumber, $message);
+            }
         }
 
         return response()->json([

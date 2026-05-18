@@ -56,8 +56,8 @@ class CustomerController extends Controller
             'service_code' => 'required|string|max:255',
         ];
 
-        $isPaid = $request->input('is_paid', false) || 
-                  $request->filled(array_keys($paidRules));
+        $isPaid = $request->input('is_paid', false) ||
+            $request->filled(array_keys($paidRules));
 
         $rules = $baseRules;
         if ($isPaid) {
@@ -105,7 +105,7 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $isPaid = $request->input('is_paid', $customer->is_paid);
-        
+
         $rules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -178,7 +178,7 @@ class CustomerController extends Controller
 
         // Check if customer already exists with this mobile number
         $existingCustomer = Customer::where('mobile_number', $request->mobile_number)->first();
-        
+
         if ($existingCustomer) {
             // If customer exists and is paid, return error
             if ($existingCustomer->is_paid) {
@@ -193,14 +193,14 @@ class CustomerController extends Controller
                 $emailValidator = Validator::make(['email' => $request->email], [
                     'email' => 'required|email|unique:customers,email'
                 ]);
-                
+
                 if ($emailValidator->fails()) {
                     return response()->json(['errors' => $emailValidator->errors()], 422);
                 }
             }
-            
+
             $existingCustomer->update($data);
-            
+
             return response()->json([
                 'message' => 'Customer information updated successfully',
                 'customer' => $existingCustomer,
@@ -209,19 +209,19 @@ class CustomerController extends Controller
                 // 'next_step' => $this->getNextStep($existingCustomer->registration_step)
             ], 200);
         }
-        
+
         $data = $validator->validated();
-        
+
         $emailValidator = Validator::make(['email' => $request->email], [
             'email' => 'unique:customers,email'
         ]);
-        
+
         if ($emailValidator->fails()) {
             return response()->json(['errors' => $emailValidator->errors()], 422);
         }
-        
+
         $data['registration_step'] = 1;
-        
+
         $customer = Customer::create($data);
 
         return response()->json([
@@ -265,20 +265,27 @@ class CustomerController extends Controller
 
         // Update customer with additional info
         $data = $validator->validated();
-        
-        
+
+
         $data['registration_step'] = 3; // Step 3: Additional info
-        
+
         $customer->update($data);
 
         $smsService = new SmsService();
-            $mobileNumber = $customer->mobile_number;
-            if (!empty($mobileNumber)) {
+        $mobileNumber = $customer->mobile_number;
+        if (!empty($mobileNumber)) {
 
-                    $message = "Dear Customer, Your Passport Application is almost done! Complete process now to live your travel dreams. Click Now https://passportsuvidha.com/apply-passport";
+            $smsMessage = $smsService->smsMessage('complete-process-sms');
+            if (!$smsMessage['success']) {
+                return response([
+                    'success' => false,
+                    'message' => "SMS template not found"
+                ]);
+            }
 
-                    $response = $smsService->sendSms($mobileNumber, $message);
-                }
+            $message = $smsMessage['message'];
+            $response = $smsService->sendSms($mobileNumber, $message);
+        }
 
         return response()->json([
             'message' => 'Additional information saved successfully',
@@ -370,10 +377,10 @@ class CustomerController extends Controller
         }
 
         $mobileNumber = $request->mobile_number;
-        
+
         // Check if customer exists
         $customer = Customer::where('mobile_number', $mobileNumber)->first();
-        
+
         if (!$customer) {
             return response()->json([
                 'errors' => ['mobile_number' => ['Customer not found with this mobile number.']]
@@ -385,7 +392,7 @@ class CustomerController extends Controller
                 'errors' => ['account' => ['Your account is inactive.']]
             ], 403);
         }
-        
+
         // Check if the customer has completed registration
         if ($customer->registration_step < 4 || $customer->is_paid == 0) {
             return response()->json([
@@ -398,7 +405,7 @@ class CustomerController extends Controller
                 'errors' => ['account' => ['Your account has been deleted. Please contact support.']]
             ], 403);
         }
-        
+
         // Return success response with next step to request OTP
         return response()->json([
             'message' => 'Customer found, proceed with OTP verification.',
