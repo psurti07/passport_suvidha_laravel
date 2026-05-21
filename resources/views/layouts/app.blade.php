@@ -688,7 +688,6 @@
                     <span class="nav-link-text">Create An Account</span>
                 </a>
 
-                {{-- Documents Section --}}
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">DOCUMENTS</div>
 
                 <a href="{{ route('admin.application-documents.index') }}"
@@ -726,7 +725,6 @@
                     <span class="nav-link-text">Appointment Letters</span>
                 </a>
 
-                {{-- Application Section --}}
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">APPLICATION</div>
 
                 <a href="{{ route('admin.application.status') }}"
@@ -774,18 +772,7 @@
                     <span class="nav-link-text">Completed Applications</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SYSTEM</div>
-
-                <a href="{{ route('admin.otps.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text">OTP Management</span>
-                </a>
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">REPORTS</div>
 
                 <a href="{{ route('admin.invoices.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}"
@@ -807,16 +794,6 @@
                         <path stroke-width="2" d="M8 17v-4M12 17v-6M16 17v-2" />
                     </svg>
                     <span class="nav-link-text">GST Data</span>
-                </a>
-
-                <a href="{{ route('admin.dnd.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.dnd.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'DND List' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5l14 14"></path>
-                    </svg>
-                    <span class="nav-link-text">DND List</span>
                 </a>
 
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">OFFER</div>
@@ -877,7 +854,6 @@
                     <span class="nav-link-text">Zaakpay Log</span>
                 </a>
 
-                {{-- Support Section --}}
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SUPPORT</div>
 
                 <a href="{{ route('admin.support.customer') }}"
@@ -904,7 +880,40 @@
                     <span class="nav-link-text">Guest Support</span>
                 </a>
 
-                {{-- New Templates Section --}}
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SMS</div>
+
+                <a href="{{ route('admin.otps.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">OTP Management</span>
+                </a>
+
+                <a href="{{ route('admin.sms.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.sms.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'SMS Messages' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4-.8L3 20l1.3-3.9A7.93 7.93 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">SMS Messages</span>
+                </a>
+
+                <a href="{{ route('admin.dnd.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.dnd.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'DND List' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5l14 14"></path>
+                    </svg>
+                    <span class="nav-link-text">DND List</span>
+                </a>
+
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">TEMPLATES</div>
 
                 <a href="{{ route('admin.predefined-messages.index') }}"

@@ -240,7 +240,6 @@ class AppointmentLetterController extends Controller
     {
         $isUsed = ApplicationProgress::where('file_type', 'appointment_letters')
             ->where('file', $appointmentLetter->id)
-            ->whereNull('deleted_at')
             ->exists();
 
         if ($isUsed) {
