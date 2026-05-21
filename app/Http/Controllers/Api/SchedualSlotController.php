@@ -172,20 +172,20 @@ class SchedualSlotController extends Controller
         }
     }
 
-    public function encryptId()
-    {
-        $id = encryptData('8');
-        return response()->json([
-            'success' => true,
-            'id' => $id
-        ]);
-    }
-    public function decryptId()
-    {
-        $id = decryptData('QEBAQCYmJiYjIyMjJCQkJHGTLYSja31%2BCPcwuo93bEg%3D');
-        return response()->json([
-            'success' => true,
-            'id' => $id
-        ]);
-    }
+    // public function encryptId()
+    // {
+    //     $id = encryptData('8');
+    //     return response()->json([
+    //         'success' => true,
+    //         'id' => $id
+    //     ]);
+    // }
+    // public function decryptId()
+    // {
+    //     $id = decryptData('QEBAQCYmJiYjIyMjJCQkJHGTLYSja31%2BCPcwuo93bEg%3D');
+    //     return response()->json([
+    //         'success' => true,
+    //         'id' => $id
+    //     ]);
+    // }
 }

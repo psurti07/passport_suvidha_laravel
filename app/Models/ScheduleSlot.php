@@ -74,7 +74,7 @@ class ScheduleSlot extends Model
         return [
             self::LANGUAGE_ENGLISH => 'English',
             self::LANGUAGE_HINDI => 'Hindi',
-            self::LANGUAGE_GUJRATI => 'Gujrati'
+            self::LANGUAGE_GUJRATI => 'Gujarati'
         ];
     }
 

@@ -40,17 +40,32 @@ class InitSiteOptions extends Command
     {
         $keys = [
             'sms-sender-id',
+
+            // Facebook
             'facebook-domain-verification-id',
             'facebook-pixel-key',
             'facebook-access-token',
             'facebook-event-name',
             'facebook-event-id',
+
+            // Whatsapp
             'whatsapp-remarketing-campaign',
             'whatsapp-get-offer-campaign',
             'whatsapp-payment-success-campaign',
             'whatsapp-username-password-campaign',
+
+            // Other Messages
             'customer-message',
-            'welcome-message'
+            'welcome-message',
+
+            // SMS Templates
+            'otp-sms',
+            'complete-process-sms',
+            'application-submitted-sms',
+            'login-otp-sms',
+            'welcome-sms',
+            'payment-failed-sms',
+            'account-sms',
         ];
 
         foreach ($keys as $key) {

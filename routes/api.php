@@ -123,5 +123,5 @@ Route::get('/schedule-success', [SchedualSlotController::class, 'scheduleSuccess
 Route::get('/schedule-cancel', [SchedualSlotController::class, 'scheduleCancle']);
 Route::post('/schedule-slot', [SchedualSlotController::class, 'scheduleSlot']);
 
-Route::get('/encrypt', [SchedualSlotController::class, 'encryptId']);
-Route::get('/decrypt', [SchedualSlotController::class, 'decryptId']);
+// Route::get('/encrypt', [SchedualSlotController::class, 'encryptId']);
+// Route::get('/decrypt', [SchedualSlotController::class, 'decryptId']);
