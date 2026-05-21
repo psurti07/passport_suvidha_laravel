@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\ZaakpayController;
 use App\Http\Controllers\Api\SiteOptionController;
 // use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\MetaKeywordsController;
+use App\Http\Controllers\Api\SchedualSlotController;
 
 /*
 |--------------------------------------------------------------------------
@@ -116,3 +117,11 @@ Route::get('/seo/{slug}', [MetaKeywordsController::class, 'show']);
 // Route::get('/locations', [LocationController::class, 'getPoliceStations']);
 
 Route::get('/cardoffer-response', [OfferOrderController::class, 'paymentResponse']);
+
+Route::get('/schedule-slot', [SchedualSlotController::class, 'getScheduleDetails']);
+Route::get('/schedule-success', [SchedualSlotController::class, 'scheduleSuccess']);
+Route::get('/schedule-cancel', [SchedualSlotController::class, 'scheduleCancle']);
+Route::post('/schedule-slot', [SchedualSlotController::class, 'scheduleSlot']);
+
+Route::get('/encrypt', [SchedualSlotController::class, 'encryptId']);
+Route::get('/decrypt', [SchedualSlotController::class, 'decryptId']);

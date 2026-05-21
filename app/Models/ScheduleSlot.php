@@ -19,6 +19,7 @@ class ScheduleSlot extends Model
         'language',
         'remarks',
         'status',
+        'deleted_at'
     ];
 
     protected $casts = [
@@ -26,11 +27,11 @@ class ScheduleSlot extends Model
         'time' => 'datetime:H:i',
     ];
 
-    // Relationships
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
-    }
+    }    // Relationships
+
 
     public function service(): BelongsTo
     {
@@ -57,5 +58,33 @@ class ScheduleSlot extends Model
             4 => 'Not Reachable',
             default => 'Unknown',
         };
+    }
+
+    const SCHEDULED = 1;
+    const COMPLETED = 2;
+    const CANCELLED = 3;
+    const NOT_REACHABLE = 4;
+
+    const LANGUAGE_HINDI = 1;
+    const LANGUAGE_ENGLISH = 2;
+    const LANGUAGE_GUJRATI = 3;
+
+    public static function getLanguages()
+    {
+        return [
+            self::LANGUAGE_ENGLISH => 'English',
+            self::LANGUAGE_HINDI => 'Hindi',
+            self::LANGUAGE_GUJRATI => 'Gujrati'
+        ];
+    }
+
+    public static function getLangusgeName($id)
+    {
+        return self::getLanguages()[$id] ?? null;
+    }
+
+    public static function getLanguageId($name)
+    {
+        return array_search($name, self::getLanguages());
     }
 }

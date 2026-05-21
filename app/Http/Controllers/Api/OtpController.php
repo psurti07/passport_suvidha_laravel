@@ -58,7 +58,7 @@ class OtpController extends Controller
                 ]);
             }
 
-            $message = str_replace('{#var#}', $otp, $smsMessage['message']);
+            $message = str_replace('{#var_otp#}', $otp, $smsMessage['message']);
         } else {
             $smsMessage = $smsService->smsMessage('registration-otp-sms');
             if (!$smsMessage['success']) {
@@ -68,7 +68,7 @@ class OtpController extends Controller
                 ]);
             }
 
-            $message = str_replace('{#var#}', $otp, $smsMessage['message']);
+            $message = str_replace('{#var_otp#}', $otp, $smsMessage['message']);
         }
 
         $smsResult = $smsService->sendSms($mobileNumber, $message);

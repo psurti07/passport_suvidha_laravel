@@ -314,7 +314,7 @@ class PaymentController extends Controller
                     ]);
                 }
 
-                $message = str_replace('{#var#}', $paymentMode ?? '', $smsMessage['message']);
+                $message = str_replace('{#var_method#}', $paymentMode ?? '', $smsMessage['message']);
                 $smsService->sendSms($mobileNumber, $message);
             }
         }

@@ -42,3 +42,50 @@ if (!function_exists('getOption')) {
         return \App\Models\SiteOption::where('option_key', $key)->value('option_value');
     }
 }
+
+if (!function_exists('encryptData')) {
+    function encryptData($data)
+    {
+        $key = "jvJ7RGlyfjm0jwaa";
+        $iv = "@@@@&&&&####$$$$";
+
+        $encrypted = openssl_encrypt(
+            $data,
+            'AES-256-CBC',
+            $key,
+            OPENSSL_RAW_DATA,
+            $iv
+        );
+
+        return rtrim(strtr(base64_encode($iv . $encrypted), '+/', '-_'), '=');
+    }
+}
+
+if (!function_exists('decryptData')) {
+    function decryptData($data)
+    {
+        $key = "jvJ7RGlyfjm0jwaa";
+
+        $data = strtr($data, '-_', '+/');
+
+        $padding = strlen($data) % 4;
+
+        if ($padding) {
+            $data .= str_repeat('=', 4 - $padding);
+        }
+
+        $data = base64_decode($data);
+
+        $iv = substr($data, 0, 16);
+
+        $encrypted = substr($data, 16);
+
+        return openssl_decrypt(
+            $encrypted,
+            'AES-256-CBC',
+            $key,
+            OPENSSL_RAW_DATA,
+            $iv
+        );
+    }
+}
