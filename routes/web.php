@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\ZaakpayLogController;
 use App\Http\Controllers\Admin\CardOfferController;
 use App\Http\Controllers\Admin\StarOfferController;
 use App\Http\Controllers\Admin\SiteOptionController;
+use App\Http\Controllers\Admin\SmsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +75,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('customers/{customer}/activate', [CustomerController::class, 'activate'])->name('customers.activate');
     Route::patch('customers/{customer}/deactivate', [CustomerController::class, 'deactivate'])->name('customers.deactivate');
 
+    // Application Progress Routes
+    Route::get('customers/{customer}/application-progress', [ApplicationProgressController::class, 'customerHistory'])->name('application-progress.customer-history');
+    Route::resource('application-progress', ApplicationProgressController::class);
+
     // Application Documents Routes
     Route::resource('application-documents', ApplicationDocumentController::class);
     Route::get('/application-documents-data', [ApplicationDocumentController::class, 'data'])->name('application-documents.data');
@@ -99,10 +104,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/application-status/current', [ApplicationStatusController::class, 'current'])->name('application.status.current');
     Route::get('/application-status/completed', [ApplicationStatusController::class, 'completed'])->name('application.status.completed');
 
-    // Otp Routes
-    Route::get('otps', [OtpController::class, 'index'])->name('otps.index');
-    Route::get('/otps-data', [OtpController::class, 'data'])->name('otps.data');
-
     // Invoice Routes
     Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
     Route::get('/invoices-data', [InvoiceController::class, 'data'])->name('invoices.data');
@@ -110,12 +111,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/gst-reports', [InvoiceController::class, 'gstIndex'])->name('gst.index');
     Route::get('/gst-reports/data', [InvoiceController::class, 'gstData'])->name('gst.data');
     Route::delete('/invoices/{invoice}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
-
-    // DND Routes
-    Route::get('dnd', [DndController::class, 'index'])->name('dnd.index');
-    Route::get('/dnd-data', [DndController::class, 'data'])->name('dnd.data');
-    Route::post('dnd/upload', [DndController::class, 'upload'])->name('dnd.upload');
-    Route::delete('dnd/{customer}/delete', [DndController::class, 'destroy'])->name('dnd.destroy');
 
     // Card Offer Routes
     Route::get('card-offers', [CardOfferController::class, 'index'])->name('card-offers.index');
@@ -151,6 +146,21 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/support/tickets/{ticket}/status', [SupportController::class, 'updateStatus'])->name('support.tickets.status.update');
     Route::delete('/support/tickets/{ticket}', [SupportController::class, 'destroy'])->name('support.tickets.destroy');
 
+    // Otp Routes
+    Route::get('otps', [OtpController::class, 'index'])->name('otps.index');
+    Route::get('/otps-data', [OtpController::class, 'data'])->name('otps.data');
+
+    // Sms Routes
+    Route::resource('sms', SmsController::class);
+    Route::get('/sms-data', [SmsController::class, 'data'])->name('sms.data');
+    Route::post('/sms/send-test', [SmsController::class, 'sendTest'])->name('sms.sendTest');
+
+    // DND Routes
+    Route::get('dnd', [DndController::class, 'index'])->name('dnd.index');
+    Route::get('/dnd-data', [DndController::class, 'data'])->name('dnd.data');
+    Route::post('dnd/upload', [DndController::class, 'upload'])->name('dnd.upload');
+    Route::delete('dnd/{customer}/delete', [DndController::class, 'destroy'])->name('dnd.destroy');
+
     // Predefined Messages Routes
     Route::resource('predefined-messages', PreDefinedMessageController::class);
     Route::get('/predefined-messages-data', [PreDefinedMessageController::class, 'data'])->name('predefined-messages.data');
@@ -167,16 +177,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('users', UserController::class);
     Route::get('/users-data', [UserController::class, 'data'])->name('users.data');
 
-    // Application Progress Routes
-    Route::get('customers/{customer}/application-progress', [ApplicationProgressController::class, 'customerHistory'])
-        ->name('application-progress.customer-history');
-    Route::resource('application-progress', ApplicationProgressController::class);
-
     // Leads Routes
-    Route::match(['get', 'post'], '/leads/normal', [LeadController::class, 'normalLeads'])->name('leads.normal');
-    Route::match(['get', 'post'], '/leads/tatkal', [LeadController::class, 'tatkalLeads'])->name('leads.tatkal');
-    Route::get('/lead/{customer}', [LeadController::class, 'show'])->name('lead.show');
+    // Route::match(['get', 'post'], '/leads/normal', [LeadController::class, 'normalLeads'])->name('leads.normal');
+    // Route::match(['get', 'post'], '/leads/tatkal', [LeadController::class, 'tatkalLeads'])->name('leads.tatkal');
+    // Route::get('/lead/{customer}', [LeadController::class, 'show'])->name('lead.show');
 
-    // Report Routes
-    Route::get('/reports/gst', [ReportController::class, 'gstReport'])->name('reports.gst');
+    // // Report Routes
+    // Route::get('/reports/gst', [ReportController::class, 'gstReport'])->name('reports.gst');
 });
