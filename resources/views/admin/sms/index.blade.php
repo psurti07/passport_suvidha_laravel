@@ -23,13 +23,13 @@
 
                         <div>
                             <label class="text-sm">From</label>
-                            <input type="date" id="from_date" value="{{ now()->subDays(1)->format('Y-m-d') }}"
+                            <input type="date" id="from_date"
                                 class="border rounded-lg px-3 py-2 text-sm">
                         </div>
 
                         <div>
                             <label class="text-sm">To</label>
-                            <input type="date" id="to_date" value="{{ now()->format('Y-m-d') }}"
+                            <input type="date" id="to_date"
                                 class="border rounded-lg px-3 py-2 text-sm">
                         </div>
 
