@@ -57,21 +57,21 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
     Route::post('/customer/additional-info', [CustomerController::class, 'addAdditionalInfo'])->name('api.customers.additional-info');
     Route::post('/customer/select-service', [CustomerController::class, 'selectService'])->name('api.customers.select-service');
 
-    // Application Review Routes
-    Route::get('/application-review/summary', [FinalDetailController::class, 'getApplicationSummary'])->name('api.application-review.summary');
-    Route::get('/application-review/preview', [FinalDetailController::class, 'preview'])->name('api.application-review.preview');
-    Route::get('/application-review/download', [FinalDetailController::class, 'download'])->name('api.application-review.download');
-    Route::post('/application-review/verify', [FinalDetailController::class, 'verifyApplication'])->name('api.application-review.verify');
+    Route::prefix('application-review')->group(function () {
+        Route::get('/summary', [FinalDetailController::class, 'getApplicationSummary'])->name('api.application-review.summary');
+        Route::get('/preview', [FinalDetailController::class, 'preview'])->name('api.application-review.preview');
+        Route::get('/download', [FinalDetailController::class, 'download'])->name('api.application-review.download');
+        Route::post('/verify', [FinalDetailController::class, 'verifyApplication'])->name('api.application-review.verify');
+    });
+
     Route::get('/application-progress/status', [ApplicationProgressController::class, 'getApplicationProgress']);
 
-    // Appointment Letter Routes     
     Route::prefix('appointment-letters')->group(function () {
         Route::get('/', [AppointmentLetterController::class, 'listUserLetters'])->name('api.appointment-letters.list');
         Route::get('/download/{id}', [AppointmentLetterController::class, 'downloadById'])->name('api.appointment-letters.download-by-id');
         Route::get('/download', [AppointmentLetterController::class, 'download'])->name('api.appointment-letters.download');
     });
 
-    // Required Documents Routes
     Route::prefix('required-documents')->group(function () {
         Route::get('/', [RequiredDocumentsController::class, 'index'])->name('api.required-documents.index');
         Route::post('/upload/{document_type_id}', [RequiredDocumentsController::class, 'upload'])->name('api.required-documents.upload');
@@ -100,28 +100,28 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/payment-failed', [PaymentController::class, 'paymentFailed']);
 });
 
+// offer page payment routes
 Route::post('/create-payment', [OfferOrderController::class, 'createPayment']);
 Route::post('/cashfree/webhook', [OfferOrderController::class, 'cashfreeWebhook'])->name('cashfree.webhook');
 Route::post('/zaakpay/callback', [OfferOrderController::class, 'zaakpayCallback'])->name('zaakpay.callback');
 Route::get('/check-payment-status', [OfferOrderController::class, 'checkPaymentStatus']);
 Route::post('/mark-payment-failed', [OfferOrderController::class, 'markPaymentFailed']);
 Route::post('/payment-cancelled', [OfferOrderController::class, 'paymentCancelled']);
+Route::get('/cardoffer-response', [OfferOrderController::class, 'paymentResponse']);
 
-// welcome message
+// welcome message routes
 Route::get('/welcome-message', [SiteOptionController::class, 'getWelcomeMessage']);
 
-// SEO Meta keywords
+// SEO Meta keywords routes
 Route::get('/seo/{slug}', [MetaKeywordsController::class, 'show']);
 
 // locations
 // Route::get('/locations', [LocationController::class, 'getPoliceStations']);
 
-Route::get('/cardoffer-response', [OfferOrderController::class, 'paymentResponse']);
-
+// Schedule slot routes
 Route::get('/schedule-slot', [SchedualSlotController::class, 'getScheduleDetails']);
 Route::get('/schedule-success', [SchedualSlotController::class, 'scheduleSuccess']);
 Route::get('/schedule-cancel', [SchedualSlotController::class, 'scheduleCancle']);
 Route::post('/schedule-slot', [SchedualSlotController::class, 'scheduleSlot']);
-
-// Route::get('/encrypt', [SchedualSlotController::class, 'encryptId']);
-// Route::get('/decrypt', [SchedualSlotController::class, 'decryptId']);
+Route::get('/encrypt', [SchedualSlotController::class, 'encryptId']);
+Route::get('/decrypt', [SchedualSlotController::class, 'decryptId']);
