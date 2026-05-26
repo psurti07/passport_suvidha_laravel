@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Staff Users')
+
 @section('content')
 <div class="max-w-4xl mx-auto px-4 py-6">
     <div class="bg-white rounded-xl shadow-sm border border-gray-100">

@@ -28,12 +28,15 @@ class PreDefinedMessageController extends Controller
             'pre_defined_messages.message_remarks',
             'pre_defined_messages.created_at',
             'pre_defined_messages.updated_at',
-        ])
+        ]);
 
-            ->whereBetween('pre_defined_messages.created_at', [
-                $from . ' 00:00:00',
-                $to . ' 23:59:59'
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+
+            $query->whereBetween('created_at', [
+                $request->from_date . ' 00:00:00',
+                $request->to_date . ' 23:59:59'
             ]);
+        }
 
         return DataTables::of($query)
 

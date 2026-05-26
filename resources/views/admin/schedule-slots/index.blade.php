@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Staff Users')
+@section('title', 'Schedule Slots')
 
 @section('content')
 
@@ -16,33 +16,41 @@
                     <div class="flex items-center gap-4">
                         <h2
                             class="text-xl sm:text-2xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                            USERS
+                            SCHEDULE SLOTS
                         </h2>
-                        <a href="{{ route('admin.users.create') }}"
-                            class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                            New User
-                        </a>
                     </div>
                     <div class="flex flex-wrap gap-3">
 
                         <div>
                             <label class="text-sm">From</label>
-                            <input type="date" id="from_date"
+                            <input type="date" id="from_date" value="{{ now()->subDays(1)->format('Y-m-d') }}"
                                 class="border rounded-lg px-3 py-2 text-sm">
                         </div>
 
                         <div>
                             <label class="text-sm">To</label>
-                            <input type="date" id="to_date"
+                            <input type="date" id="to_date" value="{{ now()->format('Y-m-d') }}"
                                 class="border rounded-lg px-3 py-2 text-sm">
                         </div>
 
                         <div>
-                            <label class="text-sm">Status</label>
-                            <select id="is_active" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
+                            <label class="text-sm">Language</label>
+                            <select id="language" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
                                 <option value="">All</option>
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
+                                <option value="1">Hindi</option>
+                                <option value="2">English</option>
+                                <option value="3">Gujarati</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="text-sm">Status</label>
+                            <select id="status" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
+                                <option value="">All</option>
+                                <option value="1">Scheduled</option>
+                                <option value="2">Completed</option>
+                                <option value="3">Cancelled</option>
+                                <option value="4">Not Reachable</option>
                             </select>
                         </div>
 
@@ -63,7 +71,7 @@
             <div class="mt-4 overflow-x-auto">
                 <div class="whitespace-nowrap text-sm text-gray-700">
 
-                    <table id="users-table" class="min-w-full divide-y divide-gray-200 pt-5">
+                    <table id="schedule-slots-table" class="min-w-full divide-y divide-gray-200 pt-5">
 
                         <thead class="bg-blue-50">
 
@@ -71,17 +79,24 @@
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ID</th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Name</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Customer</th>
 
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Email</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                                    Mobile</th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Service
+                                </th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Date & Time
+                                </th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Launguage
+                                </th>
+
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Remarks
+                                </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
-                                </th>
-
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created
-                                </th>
-
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Updated
                                 </th>
 
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
@@ -110,7 +125,7 @@
 <script>
 $(function() {
 
-    let table = $('#users-table').DataTable({
+    let table = $('#schedule-slots-table').DataTable({
 
         processing: true,
         serverSide: true,
@@ -120,11 +135,12 @@ $(function() {
         ],
 
         ajax: {
-            url: "{{ route('admin.users.data') }}",
+            url: "{{ route('admin.schedule-slots.data') }}",
             data: function(d) {
                 d.from_date = $('#from_date').val();
                 d.to_date = $('#to_date').val();
-                d.is_active = $('#is_active').val();
+                d.language = $('#language').val();
+                d.status = $('#status').val();
             }
         },
 
@@ -133,24 +149,34 @@ $(function() {
                 name: 'id'
             },
             {
-                data: 'name',
-                name: 'name'
+                data: 'customer_name',
+                name: 'customer_name'
             },
             {
-                data: 'email',
-                name: 'email'
+                data: 'customer_mobile',
+                name: 'customer_mobile'
             },
             {
-                data: 'is_active',
-                name: 'is_active'
+                data: 'service_name',
+                name: 'service_name'
             },
             {
-                data: 'created_at',
-                name: 'created_at'
+                data: 'date_time',
+                name: 'date_time'
             },
             {
-                data: 'updated_at',
-                name: 'updated_at'
+                data: 'language',
+                name: 'language'
+            },
+            {
+                data: 'remarks',
+                name: 'remarks',
+                className: 'whitespace-normal break-words',
+                width: '500px'
+            },
+            {
+                data: 'status',
+                name: 'status'
             },
             {
                 data: 'actions',
@@ -197,5 +223,35 @@ $(function() {
     });
 
 });
+</script>
+<script>
+    $(document).on('change', '.change-status', function () {
+
+        let status = $(this).val();
+        let id = $(this).data('id');
+
+        $.ajax({
+            url: "{{ url('admin/schedule-slots') }}/" + id + "/status",
+            type: 'PATCH',
+            data: {
+                _token: '{{ csrf_token() }}',
+                status: status
+            },
+            success: function (response) {
+
+                if(response.success) {
+
+                    toast(response.message, 'success');
+
+                    $('#schedule-slots-table').DataTable().ajax.reload(null, false);
+                }
+            },
+            error: function () {
+
+                toast('Something went wrong.', 'error');
+            }
+        });
+
+    });
 </script>
 @endpush

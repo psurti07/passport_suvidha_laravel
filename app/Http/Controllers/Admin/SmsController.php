@@ -26,22 +26,23 @@ class SmsController extends Controller
             'option_value',
             'created_at',
             'updated_at',
-        ])
-
-            ->whereIn('option_key', [
-                'otp-sms',
-                'complete-process-sms',
-                'application-submitted-sms',
-                'login-otp-sms',
-                'welcome-sms',
-                'payment-failed-sms',
-                'account-sms',
-            ])
-
-        ->whereBetween('created_at', [
-            $from . ' 00:00:00',
-            $to . ' 23:59:59'
+        ])->whereIn('option_key', [
+            'otp-sms',
+            'complete-process-sms',
+            'application-submitted-sms',
+            'login-otp-sms',
+            'welcome-sms',
+            'payment-failed-sms',
+            'account-sms',
         ]);
+
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+
+            $query->whereBetween('created_at', [
+                $request->from_date . ' 00:00:00',
+                $request->to_date . ' 23:59:59'
+            ]);
+        }
 
         return DataTables::of($query)
 

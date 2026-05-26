@@ -17,9 +17,6 @@ class DocumentTypeController extends Controller
 
     public function data(Request $request)
     {
-        $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
-        $to   = $request->to_date ?? now()->format('Y-m-d');
-
         $query = DocumentType::select([
             'id',
             'name',
@@ -27,12 +24,15 @@ class DocumentTypeController extends Controller
             'is_mandatory',
             'created_at',
             'updated_at',
-        ])
+        ]);
 
-            ->whereBetween('created_at', [
-                $from . ' 00:00:00',
-                $to . ' 23:59:59'
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+
+            $query->whereBetween('created_at', [
+                $request->from_date . ' 00:00:00',
+                $request->to_date . ' 23:59:59'
             ]);
+        }
 
         if ($request->filled('is_mandatory')) {
             $query->where('is_mandatory', $request->is_mandatory);

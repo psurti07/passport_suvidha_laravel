@@ -33,9 +33,6 @@ class UserController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
-        $to   = $request->to_date ?? now()->format('Y-m-d');
-
         $query = User::with('creator')->where('role', 'staff')->select([
             'id',
             'name',
@@ -43,12 +40,15 @@ class UserController extends Controller
             'is_active',
             'created_at',
             'updated_at',
-        ])
+        ]);
 
-            ->whereBetween('created_at', [
-                $from . ' 00:00:00',
-                $to . ' 23:59:59'
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+
+            $query->whereBetween('created_at', [
+                $request->from_date . ' 00:00:00',
+                $request->to_date . ' 23:59:59'
             ]);
+        }
 
         if ($request->filled('is_active')) {
             $query->where('is_active', $request->is_active);

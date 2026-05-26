@@ -197,7 +197,9 @@ $(function() {
                 extend: 'csv'
             },
             {
-                extend: 'pdf'
+                extend: 'pdf',
+                orientation: 'landscape', 
+                pageSize: 'A3',
             }
         ],
 

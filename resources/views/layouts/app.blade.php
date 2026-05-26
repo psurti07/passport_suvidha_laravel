@@ -914,6 +914,21 @@
                     <span class="nav-link-text">DND List</span>
                 </a>
 
+                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SCHEDULES SLOTS</div>
+
+                <a href="{{ route('admin.schedule-slots.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.schedule-slots.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Schedule Slots' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12v3l2 2">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text">Schedule Slots</span>
+                </a>
+
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">TEMPLATES</div>
 
                 <a href="{{ route('admin.predefined-messages.index') }}"

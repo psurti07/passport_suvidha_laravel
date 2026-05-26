@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\CardOfferController;
 use App\Http\Controllers\Admin\StarOfferController;
 use App\Http\Controllers\Admin\SiteOptionController;
 use App\Http\Controllers\Admin\SmsController;
+use App\Http\Controllers\Admin\ScheduleSlotController;
 
 /*
 |--------------------------------------------------------------------------
@@ -160,6 +161,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dnd-data', [DndController::class, 'data'])->name('dnd.data');
     Route::post('dnd/upload', [DndController::class, 'upload'])->name('dnd.upload');
     Route::delete('dnd/{customer}/delete', [DndController::class, 'destroy'])->name('dnd.destroy');
+
+    // Schedule Routes
+    Route::resource('schedule-slots', ScheduleSlotController::class);
+    Route::get('/schedule-slots-data', [ScheduleSlotController::class, 'data'])->name('schedule-slots.data');
+    Route::patch('schedule-slots/{scheduleSlot}/status',[ScheduleSlotController::class, 'updateStatus'])->name('schedule-slots.update-status');
 
     // Predefined Messages Routes
     Route::resource('predefined-messages', PreDefinedMessageController::class);

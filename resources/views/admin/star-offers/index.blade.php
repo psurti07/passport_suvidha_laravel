@@ -202,6 +202,8 @@ $(function() {
             },
             {
                 extend: 'pdf',
+                orientation: 'landscape', 
+                pageSize: 'A3',
                 exportOptions: {
                     columns: ':not(:last-child)'
                 }
