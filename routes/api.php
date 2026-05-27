@@ -70,6 +70,7 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
         Route::get('/', [AppointmentLetterController::class, 'listUserLetters'])->name('api.appointment-letters.list');
         Route::get('/download/{id}', [AppointmentLetterController::class, 'downloadById'])->name('api.appointment-letters.download-by-id');
         Route::get('/download', [AppointmentLetterController::class, 'download'])->name('api.appointment-letters.download');
+        Route::get('/preview', [AppointmentLetterController::class, 'preview'])->name('api.appointment-letters.preview');
     });
 
     Route::prefix('required-documents')->group(function () {

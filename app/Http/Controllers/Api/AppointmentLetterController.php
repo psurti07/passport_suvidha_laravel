@@ -299,4 +299,46 @@ class AppointmentLetterController extends Controller
 
         return response()->download($fullPath, $fileName);
     }
+
+    public function preview()
+    {
+        $customer = auth()->user();
+
+        if (!$customer) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access'
+            ], 404);
+        }
+
+        $appointmentLetter = AppointmentLetter::where('customer_id', $customer->id)
+            ->latest()
+            ->first();
+
+        if (!$appointmentLetter) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No appointment letter found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        // check file exists
+        if (!Storage::disk('public')->exists($appointmentLetter->file_path)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $fullPath = storage_path('app/public/' . $appointmentLetter->file_path);
+
+        // detect mime type
+        $mimeType = mime_content_type($fullPath);
+
+        // preview in browser
+        return response()->file($fullPath, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'inline; filename="' . basename($fullPath) . '"'
+        ]);
+    }
 }

@@ -60,7 +60,7 @@ class OtpController extends Controller
 
             $message = str_replace('{#var_otp#}', $otp, $smsMessage['message']);
         } else {
-            $smsMessage = $smsService->smsMessage('registration-otp-sms');
+            $smsMessage = $smsService->smsMessage('otp-sms');
             if (!$smsMessage['success']) {
                 return response([
                     'success' => false,
