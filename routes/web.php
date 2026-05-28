@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\StarOfferController;
 use App\Http\Controllers\Admin\SiteOptionController;
 use App\Http\Controllers\Admin\SmsController;
 use App\Http\Controllers\Admin\ScheduleSlotController;
+use App\Http\Controllers\Admin\CronController;
 
 /*
 |--------------------------------------------------------------------------
@@ -183,11 +184,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('users', UserController::class);
     Route::get('/users-data', [UserController::class, 'data'])->name('users.data');
 
-    // Leads Routes
-    // Route::match(['get', 'post'], '/leads/normal', [LeadController::class, 'normalLeads'])->name('leads.normal');
-    // Route::match(['get', 'post'], '/leads/tatkal', [LeadController::class, 'tatkalLeads'])->name('leads.tatkal');
-    // Route::get('/lead/{customer}', [LeadController::class, 'show'])->name('lead.show');
-
-    // // Report Routes
-    // Route::get('/reports/gst', [ReportController::class, 'gstReport'])->name('reports.gst');
+    // Rcs Remarketing
+    Route::get('/cron/remarketing-rcs/{token}',[CronController::class, 'remarketingRcs']);
 });

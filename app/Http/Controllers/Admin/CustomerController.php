@@ -428,13 +428,18 @@ class CustomerController extends Controller
                 'card_number' => $order->id
             ]);
 
-            if (isset($customer) && !empty($customer->mobile_number)) {
-                $smsService = new SmsService();
+            // if (!empty($customer->mobile_number)) {
 
-                $message = "Congrats, Your Passport Application is submitted successfully! Our Company Executive will contact you within 24-48 hours to proceed. Thanks, PassportSuvidha";
+            //     $smsService = new SmsService();
 
-                $smsService->sendSms($customer->mobile_number, $message);
-            }
+            //     $smsService->sendTemplate(
+            //         $customer->mobile_number,
+            //         'application-submitted-sms',
+            //         [
+            //             'name' => $customer->full_name
+            //         ]
+            //     );
+            // }
 
             return $customer;
         });
