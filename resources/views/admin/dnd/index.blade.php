@@ -80,9 +80,6 @@
 
                 </div>
 
-
-
-
                 <div class="mt-4 overflow-x-auto">
                     <div class="whitespace-nowrap text-sm text-gray-700">
 

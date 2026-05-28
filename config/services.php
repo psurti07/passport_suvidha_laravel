@@ -31,9 +31,18 @@ return [
     ],
    
     'sms' => [
+        'api_url' => env('SMS_API_URL'),
         'username' => env('SMS_API_USERNAME'),
         'password' => env('SMS_API_PASSWORD'),
         'sender_id' => env('SMS_API_SENDER_ID'),
+    ],
+
+    'rcs' => [
+        'base_url' => env('RCS_BASE_URL'),
+        'user_id' => env('RCS_USERID'),
+        'api_key' => env('RCS_APIKEY'),
+        'template_id' => env('RCS_TEMPLATEID'),
+        'cron_token' => env('RCS_CRON_TOKEN'),
     ],
 
     'app' => [

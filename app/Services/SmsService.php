@@ -15,21 +15,16 @@ class SmsService
 
     public function __construct()
     {
-        $this->url = env('SMS_API_URL');
-
-        $this->username = env('SMS_API_USERNAME');
-
-        $this->password = env('SMS_API_PASSWORD');
-
+        $this->url = config('services.sms.api_url');
+        $this->username = config('services.sms.username');
+        $this->password = config('services.sms.password');
         $this->senderId = SiteOption::where(
             'option_key',
             'sms-sender-id'
-        )->value('option_value') ?? env('SMS_API_SENDER_ID');
+        )->value('option_value') ?? config('services.sms.sender_id');
     }
 
-    /**
-     * Send Single SMS
-     */
+    // Send Single SMS
     public function send(
         string $mobile,
         string $message
@@ -71,9 +66,7 @@ class SmsService
         }
     }
 
-    /**
-     * Send Template SMS
-     */
+    // Send Template SMS
     public function sendTemplate(
         string $mobile,
         string $templateKey,
@@ -105,9 +98,7 @@ class SmsService
         return $this->send($mobile, $template);
     }
 
-    /**
-     * Send Bulk / Remarketing SMS
-     */
+    // Send Bulk / Remarketing SMS
     public function sendBulk(
         array $mobiles,
         string $message
