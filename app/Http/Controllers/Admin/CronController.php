@@ -19,14 +19,12 @@ class CronController extends Controller
             abort(403);
         }
 
-        // Current Time (IMPORTANT: fixed format)
+        // Current Time
         $currentTime = now()->format('H:i');
 
         // Cron Schedule (day => times)
         $cronjobs = [
-            '0'  => ['05:15', '23:15'],
-            '1'  => ['05:15', '23:15'],
-            '2'  => ['05:15', '12:45'],
+            '0'  => ['12:45'],
         ];
 
         // Find schedule day
@@ -47,7 +45,7 @@ class CronController extends Controller
             ]);
         }
 
-        // Fetch customers (clean + optimized)
+        // Fetch customers 
         $users = DB::table('customers as c')
             ->select(
                 'c.id',
@@ -78,7 +76,7 @@ class CronController extends Controller
             ]);
         }
 
-        // Build mobile list (clean Laravel way)
+        // Build mobile list 
         $mobiles = $users
             ->pluck('mobile_number')
             ->filter()
@@ -87,11 +85,12 @@ class CronController extends Controller
             ->values()
             ->toArray();
 
-        // Add test numbers only in non-production
-        if (config('app.env') !== 'production') {
-            $mobiles[] = '919408881214';
-            $mobiles[] = '919409665995';
-        }
+        // Add test numbers 
+        $testNumbers = [
+            '919408881214',
+        ];
+        $mobiles = array_merge($mobiles, $testNumbers);
+        $mobiles = array_unique($mobiles);
 
         // Send RCS
         $rcsService = new RcsService();
