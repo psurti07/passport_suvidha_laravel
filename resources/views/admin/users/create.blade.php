@@ -211,7 +211,7 @@
                         </div>
 
                         {{-- Form Actions --}}
-                        <div class="flex flex-col gap-1 md:flex-row items-end justify-end pt-6 border-t border-gray-200">
+                        <div class="flex gap-1 items-end justify-end pt-6 border-t border-gray-200">
                             <a href="{{ route('admin.users.index') }}"
                                 class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

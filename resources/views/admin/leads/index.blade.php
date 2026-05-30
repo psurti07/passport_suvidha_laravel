@@ -59,9 +59,9 @@
 
 
                 <div class="mt-4 overflow-x-auto">
-                    <div class="whitespace-nowrap text-sm text-gray-700">
+                    <div class="whitespace-nowrap text-sm text-gray-700 ">
 
-                        <table id="leads-table" class="min-w-full divide-y divide-gray-200 pt-5">
+                        <table id="leads-table" class="min-w-full divide-y divide-gray-200">
 
                             <thead class="bg-blue-50">
 
@@ -92,7 +92,7 @@
 
                             </thead>
 
-                            <tbody></tbody>
+                            <tbody class="pt-0"></tbody>
 
                         </table>
 
@@ -116,8 +116,9 @@
                 processing: true,
                 serverSide: true,
 
-                responsive: true,
+                responsive: false,
                 scrollX: true,
+                autoWidth: false,
 
                 order: [
                     [0, 'desc']

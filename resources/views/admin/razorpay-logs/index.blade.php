@@ -57,10 +57,10 @@
                 </form>
 
 
-                <div class="mt-4 overflow-x-auto">
-                    <div class="whitespace-nowrap text-sm text-gray-700">
+                <div class="mt-4">
+                    <div class="whitespace-wrap text-sm text-gray-700">
 
-                        <table id="razorpay-logs-table" class="min-w-full divide-y divide-gray-200 pt-5">
+                        <table id="razorpay-logs-table" class="min-w-full divide-y divide-gray-200">
 
                             <thead class="bg-blue-50">
 
@@ -68,7 +68,8 @@
 
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ID</th>
 
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Customer
+                                    <th class="w-50 px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                                        Customer
                                     </th>
 
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile
@@ -125,8 +126,10 @@
 
                 processing: true,
                 serverSide: true,
-                responsive: true,
+
+                responsive: false,
                 scrollX: true,
+                autoWidth: false,
 
                 order: [
                     [0, 'desc']

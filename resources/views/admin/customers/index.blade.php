@@ -61,7 +61,7 @@
                 <div class="mt-4 overflow-x-auto">
                     <div class="whitespace-nowrap text-sm text-gray-700">
 
-                        <table id="customers-table" class="min-w-full divide-y divide-gray-200 pt-5">
+                        <table id="customers-table" class="min-w-full divide-y divide-gray-200">
 
                             <thead class="bg-blue-50">
 
@@ -116,8 +116,9 @@
                 processing: true,
                 serverSide: true,
 
-                responsive: true,
+                responsive: false,
                 scrollX: true,
+                autoWidth: false,
 
                 order: [
                     [0, 'desc']

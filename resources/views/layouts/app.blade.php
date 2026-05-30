@@ -548,9 +548,9 @@
     }
 }" x-init="console.log('Alpine initialized, sidebar state from localStorage:', localStorage.getItem('sidebarCollapsed'));
 scrollToActive()" x-cloak>
-    <div class="layout-wrapper">
+    <div class="layout-wrapper overflow-hidden">
         <div class="sidebar-overlay" :class="{ 'active': isMobileMenuOpen }" @click="toggleSidebar()"></div>
-        <main class="main-content" :class="{ 'sidebar-collapsed': sidebarCollapsed }">
+        <main class="main-content  min-[1440px]:w-[75%]" :class="{ 'sidebar-collapsed': sidebarCollapsed }">
             <nav class="top-nav h-16 border-b border-border-color">
                 <div class="mx-auto h-full px-3 md:px-6 ">
                     <div class="flex justify-between items-center h-full">
