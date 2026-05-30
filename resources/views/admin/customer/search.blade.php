@@ -112,7 +112,7 @@
                         enctype="multipart/form-data" class="space-y-5" novalidate>
                         @csrf
                         @method('PUT')
-                        <div class="grid grid-cols-12 md:grid-cols-12 gap-12">
+                        <div class="grid grid-cols-1 md:grid-cols-1 gap-12">
                             <div>
                                 <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address <span
                                         class="text-red-500">*</span></label>
