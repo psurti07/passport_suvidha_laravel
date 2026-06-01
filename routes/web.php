@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\SiteOptionController;
 use App\Http\Controllers\Admin\SmsController;
 use App\Http\Controllers\Admin\ScheduleSlotController;
 use App\Http\Controllers\Admin\CronController;
+use App\Http\Controllers\Admin\RemarketingLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,7 +135,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/cashfree-logs', [CashfreeLogController::class, 'index'])->name('cashfree-logs.index');
     Route::get('/cashfree-logs/data', [CashfreeLogController::class, 'data'])->name('cashfree-logs.data');
 
-    //Zaakpay Logs Routes
+    // Zaakpay Logs Routes
     Route::get('/zaakpay-logs', [ZaakpayLogController::class, 'index'])->name('zaakpay-logs.index');
     Route::get('/zaakpay-logs/data', [ZaakpayLogController::class, 'data'])->name('zaakpay-logs.data');
 
@@ -156,6 +157,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('sms', SmsController::class);
     Route::get('/sms-data', [SmsController::class, 'data'])->name('sms.data');
     Route::post('/sms/send-test', [SmsController::class, 'sendTest'])->name('sms.sendTest');
+
+    // Remarketing Logs Routes
+    Route::resource('remarketing-logs', RemarketingLogController::class);
+    Route::get('/remarketing-logs-data', [RemarketingLogController::class, 'data'])->name('remarketing-logs.data');
 
     // DND Routes
     Route::get('dnd', [DndController::class, 'index'])->name('dnd.index');

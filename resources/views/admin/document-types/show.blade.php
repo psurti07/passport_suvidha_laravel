@@ -3,6 +3,7 @@
 @section('title', 'Document Type')
 
 @section('content')
+
 <div class="mx-auto">
     <div class="bg-white rounded-xl shadow-lg border border-gray-100">
         <div class="p-4 sm:p-6 lg:p-8">

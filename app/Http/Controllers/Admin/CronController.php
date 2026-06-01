@@ -98,8 +98,8 @@ class CronController extends Controller
 
         // Log
         SmsLog::create([
-            'crontype' => 'customer rcs',
-            'parentid' => 31,
+            'type' => 'rcs',
+            'crontype' => 'customer rcs',            
             'cronname' => 'RCS - ' . $scheduleDay,
             'msgcount' => $users->count(),
             'msgresponse' => json_encode($response),

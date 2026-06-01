@@ -10,8 +10,9 @@ class SmsLog extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id',
+        'type',
         'crontype',
-        'parentid',
         'cronname',
         'msgcount',
         'msgresponse'
