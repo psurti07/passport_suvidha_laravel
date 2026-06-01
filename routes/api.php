@@ -126,3 +126,6 @@ Route::get('/schedule-cancel', [SchedualSlotController::class, 'scheduleCancle']
 Route::post('/schedule-slot', [SchedualSlotController::class, 'scheduleSlot']);
 Route::get('/encrypt', [SchedualSlotController::class, 'encryptId']);
 Route::get('/decrypt', [SchedualSlotController::class, 'decryptId']);
+
+// Fb code setup 
+Route::get('/fb-pixel', [SiteOptionController::class, 'getFbPixel']);

@@ -16,4 +16,26 @@ class SiteOptionController extends Controller
             'message' => $option->option_value ?? null,
         ]);
     }
+
+    public function getFbPixel()
+    {
+        try {
+            $options = SiteOption::whereIn('option_key', [
+                'facebook-domain-verification-id',
+                'facebook-pixel-key'
+            ])->pluck('option_value', 'option_key');
+
+            return response()->json([
+                'success' => true,
+                'fb_pixel_key' => $options['facebook-pixel-key'] ?? null,
+                'domain_verification' => $options['facebook-domain-verification-id'] ?? null,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while fetching site options.',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
+    }
 }
