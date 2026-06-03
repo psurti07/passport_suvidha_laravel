@@ -19,6 +19,8 @@ use App\Http\Controllers\Api\SiteOptionController;
 // use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\MetaKeywordsController;
 use App\Http\Controllers\Api\SchedualSlotController;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -104,7 +106,6 @@ Route::middleware('auth:sanctum')->group(function () {
 // offer page payment routes
 Route::post('/create-payment', [OfferOrderController::class, 'createPayment']);
 Route::post('/cashfree/webhook', [OfferOrderController::class, 'cashfreeWebhook'])->name('cashfree.webhook');
-Route::post('/zaakpay/callback', [OfferOrderController::class, 'zaakpayCallback'])->name('zaakpay.callback');
 Route::get('/check-payment-status', [OfferOrderController::class, 'checkPaymentStatus']);
 Route::post('/mark-payment-failed', [OfferOrderController::class, 'markPaymentFailed']);
 Route::post('/payment-cancelled', [OfferOrderController::class, 'paymentCancelled']);
@@ -129,3 +130,7 @@ Route::get('/decrypt', [SchedualSlotController::class, 'decryptId']);
 
 // Fb code setup 
 Route::get('/fb-pixel', [SiteOptionController::class, 'getFbPixel']);
+
+// PhonePe routes
+Route::post('/check-phonepe-status', [OfferOrderController::class, 'checkPhonepeStatus']);
+Route::match(['GET', 'POST'], '/phonepe/redirect', [OfferOrderController::class, 'phonepeRedirect'])->name('phonepe.redirect');

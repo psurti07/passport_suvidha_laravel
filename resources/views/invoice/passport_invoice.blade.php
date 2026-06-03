@@ -6,174 +6,175 @@
     <title>Tax Invoice - Passport Suvidha Service</title>
 
     <style>
-    * {
-        box-sizing: border-box;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    body {
-        font-family:
-            DejaVu Sans,
-            sans-serif;
-        font-size: 11px;
-        color: #111;
-        background: #fff;
-        margin: 30px;
-        padding: 0px;
-        line-height: 1.6;
-        border: 1px solid #222;
-    }
+        body {
+            font-family:
+                DejaVu Sans,
+                sans-serif;
+            font-size: 11px;
+            color: #111;
+            background: #fff;
+            margin: 30px;
+            margin-bottom: 220px;
+            padding: 0px;
+            line-height: 1.6;
+            border: 1px solid #222;
+        }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        table-layout: fixed;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
 
-    .border {
-        width: 100%;
-        /* border: 1px solid #222; */
-    }
+        .border {
+            width: 100%;
+            /* border: 1px solid #222; */
+        }
 
-    .border td,
-    .border th {
-        /* border: 0.6px solid #999; */
-    }
+        .border td,
+        .border th {
+            /* border: 0.6px solid #999; */
+        }
 
-    /* .border {
+        /* .border {
             width: 100%;
             border: 1px solid #222;
             table-layout: fixed;
         }
- 
+
         .border tr td:last-child,
         .border tr th:last-child {
             border-right: 1px solid #999 !important;
         } */
 
-    td,
-    th {
-        padding: 10px 12px;
-        vertical-align: top;
-    }
+        td,
+        th {
+            padding: 10px 12px;
+            vertical-align: top;
+        }
 
-    .center {
-        text-align: center;
-    }
+        .center {
+            text-align: center;
+        }
 
-    .right {
-        text-align: right;
-        white-space: nowrap;
-    }
+        .right {
+            text-align: right;
+            white-space: nowrap;
+        }
 
-    .bold {
-        font-weight: bold;
-    }
+        .bold {
+            font-weight: bold;
+        }
 
-    .company-name {
-        font-size: 20px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        border-bottom: 1px solid #222;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-    }
+        .company-name {
+            font-size: 26px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
 
-    .section-heading {
-        background: #f5f5f5;
-        /* border: 1px solid #bbb; */
-        padding: 7px 10px;
-        font-size: 11px;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 10px;
-    }
+        .section-heading {
+            background: #f5f5f5;
+            /* border: 1px solid #bbb; */
+            padding: 7px 10px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
 
-    .header-info {
-        background: #fafafa;
-    }
+        .header-info {
+            background: #fafafa;
+        }
 
-    tr.bold.center td,
-    tr.bold.center th {
-        background: #f3f3f3;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        padding-top: 12px;
-        padding-bottom: 12px;
-    }
+        tr.bold.center td,
+        tr.bold.center th {
+            background: #f3f3f3;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+        }
 
-    tr td {
-        background: #fff;
-    }
+        tr td {
+            background: #fff;
+        }
 
-    tr.bold td {
-        background: #f8f8f8;
-        font-weight: 700;
-        border-top: 1px solid #222;
-    }
+        tr.bold td {
+            background: #f8f8f8;
+            font-weight: 700;
+            border-top: 1px solid #222;
+        }
 
-    .grand-total-box {
-        background: #fafafa !important;
-        font-size: 14px;
-        font-weight: 700;
-        padding: 10px;
-    }
+        .grand-total-box {
+            background: #fafafa !important;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 10px;
+        }
 
-    .amount-words {
-        text-transform: uppercase;
-        font-weight: bold;
-        font-size: 12px;
-        line-height: 22px;
-        letter-spacing: 0.3px;
-    }
+        .amount-words {
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 12px;
+            line-height: 22px;
+            letter-spacing: 0.3px;
+        }
 
-    .payment-section {
-        background: #fafafa;
-    }
+        .payment-section {
+            background: #fafafa;
+        }
 
-    ol {
-        margin: 8px 0 0 18px !important;
-        padding: 0;
-    }
+        ol {
+            margin: 8px 0 0 18px !important;
+            padding: 0;
+        }
 
-    ol li {
-        margin-bottom: 6px;
-    }
+        ol li {
+            margin-bottom: 6px;
+        }
 
-    strong {
-        font-weight: 700;
-    }
+        strong {
+            font-weight: 700;
+        }
 
-    .border tr:first-child td {
-        padding-top: 14px;
-        padding-bottom: 14px;
-    }
+        .border tr:first-child td {
+            padding-top: 14px;
+            padding-bottom: 14px;
+        }
 
-    @page {
-        margin: 12px;
-    }
+        @page {
+            margin: 12px;
+        }
 
-    .border tr td:last-child,
-    .border tr th:last-child {
-        border-right: 1px solid #cfcfcf !important;
-    }
+        .border tr td:last-child,
+        .border tr th:last-child {
+            border-right: 1px solid #cfcfcf !important;
+        }
 
-    .border tr td:first-child,
-    .border tr th:first-child {
-        border-left: 1px solid #cfcfcf !important;
-    }
-
-
+        .border tr td:first-child,
+        .border tr th:first-child {
+            border-left: 1px solid #cfcfcf !important;
+        }
 
 
-    .border td,
-    .border th {
-        border: 1px solid #cfcfcf;
-        padding: 10px;
-        vertical-align: top;
-    }
+
+
+        .border td,
+        .border th {
+            border: 1px solid #cfcfcf;
+            padding: 10px;
+            vertical-align: top;
+        }
     </style>
 </head>
 

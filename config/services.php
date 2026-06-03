@@ -19,17 +19,17 @@ return [
         'secret' => env('MAILGUN_SECRET'),
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
     ],
- 
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
- 
+
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-   
+
     'sms' => [
         'api_url' => env('SMS_API_URL'),
         'username' => env('SMS_API_USERNAME'),
@@ -49,8 +49,9 @@ return [
         'env' => env('APP_ENV'),
         'url' => env('APP_URL'),
         'ngrok_url' => env('NGROK_URL'),
+        'frontend_url' => env('FRONTEND_URL'),
     ],
-    
+
     'testnumbers' => [
         'number' => env('TEST_NUMBERS'),
     ],
@@ -66,11 +67,12 @@ return [
         'key' => env('CASHFREE_KEY'),
         'secret' => env('CASHFREE_SECRET')
     ],
- 
-    'zaakpay' => [
-        'mode' =>env('ZAAKPAY_MODE'),
-        'merchant_identifier' => env('ZAAKPAY_MERCHANT_IDENTIFIER'),
-        'secret_key' => env('ZAAKPAY_SECRET_KEY')
+
+    'phonepe' => [
+        'mode' => env('PHONEPE_MODE', 'test'),
+        'id' => env('PHONEPE_ID'),
+        'secret' => env('PHONEPE_SECRET'),
+        'version' => env('PHONEPE_CLIENT_VERSION'),
     ],
 
 ];

@@ -64,9 +64,16 @@ class PaymentController extends Controller
             "service_type" => $request->service_code,
         ]);
 
+        $customer = auth()->user();
+
+        $full_name = $customer?->first_name . ' ' . $customer?->last_name;
+
         return response()->json([
             'id' => $order['id'],
-            'amount' => $razorpayAmount
+            'amount' => $razorpayAmount,
+            'name' => $full_name,
+            'email' => $customer?->email,
+            'mobile' => $customer?->mobile_number,
         ]);
     }
     public function verifyPayment(Request $request)
