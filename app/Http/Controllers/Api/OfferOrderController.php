@@ -11,7 +11,7 @@ use App\Models\OfferOrder;
 use App\Models\CashfreeLog;
 use App\Models\Customer;
 use App\Models\Service;
-use App\Models\ZaakpayLog;
+use App\Models\PhonepeLog;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -96,7 +96,7 @@ class OfferOrderController extends Controller
     {
         return match ($offerType) {
             'card_offer' => 'cashfree',
-            'star_offer' => 'zaakpay',
+            'star_offer' => 'phonepe',
             default => 'cashfree',
         };
     }
@@ -107,8 +107,8 @@ class OfferOrderController extends Controller
             case 'cashfree':
                 return $this->processCashfree($order, $request);
 
-            case 'zaakpay':
-                return $this->processZaakpay($order, $request);
+            case 'phonepe':
+                return $this->processPhonepe($order, $request);
 
             default:
                 return response()->json(['success' => false]);
@@ -446,164 +446,318 @@ class OfferOrderController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | ZAAKPAY
+    | PHONEPE
     |--------------------------------------------------------------------------
     */
-    public function processZaakpay($order, $request)
+    private function isProduction()
     {
+        return config('app.env') === 'production';
+    }
 
+    private function getPhonePeTokenUrl()
+    {
+        return $this->isProduction()
+            ? 'https://api.phonepe.com/apis/identity-manager/v1/oauth/token'
+            : 'https://api-preprod.phonepe.com/apis/pg-sandbox/v1/oauth/token';
+    }
+
+    private function getPhonePePayUrl()
+    {
+        return $this->isProduction()
+            ? 'https://api.phonepe.com/apis/pg/checkout/v2/pay'
+            : 'https://api-preprod.phonepe.com/apis/pg-sandbox/checkout/v2/pay';
+    }
+
+    private function getPhonePeOrderStatusUrl($merchantOrderId)
+    {
+        return $this->isProduction()
+            ? "https://api.phonepe.com/apis/checkout/v2/order/{$merchantOrderId}/status"
+            : "https://api-preprod.phonepe.com/apis/pg-sandbox/checkout/v2/order/{$merchantOrderId}/status";
+    }
+
+    private function getPhonepeAccessToken()
+    {
         try {
-            $merchantId = config('services.zaakpay.merchant_identifier');
-            $secret = hex2bin(config('services.zaakpay.secret_key'));
 
-            $orderId = "ORD" . $order->id . time();
-            $baseUrl = $this->getWebhookUrl();
+            $response = Http::asForm()->post(
+                $this->getPhonePeTokenUrl(),
+                [
+                    'client_id'      => config('services.phonepe.id'),
+                    'client_secret'  => config('services.phonepe.secret'),
+                    'client_version' => config('services.phonepe.version'),
+                    'grant_type'     => 'client_credentials',
+                ]
+            );
 
-            // $returnUrl =  config("services.app.url") .'/api/zaakpay/callback';
-            $returnUrl =  $baseUrl . '/api/zaakpay/callback';
+            // Log::info('PHONEPE TOKEN RESPONSE', [
+            //     'status' => $response->status(),
+            //     'body'   => $response->body(),
+            // ]);
 
-            $queryString = implode('|', [
-                $merchantId,
-                $orderId,
-                (int) ($order->amount * 100),
-                "INR",
-                $returnUrl,
-                $request->email,
-                $request->fullName,
-                "NA",
-                "NA",
-                "NA",
-                "NA",
-                "India",
-                "395006",
-                $request->mobile
-            ]);
 
-            $encRequest = base64_encode(openssl_encrypt(
-                $queryString,
-                'AES-128-ECB',
-                $secret,
-                OPENSSL_RAW_DATA
-            ));
+            if (!$response->successful()) {
 
-            $checksum = hash_hmac('sha256', $encRequest, $secret);
+                // Log::error('PHONEPE TOKEN FAILED', [
+                //     'status' => $response->status(),
+                //     'body'   => $response->body(),
+                //     'headers' => $response->headers(),
+                // ]);
 
-            $amount = $order->amount;
-            $finalAmount = floor($amount);
+                return null;
+            }
 
-            $testNumbers = explode(',', config('services.testnumbers.number', ''));
+            return $response->json('access_token');
+        } catch (\Exception $e) {
+
+            // Log::error('PHONEPE TOKEN ERROR', [
+            //     'message' => $e->getMessage()
+            // ]);
+
+            return null;
+        }
+    }
+
+    private function processPhonepe($order, $request)
+    {
+        try {
+
+            $accessToken = $this->getPhonepeAccessToken();
+
+
+            if (!$accessToken) {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unable to generate PhonePe token'
+                ], 500);
+            }
+
+            $merchantOrderId =
+                'order_' . strtoupper(Str::random(8));
+
+            $finalAmount = floor($order->amount);
+
+            $testNumbers = array_map('trim', explode(',', config('services.testnumbers.number', '')));
 
             if (in_array($request->mobile, $testNumbers)) {
                 $finalAmount = 1;
             }
 
-            ZaakpayLog::create([
-                'order_note'    => 'star offer page',
-                'offer_type'    => $order->offer_type,
-                'order_amount'  => $finalAmount,
-                'order_id'      => $order->id,
-                'reference_id'  => $orderId,
-                'tx_status'     => 'pending',
-                'service_type' => $request->service_code ?? null,
+            $payload = [
+                "merchantOrderId" => $merchantOrderId,
+                "amount" => (int) round($finalAmount * 100),
+                "expireAfter" => 1200,
+
+                "metaInfo" => [
+                    "udf1" => (string) $order->id,
+                    "udf2" => (string) $request->mobile,
+                ],
+
+                "paymentFlow" => [
+                    "type" => "PG_CHECKOUT",
+                    "merchantUrls" => [
+                        "redirectUrl" => config('services.app.frontend_url')
+                            . '/staroffer-response'
+                    ]
+                ]
+            ];
+
+            // Log::info('PHONEPE CREATE REQUEST', $payload);
+
+            $response = Http::withHeaders([
+                'Authorization' => 'O-Bearer ' . $accessToken,
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json',
+            ])->post(
+                $this->getPhonePePayUrl(),
+                $payload
+            );
+
+            // Log::info('PHONEPE CREATE RESPONSE', [
+            //     'request' => $payload,
+            //     'status'  => $response->status(),
+            //     'headers' => $response->headers(),
+            //     'body'    => $response->body(),
+            //     'json'    => $response->json(),
+            // ]);
+
+            if (!$response->successful()) {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => $response->json('message')
+                        ?? 'PhonePe payment creation failed'
+                ], 500);
+            }
+
+            $data = $response->json();
+
+            PhonepeLog::create([
+                'offer_type'   => $order->offer_type,
+                'order_id'     => $order->id,
+                'order_amount' => $finalAmount,
+                'reference_id' => $merchantOrderId,
+                'tx_status'    => 'pending',
+                'service_type' => $request->service_code,
             ]);
 
+            // Log::info('PHONEPE PAYMENT CREATED', [
+            //     'order_id' => $order->id,
+            //     'merchant_order_id' => $merchantOrderId,
+            //     'payment_url' => $data['redirectUrl'] ?? $data['data']['redirectUrl'] ?? null,
+            // ]);
+
             return response()->json([
-                "success" => true,
-                "order_id" => $orderId,
-                "payment_url" => $this->getZaakpayUrl(),
-                "encRequest" => $encRequest,
-                "merchantIdentifier" => $merchantId,
-                "checksum" => $checksum
+                'success'     => true,
+                'type'        => 'phonepe',
+                'payment_url' => $data['redirectUrl']
+                    ?? $data['data']['redirectUrl']
+                    ?? null,
+                'order_id'    => $merchantOrderId,
             ]);
         } catch (\Exception $e) {
 
+            // Log::error('PHONEPE PAYMENT ERROR', [
+            //     'message' => $e->getMessage()
+            // ]);
+
             return response()->json([
-                "success" => false,
-                "message" => $e->getMessage()
+                'success' => false,
+                'message' => 'Payment initiation failed'
             ], 500);
         }
     }
 
-    public function zaakpayCallback(Request $request)
+    public function checkPhonepeStatus(Request $request)
     {
-        $encResponse = $request->input('encResponse');
+        try {
 
-        if (!$encResponse) {
+            $request->validate([
+                'order_id' => 'required'
+            ]);
+
+            $log = PhonepeLog::where('reference_id', $request->order_id)->first();
+
+            if (!$log) {
+                return response()->json([
+                    'status' => 'not_found'
+                ], 404);
+            }
+
+            if ($log->tx_status === 'success') {
+                return response()->json([
+                    'status' => 'success'
+                ]);
+            }
+
+            $accessToken = $this->getPhonepeAccessToken();
+
+            if (!$accessToken) {
+                return response()->json([
+                    'status' => 'pending'
+                ]);
+            }
+
+            $response = Http::withHeaders([
+                'Authorization' => 'O-Bearer ' . $accessToken,
+                'Accept' => 'application/json',
+            ])->get(
+                $this->getPhonePeOrderStatusUrl(
+                    $request->order_id
+                )
+            );
+
+            // Log::info('PHONEPE STATUS RESPONSE', [
+            //     'status' => $response->status(),
+            //     'body'   => $response->body(),
+            // ]);
+
+            if (!$response->successful()) {
+                return response()->json([
+                    'status' => 'pending'
+                ]);
+            }
+
+            $data = $response->json();
+
+            $state = strtoupper(
+                $data['state']
+                    ?? $data['paymentDetails'][0]['state']
+                    ?? 'PENDING'
+            );
+
+            $paymentId = $data['paymentDetails'][0]['transactionId']
+                ?? null;
+
+            $paymentMode = $data['paymentDetails'][0]['paymentMode']
+                ?? null;
+
+            if ($state === 'COMPLETED') {
+
+                $order = OfferOrder::find($log->order_id);
+
+                if ($order && !$order->payment_id) {
+                    $order->update([
+                        'payment_id'  => $paymentId,
+                        'card_number' => generateCardNumber(),
+                    ]);
+                }
+
+                $log->update([
+                    'payment_id'   => $paymentId,
+                    'tx_status'    => 'success',
+                    'payment_mode' => $paymentMode,
+                ]);
+
+                return response()->json([
+                    'status' => 'success'
+                ]);
+            }
+
+            if (
+                in_array(
+                    $state,
+                    [
+                        'FAILED',
+                        'FAILURE',
+                        'CANCELLED'
+                    ]
+                )
+            ) {
+
+                $log->update([
+                    'tx_status' => 'failed',
+                    'payment_id' => $paymentId,
+                    'payment_mode' => $paymentMode,
+                ]);
+
+                return response()->json([
+                    'status' => 'failed'
+                ]);
+            }
+
             return response()->json([
-                "status" => "failed",
-                "message" => "Invalid response"
+                'status' => 'pending'
             ]);
-        }
+        } catch (\Exception $e) {
 
-        $decrypted = $this->decryptZaakpay($encResponse);
-        parse_str($decrypted, $response);
-
-        $orderId = $response['orderId'] ?? null;
-
-        if (!$orderId) {
-            return response()->json([
-                "status" => "failed",
-                "message" => "Order not found"
-            ]);
-        }
-
-        $log = ZaakpayLog::where('reference_id', $orderId)->first();
-
-        if (!$log) {
-            return response()->json([
-                "status" => "failed",
-                "message" => "Log not found"
-            ]);
-        }
-
-        $order = OfferOrder::find($log->order_id);
-
-
-        if (($response['responseCode'] ?? '') == '100') {
-
-            $order->update([
-                'card_number' => generateCardNumber(),
-                'payment_id' => $response['pgTransId'] ?? null
-            ]);
-
-            // $this->handleSuccessfulPayment($order);
-
-            $log->update([
-                'payment_id' => $response['pgTransId'] ?? null,
-                'tx_status' => 'success',
+            Log::error('PHONEPE STATUS ERROR', [
+                'message' => $e->getMessage()
             ]);
 
             return response()->json([
-                "status" => "success",
-                "message" => "Payment successful"
-            ]);
+                'status' => 'error'
+            ], 500);
         }
-
-
-        $log->update(['tx_status' => 'failed']);
-
-        return response()->json([
-            "status" => "failed",
-            "message" => "Payment failed"
-        ]);
     }
 
-    private function getZaakpayUrl()
+    public function phonepeRedirect(Request $request)
     {
-        return 'https://zaakstaging.zaakpay.com/api/paymentTransact/V8';
-    }
+        Log::info('PHONEPE REDIRECT', $request->all());
 
-    private function decryptZaakpay($data)
-    {
-        $secret = config('services.zaakpay.secret_key');
-
-        $decrypted = openssl_decrypt(
-            base64_decode($data),
-            'AES-128-ECB',
-            $secret,
-            OPENSSL_RAW_DATA
+        return redirect(
+            config('services.app.frontend_url')
+                . '/staroffer-response'
         );
-
-        return rtrim($decrypted, "\x00..\x1F"); // clean padding
     }
 }

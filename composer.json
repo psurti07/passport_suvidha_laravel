@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
         "maatwebsite/excel": "^3.1",
+        "phonepe/pg-php-sdk-v2": "^2.0",
         "razorpay/razorpay": "^2.9",
         "yajra/laravel-datatables-oracle": "^9.21"
     },
@@ -69,5 +70,24 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+
+    
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "phonepe/pg-php-sdk-v2",
+                "version": "2.0.0",
+                "dist": {
+                    "url": "https://phonepe.mycloudrepo.io/public/repositories/phonepe-pg-php-sdk/v2-sdk.zip",
+                    "type": "zip"
+                },
+                "autoload": {
+                    "classmap": ["/"]
+                }
+            }
+        }
+    ]
+
 }
