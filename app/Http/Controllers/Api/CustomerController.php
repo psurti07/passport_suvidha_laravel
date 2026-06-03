@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Services\SmsService;
+// use App\Models\FbAdsEntry;
 
 class CustomerController extends Controller
 {
@@ -169,7 +170,8 @@ class CustomerController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email',
-            'mobile_number' => 'required|string|max:20'
+            'mobile_number' => 'required|string|max:20',
+            // 'fbclid' => 'nullable|string|max:500'
         ]);
 
         if ($validator->fails()) {
@@ -223,6 +225,15 @@ class CustomerController extends Controller
         $data['registration_step'] = 1;
 
         $customer = Customer::create($data);
+
+        // if ($request->filled('fbclid')) {
+        //     FbAdsEntry::create([
+        //         'customer_id' => $customer->id,
+        //         'fbclid' => $request->fbclid,
+        //         'sent_data' => 'sending fbclid to fbadsentry',
+        //         'received_data' => 'fbclid stored in fbadsentry'
+        //     ]);
+        // }
 
         return response()->json([
             'message' => 'Customer information saved successfully',

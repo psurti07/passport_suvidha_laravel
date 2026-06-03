@@ -13,4 +13,10 @@ class SiteOption extends Model
         'option_key',
         'option_value'
     ];
+
+    public static function getValue($key)
+    {
+        return static::where('option_key', $key)
+            ->value('option_value');
+    }
 }

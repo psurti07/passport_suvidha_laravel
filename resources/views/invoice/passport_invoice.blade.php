@@ -1,244 +1,331 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>Invoice - Passport Suvidha Service</title>
+    <meta charset="utf-8" />
+    <title>Tax Invoice - Passport Suvidha Service</title>
 
     <style>
+    * {
+        box-sizing: border-box;
+    }
+
     body {
-        font-family: DejaVu Sans, Arial, sans-serif;
-        font-size: 12px;
-        color: #333;
-        margin: 0;
-        padding: 0;
+        font-family:
+            DejaVu Sans,
+            sans-serif;
+        font-size: 11px;
+        color: #111;
+        background: #fff;
+        margin: 30px;
+        padding: 0px;
+        line-height: 1.6;
+        border: 1px solid #222;
     }
 
-    .container {
-        width: 95%;
-        padding: 2.5%;
-    }
-
-    /* HEADER TABLE (DomPDF Safe) */
-    .header-table {
-        width: 100%;
-        margin-bottom: 15px;
-    }
-
-    .company-info {
-        width: 65%;
-        vertical-align: top;
-    }
-
-    .invoice-info {
-        width: 35%;
-        text-align: right;
-        vertical-align: top;
-    }
-
-    .company-info h2 {
-        margin: 0 0 5px 0;
-        font-size: 18px;
-    }
-
-    .company-info p {
-        margin: 2px 0;
-    }
-
-    /* BILL TO */
-    .bill-to {
-        margin-top: 10px;
-    }
-
-    .bill-to strong {
-        display: block;
-        margin-bottom: 3px;
-    }
-
-    /* INVOICE TITLE */
-    .invoice-title {
-        font-size: 22px;
-        margin: 0 0 10px 0;
-    }
-
-    /* TABLE */
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 15px;
+        table-layout: fixed;
     }
 
-    th {
-        background: #333;
-        color: #fff;
-        padding: 10px;
-    }
-
-    td {
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-    }
-
-    /* TOTAL */
-    .total-section {
+    .border {
         width: 100%;
-        margin-top: 10px;
+        /* border: 1px solid #222; */
     }
 
-    .total-table {
-        width: 300px;
-        margin-left: auto;
+    .border td,
+    .border th {
+        /* border: 0.6px solid #999; */
     }
 
-    .total-table td {
-        border: none;
-        padding: 5px 0;
+    /* .border {
+            width: 100%;
+            border: 1px solid #222;
+            table-layout: fixed;
+        }
+ 
+        .border tr td:last-child,
+        .border tr th:last-child {
+            border-right: 1px solid #999 !important;
+        } */
+
+    td,
+    th {
+        padding: 10px 12px;
+        vertical-align: top;
     }
 
-    .total-table .grand {
-        border-top: 1px solid #ddd;
-        font-weight: bold;
-        font-size: 14px;
-    }
-
-    /* PAYMENT */
-    .payment-info {
-        margin-top: 15px;
-    }
-
-    .payment-info p {
-        margin: 3px 0;
-    }
-
-    /* FOOTER */
-    .footer {
-        margin-top: 30px;
+    .center {
         text-align: center;
+    }
+
+    .right {
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    .company-name {
+        font-size: 20px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-bottom: 1px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+
+    .section-heading {
+        background: #f5f5f5;
+        /* border: 1px solid #bbb; */
+        padding: 7px 10px;
         font-size: 11px;
-        color: #666;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    .header-info {
+        background: #fafafa;
+    }
+
+    tr.bold.center td,
+    tr.bold.center th {
+        background: #f3f3f3;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    tr td {
+        background: #fff;
+    }
+
+    tr.bold td {
+        background: #f8f8f8;
+        font-weight: 700;
+        border-top: 1px solid #222;
+    }
+
+    .grand-total-box {
+        background: #fafafa !important;
+        font-size: 14px;
+        font-weight: 700;
+        padding: 10px;
+    }
+
+    .amount-words {
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 22px;
+        letter-spacing: 0.3px;
+    }
+
+    .payment-section {
+        background: #fafafa;
+    }
+
+    ol {
+        margin: 8px 0 0 18px !important;
+        padding: 0;
+    }
+
+    ol li {
+        margin-bottom: 6px;
+    }
+
+    strong {
+        font-weight: 700;
+    }
+
+    .border tr:first-child td {
+        padding-top: 14px;
+        padding-bottom: 14px;
+    }
+
+    @page {
+        margin: 12px;
+    }
+
+    .border tr td:last-child,
+    .border tr th:last-child {
+        border-right: 1px solid #cfcfcf !important;
+    }
+
+    .border tr td:first-child,
+    .border tr th:first-child {
+        border-left: 1px solid #cfcfcf !important;
+    }
+
+
+
+
+    .border td,
+    .border th {
+        border: 1px solid #cfcfcf;
+        padding: 10px;
+        vertical-align: top;
     }
     </style>
 </head>
 
 <body>
+    <table class="border" cellspacing="0" cellpadding="0" style="margin: 0 auto">
+        <tr>
+            <td colspan="6" class="company-header">
+                <h1>Passport Suvidha Service</h1>
+            </td>
+        </tr>
+        <tr class="header-info">
+            <td colspan="3" class="left">
+                Second Floor, Shop No. 227<br />
+                Unique Square, Opp. Shubham K Mart<br />
+                Singanpore Road, Surat - 395004<br />
+            </td>
+            <td colspan="3" class="right">
+                <strong>Mobile :</strong> +91 7486046591<br />
+                <strong>Email :</strong> support@passportsuvidha.com<br />
+                <strong>GSTIN :</strong> 24AAHFU1938J1ZZ
+            </td>
+        </tr>
 
-    <div class="container">
+        <tr>
+            <td colspan="4">
+                <div class="section-heading">Bill To</div>
 
-        <!-- HEADER -->
-        <table class="header-table">
-            <tr>
-                <td class="company-info">
-                    <h2>Passport Suvidha Service</h2>
-                    <p>Second Floor, Shop No. 227</p>
-                    <p>Unique Square, Opp. Shubham K Mart</p>
-                    <p>Singanpore Road, Surat - 395004</p>
-                    <p>+91 7486046591</p>
-                    <p>support@passportsuvidha.com</p>
-                    <p>GSTN: 24AAHFU1938J1ZZ</p>
+                <strong>Name :</strong>
+                {{ $customer->first_name ?? '' }} {{ $customer->last_name ?? '' }}
+                <br />
 
-                    <div class="bill-to">
-                        <strong>Bill To:</strong>
-                        {{ $customer->first_name ?? '' }} {{ $customer->last_name ?? '' }}<br>
-                        {{ $customer->city ?? '' }}<br>
-                        (M) {{ $customer->mobile_number ?? '' }}<br>
-                        (E) {{ $customer->email ?? '' }}
-                    </div>
-                </td>
+                <strong>Mobile :</strong>
+                {{ $customer->mobile_number ?? '' }}
+                <br />
 
-                <td class="invoice-info">
-                    <h1 class="invoice-title">Invoice</h1>
-                    <p><strong>Invoice No:</strong> {{ $invoice->id ?? 'N/A' }}</p>
-                    <p><strong>Date:</strong>
-                        {{ $invoice->created_at ? \Carbon\Carbon::parse($invoice->created_at)->format('d/m/Y') : now()->format('d/m/Y') }}
-                    </p>
-                </td>
-            </tr>
-        </table>
+                <strong>Email :</strong>
+                {{ $customer->email ?? '' }}
+                <br />
 
-        <!-- ITEMS TABLE -->
-        <table>
-            <thead>
+                <strong>City :</strong>
+                {{ $customer->city ?? '' }}
+            </td>
+
+            <td colspan="2" class="header-info">
+                <div class="section-heading">Invoice</div>
+                <strong>Invoice No :</strong>
+                {{ $invoice->id ?? 'N/A' }}
+                <br />
+                <strong>Invoice Date :</strong>
+                {{ $invoice->created_at ? \Carbon\Carbon::parse($invoice->created_at)->format('d-m-Y') : date('d-m-Y') }}
+                <br />
+                <strong>Payment ID :</strong>
+                {{ $payment_id ?? 'N/A' }}
+                {{-- <br /><br /> --}}
+            </td>
+        </tr>
+
+        <tr class="bold center">
+            <td width="5%">Sr.</td>
+            <td width="35%" align="left">Particulars</td>
+            {{-- <td width="10%">SAC</td> --}}
+            <td width="15%" align="right">Amount</td>
+            <td width="15%" align="right">GST %</td>
+            <td width="12%" align="right">GST Amt</td>
+            <td width="18%" align="right">Total</td>
+        </tr>
+
+        <tr>
+            <td class="center">1</td>
+            {{-- <td>Government Passport Fee</td> --}}
+            <td>Government Passport Fee: <br>{{ $service->service_name ?? 'Passport Assistance Service' }}</td>
+            {{-- <td class="center">-</td> --}}
+            <td class="right">₹{{ number_format($gov_amount, 2) }}</td>
+            <td class="right">0%</td>
+            <td class="right">0.00</td>
+            <td class="right">₹{{ number_format($gov_amount, 2) }}</td>
+        </tr>
+
+        <tr>
+            <td class="center">2</td>
+
+            <td>Service Charges</td>
+
+            {{-- <td class="center">998599</td> --}}
+
+            <td class="right">₹{{ number_format($service_charges, 2) }}</td>
+
+            <td class="right">{{ $gst_rate }}%</td>
+
+            <td class="right">₹{{ number_format($cgst + $sgst + $igst, 2) }}</td>
+
+            <td class="right">
+                ₹{{ number_format($service_charges + $cgst + $sgst + $igst, 2) }}
+            </td>
+        </tr>
+
+        <tr class="bold">
+            <td colspan="2" class="right">TOTAL</td>
+
+            <td class="right">
+                ₹{{ number_format($gov_amount + $service_charges, 2) }}
+            </td>
+            <td></td>
+
+            <td class="right">₹{{ number_format($cgst + $sgst + $igst, 2) }}</td>
+
+            <td class="right">
+                ₹{{ number_format($grand_total, 2) }}
+            </td>
+        </tr>
+        {{--
+        <tr>
+            <td colspan="9">
+                <strong>Total Amount In Words</strong>
+                <br /><br />
+ 
+                <span class="amount-words">
+                    {{ strtoupper($amount_in_words ?? 'RUPEES ONLY') }}
+        </span>
+        </td>
+
+        <td colspan="4">
+            <table class="grand-total-box" style="width: 100%; border-collapse: collapse">
                 <tr>
-                    <th align="left">Item</th>
-                    <th width="80" align="right">Qty</th>
-                    <th width="150" align="right">Amount (₹)</th>
+                    <td class="bold">Grand Total</td>
+                    <td class="right bold">₹{{ number_format($grand_total, 2) }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                @if ($service)
-                <tr>
-                    <td>{{ $service->service_name ?? 'Service' }}</td>
-                    <td align="right">1</td>
-                    <td align="right">{{ number_format($payment_amount, 2) }}</td>
-                </tr>
-                @else
-                <tr>
-                    <td>No Service Found</td>
-                    <td>-</td>
-                    <td>0.00</td>
-                </tr>
-                @endif
-            </tbody>
-        </table>
-
-        <!-- TOTAL -->
-        <div class="total-section">
-            <table class="total-table">
-
-                <tr>
-                    <td>Government Charges:</td>
-                    <td align="right">₹{{ number_format($gov_amount, 2) }}</td>
-                </tr>
-
-                <tr>
-                    <td>Service Charges:</td>
-                    <td align="right">₹{{ number_format($service_charges, 2) }}</td>
-                </tr>
-
-                @if ($is_gujarat)
-                <tr>
-                    <td>CGST ({{ $gst_rate / 2 }}%):</td>
-                    <td align="right">₹{{ number_format($cgst, 2) }}</td>
-                </tr>
-                <tr>
-                    <td>SGST ({{ $gst_rate / 2 }}%):</td>
-                    <td align="right">₹{{ number_format($sgst, 2) }}</td>
-                </tr>
-                @else
-                <tr>
-                    <td>IGST ({{ $gst_rate }}%):</td>
-                    <td align="right">₹{{ number_format($igst, 2) }}</td>
-                </tr>
-                @endif
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-
-                <tr class="grand">
-                    <td><strong>Grand Total:</strong></td>
-                    <td align="right">
-                        <strong>₹{{ number_format($grand_total, 2) }}</strong>
-                    </td>
-                </tr>
-
             </table>
-        </div>
+        </td>
+        </tr> --}}
 
-        <!-- PAYMENT -->
-        <div class="payment-info">
-            <p><strong>Payment Method:</strong> {{ $payment_mode }}</p>
-            <p><strong>Payment ID:</strong> {{ $payment_id }}</p>
-        </div>
+        <tr>
+            <td colspan="9">
+                <strong class="section-heading">Payment Information</strong>
+                <br /><br />
 
-        <!-- FOOTER -->
-        <div class="footer">
-            <p>Authorized Person: {{ $invoice->authorized_person ?? 'Passport Suvidha Service' }}</p>
-            <p>This is a computer-generated invoice. No signature required.</p>
-        </div>
+                Payment Mode : {{ $payment_mode ?? 'Online' }}
 
-    </div>
+                <br />
 
+                Payment ID : {{ $payment_id ?? 'N/A' }}
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="9" class="header-info" style="align-items: center; text-align: center">
+                <p>Authorized Person: Passport Suvidha Service</p>
+                <p>This is a computer-generated invoice. No signature
+                    required.</p>
+            </td>
+        </tr>
+    </table>
 </body>
 
 </html>
