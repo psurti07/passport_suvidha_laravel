@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Zaakpay Logs')
+@section('title', 'PhonePe Logs')
 
 @section('content')
 
@@ -16,7 +16,7 @@
                         <div class="flex items-center gap-4">
                             <h2
                                 class="text-xl md:mb-6 sm:text-2xl mb-3 md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                                ZAAKPAY LOGS
+                                PHONEPE LOGS
                             </h2>
                         </div>
                         <div class="flex flex-wrap gap-2 lg:gap-3">
@@ -60,7 +60,7 @@
                 <div class="mt-4 overflow-x-auto">
                     <div class="whitespace-nowrap text-sm text-gray-700">
 
-                        <table id="zaakpay-logs-table" class="min-w-full divide-y divide-gray-200">
+                        <table id="phonepe-logs-table" class="min-w-full divide-y divide-gray-200">
 
                             <thead class="bg-blue-50">
 
@@ -121,7 +121,7 @@
     <script>
         $(function() {
 
-            let table = $('#zaakpay-logs-table').DataTable({
+            let table = $('#phonepe-logs-table').DataTable({
 
                 processing: true,
                 serverSide: true,
@@ -135,7 +135,7 @@
                 ],
 
                 ajax: {
-                    url: "{{ route('admin.zaakpay-logs.data') }}",
+                    url: "{{ route('admin.phonepe-logs.data') }}",
                     data: function(d) {
                         d.from_date = $('#from_date').val();
                         d.to_date = $('#to_date').val();

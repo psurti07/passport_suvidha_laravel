@@ -109,8 +109,8 @@ class TodayStatisticsController extends Controller
             ->where('offer_type', 1)
             ->count();
 
-        // Zaakpay → Star Offer
-        $zaakpayStarOffer = DB::table('zaakpay_logs')
+        // PhonePe → Star Offer
+        $phonepeStarOffer = DB::table('phonepe_logs')
             ->whereDate('created_at', $today)
             ->where('tx_status', 'success')
             ->where('offer_type', 2)
@@ -128,8 +128,8 @@ class TodayStatisticsController extends Controller
 
         // Add Star Offer
         $paymentStats[] = [
-            'label' => 'Zaakpay - Star Offer',
-            'count' => $zaakpayStarOffer,
+            'label' => 'PhonePe - Star Offer',
+            'count' => $phonepeStarOffer,
             'icon' => 'fa-star'
         ];
 

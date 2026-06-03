@@ -23,7 +23,7 @@ use App\Http\Controllers\Admin\DndController;
 use App\Http\Controllers\Admin\RazorpayLogController;
 use App\Http\Controllers\Admin\CashfreeLogController;
 use App\Http\Controllers\Admin\InvoiceController;
-use App\Http\Controllers\Admin\ZaakpayLogController;
+use App\Http\Controllers\Admin\PhonepeLogController;
 use App\Http\Controllers\Admin\CardOfferController;
 use App\Http\Controllers\Admin\StarOfferController;
 use App\Http\Controllers\Admin\SiteOptionController;
@@ -135,9 +135,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/cashfree-logs', [CashfreeLogController::class, 'index'])->name('cashfree-logs.index');
     Route::get('/cashfree-logs/data', [CashfreeLogController::class, 'data'])->name('cashfree-logs.data');
 
-    // Zaakpay Logs Routes
-    Route::get('/zaakpay-logs', [ZaakpayLogController::class, 'index'])->name('zaakpay-logs.index');
-    Route::get('/zaakpay-logs/data', [ZaakpayLogController::class, 'data'])->name('zaakpay-logs.data');
+    // PhonePe Logs Routes
+    Route::get('/phonepe-logs', [PhonepeLogController::class, 'index'])->name('phonepe-logs.index');
+    Route::get('/phonepe-logs/data', [PhonepeLogController::class, 'data'])->name('phonepe-logs.data');
 
     // Support Routes
     Route::get('/support/customer', [SupportController::class, 'customerSupport'])->name('support.customer');

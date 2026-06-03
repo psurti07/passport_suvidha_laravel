@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\ZaakpayLog;
+use App\Models\PhonepeLog;
 use Yajra\DataTables\Facades\DataTables;
 
 
-class ZaakpayLogController extends Controller
+class PhonepeLogController extends Controller
 {
     public function index()
     {
-        return view('admin.zaakpay-logs.index');
+        return view('admin.phonepe-logs.index');
     }
 
     public function data(Request $request)
@@ -20,7 +20,7 @@ class ZaakpayLogController extends Controller
         $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
-        $query = ZaakpayLog::select([
+        $query = PhonepeLog::select([
             'id',
             'customer_id',
             'order_id',
