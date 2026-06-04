@@ -29,7 +29,6 @@ use App\Http\Controllers\Admin\StarOfferController;
 use App\Http\Controllers\Admin\SiteOptionController;
 use App\Http\Controllers\Admin\SmsController;
 use App\Http\Controllers\Admin\ScheduleSlotController;
-use App\Http\Controllers\Admin\CronController;
 use App\Http\Controllers\Admin\RemarketingLogController;
 
 /*
@@ -188,7 +187,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Users Routes
     Route::resource('users', UserController::class);
     Route::get('/users-data', [UserController::class, 'data'])->name('users.data');
-
-    // Rcs Remarketing
-    Route::get('/cron/remarketing-rcs/{token}',[CronController::class, 'remarketingRcs']);
 });

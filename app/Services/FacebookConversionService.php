@@ -40,6 +40,7 @@ class FacebookConversionService
                     'event_name' => $eventName,
                     'event_time' => time(),
                     'event_id' => $eventId,
+                    'event_source_url' => config('app.url'),
                     'action_source' => 'website',
 
                     'user_data' => [
@@ -98,6 +99,11 @@ class FacebookConversionService
                 ]
             ]
         ];
+
+        if (!empty($fbLead->fbclid)) {
+            $payload['data'][0]['user_data']['fbc']
+                = $fbLead->fbclid;
+        }
 
         $response = Http::withoutVerifying()->post(
             "https://graph.facebook.com/v16.0/{$pixelId}/events",

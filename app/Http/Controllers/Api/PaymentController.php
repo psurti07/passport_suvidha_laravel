@@ -13,7 +13,7 @@ use App\Models\Service;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\SmsService;
-// use App\Services\FacebookConversionService;
+use App\Services\FacebookConversionService;
 
 class PaymentController extends Controller
 {
@@ -208,8 +208,8 @@ class PaymentController extends Controller
 
             DB::commit();
 
-            // $facebookService = new FacebookConversionService();
-            // $facebookService->send($customer);
+            $facebookService = new FacebookConversionService();
+            $facebookService->send($customer);
 
             if (!empty($customer->mobile_number)) {
                 $smsService = new SmsService();

@@ -42,7 +42,7 @@ return [
         'user_id' => env('RCS_USERID'),
         'api_key' => env('RCS_APIKEY'),
         'template_id' => env('RCS_TEMPLATEID'),
-        'cron_token' => env('RCS_CRON_TOKEN'),
+        'test_numbers' => env('RCS_TEST_NUMBERS'),
     ],
 
     'app' => [
