@@ -226,14 +226,14 @@ class CustomerController extends Controller
 
         $customer = Customer::create($data);
 
-        if ($request->filled('fbclid')) {
-            FbAdsEntry::create([
-                'customer_id' => $customer->id,
-                'fbclid' => $request->fbclid,
-                'sent_data' => 'sending fbclid to fbadsentry',
-                'received_data' => 'fbclid stored in fbadsentry'
-            ]);
-        }
+        // if ($request->filled('fbclid')) {
+        //     FbAdsEntry::create([
+        //         'customer_id' => $customer->id,
+        //         'fbclid' => $request->fbclid,
+        //         'sent_data' => 'sending fbclid to fbadsentry',
+        //         'received_data' => 'fbclid stored in fbadsentry'
+        //     ]);
+        // }
 
         return response()->json([
             'message' => 'Customer information saved successfully',

@@ -208,8 +208,8 @@ class PaymentController extends Controller
 
             DB::commit();
 
-            $facebookService = new FacebookConversionService();
-            $facebookService->send($customer);
+            // $facebookService = new FacebookConversionService();
+            // $facebookService->send($customer);
 
             if (!empty($customer->mobile_number)) {
                 $smsService = new SmsService();
