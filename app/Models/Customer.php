@@ -22,7 +22,7 @@ class Customer extends Authenticatable
         'first_name',
         'last_name',
         'mobile_number',
-        // 'fbclid',
+        'fbclid',
         'email',
         'address',
         'pin_code',

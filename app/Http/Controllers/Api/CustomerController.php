@@ -171,7 +171,6 @@ class CustomerController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email',
             'mobile_number' => 'required|string|max:20',
-            // 'fbclid' => 'nullable|string|max:500'
         ]);
 
         if ($validator->fails()) {
@@ -226,14 +225,12 @@ class CustomerController extends Controller
 
         $customer = Customer::create($data);
 
-        // if ($request->filled('fbclid')) {
-        //     FbAdsEntry::create([
-        //         'customer_id' => $customer->id,
-        //         'fbclid' => $request->fbclid,
-        //         'sent_data' => 'sending fbclid to fbadsentry',
-        //         'received_data' => 'fbclid stored in fbadsentry'
-        //     ]);
-        // }
+        if ($request->filled('fbclid')) {
+            FbAdsEntry::create([
+                'customer_id' => $customer->id,
+                'fbclid' => $request->fbclid
+            ]);
+        }
 
         return response()->json([
             'message' => 'Customer information saved successfully',
