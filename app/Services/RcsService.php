@@ -11,7 +11,7 @@ class RcsService
     protected $userId;
     protected $apiKey;
     protected $templateId;
-    
+
     public function __construct()
     {
         $this->baseUrl = config('services.rcs.base_url');
@@ -25,19 +25,21 @@ class RcsService
     {
         try {
 
-            $response = Http::withoutVerifying()
-                ->post(
-                    $this->baseUrl . '/rcs/api/user/authorize',
-                    [
-                        'userId' => $this->userId,
-                        'apiKey' => $this->apiKey,
-                    ]
-                );
+            $http = app()->environment('local')
+                ? Http::withoutVerifying()
+                : Http::acceptJson();
+
+            $response = $http->post(
+                $this->baseUrl . '/rcs/api/user/authorize',
+                [
+                    'userId' => $this->userId,
+                    'apiKey' => $this->apiKey,
+                ]
+            );
 
             $data = $response->json();
 
             return $data['data']['apiToken'] ?? null;
-
         } catch (\Exception $e) {
 
             Log::error('RCS TOKEN ERROR : ' . $e->getMessage());
@@ -91,7 +93,11 @@ class RcsService
 
         try {
 
-            $response = Http::withoutVerifying()
+            $http = app()->environment('local')
+                ? Http::withoutVerifying()
+                : Http::acceptJson();
+
+            $response = $http
                 ->withHeaders([
                     'Authorization' => $token,
                     'Content-Type' => 'application/json',
@@ -107,7 +113,6 @@ class RcsService
                 'status' => true,
                 'response' => $response->body(),
             ];
-
         } catch (\Exception $e) {
 
             Log::error('RCS SEND ERROR : ' . $e->getMessage());

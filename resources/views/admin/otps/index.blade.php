@@ -114,6 +114,10 @@
                 scrollX: true,
                 autoWidth: false,
 
+                order: [
+                    [0, 'desc']
+                ],
+
                 ajax: {
                     url: "{{ route('admin.otps.data') }}",
                     data: function(d) {

@@ -86,7 +86,7 @@ class FacebookConversionService
                         'client_ip_address' => request()->ip(),
 
                         'client_user_agent' =>
-                            request()->userAgent(),
+                        request()->userAgent(),
 
                         'fbc' => $fbLead->fbclid
                     ],
@@ -105,7 +105,11 @@ class FacebookConversionService
                 = $fbLead->fbclid;
         }
 
-        $response = Http::withoutVerifying()->post(
+        $http = app()->environment('local')
+            ? Http::withoutVerifying()
+            : Http::acceptJson();
+
+        $response = $http->post(
             "https://graph.facebook.com/v16.0/{$pixelId}/events",
             [
                 'access_token' => $accessToken,

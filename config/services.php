@@ -42,6 +42,7 @@ return [
         'user_id' => env('RCS_USERID'),
         'api_key' => env('RCS_APIKEY'),
         'template_id' => env('RCS_TEMPLATEID'),
+        'test_mode'=> env('RCS_TEST_MODE', false),
         'test_numbers' => env('RCS_TEST_NUMBERS'),
     ],
 

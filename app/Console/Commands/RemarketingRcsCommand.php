@@ -88,11 +88,6 @@ class RemarketingRcsCommand extends Command
             ->orderBy('c.id', 'asc')
             ->get();
 
-        if ($users->isEmpty()) {
-            $this->info('No Customers Found');
-            return 0;
-        }
-
         $mobiles = $users
             ->pluck('mobile_number')
             ->filter()
@@ -103,19 +98,31 @@ class RemarketingRcsCommand extends Command
             ->values()
             ->toArray();
 
-        $testNumbers = array_filter(
-            array_map(
-                'trim',
-                explode(',', config('services.rcs.test_numbers', ''))
-            )
-        );
+        if (config('services.rcs.test_mode')) {
 
-        $mobiles = array_unique(
-            array_merge($mobiles, $testNumbers)
-        );
+            $testNumbers = array_filter(
+                array_map(
+                    'trim',
+                    explode(',', config('services.rcs.test_numbers', ''))
+                )
+            );
 
-        $response = app(RcsService::class)
-            ->send($mobiles);
+            $mobiles = array_unique(
+                array_merge($mobiles, $testNumbers)
+            );
+        }
+
+        if (empty($mobiles)) {
+
+            $response = [
+                'status' => false,
+                'message' => 'No Mobiles Found'
+            ];
+        } else {
+
+            $response = app(RcsService::class)
+                ->send($mobiles);
+        }
 
         SmsLog::create([
             'type' => 'rcs',
@@ -124,8 +131,6 @@ class RemarketingRcsCommand extends Command
             'msgcount' => count($mobiles),
             'msgresponse' => json_encode($response),
         ]);
-
-        $this->info('RCS Sent Successfully');
 
         return 0;
     }
