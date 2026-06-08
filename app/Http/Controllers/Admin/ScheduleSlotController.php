@@ -33,7 +33,7 @@ class ScheduleSlotController extends Controller
             'deleted_at',
         ])
 
-            ->whereBetween('date', [
+            ->whereBetween('created_at', [
                 $from . ' 00:00:00',
                 $to . ' 23:59:59'
             ]);
@@ -72,37 +72,24 @@ class ScheduleSlotController extends Controller
                 } else if ($row->language == '2') {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">English</span>';
                 } else if ($row->language == '3') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-orange-100 text-orange-800">Gujarati</span>';
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Gujarati</span>';
                 } else {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-800">Unknown</span>';
                 }
             })
 
             ->editColumn('status', function ($row) {
-
-                $statuses = [
-                    1 => 'Schedule',
-                    2 => 'Completed',
-                    3 => 'Cancelled',
-                    4 => 'Not Reachable',
-                ];
-
-                $html = '<select 
-                            class="change-status border rounded-lg px-2 py-1 text-sm"
-                            data-id="' . $row->id . '">';
-
-                foreach ($statuses as $key => $value) {
-
-                    $selected = $row->status == $key ? 'selected' : '';
-
-                    $html .= '<option value="' . $key . '" ' . $selected . '>
-                                ' . $value . '
-                            </option>';
+                if ($row->status == '1') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800">Scheduled</span>';
+                } else if ($row->status == '2') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Completed</span>';
+                } else if ($row->status == '3') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Cancelled</span>';
+                } else if ($row->status == '4') {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Not Reachable</span>';
+                } else {
+                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-800">Unknown</span>';
                 }
-
-                $html .= '</select>';
-
-                return $html;
             })
 
             ->filterColumn('customer_name', function ($query, $keyword) {
@@ -127,6 +114,18 @@ class ScheduleSlotController extends Controller
             ->addColumn('actions', function ($row) {
                 return '
                     <div class="flex items-center gap-2">
+
+                        <!-- View -->
+                        <a href="' . route('admin.schedule-slots.show', $row->id) . '" 
+                            class="text-blue-600 hover:text-blue-900" title="View">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                <path fill-rule="evenodd"
+                                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </a>
 
                         <!-- Delete -->
                         <form action="' . route('admin.schedule-slots.destroy', $row->id) . '" method="POST" class="inline">
@@ -154,6 +153,12 @@ class ScheduleSlotController extends Controller
             ->make(true);
     }
 
+    public function show(ScheduleSlot $scheduleSlot)
+    {
+        $scheduleSlot->load(['customer', 'service']);
+        return view('admin.schedule-slots.show', compact('scheduleSlot'));
+    }
+
     public function updateStatus(Request $request, ScheduleSlot $scheduleSlot)
     {
         $request->validate([
@@ -171,10 +176,20 @@ class ScheduleSlotController extends Controller
             4 => 'Not Reachable',
         ];
 
-        return response()->json([
-            'success' => true,
-            'message' => $stausText[$request->status] . ' status updated successfully.'
+        return back()->with('success', $stausText[$request->status] . ' status updated successfully.');
+    }
+
+    public function updateRemark(Request $request, ScheduleSlot $scheduleSlot)
+    {
+        $request->validate([
+            'remark' => 'required|string'
         ]);
+
+        $scheduleSlot->update([
+            'remarks' => $request->remark
+        ]);
+
+        return back()->with('success', 'Remark updated successfully.');
     }
 
     public function destroy(ScheduleSlot $scheduleSlot)
