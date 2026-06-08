@@ -183,7 +183,7 @@
                         searchable: false
                     }
                 ],
-
+                dom: 'Blfrtip',
                 buttons: [{
                         extend: 'copy',
                         exportOptions: {

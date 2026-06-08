@@ -192,6 +192,8 @@
                     }
                 ],
 
+                dom: 'Blfrtip',
+
                 buttons: [{
                         extend: 'copy'
                     },

@@ -199,7 +199,7 @@
         </tr>
 
         <tr>
-            <td colspan="4">
+            <td colspan="5">
                 <div class="section-heading">Bill To</div>
 
                 <strong>Name :</strong>
@@ -218,7 +218,7 @@
                 {{ $customer->city ?? '' }}
             </td>
 
-            <td colspan="2" class="header-info">
+            <td colspan="4" class="header-info">
                 <div class="section-heading">Invoice</div>
                 <strong>Invoice No :</strong>
                 {{ $invoice->id ?? 'N/A' }}
@@ -234,43 +234,99 @@
 
         <tr class="bold center">
             <td width="5%">Sr.</td>
-            <td width="35%" align="left">Particulars</td>
-            {{-- <td width="10%">SAC</td> --}}
-            <td width="15%" align="right">Amount</td>
-            <td width="15%" align="right">GST %</td>
-            <td width="12%" align="right">GST Amt</td>
-            <td width="18%" align="right">Total</td>
+
+            <td width="33%" align="left">
+                Particulars
+            </td>
+
+            <td width="13%" align="right">
+                Amount
+            </td>
+
+            <td width="10%" align="right">
+                GST %
+            </td>
+
+            <td width="12%" align="center">
+                GST Type
+            </td>
+
+            <td width="12%" align="right">
+                GST Amt
+            </td>
+
+            <td width="15%" align="right">
+                Total
+            </td>
         </tr>
 
         <tr>
             <td class="center">1</td>
             {{-- <td>Government Passport Fee</td> --}}
             <td>Government Passport Fee: <br>{{ $service->service_name ?? 'Passport Assistance Service' }}</td>
-            {{-- <td class="center">-</td> --}}
             <td class="right">₹{{ number_format($gov_amount, 2) }}</td>
             <td class="right">0%</td>
+            <td class="center">-</td>
             <td class="right">0.00</td>
             <td class="right">₹{{ number_format($gov_amount, 2) }}</td>
         </tr>
 
-        <tr>
-            <td class="center">2</td>
+        @if (strtolower(trim($is_gujarat)))
+            <tr>
+                <td class="center">2</td>
 
-            <td>Service Charges</td>
+                <td>Service Charges</td>
 
-            {{-- <td class="center">998599</td> --}}
 
-            <td class="right">₹{{ number_format($service_charges, 2) }}</td>
+                <td class="right">₹{{ number_format($service_charges, 2) }}</td>
 
-            <td class="right">{{ $gst_rate }}%</td>
+                <td class="right">{{ $gst_rate / 2 }}%</td>
 
-            <td class="right">₹{{ number_format($cgst + $sgst + $igst, 2) }}</td>
+                <td class="center">CGST</td>
+                <td class="right">₹{{ number_format($cgst, 2) }}</td>
 
-            <td class="right">
-                ₹{{ number_format($service_charges + $cgst + $sgst + $igst, 2) }}
-            </td>
-        </tr>
+                <td class="right">
+                    ₹{{ number_format($service_charges + $cgst, 2) }}
+                </td>
+            </tr>
+            <tr>
+                <td class="center"></td>
 
+                <td></td>
+
+                {{-- <td class="center">998599</td> --}}
+
+                <td class="right"></td>
+
+                <td class="right">{{ $gst_rate / 2 }}%</td>
+
+                <td class="center">SGST</td>
+                <td class="right">₹{{ number_format($sgst, 2) }}</td>
+
+                <td class="right">
+                    ₹{{ number_format($sgst + $igst, 2) }}
+                </td>
+            </tr>
+        @else
+            <tr>
+                <td class="center">2</td>
+
+                <td>Service Charges</td>
+
+                {{-- <td class="center">998599</td> --}}
+
+                <td class="right">₹{{ number_format($service_charges, 2) }}</td>
+
+                <td class="right">{{ $gst_rate }}%</td>
+
+                <td class="center">IGST</td>
+                <td class="right">₹{{ number_format($cgst + $sgst + $igst, 2) }}</td>
+
+                <td class="right">
+                    ₹{{ number_format($service_charges + $cgst + $sgst + $igst, 2) }}
+                </td>
+            </tr>
+        @endif
         <tr class="bold">
             <td colspan="2" class="right">TOTAL</td>
 
@@ -278,11 +334,12 @@
                 ₹{{ number_format($gov_amount + $service_charges, 2) }}
             </td>
             <td></td>
+            <td></td>
 
             <td class="right">₹{{ number_format($cgst + $sgst + $igst, 2) }}</td>
 
             <td class="right">
-                ₹{{ number_format($grand_total, 2) }}
+                ₹{{ number_format($gov_amount + $service_charges + $cgst + $sgst + $igst, 2) }}
             </td>
         </tr>
         {{--
