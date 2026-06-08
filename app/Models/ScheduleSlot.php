@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Customer;
+use App\Models\Service;
 
 class ScheduleSlot extends Model
 {
@@ -32,9 +34,14 @@ class ScheduleSlot extends Model
         return $this->belongsTo(Customer::class)->withTrashed();
     }
 
+    // public function service(): BelongsTo
+    // {
+    //     return $this->belongsTo(Service::class)->withTrashed();
+    // }
+
     public function service(): BelongsTo
     {
-        return $this->belongsTo(Service::class)->withTrashed();
+        return $this->belongsTo(Service::class);
     }
 
     // Helper Methods

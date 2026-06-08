@@ -170,6 +170,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Schedule Routes
     Route::resource('schedule-slots', ScheduleSlotController::class);
     Route::get('/schedule-slots-data', [ScheduleSlotController::class, 'data'])->name('schedule-slots.data');
+    Route::post('/schedule-slots/{scheduleSlot}/remark', [ScheduleSlotController::class, 'updateRemark'])->name('schedule-slots.remark.update'); 
     Route::patch('schedule-slots/{scheduleSlot}/status',[ScheduleSlotController::class, 'updateStatus'])->name('schedule-slots.update-status');
 
     // Predefined Messages Routes
