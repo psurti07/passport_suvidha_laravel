@@ -186,12 +186,12 @@
             </td>
         </tr>
         <tr class="header-info">
-            <td colspan="3" class="left">
+            <td colspan="4" class="left">
                 Second Floor, Shop No. 227<br />
                 Unique Square, Opp. Shubham K Mart<br />
                 Singanpore Road, Surat - 395004<br />
             </td>
-            <td colspan="3" class="right">
+            <td colspan="3" class="left">
                 <strong>Mobile :</strong> +91 7486046591<br />
                 <strong>Email :</strong> support@passportsuvidha.com<br />
                 <strong>GSTIN :</strong> 24AAHFU1938J1ZZ
