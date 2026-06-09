@@ -42,7 +42,7 @@ return [
         'user_id' => env('RCS_USERID'),
         'api_key' => env('RCS_APIKEY'),
         'template_id' => env('RCS_TEMPLATEID'),
-        'test_mode'=> env('RCS_TEST_MODE', false),
+        'test_mode' => env('RCS_TEST_MODE', false),
         'test_numbers' => env('RCS_TEST_NUMBERS'),
     ],
 
@@ -74,6 +74,11 @@ return [
         'id' => env('PHONEPE_ID'),
         'secret' => env('PHONEPE_SECRET'),
         'version' => env('PHONEPE_CLIENT_VERSION'),
+    ],
+
+    'interkt' => [
+        'key' => env('INTERAKT_API_KEY'),
+        'url' => env('INTERAKT_BASE_URL')
     ],
 
 ];

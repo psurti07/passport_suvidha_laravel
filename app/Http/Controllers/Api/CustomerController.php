@@ -13,9 +13,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Services\SmsService;
 use App\Models\FbAdsEntry;
+use App\Services\ConversionTrackingService;
 
 class CustomerController extends Controller
 {
+
+    protected ConversionTrackingService $trakingService;
+    public function __construct(ConversionTrackingService $trakingService)
+    {
+        $this->trakingService = $trakingService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -224,6 +232,10 @@ class CustomerController extends Controller
         $data['registration_step'] = 1;
 
         $customer = Customer::create($data);
+
+        if ($customer) {
+            $this->traking_lead($customer);
+        }
 
         if ($request->filled('fbclid')) {
             FbAdsEntry::create([
@@ -448,5 +460,39 @@ class CustomerController extends Controller
             4 => 'payment',
             default => 'start',
         };
+    }
+
+    protected function traking_lead(Customer $customer)
+    {
+        try {
+
+            $userResponse = $this->trakingService->userTrack([
+
+                "phoneNumber" => $customer["mobile_number"],
+                "countryCode" => "+91",
+                "traits" => [
+                    "name" => $customer['first_name'] . " " . $customer['last_name']
+                ],
+                "tags" => ["Lead Gen"]
+
+            ]);
+
+            $eventResponse = $this->trakingService->eventTrack(
+                [
+                    "phoneNumber" => $customer["mobile_number"],
+                    "countryCode" => "+91",
+                    "event" => "Lead Gen"
+                ]
+            );
+
+            Log::info('Tracking Debug', [
+                'user_track' => $userResponse,
+                'event_track' => $eventResponse,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Interakt Tracking Failed', [
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

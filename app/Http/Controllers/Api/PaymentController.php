@@ -14,9 +14,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\SmsService;
 use App\Services\FacebookConversionService;
+use App\Services\ConversionTrackingService;
 
 class PaymentController extends Controller
 {
+    protected ConversionTrackingService $trakingService;
+    public function __construct(ConversionTrackingService $trakingService)
+    {
+        $this->trakingService = $trakingService;
+    }
 
     public function createOrder(Request $request)
     {
@@ -144,6 +150,10 @@ class PaymentController extends Controller
 
                 DB::commit();
 
+                if (isset($customer)) {
+                    $this->tracking_success($customer);
+                }
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Test payment successful (₹1)'
@@ -211,6 +221,11 @@ class PaymentController extends Controller
             $facebookService = new FacebookConversionService();
             $facebookService->send($customer);
 
+
+            if (isset($customer)) {
+                $this->tracking_success($customer);
+            }
+
             if (!empty($customer->mobile_number)) {
                 $smsService = new SmsService();
                 $smsMessage = $smsService->smsMessage('complete-process-sms');
@@ -232,9 +247,9 @@ class PaymentController extends Controller
             ]);
         } catch (\Exception $e) {
 
-            DB::rollBack();
-
-            Log::error('PAYMENT VERIFY ERROR: ' . $e->getMessage());
+            if (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
 
             $paymentMode = null;
 
@@ -255,6 +270,10 @@ class PaymentController extends Controller
                     'payment_id' => $request->razorpay_payment_id ?? null,
                     'payment_mode' => $paymentMode
                 ]);
+            }
+
+            if (isset($customer)) {
+                $this->tracking_failed($customer);
             }
 
             if (isset($customer) && !empty($customer->mobile_number)) {
@@ -311,6 +330,11 @@ class PaymentController extends Controller
             ]);
 
             $customer = Customer::find($log->customer_id);
+
+            if (isset($customer)) {
+                $this->tracking_failed($customer);
+            }
+
             if ($customer && !empty($customer->mobile_number)) {
 
                 $mobileNumber = $customer->mobile_number;
@@ -334,5 +358,61 @@ class PaymentController extends Controller
             'success' => false,
             'message' => 'Payment marked as failed'
         ]);
+    }
+
+    protected function tracking_success(Customer $customer)
+    {
+        try {
+
+            $userTrack = $this->trakingService->userTrack([
+
+                "phoneNumber" => $customer->mobile_number,
+                "countryCode" => "+91",
+                "traits" => [
+                    "name" => $customer->first_name . " " . $customer->last_name
+                ],
+                "tags" => ["Payment Successful"]
+
+            ]);
+
+            $eventTrack = $this->trakingService->eventTrack(
+                [
+                    "phoneNumber" => $customer->mobile_number,
+                    "countryCode" => "+91",
+                    "event" => "Payment Successful"
+                ]
+            );
+
+            Log::info('Tracking Debug sucessfull', [
+                'user_track' => $userTrack,
+                'event_track' => $eventTrack,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Interakt Tracking Failed', [
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    protected function tracking_failed(Customer $customer)
+    {
+        try {
+
+            $eventTrack = $this->trakingService->eventTrack(
+                [
+                    "phoneNumber" => $customer->mobile_number,
+                    "countryCode" => "+91",
+                    "event" => "Payment Failed"
+                ]
+            );
+
+            Log::info('Tracking Debug failed', [
+                'event_track' => $eventTrack,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Interakt Tracking Failed', [
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }
