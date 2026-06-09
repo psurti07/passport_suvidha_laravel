@@ -32,7 +32,7 @@ class InteraktService
         }
         
         $payload = [
-            "fullPhoneNumber" => $mobile,
+            "fullPhoneNumber" => '+91' . $mobile,
             "callbackData" => "remarketing",
             "type" => "Template",
             "template" => [
