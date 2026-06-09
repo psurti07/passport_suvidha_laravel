@@ -21,8 +21,7 @@ class SmsService
         $this->senderId = SiteOption::getValue('sms-sender-id');
     }
 
-    // Send Single SMS
-    public function send(
+    public function sendSmsMessage(
         string $mobile,
         string $message
     ): array {
@@ -63,8 +62,7 @@ class SmsService
         }
     }
 
-    // Send Template SMS
-    public function sendTemplate(
+    public function sendTemplateSms(
         string $mobile,
         string $templateKey,
         array $variables = []
@@ -83,20 +81,19 @@ class SmsService
             ];
         }
 
-        foreach ($variables as $key => $value) {
-
-            $template = str_replace(
-                '{#var_' . $key . '#}',
+        foreach ($variables as $value) {
+            $template = preg_replace(
+                '/\{#var#\}/',
                 $value,
-                $template
+                $template,
+                1
             );
         }
 
-        return $this->send($mobile, $template);
+        return $this->sendSmsMessage($mobile, $template);
     }
 
-    // Send Bulk / Remarketing SMS
-    public function sendBulk(
+    public function sendBulkSms(
         array $mobiles,
         string $message
     ): array {
@@ -135,79 +132,6 @@ class SmsService
             return [
                 'success' => false,
                 'response' => $e->getMessage(),
-            ];
-        }
-    }
-
-    public function sendSms($mobileNumber, $message)
-    {
-        try {
-            $url = "http://m.onlinebusinessbazaar.in/sendsms.jsp";
-            $username = SiteOption::getValue('sms-user-name');
-            $password = SiteOption::getValue('sms-password');
-            $senderId = SiteOption::getValue('sms-sender-id');
-
-            $response = Http::get($url, [
-                'user' => $username,
-                'password' => $password,
-                'senderid' => $senderId,
-                'mobiles' => '91' . $mobileNumber, //  FIXED
-                'sms' => $message
-            ]);
-
-            $result = $response->body();
-
-            //  Debug safely
-            Log::info('SMS DEBUG', [
-                'response' => $result,
-                'username' => $username,
-                'senderId' => $senderId
-            ]);
-
-            return [
-                'success' => !str_contains(strtolower($result), 'error'),
-                'response' => $result
-            ];
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'error' => $e->getMessage()
-            ];
-        }
-    }
-
-    public function smsMessage($slug)
-    {
-        try {
-
-            $data = SiteOption::where('option_key', $slug)->first();
-
-            if (!$data) {
-                return [
-                    'success' => false,
-                    'message' => 'sms template not found',
-                ];
-            }
-
-            // Log::info("message sms: ", [
-            //     'slug' => $slug,
-            //     "message" => $data->option_value
-            // ]);
-
-            return [
-                'success' => true,
-                'message' => $data->option_value
-            ];
-        } catch (\Exception $e) {
-
-            // Log::error("sms message error: ", [
-            //     'slug' => $slug,
-            //     'error' => $e->getMessage()
-            // ]);
-
-            return [
-                'success' => false,
-                'error' => $e->getMessage()
             ];
         }
     }

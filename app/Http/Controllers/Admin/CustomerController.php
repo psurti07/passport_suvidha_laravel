@@ -427,15 +427,13 @@ class CustomerController extends Controller
                     : 'Create New Customer',
                 'card_number' => $order->id
             ]);
-
+            
             if (!empty($customer->mobile_number)) {
                 $smsService = new SmsService();
-                $smsService->sendTemplate(
+
+                $smsService->sendTemplateSms(
                     $customer->mobile_number,
-                    'account-sms',
-                    [
-                        'name' => $customer->full_name
-                    ]
+                    'account-sms'
                 );
             }
 
