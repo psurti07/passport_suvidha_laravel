@@ -197,14 +197,12 @@ class CustomerController extends Controller
                 Rule::unique('customers', 'mobile_number')
                     ->whereNull('deleted_at'),
             ],
-
             'email' => [
                 'required',
                 'email',
                 Rule::unique('customers', 'email')
                     ->whereNull('deleted_at'),
             ],
-
             'is_paid' => 'sometimes|boolean',
         ];
 
