@@ -15,13 +15,10 @@ class SmsService
 
     public function __construct()
     {
-        $this->url = config('services.sms.api_url');
-        $this->username = config('services.sms.username');
-        $this->password = config('services.sms.password');
-        $this->senderId = SiteOption::where(
-            'option_key',
-            'sms-sender-id'
-        )->value('option_value') ?? config('services.sms.sender_id');
+        $this->url = 'http://m.onlinebusinessbazaar.in/sendsms.jsp';
+        $this->username = SiteOption::getValue('sms-user-name');
+        $this->password = SiteOption::getValue('sms-password');
+        $this->senderId = SiteOption::getValue('sms-sender-id');
     }
 
     // Send Single SMS

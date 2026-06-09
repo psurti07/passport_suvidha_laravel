@@ -21,18 +21,9 @@ class FacebookConversionService
         }
 
         $pixelId = SiteOption::getValue('facebook-pixel-key');
-
-        $accessToken = SiteOption::getValue(
-            'facebook-access-token'
-        );
-
-        $eventName = SiteOption::getValue(
-            'facebook-event-name'
-        );
-
-        $eventId = SiteOption::getValue(
-            'facebook-event-id'
-        );
+        $accessToken = SiteOption::getValue('facebook-access-token');
+        $eventName = SiteOption::getValue('facebook-event-name');
+        $eventId = SiteOption::getValue('facebook-event-id');
 
         $payload = [
             'data' => [

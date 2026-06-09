@@ -39,6 +39,9 @@ class InitSiteOptions extends Command
     public function handle()
     {
         $keys = [
+            // SMS
+            'sms-user-name',
+            'sms-password',
             'sms-sender-id',
 
             // Facebook
@@ -48,11 +51,15 @@ class InitSiteOptions extends Command
             'facebook-event-name',
             'facebook-event-id',
 
-            // Whatsapp
-            'whatsapp-remarketing-campaign',
-            'whatsapp-get-offer-campaign',
-            'whatsapp-payment-success-campaign',
-            'whatsapp-username-password-campaign',
+            // Interakt
+            'interakt-key',
+            'interakt-template-name',
+            'interakt-media-url',
+
+            // RCS
+            'rcs-user-id',
+            'rcs-api-key',
+            'rcs-template-id',
 
             // Other Messages
             'customer-message',

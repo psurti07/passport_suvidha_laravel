@@ -30,22 +30,6 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    'sms' => [
-        'api_url' => env('SMS_API_URL'),
-        'username' => env('SMS_API_USERNAME'),
-        'password' => env('SMS_API_PASSWORD'),
-        'sender_id' => env('SMS_API_SENDER_ID'),
-    ],
-
-    'rcs' => [
-        'base_url' => env('RCS_BASE_URL'),
-        'user_id' => env('RCS_USERID'),
-        'api_key' => env('RCS_APIKEY'),
-        'template_id' => env('RCS_TEMPLATEID'),
-        'test_mode'=> env('RCS_TEST_MODE', false),
-        'test_numbers' => env('RCS_TEST_NUMBERS'),
-    ],
-
     'app' => [
         'env' => env('APP_ENV'),
         'url' => env('APP_URL'),
@@ -54,9 +38,17 @@ return [
     ],
 
     'testnumbers' => [
-        'number' => env('TEST_NUMBERS'),
+        'test_numbers' => env('TEST_NUMBERS'),
     ],
 
+    'interakt' => [
+        'test_mode' => env('INTERAKT_TEST_MODE', false),
+    ],
+
+    'rcs' => [
+        'test_mode'=> env('RCS_TEST_MODE', false),
+    ],
+    
     'razorpay' => [
         'mode' => env('RAZORPAY_MODE'),
         'key' => env('RAZORPAY_KEY'),
