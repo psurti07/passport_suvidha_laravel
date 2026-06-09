@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
 use App\Services\SmsService;
+use App\Models\Customer;
+use Illuminate\Support\Facades\Log;
 
 class SupportController extends Controller
 {
@@ -281,20 +283,27 @@ class SupportController extends Controller
         $remark->ticket_number = $ticket->ticket_number;
         $remark->save();
 
-        // $messages = [
-        //     'open' => "Dear Customer, your support ticket {$ticket->ticket_number} has been received and is now Open. Our team will review it shortly. Passport Suvidha Support.",
+        $messages = [
+            'open' => "Dear Customer, Your support ticket {$ticket->ticket_number} has been received and is now open. Passport Suvidha Support.",
 
-        //     'in_progress' => "Dear Customer, your support ticket {$ticket->ticket_number} is currently In Progress. Our support team is working on your request. Passport Suvidha Support.",
+            'in_progress' => "Dear Customer, Your support ticket {$ticket->ticket_number} is currently In progress. Our team is working on your request. Passport Suvidha Support.",
 
-        //     'closed' => "Dear Customer, your support ticket {$ticket->ticket_number} has been closed. If you need further assistance, please contact Passport Suvidha Support.",
-        // ];
+            'closed' => "Dear Customer, Your support ticket {$ticket->ticket_number} has been closed. If further assistance is needed, please contact Passport Suvidha Support.",
+        ];
 
-        // if (!empty($ticket->mobile_number) && isset($messages[$validated['status']])) {
-        //     $smsService->send(
-        //         $ticket->mobile_number,
-        //         $messages[$validated['status']]
-        //     );
-        // }
+        $mobileNumber = $ticket->mobile_number;
+
+        if (empty($mobileNumber) && !empty($ticket->customer_id)) {
+            $mobileNumber = Customer::where('id', $ticket->customer_id)
+                ->value('mobile_number');
+        }
+
+        if (!empty($mobileNumber) && isset($messages[$validated['status']])) {
+            $smsService->sendSmsMessage(
+                $mobileNumber,
+                $messages[$validated['status']]
+            );
+        }
 
         return redirect()->route('admin.support.tickets.show', $ticket->ticket_number)
             ->with('success', 'Ticket status updated successfully.');
