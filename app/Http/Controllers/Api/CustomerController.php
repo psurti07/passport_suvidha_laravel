@@ -51,7 +51,7 @@ class CustomerController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'mobile_number' => 'required|string|max:20',
-            'email' => 'required|email|unique:customers,email',
+            'email' => 'required|email',
             'is_paid' => 'sometimes|boolean',
         ];
 
@@ -119,7 +119,7 @@ class CustomerController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'mobile_number' => 'required|string|max:20',
-            'email' => ['required', 'email', Rule::unique('customers')->ignore($customer->id)],
+            'email' => ['required', 'email'],
 
             'address' => 'nullable|string',
             'gender' => 'nullable|in:male,female,other',
@@ -200,7 +200,7 @@ class CustomerController extends Controller
 
             if ($existingCustomer->email !== $request->email) {
                 $emailValidator = Validator::make(['email' => $request->email], [
-                    'email' => 'required|email|unique:customers,email'
+                    'email' => 'required|email'
                 ]);
 
                 if ($emailValidator->fails()) {
@@ -222,7 +222,7 @@ class CustomerController extends Controller
         $data = $validator->validated();
 
         $emailValidator = Validator::make(['email' => $request->email], [
-            'email' => 'unique:customers,email'
+            'email' => 'required|email'
         ]);
 
         if ($emailValidator->fails()) {
