@@ -50,8 +50,19 @@ class CustomerController extends Controller
         $baseRules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'mobile_number' => 'required|string|max:20',
-            'email' => 'required|email',
+            'mobile_number' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('customers', 'mobile_number')
+                    ->whereNull('deleted_at'),
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('customers', 'email')
+                    ->whereNull('deleted_at'),
+            ],
             'is_paid' => 'sometimes|boolean',
         ];
 
@@ -118,9 +129,21 @@ class CustomerController extends Controller
         $rules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'mobile_number' => 'required|string|max:20',
-            'email' => ['required', 'email'],
-
+            'mobile_number' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('customers', 'mobile_number')
+                    ->ignore($customer->id)
+                    ->whereNull('deleted_at'),
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('customers', 'email')
+                    ->ignore($customer->id)
+                    ->whereNull('deleted_at'),
+            ],
             'address' => 'nullable|string',
             'gender' => 'nullable|in:male,female,other',
             'date_of_birth' => 'nullable|date',
