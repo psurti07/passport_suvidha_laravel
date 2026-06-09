@@ -67,29 +67,18 @@ class RemarketingRcsCommand extends Command
             return 0;
         }
 
-        $users = DB::table('customers as c')
-            ->select(
-                'c.id',
-                'c.first_name',
-                'c.last_name',
-                'c.mobile_number',
-                'c.email',
-                'c.created_at'
-            )
+        $users = DB::table('customers')
             ->whereDate(
-                'c.created_at',
+                'created_at',
                 Carbon::now()->subDays($scheduleDay)->toDateString()
             )
-            ->where('c.is_paid', 0)
-            ->where('c.is_active', 1)
-            ->where('c.is_dnd', 0)
-            ->whereNull('c.deleted_at')
-            ->distinct()
-            ->orderBy('c.id', 'asc')
-            ->get();
+            ->where('is_paid', 0)
+            ->where('is_active', 1)
+            ->where('is_dnd', 0)
+            ->whereNull('deleted_at')
+            ->pluck('mobile_number');
 
         $mobiles = $users
-            ->pluck('mobile_number')
             ->filter()
             ->map(function ($mobile) {
                 return '91' . trim($mobile);
@@ -103,7 +92,7 @@ class RemarketingRcsCommand extends Command
             $testNumbers = array_filter(
                 array_map(
                     'trim',
-                    explode(',', config('services.rcs.test_numbers', ''))
+                    explode(',', config('services.testnumbers.test_numbers', ''))
                 )
             );
 

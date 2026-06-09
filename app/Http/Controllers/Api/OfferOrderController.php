@@ -74,7 +74,7 @@ class OfferOrderController extends Controller
 
         $finalAmount = floor($amount);
 
-        $testNumbers = array_map('trim', explode(',', config('services.testnumbers.number', '')));
+        $testNumbers = array_map('trim', explode(',', config('services.testnumbers.test_numbers', '')));
 
         if (in_array($request->mobile, $testNumbers)) {
             $finalAmount = 1;
@@ -537,7 +537,7 @@ class OfferOrderController extends Controller
 
             $finalAmount = floor($order->amount);
 
-            $testNumbers = array_map('trim', explode(',', config('services.testnumbers.number', '')));
+            $testNumbers = array_map('trim', explode(',', config('services.testnumbers.test_numbers', '')));
 
             if (in_array($request->mobile, $testNumbers)) {
                 $finalAmount = 1;

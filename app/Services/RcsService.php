@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Models\SiteOption;
 
 class RcsService
 {
@@ -14,10 +15,10 @@ class RcsService
 
     public function __construct()
     {
-        $this->baseUrl = config('services.rcs.base_url');
-        $this->userId = config('services.rcs.user_id');
-        $this->apiKey = config('services.rcs.api_key');
-        $this->templateId = config('services.rcs.template_id');
+        $this->baseUrl = 'https://rcsapi.rcscloud.smartping.io';
+        $this->userId = SiteOption::getValue('rcs-user-id');
+        $this->apiKey = SiteOption::getValue('rcs-api-key');
+        $this->templateId = SiteOption::getValue('rcs-template-id');
     }
 
     // Generate API Token

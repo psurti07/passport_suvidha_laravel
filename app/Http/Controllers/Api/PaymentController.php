@@ -45,7 +45,7 @@ class PaymentController extends Controller
         $amount = $service->service_total_amount;
         $finalAmount = floor($amount);
 
-        $testNumbers = explode(',', config('services.testnumbers.number', ''));
+        $testNumbers = explode(',', config('services.testnumbers.test_numbers', ''));
 
         if (in_array($request->mobile, $testNumbers)) {
             $finalAmount = 1;

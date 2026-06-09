@@ -9,6 +9,7 @@ use App\Models\TicketRemark;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
+use App\Services\SmsService;
 
 class SupportController extends Controller
 {
@@ -263,7 +264,7 @@ class SupportController extends Controller
             ->with('success', 'Remark added successfully.');
     }
 
-    public function updateStatus(Request $request, Ticket $ticket)
+    public function updateStatus(Request $request, Ticket $ticket, SmsService $smsService)
     {
         $validated = $request->validate([
             'status' => 'required|string|in:open,in_progress,closed', // Validate allowed statuses
@@ -279,6 +280,21 @@ class SupportController extends Controller
         $remark->user_id = Auth::id(); // Action performed by logged-in admin
         $remark->ticket_number = $ticket->ticket_number;
         $remark->save();
+
+        // $messages = [
+        //     'open' => "Dear Customer, your support ticket {$ticket->ticket_number} has been received and is now Open. Our team will review it shortly. Passport Suvidha Support.",
+
+        //     'in_progress' => "Dear Customer, your support ticket {$ticket->ticket_number} is currently In Progress. Our support team is working on your request. Passport Suvidha Support.",
+
+        //     'closed' => "Dear Customer, your support ticket {$ticket->ticket_number} has been closed. If you need further assistance, please contact Passport Suvidha Support.",
+        // ];
+
+        // if (!empty($ticket->mobile_number) && isset($messages[$validated['status']])) {
+        //     $smsService->send(
+        //         $ticket->mobile_number,
+        //         $messages[$validated['status']]
+        //     );
+        // }
 
         return redirect()->route('admin.support.tickets.show', $ticket->ticket_number)
             ->with('success', 'Ticket status updated successfully.');

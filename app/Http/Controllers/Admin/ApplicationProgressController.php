@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\FinalDetail;
 use App\Models\AppointmentLetter;
 use App\Models\ApplicationStatus;
+use App\Services\SmsService;
 
 class ApplicationProgressController extends Controller
 {
@@ -46,7 +47,7 @@ class ApplicationProgressController extends Controller
         return view('admin.application-progress.create', compact('customers'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, SmsService $smsService)
     {
         $status = ApplicationStatus::find($request->status_id);
         $slug = $status?->slug;
@@ -128,6 +129,50 @@ class ApplicationProgressController extends Controller
         }
 
         ApplicationProgress::create($data);
+
+        // $customer = Customer::find($request->customer_id);
+
+        // if ($customer && !empty($customer->mobile_number)) {
+
+        //     $statusMessages = [
+        //         'in_process' =>
+        //         "Dear Customer, your passport application is currently under process. Passport Suvidha.",
+
+        //         'documents_submitted' =>
+        //         "Dear Customer, your documents have been successfully submitted for passport processing. Passport Suvidha.",
+
+        //         'details_verification' =>
+        //         "Dear Customer, your application details are currently under verification. Passport Suvidha.",
+
+        //         'appointment_scheduled' =>
+        //         "Dear Customer, your passport appointment has been scheduled. Please check your account for details. Passport Suvidha.",
+
+        //         'appointment_rescheduled1' =>
+        //         "Dear Customer, your passport appointment has been rescheduled. Please check updated details. Passport Suvidha.",
+
+        //         'appointment_rescheduled2' =>
+        //         "Dear Customer, your passport appointment has been rescheduled. Please check updated details. Passport Suvidha.",
+
+        //         'appointment_rescheduled3' =>
+        //         "Dear Customer, your passport appointment has been rescheduled. Please check updated details. Passport Suvidha.",
+
+        //         'pov_success' =>
+        //         "Dear Customer, police verification for your passport application has been completed successfully. Passport Suvidha.",
+
+        //         'pov_failed' =>
+        //         "Dear Customer, police verification could not be completed successfully. Please contact Passport Suvidha support.",
+
+        //         'pov_insufficient_documents' =>
+        //         "Dear Customer, additional documents are required for your passport application. Please contact Passport Suvidha support.",
+        //     ];
+
+        //     if ($status && isset($statusMessages[$status->slug])) {
+        //         $smsService->send(
+        //             $customer->mobile_number,
+        //             $statusMessages[$status->slug]
+        //         );
+        //     }
+        // }
 
         if ($status && $status->step) {
             $customer = Customer::find($request->customer_id);

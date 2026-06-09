@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('remarketing:rcs')->everyFifteenMinutes();
+        $schedule->command('remarketing:interakt')->everyFifteenMinutes();
     }
 
     /**
