@@ -142,11 +142,10 @@ class SmsService
     public function sendSms($mobileNumber, $message)
     {
         try {
-            $username = config('services.sms.username');
-            $password = config('services.sms.password');
-            $senderId = config('services.sms.sender_id');
-
             $url = "http://m.onlinebusinessbazaar.in/sendsms.jsp";
+            $username = SiteOption::getValue('sms-user-name');
+            $password = SiteOption::getValue('sms-password');
+            $senderId = SiteOption::getValue('sms-sender-id');
 
             $response = Http::get($url, [
                 'user' => $username,

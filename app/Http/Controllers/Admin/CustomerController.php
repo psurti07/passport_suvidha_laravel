@@ -428,18 +428,16 @@ class CustomerController extends Controller
                 'card_number' => $order->id
             ]);
 
-            // if (!empty($customer->mobile_number)) {
-
-            //     $smsService = new SmsService();
-
-            //     $smsService->sendTemplate(
-            //         $customer->mobile_number,
-            //         'application-submitted-sms',
-            //         [
-            //             'name' => $customer->full_name
-            //         ]
-            //     );
-            // }
+            if (!empty($customer->mobile_number)) {
+                $smsService = new SmsService();
+                $smsService->sendTemplate(
+                    $customer->mobile_number,
+                    'account-sms',
+                    [
+                        'name' => $customer->full_name
+                    ]
+                );
+            }
 
             return $customer;
         });
