@@ -17,6 +17,15 @@ class SiteOptionController extends Controller
         ]);
     }
 
+    public function getCustomerMessage()
+    {
+        $option = SiteOption::where('option_key', 'customer-message')->first();
+
+        return response()->json([
+            'message' => $option->option_value ?? null,
+        ]);
+    }
+
     public function getFbPixel()
     {
         try {

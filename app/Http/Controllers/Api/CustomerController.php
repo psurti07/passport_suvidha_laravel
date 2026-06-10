@@ -200,8 +200,19 @@ class CustomerController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'mobile_number' => 'required|string|max:20',
+            'mobile_number' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('customers', 'mobile_number')
+                    ->whereNull('deleted_at'),
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('customers', 'email')
+                    ->whereNull('deleted_at'),
+            ],
         ]);
 
         if ($validator->fails()) {
@@ -318,7 +329,7 @@ class CustomerController extends Controller
         $mobileNumber = $customer->mobile_number;
         if (!empty($mobileNumber)) {
 
-            $smsMessage = $smsService->smsMessage('complete-process-sms');
+            $smsMessage = $smsService->sendTemplateSms($mobileNumber, 'complete-process-sms');
             if (!$smsMessage['success']) {
                 return response([
                     'success' => false,
@@ -326,8 +337,8 @@ class CustomerController extends Controller
                 ]);
             }
 
-            $message = $smsMessage['message'];
-            $response = $smsService->sendSms($mobileNumber, $message);
+            // $message = $smsMessage['message'];
+            // $response = $smsService->sendSms($mobileNumber, $message);
         }
 
         return response()->json([

@@ -114,6 +114,8 @@ Route::get('/cardoffer-response', [OfferOrderController::class, 'paymentResponse
 // welcome message routes
 Route::get('/welcome-message', [SiteOptionController::class, 'getWelcomeMessage']);
 
+Route::get('/customer-message', [SiteOptionController::class, 'getCustomerMessage']);
+
 // SEO Meta keywords routes
 Route::get('/seo/{slug}', [MetaKeywordsController::class, 'show']);
 

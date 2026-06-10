@@ -30,17 +30,17 @@ class SupportTicketController extends Controller
 
         // Check if authentication was successful and if the user is a Customer
         if (!$customer instanceof Customer) {
-             // Handle cases where the authenticated entity is not a customer
-             // Or if using specific guard: $customer = Auth::guard('customer_api')->user();
-             // If still null, return error
-             return response()->json(['error' => 'Customer authentication required.'], 401);
+            // Handle cases where the authenticated entity is not a customer
+            // Or if using specific guard: $customer = Auth::guard('customer_api')->user();
+            // If still null, return error
+            return response()->json(['error' => 'Customer authentication required.'], 401);
         }
 
         // Fetch tickets for the authenticated customer using customer_id
         // *** IMPORTANT: Assumes Ticket model has a 'customer_id' foreign key referencing customers.id ***
         $tickets = Ticket::where('customer_id', $customer->id)
-                        ->latest()
-                        ->paginate();
+            ->latest()
+            ->paginate();
 
         return TicketResource::collection($tickets);
     }
@@ -53,7 +53,7 @@ class SupportTicketController extends Controller
      */
     public function store(Request $request)
     {
-        $customer = Auth::guard('sanctum')->user(); 
+        $customer = Auth::guard('sanctum')->user();
 
         $rules = [
             'subject' => 'required|string|max:255',
@@ -71,78 +71,77 @@ class SupportTicketController extends Controller
 
             $validatedData = $validator->validated();
 
-            $ticketData['customer_id'] = $customer->id; 
+            $ticketData['customer_id'] = $customer->id;
 
             $customerName = trim("{$customer->first_name} {$customer->last_name}");
 
             if (empty($customerName)) {
 
-                 $emailParts = explode('@', $customer->email ?? '');
-                 $customerName = $emailParts[0] ?: "Customer {$customer->id}";
+                $emailParts = explode('@', $customer->email ?? '');
+                $customerName = $emailParts[0] ?: "Customer {$customer->id}";
             }
             $ticketData['name'] = $customerName;
             $ticketData['email'] = $customer->email;
             $ticketData['subject'] = $validatedData['subject'];
             $ticketData['message'] = $validatedData['message'];
-
         } else {
 
             $rules['name'] = 'required|string|max:255';
             $rules['email'] = 'required|email|max:255';
-            $rules['mobile_number'] = 'required|digits:10'; 
-            
+            $rules['mobile_number'] = 'required|digits:10';
+
             $validator = Validator::make($request->all(), $rules);
-            
+
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 422);
             }
-            
+
             $validatedData = $validator->validated();
-            
+
             $ticketData['customer_id'] = null;
             $ticketData['name'] = $validatedData['name'];
             $ticketData['email'] = $validatedData['email'];
             $ticketData['subject'] = $validatedData['subject'];
             $ticketData['message'] = $validatedData['message'];
-            
+
 
             $mobileNumber = $validatedData['mobile_number'];
         }
-            
 
-            $ticket = Ticket::create($ticketData);
-            
-            $smsService = new SmsService();
-            
-            try {
-            
-                if ($customer instanceof Customer) {
-                    $mobileNumber = $customer->mobile_number;
-                    $name = $ticketData['name'];
-                }
 
-                if (!empty($ticketData['email'])) {
-                    Mail::raw(
-                        "Hello $name,\n\nYour support ticket (#{$ticket->id}) has been created successfully.\n\nSubject: {$ticket->subject}\n\nWe will get back to you soon.\n\nThank you.",
-                        function ($message) use ($ticketData) {
-                            $message->to($ticketData['email'])
-                                    ->subject('Support Ticket Created');
-                        }
-                    );
-                }
+        $ticket = Ticket::create($ticketData);
 
-                if (!empty($mobileNumber)) {
+        $smsService = new SmsService();
 
-                    $message = "Hello, 123456 is the OTP for logging into your Passport Suvidha account. Please don't share this with others. Thank you.";
+        try {
 
-                    $response = $smsService->sendSms($mobileNumber, $message);
-                }
-            
-            } catch (\Exception $e) {
-                Log::error("SMS Failed: " . $e->getMessage());
+            if ($customer instanceof Customer) {
+                $mobileNumber = $customer->mobile_number;
+                $name = $ticketData['name'];
             }
-            
-            return new TicketResource($ticket);
+
+            // if (!empty($ticketData['email'])) {
+            //     Mail::raw(
+            //         "Hello $name,\n\nYour support ticket (#{$ticket->id}) has been created successfully.\n\nSubject: {$ticket->subject}\n\nWe will get back to you soon.\n\nThank you.",
+            //         function ($message) use ($ticketData) {
+            //             $message->to($ticketData['email'])
+            //                 ->subject('Support Ticket Created');
+            //         }
+            //     );
+            // }
+
+            if (!empty($mobileNumber)) {
+                $smsService = new SmsService();
+
+                $message = "Hello, 123456 is the OTP for logging into your Passport Suvidha account. Please don't share this with others. Thank you.";
+
+                $response = $smsService->sendSmsMessage($mobileNumber, $message);
+            }
+        } catch (\Exception $e) {
+            Log::error("SMS Failed: " . $e->getMessage());
+        }
+
+        return new TicketResource($ticket);
     }
 
     // TODO: Add show, update, destroy methods as needed
@@ -245,7 +244,6 @@ class SupportTicketController extends Controller
             ];
 
             $mobileNumber = $ticketData['mobile_number'];
-
         } else {
 
             $ticketData = [
@@ -287,4 +285,4 @@ class SupportTicketController extends Controller
             ]
         ]);
     }
-} 
+}

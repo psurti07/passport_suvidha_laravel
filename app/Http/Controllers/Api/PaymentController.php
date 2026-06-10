@@ -228,7 +228,7 @@ class PaymentController extends Controller
 
             if (!empty($customer->mobile_number)) {
                 $smsService = new SmsService();
-                $smsMessage = $smsService->smsMessage('complete-process-sms');
+                $smsMessage = $smsService->sendTemplateSms($customer->mobile_number, 'application-submitted-sms');
                 if (!$smsMessage['success']) {
                     return response([
                         'success' => false,
@@ -236,9 +236,9 @@ class PaymentController extends Controller
                     ]);
                 }
 
-                $message = $smsMessage['message'];
+                // $message = $smsMessage['message'];
 
-                $smsService->sendSms($customer->mobile_number, $message);
+                // $smsService->sendSms($customer->mobile_number, $message);
             }
 
             return response()->json([
@@ -279,7 +279,9 @@ class PaymentController extends Controller
             if (isset($customer) && !empty($customer->mobile_number)) {
                 $smsService = new SmsService();
 
-                $smsMessage = $smsService->smsMessage('payment-failed-sms');
+                // $url = "https://passportsuvidha.com/cardoffer";
+
+                $smsMessage = $smsService->sendTemplateSms($customer->mobile_number, 'payment-failed-sms');
 
                 if (!$smsMessage['success']) {
                     return response([
@@ -288,9 +290,9 @@ class PaymentController extends Controller
                     ]);
                 }
 
-                $message = str_replace('{#var#}', $paymentMode ?? 'UPI', $smsMessage['message']);
+                // $message = str_replace('{#var#}', $paymentMode ?? 'UPI', $smsMessage['message']);
 
-                $smsService->sendSms($customer->mobile_number, $message);
+                // $smsService->sendSms($customer->mobile_number, $message);
             }
 
             return response()->json([
@@ -340,7 +342,8 @@ class PaymentController extends Controller
                 $mobileNumber = $customer->mobile_number;
 
                 $smsService = new SmsService();
-                $smsMessage = $smsService->smsMessage('payment-failed-sms');
+                // $url = "https://passportsuvidha.com/cardoffer";
+                $smsMessage = $smsService->sendTemplateSms($mobileNumber, 'payment-failed-sms');
 
                 if (!$smsMessage['success']) {
                     return response([
@@ -349,8 +352,8 @@ class PaymentController extends Controller
                     ]);
                 }
 
-                $message = str_replace('{#var_method#}', $paymentMode ?? '', $smsMessage['message']);
-                $smsService->sendSms($mobileNumber, $message);
+                // $message = str_replace('{#var_method#}', $paymentMode ?? '', $smsMessage['message']);
+                // $smsService->sendSms($mobileNumber, $message);
             }
         }
 

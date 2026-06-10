@@ -50,7 +50,7 @@ class OtpController extends Controller
         ]);
 
         if ($purpose === 'login') {
-            $smsMessage = $smsService->smsMessage('login-otp-sms');
+            $smsMessage = $smsService->sendTemplateSms($mobileNumber, 'login-otp-sms', [$otp]);
             if (!$smsMessage['success']) {
                 return response([
                     'success' => false,
@@ -58,9 +58,9 @@ class OtpController extends Controller
                 ]);
             }
 
-            $message = str_replace('{#var_otp#}', $otp, $smsMessage['message']);
+            // $message = str_replace('{#var_otp#}', $otp, $smsMessage['message']);
         } else {
-            $smsMessage = $smsService->smsMessage('otp-sms');
+            $smsMessage = $smsService->sendTemplateSms($mobileNumber, 'otp-sms', [$otp]);
             if (!$smsMessage['success']) {
                 return response([
                     'success' => false,
@@ -68,17 +68,17 @@ class OtpController extends Controller
                 ]);
             }
 
-            $message = str_replace('{#var_otp#}', $otp, $smsMessage['message']);
+            // $message = str_replace('{#var_otp#}', $otp, $smsMessage['message']);
         }
 
-        $smsResult = $smsService->sendSms($mobileNumber, $message);
+        // $smsResult = $smsService->sendSms($mobileNumber, $message);
 
-        if (!$smsResult['success']) {
-            Log::error('Failed to send OTP SMS', [
-                'mobile' => $mobileNumber,
-                'error' => $smsResult['error'] ?? 'Unknown error'
-            ]);
-        }
+        // if (!$smsResult['success']) {
+        //     Log::error('Failed to send OTP SMS', [
+        //         'mobile' => $mobileNumber,
+        //         'error' => $smsResult['error'] ?? 'Unknown error'
+        //     ]);
+        // }
 
         $response = [
             'message' => 'OTP sent successfully.',
