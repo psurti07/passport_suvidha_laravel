@@ -191,8 +191,18 @@ class CustomerController extends Controller
         $baseRules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'mobile_number' => ['required', 'regex:/^[6-9][0-9]{9}$/', 'unique:customers,mobile_number'],
-            'email' => 'required|email|unique:customers,email',
+            'mobile_number' => [
+                'required',
+                'regex:/^[6-9][0-9]{9}$/',
+                Rule::unique('customers', 'mobile_number')
+                    ->whereNull('deleted_at'),
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('customers', 'email')
+                    ->whereNull('deleted_at'),
+            ],
             'is_paid' => 'sometimes|boolean',
         ];
 
@@ -264,12 +274,16 @@ class CustomerController extends Controller
             'mobile_number' => [
                 'required',
                 'regex:/^[6-9][0-9]{9}$/',
-                Rule::unique('customers')->ignore($customer->id)
+                Rule::unique('customers', 'mobile_number')
+                    ->ignore($customer->id)
+                    ->whereNull('deleted_at'),
             ],
             'email' => [
                 'required',
                 'email',
-                Rule::unique('customers')->ignore($customer->id)
+                Rule::unique('customers', 'email')
+                    ->ignore($customer->id)
+                    ->whereNull('deleted_at'),
             ],
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',
@@ -427,7 +441,7 @@ class CustomerController extends Controller
                     : 'Create New Customer',
                 'card_number' => $order->id
             ]);
-            
+
             if (!empty($customer->mobile_number)) {
                 $smsService = new SmsService();
 
