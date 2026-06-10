@@ -176,12 +176,11 @@ class SmsController extends Controller
 
         $otp = str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT);
 
-        $message = str_replace('{#var_otp#}', $otp, $message);
-        $message = str_replace('{#var_method#}', 'Test', $message);
-
+        $message = str_replace('{#var#}', $otp, $message);
+    
         $smsService = new SmsService();
 
-        $response = $smsService->sendSms($mobile, $message);
+        $response = $smsService->sendSmsMessage($mobile, $message);
 
         if ($response['success']) {
 
@@ -193,7 +192,7 @@ class SmsController extends Controller
 
         return back()->with(
             'error',
-            $response['message']
+            $response['response']
         );
     }
 }
