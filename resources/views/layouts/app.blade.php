@@ -605,7 +605,7 @@ scrollToActive()" x-cloak>
                             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Dashboard</span>
+                    <span class="nav-link-text font-semibold text-lg">Dashboard</span>
                 </a>
 
                 <a href="{{ route('admin.todaystatistics') }}"
@@ -616,7 +616,7 @@ scrollToActive()" x-cloak>
                             d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Today Statistics</span>
+                    <span class="nav-link-text font-semibold text-lg">Today Statistics</span>
                 </a>
 
                 <a href="{{ route('admin.customer.search.form') }}"
@@ -626,10 +626,10 @@ scrollToActive()" x-cloak>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                    <span class="nav-link-text">Search Customer</span>
+                    <span class="nav-link-text font-semibold text-lg">Search Customer</span>
                 </a>
 
-                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">CUSTOMER MANAGEMENT</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">CUSTOMER MANAGEMENT</div>
 
                 <a href="{{ route('admin.leads.today') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.leads.today') ? 'active' : '' }}"
@@ -642,7 +642,7 @@ scrollToActive()" x-cloak>
                         <circle cx="12" cy="15" r="2" stroke-width="2"></circle>
                         <path stroke-width="2" d="M8 20c1.5-2 6.5-2 8 0"></path>
                     </svg>
-                    <span class="nav-link-text">Today's Leads</span>
+                    <span class="nav-link-text font-semibold text-lg">Today's Leads</span>
                 </a>
 
                 <a href="{{ route('admin.leads.index') }}"
@@ -654,7 +654,7 @@ scrollToActive()" x-cloak>
                         <path stroke-width="2" d="M5 20c0-3 4-4 4-4s4 1 4 4"></path>
                         <path stroke-width="2" d="M13 20c0-3 4-4 4-4s4 1 4 4"></path>
                     </svg>
-                    <span class="nav-link-text">Leads</span>
+                    <span class="nav-link-text font-semibold text-lg">Leads</span>
                 </a>
 
                 <a href="{{ route('admin.customers.today') }}"
@@ -665,7 +665,7 @@ scrollToActive()" x-cloak>
                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Today's Customers</span>
+                    <span class="nav-link-text font-semibold text-lg">Today's Customers</span>
                 </a>
 
                 <a href="{{ route('admin.customers.index') }}"
@@ -676,7 +676,7 @@ scrollToActive()" x-cloak>
                             d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Customers</span>
+                    <span class="nav-link-text font-semibold text-lg">Customers</span>
                 </a>
 
                 <a href="{{ route('admin.customers.create') }}"
@@ -686,10 +686,10 @@ scrollToActive()" x-cloak>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Create An Account</span>
+                    <span class="nav-link-text font-semibold text-lg">Create An Account</span>
                 </a>
 
-                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">DOCUMENTS</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">DOCUMENTS</div>
 
                 <a href="{{ route('admin.application-documents.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application-documents.*') ? 'active' : '' }}"
@@ -700,7 +700,7 @@ scrollToActive()" x-cloak>
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Application Documents</span>
+                    <span class="nav-link-text font-semibold text-lg">Application Documents</span>
                 </a>
 
                 <a href="{{ route('admin.final-details.index') }}"
@@ -712,7 +712,7 @@ scrollToActive()" x-cloak>
                             d="M9 4H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-2" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6M9 16h6" />
                     </svg>
-                    <span class="nav-link-text">Final Details</span>
+                    <span class="nav-link-text font-semibold text-lg">Final Details</span>
                 </a>
 
                 <a href="{{ route('admin.appointment-letters.index') }}"
@@ -723,10 +723,10 @@ scrollToActive()" x-cloak>
                             d="M9 5h6m2 0a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2m2 0a2 2 0 104 0 2 2 0 00-4 0zm-1 9l2 2 4-4">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Appointment Letters</span>
+                    <span class="nav-link-text font-semibold text-lg">Appointment Letters</span>
                 </a>
 
-                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">APPLICATION</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">APPLICATION</div>
 
                 <a href="{{ route('admin.application.status') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status') ? 'active' : '' }}"
@@ -736,7 +736,7 @@ scrollToActive()" x-cloak>
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M9 12h6m-6 4h6m-6-8h6M5 4h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" />
                     </svg>
-                    <span class="nav-link-text">All Applications</span>
+                    <span class="nav-link-text font-semibold text-lg">All Applications</span>
                 </a>
 
                 <a href="{{ route('admin.application.status.new') }}"
@@ -747,7 +747,7 @@ scrollToActive()" x-cloak>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 4h16v16H4V4z" />
                     </svg>
-                    <span class="nav-link-text">New Applications</span>
+                    <span class="nav-link-text font-semibold text-lg">New Applications</span>
                 </a>
 
                 <a href="{{ route('admin.application.status.current') }}"
@@ -758,7 +758,7 @@ scrollToActive()" x-cloak>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3" />
                         <circle cx="12" cy="12" r="9" stroke-width="2" />
                     </svg>
-                    <span class="nav-link-text">Current Applications</span>
+                    <span class="nav-link-text font-semibold text-lg">Current Applications</span>
                 </a>
 
                 <a href="{{ route('admin.application.status.completed') }}"
@@ -770,10 +770,10 @@ scrollToActive()" x-cloak>
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M9 5h6m2 0a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h2z" />
                     </svg>
-                    <span class="nav-link-text">Completed Applications</span>
+                    <span class="nav-link-text font-semibold text-lg">Completed Applications</span>
                 </a>
 
-                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">REPORTS</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">REPORTS</div>
 
                 <a href="{{ route('admin.invoices.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}"
@@ -783,7 +783,7 @@ scrollToActive()" x-cloak>
                             d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Invoice List</span>
+                    <span class="nav-link-text font-semibold text-lg">Invoice List</span>
                 </a>
 
                 <a href="{{ route('admin.gst.index') }}"
@@ -794,10 +794,10 @@ scrollToActive()" x-cloak>
                         <path stroke-width="2" d="M14 2v6h6" />
                         <path stroke-width="2" d="M8 17v-4M12 17v-6M16 17v-2" />
                     </svg>
-                    <span class="nav-link-text">GST Data</span>
+                    <span class="nav-link-text font-semibold text-lg">GST Data</span>
                 </a>
 
-                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">OFFER</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">OFFER</div>
 
                 <a href="{{ route('admin.card-offers.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.card-offers.*') ? 'active' : '' }}"
@@ -810,7 +810,7 @@ scrollToActive()" x-cloak>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 3l5 5-5 5">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Card Offer</span>
+                    <span class="nav-link-text font-semibold text-lg">Card Offer</span>
                 </a>
 
                 <a href="{{ route('admin.star-offers.index') }}"
@@ -824,10 +824,10 @@ scrollToActive()" x-cloak>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 3l5 5-5 5">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Star Offer</span>
+                    <span class="nav-link-text font-semibold text-lg">Star Offer</span>
                 </a>
 
-                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">PAYMENT GATEWAY LOG</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">PAYMENT GATEWAY LOG</div>
 
                 <a href="{{ route('admin.razorpay-logs.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.razorpay-logs.*') ? 'active' : '' }}"
@@ -836,7 +836,7 @@ scrollToActive()" x-cloak>
                         <rect x="2" y="5" width="20" height="14" rx="2" ry="2" stroke-width="2"></rect>
                         <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
                     </svg>
-                    <span class="nav-link-text">Razorpay Log</span>
+                    <span class="nav-link-text font-semibold text-lg">Razorpay Log</span>
                 </a>
 
                 <a href="{{ route('admin.cashfree-logs.index') }}"
@@ -846,7 +846,7 @@ scrollToActive()" x-cloak>
                         <rect x="2" y="5" width="20" height="14" rx="2" ry="2" stroke-width="2"></rect>
                         <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
                     </svg>
-                    <span class="nav-link-text">Cashfree Log</span>
+                    <span class="nav-link-text font-semibold text-lg">Cashfree Log</span>
                 </a>
 
                 <a href="{{ route('admin.phonepe-logs.index') }}"
@@ -856,10 +856,10 @@ scrollToActive()" x-cloak>
                         <rect x="2" y="5" width="20" height="14" rx="2" ry="2" stroke-width="2"></rect>
                         <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
                     </svg>
-                    <span class="nav-link-text">PhonePe Log</span>
+                    <span class="nav-link-text font-semibold text-lg">PhonePe Log</span>
                 </a>
 
-                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">SUPPORT</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">SUPPORT</div>
 
                 <a href="{{ route('admin.support.customer') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.support.customer') ? 'active' : '' }}"
@@ -870,7 +870,7 @@ scrollToActive()" x-cloak>
                             d="M18.364 5.636l-3.536 3.536m0 0a3 3 0 104.243 4.243m-4.243-4.243L10.586 1.414m7.778 4.222a3 3 0 00-4.243 0M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Customer Support</span>
+                    <span class="nav-link-text font-semibold text-lg">Customer Support</span>
                 </a>
 
                 <a href="{{ route('admin.support.guest') }}"
@@ -882,10 +882,10 @@ scrollToActive()" x-cloak>
                             d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Guest Support</span>
+                    <span class="nav-link-text font-semibold text-lg">Guest Support</span>
                 </a>
 
-                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">SMS</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">SMS</div>
 
                 <a href="{{ route('admin.otps.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
@@ -895,7 +895,7 @@ scrollToActive()" x-cloak>
                             d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">OTP Management</span>
+                    <span class="nav-link-text font-semibold text-lg">OTP Management</span>
                 </a>
 
                 <a href="{{ route('admin.sms.index') }}"
@@ -906,7 +906,7 @@ scrollToActive()" x-cloak>
                             d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4-.8L3 20l1.3-3.9A7.93 7.93 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">SMS Messages</span>
+                    <span class="nav-link-text font-semibold text-lg">SMS Messages</span>
                 </a>
 
                 <a href="{{ route('admin.remarketing-logs.index') }}"
@@ -918,7 +918,7 @@ scrollToActive()" x-cloak>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17v-3"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 21h14"></path>
                     </svg>
-                    <span class="nav-link-text">Remarketing Logs</span>
+                    <span class="nav-link-text font-semibold text-lg">Remarketing Logs</span>
                 </a>
 
                 <a href="{{ route('admin.dnd.index') }}"
@@ -928,10 +928,10 @@ scrollToActive()" x-cloak>
                         <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5l14 14"></path>
                     </svg>
-                    <span class="nav-link-text">DND List</span>
+                    <span class="nav-link-text font-semibold text-lg">DND List</span>
                 </a>
 
-                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">SCHEDULES SLOTS</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">SCHEDULES SLOTS</div>
 
                 <a href="{{ route('admin.schedule-slots.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.schedule-slots.*') ? 'active' : '' }}"
@@ -943,7 +943,7 @@ scrollToActive()" x-cloak>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12v3l2 2">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Schedule Slots</span>
+                    <span class="nav-link-text font-semibold text-lg">Schedule Slots</span>
                 </a>
 
                 <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">TEMPLATES</div>
@@ -957,7 +957,7 @@ scrollToActive()" x-cloak>
                             d="M7 8h10M7 12h4m1 8l-5-5h11.5a2.5 2.5 0 002.5-2.5V7.5a2.5 2.5 0 00-2.5-2.5H5.5A2.5 2.5 0 003 7.5v7.008A2.492 2.492 0 005.5 17H7z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Predefined Messages</span>
+                    <span class="nav-link-text font-semibold text-lg">Predefined Messages</span>
                 </a>
 
                 <a href="{{ route('admin.document-types.index') }}"
@@ -969,10 +969,10 @@ scrollToActive()" x-cloak>
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Document Types</span>
+                    <span class="nav-link-text font-semibold text-lg">Document Types</span>
                 </a>
 
-                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">OTHER OPTIONS</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">OTHER OPTIONS</div>
 
                 <a href="{{ route('admin.site-options') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.site-options*') ? 'active' : '' }}"
@@ -984,12 +984,12 @@ scrollToActive()" x-cloak>
                             d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Site Options</span>
+                    <span class="nav-link-text font-semibold text-lg">Site Options</span>
                 </a>
 
                 {{-- Staff Management Section --}}
                 @if (Auth::check() && Auth::user()->isAdmin())
-                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">STAFF MANAGEMENT</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">STAFF MANAGEMENT</div>
 
                 <a href="{{ route('admin.users.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
@@ -999,7 +999,7 @@ scrollToActive()" x-cloak>
                             d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
                         </path>
                     </svg>
-                    <span class="nav-link-text">Staff Members</span>
+                    <span class="nav-link-text font-semibold text-lg">Staff Members</span>
                 </a>
                 @endif
 
