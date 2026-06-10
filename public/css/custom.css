@@ -16,3 +16,7 @@
 .toastify.on {
     opacity: 1;
 }
+.bg-blue{
+    background: #1e5b94;
+    color: aliceblue;
+}

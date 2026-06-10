@@ -629,7 +629,7 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text">Search Customer</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">CUSTOMER MANAGEMENT</div>
+                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">CUSTOMER MANAGEMENT</div>
 
                 <a href="{{ route('admin.leads.today') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.leads.today') ? 'active' : '' }}"
@@ -689,7 +689,7 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text">Create An Account</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">DOCUMENTS</div>
+                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">DOCUMENTS</div>
 
                 <a href="{{ route('admin.application-documents.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application-documents.*') ? 'active' : '' }}"
@@ -726,7 +726,7 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text">Appointment Letters</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">APPLICATION</div>
+                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">APPLICATION</div>
 
                 <a href="{{ route('admin.application.status') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status') ? 'active' : '' }}"
@@ -773,7 +773,7 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text">Completed Applications</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">REPORTS</div>
+                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">REPORTS</div>
 
                 <a href="{{ route('admin.invoices.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}"
@@ -797,7 +797,7 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text">GST Data</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">OFFER</div>
+                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">OFFER</div>
 
                 <a href="{{ route('admin.card-offers.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.card-offers.*') ? 'active' : '' }}"
@@ -827,7 +827,7 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text">Star Offer</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">PAYMENT GATEWAY LOG</div>
+                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">PAYMENT GATEWAY LOG</div>
 
                 <a href="{{ route('admin.razorpay-logs.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.razorpay-logs.*') ? 'active' : '' }}"
@@ -859,7 +859,7 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text">PhonePe Log</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SUPPORT</div>
+                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">SUPPORT</div>
 
                 <a href="{{ route('admin.support.customer') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.support.customer') ? 'active' : '' }}"
@@ -885,7 +885,7 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text">Guest Support</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SMS</div>
+                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">SMS</div>
 
                 <a href="{{ route('admin.otps.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
@@ -931,7 +931,7 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text">DND List</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">SCHEDULES SLOTS</div>
+                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">SCHEDULES SLOTS</div>
 
                 <a href="{{ route('admin.schedule-slots.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.schedule-slots.*') ? 'active' : '' }}"
@@ -972,7 +972,7 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text">Document Types</span>
                 </a>
 
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">OTHER OPTIONS</div>
+                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">OTHER OPTIONS</div>
 
                 <a href="{{ route('admin.site-options') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.site-options*') ? 'active' : '' }}"
@@ -989,7 +989,7 @@ scrollToActive()" x-cloak>
 
                 {{-- Staff Management Section --}}
                 @if (Auth::check() && Auth::user()->isAdmin())
-                <div class="mt-6 px-4 py-2 text-xs font-semibold text-text-gray">STAFF MANAGEMENT</div>
+                <div class="mt-6 px-4 py-3 text-sm rounded-md bg-blue font-semibold text-text-gray">STAFF MANAGEMENT</div>
 
                 <a href="{{ route('admin.users.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
