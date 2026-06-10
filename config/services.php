@@ -48,6 +48,12 @@ return [
     'rcs' => [
         'test_mode'=> env('RCS_TEST_MODE', false),
     ],
+
+    'brevo' => [
+        'api_key'      => env('BREVO_API_KEY'),
+        'sender_name'  => env('BREVO_SENDER_NAME'),
+        'sender_email' => env('BREVO_SENDER_EMAIL'),
+    ],
     
     'razorpay' => [
         'mode' => env('RAZORPAY_MODE'),
