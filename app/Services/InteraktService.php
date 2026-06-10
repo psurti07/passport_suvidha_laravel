@@ -30,7 +30,7 @@ class InteraktService
                 'message' => 'Interakt config missing'
             ];
         }
-        
+
         $payload = [
             "fullPhoneNumber" => '+91' . $mobile,
             "callbackData" => "some text here",
@@ -65,8 +65,7 @@ class InteraktService
 
             return [
                 'status' => $response->successful(),
-                'response' => $response->body(),
-                'payload' => $payload,
+                'response' => $response->json(),
             ];
         } catch (\Exception $e) {
 
@@ -75,7 +74,6 @@ class InteraktService
             return [
                 'status' => false,
                 'message' => $e->getMessage(),
-                'payload' => $payload,
             ];
         }
     }

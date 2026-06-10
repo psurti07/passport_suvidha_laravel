@@ -101,7 +101,7 @@ class RemarketingInteraktCommand extends Command
                 continue;
             }
 
-            $mobile = '+91' . trim($user->mobile_number);
+            $mobile = trim($user->mobile_number);
 
             $mobiles[$mobile] = [
                 'customer_id' => $user->id,
@@ -147,7 +147,6 @@ class RemarketingInteraktCommand extends Command
                     );
 
                 $responses[] = [
-                    'customer_id' => $data['customer_id'],
                     'mobile' => $mobile,
                     'response' => $response,
                 ];
