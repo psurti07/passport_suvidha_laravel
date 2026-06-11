@@ -764,15 +764,19 @@ class OfferOrderController extends Controller
             return redirect(config('services.app.frontend_url') . '/staroffer');
         }
 
-        // If already success (instant return, no API call)
+        // Instant success (no API call)
         if ($log->tx_status === 'success') {
-            return redirect(config('services.app.frontend_url') . '/staroffer-response?status=success');
+            return redirect(
+                config('services.app.frontend_url') . '/staroffer-response?status=success'
+            );
         }
 
         $accessToken = $this->getPhonepeAccessToken();
 
         if (!$accessToken) {
-            return redirect(config('services.app.frontend_url') . '/staroffer');
+            return redirect(
+                config('services.app.frontend_url') . '/staroffer?status=pending&order_id=' . $orderId
+            );
         }
 
         $response = Http::withHeaders([
@@ -781,7 +785,9 @@ class OfferOrderController extends Controller
         ])->get($this->getPhonePeOrderStatusUrl($orderId));
 
         if (!$response->successful()) {
-            return redirect(config('services.app.frontend_url') . '/staroffer');
+            return redirect(
+                config('services.app.frontend_url') . '/staroffer?status=pending&order_id=' . $orderId
+            );
         }
 
         $data = $response->json();
@@ -810,7 +816,9 @@ class OfferOrderController extends Controller
                 'payment_mode' => $paymentMode,
             ]);
 
-            return redirect(config('services.app.frontend_url') . '/staroffer-response?status=success');
+            return redirect(
+                config('services.app.frontend_url') . '/staroffer-response?status=success'
+            );
         }
 
         if (in_array($state, ['FAILED', 'FAILURE', 'CANCELLED'])) {
@@ -819,9 +827,13 @@ class OfferOrderController extends Controller
                 'tx_status' => 'failed',
             ]);
 
-            return redirect(config('services.app.frontend_url') . '/staroffer');
+            return redirect(
+                config('services.app.frontend_url') . '/staroffer'
+            );
         }
 
-        return redirect(config('services.app.frontend_url') . '/staroffer');
+        return redirect(
+            config('services.app.frontend_url') . '/staroffer?status=pending&order_id=' . $orderId
+        );
     }
 }
