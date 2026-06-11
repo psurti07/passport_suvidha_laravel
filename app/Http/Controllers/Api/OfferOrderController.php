@@ -556,7 +556,7 @@ class OfferOrderController extends Controller
                 "paymentFlow" => [
                     "type" => "PG_CHECKOUT",
                     "merchantUrls" => [
-                        "redirectUrl" => config('services.app.url') . '/api/phonepe/verify?order_id=' . $merchantOrderId
+                        "redirectUrl" => config('services.app.url') . 'api/phonepe/verify?order_id=' . $merchantOrderId
                     ]
                 ]
             ];
