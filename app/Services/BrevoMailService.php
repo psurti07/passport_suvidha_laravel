@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-
 class BrevoMailService
 {
     public function sendBrevoHtmlMail(
@@ -67,7 +66,13 @@ class BrevoMailService
     {
         try {
 
-            $response = Http::timeout(30)
+            $http = Http::timeout(30);
+
+            if (app()->isLocal()) {
+                $http = $http->withoutVerifying();
+            }
+
+            $response = $http
                 ->withHeaders([
                     'accept'       => 'application/json',
                     'content-type' => 'application/json',
