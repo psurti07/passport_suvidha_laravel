@@ -867,22 +867,33 @@ scrollToActive()" x-cloak>
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M18.364 5.636l-3.536 3.536m0 0a3 3 0 104.243 4.243m-4.243-4.243L10.586 1.414m7.778 4.222a3 3 0 00-4.243 0M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
+                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
                         </path>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">Customer Support</span>
                 </a>
 
-                <a href="{{ route('admin.support.guest') }}"
+                <!-- <a href="{{ route('admin.support.guest') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.support.guest') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Guest Support' : ''">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
+                            d="M18.364 5.636l-3.536 3.536m0 0a3 3 0 104.243 4.243m-4.243-4.243L10.586 1.414m7.778 4.222a3 3 0 00-4.243 0M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
                         </path>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">Guest Support</span>
+                </a> -->
+
+                <a href="{{ route('admin.contact.enquiry') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.contact.enquiry') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Contact Enquiry' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 0v8a2 2 0 002 2h14a2 2 0 002-2V8m-18 0a2 2 0 012-2h14a2 2 0 012 2">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text font-semibold text-lg">Contact Enquiry</span>
                 </a>
 
                 <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">SMS</div>

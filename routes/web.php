@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\SiteOptionController;
 use App\Http\Controllers\Admin\SmsController;
 use App\Http\Controllers\Admin\ScheduleSlotController;
 use App\Http\Controllers\Admin\RemarketingLogController;
+use App\Http\Controllers\Admin\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -147,6 +148,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/support/tickets/{ticket}/remarks', [SupportController::class, 'storeRemark'])->name('support.tickets.remarks.store');
     Route::patch('/support/tickets/{ticket}/status', [SupportController::class, 'updateStatus'])->name('support.tickets.status.update');
     Route::delete('/support/tickets/{ticket}', [SupportController::class, 'destroy'])->name('support.tickets.destroy');
+
+    // Contact Routes
+    Route::get('/contact/enquiry', [ContactController::class, 'index'])->name('contact.enquiry');
+    Route::get('/contact/enquiry/data', [ContactController::class, 'data'])->name('contact.enquiry.data');
+    Route::delete('/contact/enquiry/{contact}', [ContactController::class, 'destroy'])->name('contact.enquiry.destroy');
 
     // Otp Routes
     Route::get('otps', [OtpController::class, 'index'])->name('otps.index');
