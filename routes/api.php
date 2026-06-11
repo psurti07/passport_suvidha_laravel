@@ -141,4 +141,4 @@ Route::get('/fb-pixel', [SiteOptionController::class, 'getFbPixel']);
 // PhonePe routes
 // Route::post('/check-phonepe-status', [OfferOrderController::class, 'checkPhonepeStatus']);
 Route::get('/phonepe/verify', [OfferOrderController::class, 'phonepeVerify']);
-Route::match(['GET', 'POST'], '/phonepe/redirect', [OfferOrderController::class, 'phonepeRedirect'])->name('phonepe.redirect');
+// Route::match(['GET', 'POST'], '/phonepe/redirect', [OfferOrderController::class, 'phonepeRedirect'])->name('phonepe.redirect');
