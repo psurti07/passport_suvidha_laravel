@@ -556,13 +556,12 @@ class OfferOrderController extends Controller
                 "paymentFlow" => [
                     "type" => "PG_CHECKOUT",
                     "merchantUrls" => [
-                        "redirectUrl" => config('services.app.frontend_url')
-                            . '/staroffer-response'
+                        "redirectUrl" => config('services.app.url') . '/api/phonepe/verify?order_id=' . $merchantOrderId
                     ]
                 ]
             ];
 
-            // Log::info('PHONEPE CREATE REQUEST', $payload);
+            Log::info('PHONEPE CREATE REQUEST', $payload);
 
             $response = Http::withHeaders([
                 'Authorization' => 'O-Bearer ' . $accessToken,
@@ -573,13 +572,13 @@ class OfferOrderController extends Controller
                 $payload
             );
 
-            // Log::info('PHONEPE CREATE RESPONSE', [
-            //     'request' => $payload,
-            //     'status'  => $response->status(),
-            //     'headers' => $response->headers(),
-            //     'body'    => $response->body(),
-            //     'json'    => $response->json(),
-            // ]);
+            Log::info('PHONEPE CREATE RESPONSE', [
+                'request' => $payload,
+                'status'  => $response->status(),
+                'headers' => $response->headers(),
+                'body'    => $response->body(),
+                'json'    => $response->json(),
+            ]);
 
             if (!$response->successful()) {
 
@@ -601,11 +600,11 @@ class OfferOrderController extends Controller
                 'service_type' => $request->service_code,
             ]);
 
-            // Log::info('PHONEPE PAYMENT CREATED', [
-            //     'order_id' => $order->id,
-            //     'merchant_order_id' => $merchantOrderId,
-            //     'payment_url' => $data['redirectUrl'] ?? $data['data']['redirectUrl'] ?? null,
-            // ]);
+            Log::info('PHONEPE PAYMENT CREATED', [
+                'order_id' => $order->id,
+                'merchant_order_id' => $merchantOrderId,
+                'payment_url' => $data['redirectUrl'] ?? $data['data']['redirectUrl'] ?? null,
+            ]);
 
             return response()->json([
                 'success'     => true,
@@ -617,9 +616,9 @@ class OfferOrderController extends Controller
             ]);
         } catch (\Exception $e) {
 
-            // Log::error('PHONEPE PAYMENT ERROR', [
-            //     'message' => $e->getMessage()
-            // ]);
+            Log::error('PHONEPE PAYMENT ERROR', [
+                'message' => $e->getMessage()
+            ]);
 
             return response()->json([
                 'success' => false,
@@ -628,136 +627,201 @@ class OfferOrderController extends Controller
         }
     }
 
-    public function checkPhonepeStatus(Request $request)
+    // public function checkPhonepeStatus(Request $request)
+    // {
+    //     try {
+
+    //         $request->validate([
+    //             'order_id' => 'required'
+    //         ]);
+
+    //         $log = PhonepeLog::where('reference_id', $request->order_id)->first();
+
+    //         if (!$log) {
+    //             return response()->json([
+    //                 'status' => 'not_found'
+    //             ], 404);
+    //         }
+
+    //         if ($log->tx_status === 'success') {
+    //             return response()->json([
+    //                 'status' => 'success'
+    //             ]);
+    //         }
+
+    //         $accessToken = $this->getPhonepeAccessToken();
+
+    //         if (!$accessToken) {
+    //             return response()->json([
+    //                 'status' => 'pending'
+    //             ]);
+    //         }
+
+    //         $response = Http::withHeaders([
+    //             'Authorization' => 'O-Bearer ' . $accessToken,
+    //             'Accept' => 'application/json',
+    //         ])->get(
+    //             $this->getPhonePeOrderStatusUrl(
+    //                 $request->order_id
+    //             )
+    //         );
+
+    //         // Log::info('PHONEPE STATUS RESPONSE', [
+    //         //     'status' => $response->status(),
+    //         //     'body'   => $response->body(),
+    //         // ]);
+
+    //         if (!$response->successful()) {
+    //             return response()->json([
+    //                 'status' => 'pending'
+    //             ]);
+    //         }
+
+    //         $data = $response->json();
+
+    //         $state = strtoupper(
+    //             $data['state']
+    //                 ?? $data['paymentDetails'][0]['state']
+    //                 ?? 'PENDING'
+    //         );
+
+    //         $paymentId = $data['paymentDetails'][0]['transactionId']
+    //             ?? null;
+
+    //         $paymentMode = $data['paymentDetails'][0]['paymentMode']
+    //             ?? null;
+
+    //         if ($state === 'COMPLETED') {
+
+    //             $order = OfferOrder::find($log->order_id);
+
+    //             if ($order && !$order->payment_id) {
+    //                 $order->update([
+    //                     'payment_id'  => $paymentId,
+    //                     'card_number' => generateCardNumber(),
+    //                 ]);
+    //             }
+
+    //             $log->update([
+    //                 'payment_id'   => $paymentId,
+    //                 'tx_status'    => 'success',
+    //                 'payment_mode' => $paymentMode,
+    //             ]);
+
+    //             return response()->json([
+    //                 'status' => 'success'
+    //             ]);
+    //         }
+
+    //         if (
+    //             in_array(
+    //                 $state,
+    //                 [
+    //                     'FAILED',
+    //                     'FAILURE',
+    //                     'CANCELLED'
+    //                 ]
+    //             )
+    //         ) {
+
+    //             $log->update([
+    //                 'tx_status' => 'failed',
+    //                 'payment_id' => $paymentId,
+    //                 'payment_mode' => $paymentMode,
+    //             ]);
+
+    //             return response()->json([
+    //                 'status' => 'failed'
+    //             ]);
+    //         }
+
+    //         return response()->json([
+    //             'status' => 'pending'
+    //         ]);
+    //     } catch (\Exception $e) {
+
+    //         Log::error('PHONEPE STATUS ERROR', [
+    //             'message' => $e->getMessage()
+    //         ]);
+
+    //         return response()->json([
+    //             'status' => 'error'
+    //         ], 500);
+    //     }
+    // }
+
+    public function phonepeVerify(Request $request)
     {
-        try {
+        $orderId = $request->query('order_id');
 
-            $request->validate([
-                'order_id' => 'required'
-            ]);
-
-            $log = PhonepeLog::where('reference_id', $request->order_id)->first();
-
-            if (!$log) {
-                return response()->json([
-                    'status' => 'not_found'
-                ], 404);
-            }
-
-            if ($log->tx_status === 'success') {
-                return response()->json([
-                    'status' => 'success'
-                ]);
-            }
-
-            $accessToken = $this->getPhonepeAccessToken();
-
-            if (!$accessToken) {
-                return response()->json([
-                    'status' => 'pending'
-                ]);
-            }
-
-            $response = Http::withHeaders([
-                'Authorization' => 'O-Bearer ' . $accessToken,
-                'Accept' => 'application/json',
-            ])->get(
-                $this->getPhonePeOrderStatusUrl(
-                    $request->order_id
-                )
-            );
-
-            // Log::info('PHONEPE STATUS RESPONSE', [
-            //     'status' => $response->status(),
-            //     'body'   => $response->body(),
-            // ]);
-
-            if (!$response->successful()) {
-                return response()->json([
-                    'status' => 'pending'
-                ]);
-            }
-
-            $data = $response->json();
-
-            $state = strtoupper(
-                $data['state']
-                    ?? $data['paymentDetails'][0]['state']
-                    ?? 'PENDING'
-            );
-
-            $paymentId = $data['paymentDetails'][0]['transactionId']
-                ?? null;
-
-            $paymentMode = $data['paymentDetails'][0]['paymentMode']
-                ?? null;
-
-            if ($state === 'COMPLETED') {
-
-                $order = OfferOrder::find($log->order_id);
-
-                if ($order && !$order->payment_id) {
-                    $order->update([
-                        'payment_id'  => $paymentId,
-                        'card_number' => generateCardNumber(),
-                    ]);
-                }
-
-                $log->update([
-                    'payment_id'   => $paymentId,
-                    'tx_status'    => 'success',
-                    'payment_mode' => $paymentMode,
-                ]);
-
-                return response()->json([
-                    'status' => 'success'
-                ]);
-            }
-
-            if (
-                in_array(
-                    $state,
-                    [
-                        'FAILED',
-                        'FAILURE',
-                        'CANCELLED'
-                    ]
-                )
-            ) {
-
-                $log->update([
-                    'tx_status' => 'failed',
-                    'payment_id' => $paymentId,
-                    'payment_mode' => $paymentMode,
-                ]);
-
-                return response()->json([
-                    'status' => 'failed'
-                ]);
-            }
-
-            return response()->json([
-                'status' => 'pending'
-            ]);
-        } catch (\Exception $e) {
-
-            Log::error('PHONEPE STATUS ERROR', [
-                'message' => $e->getMessage()
-            ]);
-
-            return response()->json([
-                'status' => 'error'
-            ], 500);
+        if (!$orderId) {
+            return redirect(config('services.app.frontend_url') . '/staroffer');
         }
-    }
 
-    public function phonepeRedirect(Request $request)
-    {
-        Log::info('PHONEPE REDIRECT', $request->all());
+        $log = PhonepeLog::where('reference_id', $orderId)->first();
 
-        return redirect(
-            config('services.app.frontend_url')
-                . '/staroffer-response'
+        if (!$log) {
+            return redirect(config('services.app.frontend_url') . '/staroffer');
+        }
+
+        // If already success (instant return, no API call)
+        if ($log->tx_status === 'success') {
+            return redirect(config('services.app.frontend_url') . '/staroffer-response?status=success');
+        }
+
+        $accessToken = $this->getPhonepeAccessToken();
+
+        if (!$accessToken) {
+            return redirect(config('services.app.frontend_url') . '/staroffer');
+        }
+
+        $response = Http::withHeaders([
+            'Authorization' => 'O-Bearer ' . $accessToken,
+            'Accept' => 'application/json',
+        ])->get($this->getPhonePeOrderStatusUrl($orderId));
+
+        if (!$response->successful()) {
+            return redirect(config('services.app.frontend_url') . '/staroffer');
+        }
+
+        $data = $response->json();
+
+        $state = strtoupper(
+            $data['state'] ?? $data['paymentDetails'][0]['state'] ?? 'PENDING'
         );
+
+        $paymentId = $data['paymentDetails'][0]['transactionId'] ?? null;
+        $paymentMode = $data['paymentDetails'][0]['paymentMode'] ?? null;
+
+        if ($state === 'COMPLETED') {
+
+            $order = OfferOrder::find($log->order_id);
+
+            if ($order && !$order->payment_id) {
+                $order->update([
+                    'payment_id' => $paymentId,
+                    'card_number' => generateCardNumber(),
+                ]);
+            }
+
+            $log->update([
+                'payment_id' => $paymentId,
+                'tx_status' => 'success',
+                'payment_mode' => $paymentMode,
+            ]);
+
+            return redirect(config('services.app.frontend_url') . '/staroffer-response?status=success');
+        }
+
+        if (in_array($state, ['FAILED', 'FAILURE', 'CANCELLED'])) {
+
+            $log->update([
+                'tx_status' => 'failed',
+            ]);
+
+            return redirect(config('services.app.frontend_url') . '/staroffer');
+        }
+
+        return redirect(config('services.app.frontend_url') . '/staroffer');
     }
 }

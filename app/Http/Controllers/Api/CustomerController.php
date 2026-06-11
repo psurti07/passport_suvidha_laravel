@@ -55,13 +55,13 @@ class CustomerController extends Controller
                 'string',
                 'max:20',
                 Rule::unique('customers', 'mobile_number')
-                    ->whereNull('deleted_at'),
+                    ->where('is_paid', 1),
             ],
             'email' => [
                 'required',
                 'email',
                 Rule::unique('customers', 'email')
-                    ->whereNull('deleted_at'),
+                    ->where('is_paid', 1),
             ],
             'is_paid' => 'sometimes|boolean',
         ];
@@ -135,14 +135,22 @@ class CustomerController extends Controller
                 'max:20',
                 Rule::unique('customers', 'mobile_number')
                     ->ignore($customer->id)
-                    ->whereNull('deleted_at'),
+                    ->where(function ($query) {
+                        return $query
+                            ->whereNull('deleted_at')
+                            ->where('is_paid', 1);
+                    }),
             ],
             'email' => [
                 'required',
                 'email',
                 Rule::unique('customers', 'email')
                     ->ignore($customer->id)
-                    ->whereNull('deleted_at'),
+                    ->where(function ($query) {
+                        return $query
+                            ->whereNull('deleted_at')
+                            ->where('is_paid', 1);
+                    }),
             ],
             'address' => 'nullable|string',
             'gender' => 'nullable|in:male,female,other',
@@ -205,13 +213,13 @@ class CustomerController extends Controller
                 'string',
                 'max:20',
                 Rule::unique('customers', 'mobile_number')
-                    ->whereNull('deleted_at'),
+                    ->where('is_paid', 1),
             ],
             'email' => [
                 'required',
                 'email',
                 Rule::unique('customers', 'email')
-                    ->whereNull('deleted_at'),
+                    ->where('is_paid', 1),
             ],
         ]);
 

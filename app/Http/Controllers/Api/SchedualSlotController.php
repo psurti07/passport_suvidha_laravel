@@ -174,7 +174,7 @@ class SchedualSlotController extends Controller
 
     // public function encryptId()
     // {
-    //     $id = encryptData('4');
+    //     $id = encryptData('5');
     //     return response()->json([
     //         'success' => true,
     //         'id' => $id
@@ -182,7 +182,7 @@ class SchedualSlotController extends Controller
     // }
     // public function decryptId()
     // {
-    //     $id = decryptData('QEBAQCYmJiYjIyMjJCQkJOS4oTv-RvWcER3S9M8JPDQ');
+    //     $id = decryptData('QEBAQCYmJiYjIyMjJCQkJBYdHUqeJS_tNwEVSORMaKg');
     //     return response()->json([
     //         'success' => true,
     //         'id' => $id

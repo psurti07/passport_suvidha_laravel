@@ -211,7 +211,7 @@ class SupportTicketController extends Controller
         if (!$customer) {
             $rules['name'] = 'required|string|max:255';
             $rules['email'] = 'required|email|max:255';
-            $rules['mobile_number'] = 'nullable|digits:10';
+            $rules['mobile_number'] = 'required|digits:10';
         }
 
         $validator = Validator::make($request->all(), $rules);

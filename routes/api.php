@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\OtpController;
 use App\Http\Controllers\Api\SupportTicketController;
 use App\Http\Controllers\Api\AppointmentLetterController;
 use App\Http\Controllers\Api\ApplicationProgressController;
+use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\FinalDetailController;
 use App\Http\Controllers\Api\HealthController;
@@ -111,10 +112,14 @@ Route::post('/mark-payment-failed', [OfferOrderController::class, 'markPaymentFa
 Route::post('/payment-cancelled', [OfferOrderController::class, 'paymentCancelled']);
 Route::get('/cardoffer-response', [OfferOrderController::class, 'paymentResponse']);
 
-// welcome message routes
+// welcome message routesstorePublic
 Route::get('/welcome-message', [SiteOptionController::class, 'getWelcomeMessage']);
 
+// customer message route
 Route::get('/customer-message', [SiteOptionController::class, 'getCustomerMessage']);
+
+//contact enquiry
+Route::post('/contact/enquiry', [ContactController::class, 'create']);
 
 // SEO Meta keywords routes
 Route::get('/seo/{slug}', [MetaKeywordsController::class, 'show']);
@@ -134,5 +139,6 @@ Route::get('/decrypt', [SchedualSlotController::class, 'decryptId']);
 Route::get('/fb-pixel', [SiteOptionController::class, 'getFbPixel']);
 
 // PhonePe routes
-Route::post('/check-phonepe-status', [OfferOrderController::class, 'checkPhonepeStatus']);
+// Route::post('/check-phonepe-status', [OfferOrderController::class, 'checkPhonepeStatus']);
+Route::get('/phonepe/verify', [OfferOrderController::class, 'phonepeVerify']);
 Route::match(['GET', 'POST'], '/phonepe/redirect', [OfferOrderController::class, 'phonepeRedirect'])->name('phonepe.redirect');
