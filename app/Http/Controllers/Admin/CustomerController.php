@@ -186,7 +186,7 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, SmsService $smsService)
     {
         $baseRules = [
             'first_name' => 'required|string|max:255',
@@ -229,7 +229,7 @@ class CustomerController extends Controller
 
         $validated['is_paid'] = $isPaid;
 
-        $this->createOrConvert($validated, null, 'create');
+        $this->createOrConvert($validated, null, 'create', $smsService);
 
         return back()->with('success', 'Customer created successfully');
     }
@@ -324,7 +324,7 @@ class CustomerController extends Controller
             ->with('success', 'Customer deleted successfully.');
     }
 
-    public function convertToCustomer(Request $request, Customer $customer)
+    public function convertToCustomer(Request $request, Customer $customer, SmsService $smsService)
     {
         if ($customer->is_paid) {
             return back()->with('error', 'Already converted');
@@ -359,7 +359,7 @@ class CustomerController extends Controller
         $validated = $validator->validated();
         $validated['is_paid'] = true;
 
-        $this->createOrConvert($validated, $customer, 'convert');
+        $this->createOrConvert($validated, $customer, 'convert', $smsService);
 
         return redirect()
             ->route('admin.customers.show', $customer->id)
@@ -367,9 +367,9 @@ class CustomerController extends Controller
             ->withFragment('info');
     }
 
-    private function createOrConvert($validated, $customer = null, $type = 'create')
+    private function createOrConvert($validated, $customer = null, $type = 'create', SmsService $smsService)
     {
-        return DB::transaction(function () use ($validated, $customer, $type) {
+        return DB::transaction(function () use ($validated, $customer, $type, $smsService) {
 
             $isPaid = $validated['is_paid'];
 
@@ -443,8 +443,6 @@ class CustomerController extends Controller
             ]);
 
             if (!empty($customer->mobile_number)) {
-                $smsService = new SmsService();
-
                 $smsService->sendTemplateSms(
                     $customer->mobile_number,
                     'account-sms'
