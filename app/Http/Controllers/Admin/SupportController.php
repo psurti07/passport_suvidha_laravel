@@ -283,26 +283,28 @@ class SupportController extends Controller
         $remark->ticket_number = $ticket->ticket_number;
         $remark->save();
 
-        $messages = [
-            'open' => "Dear Customer, Your support ticket {$ticket->ticket_number} has been received and is now open. Passport Suvidha Support.",
-
-            'in_progress' => "Dear Customer, Your support ticket {$ticket->ticket_number} is currently In progress. Our team is working on your request. Passport Suvidha Support.",
-
-            'closed' => "Dear Customer, Your support ticket {$ticket->ticket_number} has been closed. If further assistance is needed, please contact Passport Suvidha Support.",
-        ];
-
         $mobileNumber = $ticket->mobile_number;
-
         if (empty($mobileNumber) && !empty($ticket->customer_id)) {
             $mobileNumber = Customer::where('id', $ticket->customer_id)
                 ->value('mobile_number');
         }
+        if (!empty($mobileNumber)) {
+            $templateSlug = match ($validated['status']) {
+                'open' => 'ticket-open-sms',
+                'in_progress' => 'ticket-in-progress-sms',
+                'closed' => 'ticket-closed-sms',
+                default => null
+            };
 
-        if (!empty($mobileNumber) && isset($messages[$validated['status']])) {
-            $smsService->sendSmsMessage(
-                $mobileNumber,
-                $messages[$validated['status']]
-            );
+            if ($templateSlug) {
+                $smsService->sendTemplateSms(
+                    $mobileNumber,
+                    $templateSlug,
+                    [
+                        $ticket->ticket_number
+                    ]
+                );
+            }
         }
 
         return redirect()->route('admin.support.tickets.show', $ticket->ticket_number)

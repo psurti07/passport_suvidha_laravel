@@ -63,16 +63,7 @@ class InitSiteOptions extends Command
 
             // Other Messages
             'customer-message',
-            'welcome-message',
-
-            // SMS Templates
-            'otp-sms',
-            'complete-process-sms',
-            'application-submitted-sms',
-            'login-otp-sms',
-            'welcome-sms',
-            'payment-failed-sms',
-            'account-sms',
+            'welcome-message'
         ];
 
         foreach ($keys as $key) {

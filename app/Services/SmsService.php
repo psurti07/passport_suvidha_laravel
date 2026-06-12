@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\SiteOption;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Models\MessageTemplate;
 
 class SmsService
 {
@@ -64,33 +65,35 @@ class SmsService
 
     public function sendTemplateSms(
         string $mobile,
-        string $templateKey,
+        string $slug,
         array $variables = []
     ): array {
 
-        $template = SiteOption::where(
-            'option_key',
-            $templateKey
-        )->value('option_value');
+        $message = MessageTemplate::where(
+            'slug',
+            $slug
+        )->value('message');
 
-        if (!$template) {
-
+        if(!$message){
             return [
-                'success' => false,
-                'response' => 'SMS template not found.',
+                'success'=>false,
+                'response'=>'SMS template not found.'
             ];
         }
 
-        foreach ($variables as $value) {
-            $template = preg_replace(
-                '/\{#var#\}/',
+        foreach($variables as $value){
+            $message = str_replace(
+                '{#var#}',
                 $value,
-                $template,
-                1
+                $message
             );
+
         }
 
-        return $this->sendSmsMessage($mobile, $template);
+        return $this->sendSmsMessage(
+            $mobile,
+            $message
+        );
     }
 
     public function sendBulkSms(
@@ -99,7 +102,6 @@ class SmsService
     ): array {
 
         try {
-
             $mobileList = implode(',', $mobiles);
 
             $response = Http::timeout(60)
