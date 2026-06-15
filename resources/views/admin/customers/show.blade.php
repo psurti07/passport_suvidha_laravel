@@ -551,7 +551,7 @@
                                 <input type="file" id="document_file" name="document_file" required
                                     class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100
                                     @error('document_file') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
-                                <p class="mt-1 text-xs text-gray-500">PDF, JPG, PNG. Max size: 5MB.</p>
+                                <p class="mt-1 text-xs text-gray-500">PDF, JPG, JPEG, PNG. Max size: 5MB.</p>
                                 @error('document_file')
                                     <p class="mt-1 text-sm text-red-600 flex items-center">
                                         <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -763,7 +763,7 @@
                                         <input type="file" id="file" name="file" :required="showFileUpload"
                                             class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100
                                             @error('file') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
-                                        <p class="mt-1 text-xs text-gray-500">PDF, JPG, PNG. Max size: 5MB.</p>
+                                        <p class="mt-1 text-xs text-gray-500">PDF, JPG, JPEG, PNG. Max size: 5MB.</p>
                                         @error('file')
                                             <p class="mt-1 text-sm text-red-600 flex items-center">
                                                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">

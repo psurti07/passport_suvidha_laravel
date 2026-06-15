@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\SiteOption;
+use App\Models\MessageTemplate;
 use Yajra\DataTables\Facades\DataTables;
 use App\Services\SmsService;
 
@@ -20,20 +20,13 @@ class SmsController extends Controller
         $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
-        $query = SiteOption::select([
+        $query = MessageTemplate::select([
             'id',
-            'option_key',
-            'option_value',
+            'slug',
+            'name',
+            'message',
             'created_at',
             'updated_at',
-        ])->whereIn('option_key', [
-            'otp-sms',
-            'complete-process-sms',
-            'application-submitted-sms',
-            'login-otp-sms',
-            'welcome-sms',
-            'payment-failed-sms',
-            'account-sms',
         ]);
 
         if ($request->filled('from_date') && $request->filled('to_date')) {
@@ -48,25 +41,10 @@ class SmsController extends Controller
 
             ->addIndexColumn()
 
-            ->editColumn('option_key', function ($row) {
+            ->editColumn('message', function ($row) {
 
-                $types = [
-                    'otp-sms' => 'OTP SMS',
-                    'complete-process-sms' => 'Complete Process SMS',
-                    'application-submitted-sms' => 'Application Submitted SMS',
-                    'login-otp-sms' => 'Login OTP SMS',
-                    'welcome-sms' => 'Welcome SMS',
-                    'payment-failed-sms' => 'Payment Failed SMS',
-                    'account-sms' => 'Account SMS',
-                ];
-
-                return $types[$row->option_key] ?? ucwords(str_replace('-', ' ', $row->option_key));
-            })
-
-            ->editColumn('option_value', function ($row) {
-
-                return $row->option_value
-                    ? $row->option_value
+                return $row->message
+                    ? $row->message
                     : '<span class="text-gray-400 italic">No SMS Added</span>';
             })
 
@@ -103,66 +81,50 @@ class SmsController extends Controller
                 ';
             })
 
-            ->rawColumns(['option_value', 'actions'])
+            ->rawColumns(['message', 'actions'])
 
             ->make(true);
     }
 
-    public function show(SiteOption $sms)
+    public function show(MessageTemplate $sms)
     {
-        $smsTypes = [
-            'otp-sms' => 'OTP SMS',
-            'complete-process-sms' => 'Complete Process SMS',
-            'application-submitted-sms' => 'Application Submitted SMS',
-            'login-otp-sms' => 'Login OTP SMS',
-            'welcome-sms' => 'Welcome SMS',
-            'payment-failed-sms' => 'Payment Failed SMS',
-            'account-sms' => 'Account SMS',
-        ];
-        $smsType = $smsTypes[$sms->option_key] ?? ucwords(str_replace('-', ' ', $sms->option_key));
-        return view('admin.sms.show', compact('sms', 'smsType'));
+        return view('admin.sms.show', compact('sms'));
     }
 
-    public function edit(SiteOption $sms)
+    public function edit(MessageTemplate $sms)
     {
-        $smsTypes = [
-            'otp-sms' => 'OTP SMS',
-            'complete-process-sms' => 'Complete Process SMS',
-            'application-submitted-sms' => 'Application Submitted SMS',
-            'login-otp-sms' => 'Login OTP SMS',
-            'welcome-sms' => 'Welcome SMS',
-            'payment-failed-sms' => 'Payment Failed SMS',
-            'account-sms' => 'Account SMS',
-        ];
-
-        $smsType = $smsTypes[$sms->option_key] ?? $sms->option_key;
-
-        return view('admin.sms.edit', compact('sms', 'smsType'));
+        return view('admin.sms.edit', compact('sms'));
     }
 
-    public function update(Request $request, SiteOption $sms)
+    public function update(Request $request, MessageTemplate $sms)
     {
         $validated = $request->validate(
             [
-                'option_value' => 'required|string',
+                'message' => 'required|string',
             ],
             [
-                'option_value.required' => 'The sms message field is required.',
+                'message.required' => 'The sms message field is required.'
             ]
         );
 
-        $sms->update($validated);
+        $sms->update([
+            'message' => $validated['message']
+        ]);
 
         return redirect()->route('admin.sms.index')
             ->with('success', 'SMS updated successfully.');
     }
 
-    public function sendTest(Request $request)
+    public function sendTest(Request $request, SmsService $smsService)
     {
         $validated = $request->validate(
             [
-                'mobile_number' => ['required', 'regex:/^[6-9][0-9]{9}$/'],
-                'option_value' => ['required'],
+                'mobile_number' => [
+                    'required',
+                    'regex:/^[6-9][0-9]{9}$/'
+                ],
+
+                'slug' => 'required'
             ],
             [
                 'mobile_number.required' => 'Mobile number is required.',
@@ -172,18 +134,36 @@ class SmsController extends Controller
 
         $mobile = $validated['mobile_number'];
 
-        $message = $validated['option_value'];
-
         $otp = str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+        $ticketNumber = 'TKT' . now()->format('YmdHis') . rand(100, 999);
 
-        $message = str_replace('{#var#}', $otp, $message);
-    
-        $smsService = new SmsService();
+        $templateValue = match ($validated['slug']) {
+            'otp-sms',
+            'login-otp-sms'
+            => $otp,
 
-        $response = $smsService->sendSmsMessage($mobile, $message);
+            'ticket-open-sms',
+            'ticket-in-progress-sms',
+            'ticket-closed-sms'
+            => $ticketNumber,
+
+            default => null
+        };
+
+        if (!$templateValue) {
+            return back()->with(
+                'error',
+                'Test value not available for this SMS template.'
+            );
+        }
+
+        $response = $smsService->sendTemplateSms(
+            $mobile,
+            $validated['slug'],
+            [$templateValue]
+        );
 
         if ($response['success']) {
-
             return back()->with(
                 'success',
                 'Test SMS sent successfully to ' . $mobile

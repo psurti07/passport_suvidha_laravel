@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'SMS Message: ' . $smsType)
+@section('title', 'SMS Message: ' . $sms->name)
 
 @section('content')
 <div class="mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -39,7 +39,7 @@
             <div>
                 <form action="{{ route('admin.sms.sendTest') }}" method="POST" novalidate>
                     @csrf
-                    <input type="hidden" name="option_value" value="{{ $sms->option_value }}">
+                    <input type="hidden" name="slug" value="{{ $sms->slug }}">
                     <div class="space-y-6">
                         <div>
                             <label for="mobile_number" class="block text-sm font-medium text-gray-700 mb-1">Mobile

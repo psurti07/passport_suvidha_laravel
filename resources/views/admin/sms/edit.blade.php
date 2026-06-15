@@ -37,23 +37,23 @@
                 @csrf
                 @method('PUT')
                 <div class="space-y-6">
-                    {{-- SMS Type --}}
+                    {{-- SMS Name --}}
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
-                            SMS Type
+                            SMS Name
                         </label>
 
-                        <input type="text" value="{{ $smsType }}" disabled
+                        <input type="text" value="{{ $sms->name }}" disabled
                             class="w-full border border-gray-200 bg-gray-100 rounded-lg text-sm px-4 py-2 text-gray-600 cursor-not-allowed">
                     </div>
 
                     {{-- SMS Message --}}
                     <div>
-                        <label for="option_value" class="block text-sm font-medium text-gray-700 mb-1">SMS Message
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-1">SMS Message
                             <span class="text-red-500">*</span></label>
-                        <textarea id="option_value" name="option_value" rows="4" placeholder="Enter sms message here..."
-                            class="w-full border border-gray-300 rounded-lg text-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm @error('option_value') border-red-500 @enderror">{{ old('option_value', $sms->option_value) }}</textarea>
-                        @error('option_value')
+                        <textarea id="message" name="message" rows="4" placeholder="Enter sms message here..."
+                            class="w-full border border-gray-300 rounded-lg text-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm @error('message') border-red-500 @enderror">{{ old('message', $sms->message) }}</textarea>
+                        @error('message')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
