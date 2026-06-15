@@ -228,8 +228,16 @@ class PaymentController extends Controller
 
             if (!empty($customer->mobile_number)) {
                 $smsService = new SmsService();
-                $smsMessage = $smsService->sendTemplateSms($customer->mobile_number, 'application-submitted-sms');
-                if (!$smsMessage['success']) {
+                $smsMessageSuccess = $smsService->sendTemplateSms($customer->mobile_number, 'application-submitted-sms');
+                if (!$smsMessageSuccess['success']) {
+                    return response([
+                        'success' => false,
+                        'message' => "SMS template not found"
+                    ]);
+                }
+
+                $smsMessageAccount = $smsService->sendTemplateSms($customer->mobile_number, 'account-sms');
+                if (!$smsMessageAccount['success']) {
                     return response([
                         'success' => false,
                         'message' => "SMS template not found"

@@ -142,3 +142,5 @@ Route::get('/fb-pixel', [SiteOptionController::class, 'getFbPixel']);
 // Route::post('/check-phonepe-status', [OfferOrderController::class, 'checkPhonepeStatus']);
 Route::get('/phonepe/verify', [OfferOrderController::class, 'phonepeVerify']);
 // Route::match(['GET', 'POST'], '/phonepe/redirect', [OfferOrderController::class, 'phonepeRedirect'])->name('phonepe.redirect');
+
+// Route::post('/fee-calculate', [ServiceController::class, 'feeCalculate']);

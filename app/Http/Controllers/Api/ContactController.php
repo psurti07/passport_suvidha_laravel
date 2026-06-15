@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use App\Services\SmsService;
 
 class ContactController extends Controller
 {
@@ -28,9 +29,22 @@ class ContactController extends Controller
             'mobile' => $validated['mobile_number']
         ]);
 
+        if (!empty($validated['mobile_number'])) {
+
+            $smsService = new SmsService();
+
+            $smsMessageSuccess = $smsService->sendTemplateSms($validated['mobile_number'], 'application-submitted-sms');
+            if (!$smsMessageSuccess['success']) {
+                return response([
+                    'success' => false,
+                    'message' => "SMS template not found"
+                ]);
+            }
+        }
+
         return response()->json([
             'success' => true,
-            'message' => 'Ticket created successfully',
+            'message' => 'Message Sent successfully',
             'data' => [
                 'id' => $contact->id,
             ]

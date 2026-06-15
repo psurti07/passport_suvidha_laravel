@@ -337,7 +337,9 @@ class CustomerController extends Controller
         $mobileNumber = $customer->mobile_number;
         if (!empty($mobileNumber)) {
 
-            $smsMessage = $smsService->sendTemplateSms($mobileNumber, 'complete-process-sms');
+            $url = "https://passportsuvidha.com/apply-passport";
+
+            $smsMessage = $smsService->sendTemplateSms($mobileNumber, 'complete-process-sms', [$url]);
             if (!$smsMessage['success']) {
                 return response([
                     'success' => false,
