@@ -135,32 +135,31 @@ class SmsController extends Controller
         $mobile = $validated['mobile_number'];
 
         $otp = str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+
         $ticketNumber = 'TKT' . now()->format('YmdHis') . rand(100, 999);
 
         $templateValue = match ($validated['slug']) {
             'otp-sms',
             'login-otp-sms'
-            => $otp,
+            => [$otp],
+
+            'complete-process-sms'
+            => [
+                'https://passportsuvidha.com/apply-passport'
+            ],
 
             'ticket-open-sms',
             'ticket-in-progress-sms',
             'ticket-closed-sms'
-            => $ticketNumber,
+            => [$ticketNumber],
 
-            default => null
+            default => []
         };
-
-        if (!$templateValue) {
-            return back()->with(
-                'error',
-                'Test value not available for this SMS template.'
-            );
-        }
 
         $response = $smsService->sendTemplateSms(
             $mobile,
             $validated['slug'],
-            [$templateValue]
+            $templateValue
         );
 
         if ($response['success']) {

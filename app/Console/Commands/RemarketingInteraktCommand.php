@@ -79,11 +79,10 @@ class RemarketingInteraktCommand extends Command
             return 0;
         }
 
+        $createdDate = Carbon::now()->subDays($scheduleDay)->toDateString();
+
         $users = Customer::query()
-            ->whereDate(
-                'created_at',
-                Carbon::now()->subDays($scheduleDay)->toDateString()
-            )
+            ->whereDate('created_at', $createdDate)
             ->where('is_paid', 0)
             ->where('is_active', 1)
             ->where('is_dnd', 0)

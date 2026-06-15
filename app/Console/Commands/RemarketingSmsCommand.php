@@ -5,24 +5,26 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Services\RcsService;
 use App\Models\SmsLog;
+use App\Models\MessageTemplate;
+use App\Services\SmsService;
+use Illuminate\Support\Facades\Log;
 
-class RemarketingRcsCommand extends Command
+class RemarketingSmsCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'remarketing:rcs';
+    protected $signature = 'remarketing:sms';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Send RCS Remarketing Messages';
+    protected $description = 'Send Passport Remarketing SMS';
 
     /**
      * Create a new command instance.
@@ -39,31 +41,30 @@ class RemarketingRcsCommand extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(SmsService $smsService)
     {
         $currentTime = now()->format('H:i');
 
         $cronjobs = [
-            '1' => ['08:00'],
-            '2' => ['10:30'],
-            '3' => ['13:00'],
-            '4' => ['15:15'],
-            '5' => ['17:30'],
-            '6' => ['19:00'],
-            '7' => ['21:45'],
+            '0' => ['21:00'],
+            '1' => ['10:30'],
+            '2' => ['13:00'],
+            '3' => ['15:00'],
+            '5' => ['19:00'],
         ];
 
         $scheduleDay = null;
 
         foreach ($cronjobs as $day => $times) {
             if (in_array($currentTime, $times)) {
-                $scheduleDay = (int) $day;
+                $scheduleDay = (int)$day;
                 break;
             }
         }
 
         if (is_null($scheduleDay)) {
             $this->info('No Schedule Found');
+
             return 0;
         }
 
@@ -80,45 +81,69 @@ class RemarketingRcsCommand extends Command
         $mobiles = $users
             ->filter()
             ->map(function ($mobile) {
-                return '91' . trim($mobile);
+
+                return trim($mobile);
             })
             ->unique()
             ->values()
             ->toArray();
 
-        if (config('services.rcs.test_mode')) {
-
+        if (config('services.sms.test_mode')) {
             $testNumbers = array_filter(
                 array_map(
                     'trim',
-                    explode(',', config('services.testnumbers.test_numbers', ''))
+                    explode(
+                        ',',
+                        config('services.testnumbers.test_numbers', '')
+                    )
                 )
             );
 
             $mobiles = array_unique(
-                array_merge($mobiles, $testNumbers)
+                array_merge(
+                    $mobiles,
+                    $testNumbers
+                )
             );
         }
 
         if (empty($mobiles)) {
-
             $response = [
                 'status' => false,
                 'message' => 'No Mobiles Found'
+
             ];
         } else {
+            $message = MessageTemplate::where(
+                'slug',
+                'remarketing-sms'
+            )
+                ->value('message');
 
-            $response = app(RcsService::class)
-                ->send($mobiles);
+            if (!$message) {
+                $response = [
+                    'status' => false,
+                    'message' => 'SMS Template Not Found'
+                ];
+            } else {
+                $response = $smsService->sendBulkSms(
+                    $mobiles,
+                    $message
+                );
+            }
         }
 
         SmsLog::create([
-            'type' => 'rcs',
-            'crontype' => 'customer rcs',
-            'cronname' => 'RCS - ' . $scheduleDay,
+            'type' => 'sms',
+            'crontype' => 'customer sms',
+            'cronname' => 'SMS - ' . $scheduleDay,
             'msgcount' => count($mobiles),
             'msgresponse' => json_encode($response),
         ]);
+
+        $this->info(
+            'SMS Sent : ' . count($mobiles)
+        );
 
         return 0;
     }

@@ -74,20 +74,19 @@ class SmsService
             $slug
         )->value('message');
 
-        if(!$message){
+        if (!$message) {
             return [
-                'success'=>false,
-                'response'=>'SMS template not found.'
+                'success' => false,
+                'response' => 'SMS template not found.'
             ];
         }
 
-        foreach($variables as $value){
+        foreach ($variables as $value) {
             $message = str_replace(
                 '{#var#}',
                 $value,
                 $message
             );
-
         }
 
         return $this->sendSmsMessage(
