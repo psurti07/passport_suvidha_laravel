@@ -41,6 +41,10 @@ return [
         'test_numbers' => env('TEST_NUMBERS'),
     ],
 
+    'sms' => [
+        'test_mode' => env('SMS_TEST_MODE', false),
+    ],
+
     'interakt' => [
         'test_mode' => env('INTERAKT_TEST_MODE', false),
     ],

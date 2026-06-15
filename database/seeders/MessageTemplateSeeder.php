@@ -55,6 +55,8 @@ class MessageTemplateSeeder extends Seeder
             ['slug' => 'ticket-closed-sms', 'name' => 'Ticket Closed SMS'],
 
             ['slug' => 'generate-support-ticket', 'name' => 'Generate Support Ticket'],
+            
+            ['slug' => 'remarketing-sms', 'name' => 'Remarketing SMS']
 
         ];
 

@@ -157,87 +157,87 @@ class ApplicationProgressController extends Controller
             }
         }
 
-        if ($customer && $customer->email) {
-            $attachments = [];
-            if (
-                $progress->file_type === 'final_details'
-            ) {
-                $finalDetail =
-                    FinalDetail::find(
-                        $progress->file
-                    );
+        // if ($customer && $customer->email) {
+        //     $attachments = [];
+        //     if (
+        //         $progress->file_type === 'final_details'
+        //     ) {
+        //         $finalDetail =
+        //             FinalDetail::find(
+        //                 $progress->file
+        //             );
 
-                if ($finalDetail) {
-                    $attachments[] =
-                        $this->prepareAttachment(
-                            $finalDetail->file_path,
-                            'final-details'
-                        );
-                }
-            }
+        //         if ($finalDetail) {
+        //             $attachments[] =
+        //                 $this->prepareAttachment(
+        //                     $finalDetail->file_path,
+        //                     'final-details'
+        //                 );
+        //         }
+        //     }
 
-            if (
-                $progress->file_type ===
-                'appointment_letters'
-            ) {
-                $appointmentLetter =
-                    AppointmentLetter::find(
-                        $progress->file
-                    );
-                if ($appointmentLetter) {
-                    $attachments[] =
-                        $this->prepareAttachment(
-                            $appointmentLetter->file_path,
-                            'appointment-letter'
-                        );
-                }
-            }
+        //     if (
+        //         $progress->file_type ===
+        //         'appointment_letters'
+        //     ) {
+        //         $appointmentLetter =
+        //             AppointmentLetter::find(
+        //                 $progress->file
+        //             );
+        //         if ($appointmentLetter) {
+        //             $attachments[] =
+        //                 $this->prepareAttachment(
+        //                     $appointmentLetter->file_path,
+        //                     'appointment-letter'
+        //                 );
+        //         }
+        //     }
 
-            $html = "
-                <h2>
-                Dear {$customer->first_name} {$customer->last_name} 
-                </h2>
+        //     $html = "
+        //         <h2>
+        //         Dear {$customer->first_name} {$customer->last_name} 
+        //         </h2>
 
-                <p>
-                Your application status has been updated.
-                </p>
+        //         <p>
+        //         Your application status has been updated.
+        //         </p>
 
-                <p>
-                <b>Status:</b>
-                {$status->status_name}
-                </p>
+        //         <p>
+        //         <b>Status:</b>
+        //         {$status->status_name}
+        //         </p>
 
-                <p>
-                <b>Remark:</b>
-                {$request->remark}
-                </p>
+        //         <p>
+        //         <b>Remark:</b>
+        //         {$request->remark}
+        //         </p>
 
-                <br>
+        //         <br>
 
-                Thanks,<br>
-                Passport Suvidha
+        //         Thanks,<br>
+        //         Passport Suvidha
 
-                ";
+        //         ";
 
-            if (!empty($attachments)) {
-                $brevoMailService
-                    ->sendBrevoHtmlMailWithAttachments(
-                        $customer->email,
-                        $customer->first_name,
-                        'Application Status Update',
-                        $html,
-                        $attachments
-                    );
-            } else {
-                $brevoMailService
-                    ->sendBrevoHtmlMail(
-                        $customer->email,
-                        $customer->first_name,
-                        'Application Status Update',
-                        $html
-                    );
-            }
-        }
+        //     if (!empty($attachments)) {
+        //         $brevoMailService
+        //             ->sendBrevoHtmlMailWithAttachments(
+        //                 $customer->email,
+        //                 $customer->first_name,
+        //                 'Application Status Update',
+        //                 $html,
+        //                 $attachments
+        //             );
+        //     } else {
+        //         $brevoMailService
+        //             ->sendBrevoHtmlMail(
+        //                 $customer->email,
+        //                 $customer->first_name,
+        //                 'Application Status Update',
+        //                 $html
+        //             );
+        //     }
+        // }
 
         if ($status && $status->step) {
             $customer = Customer::find($request->customer_id);
