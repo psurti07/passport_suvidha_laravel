@@ -29,22 +29,22 @@ class ContactController extends Controller
             'mobile' => $validated['mobile_number']
         ]);
 
-        if (!empty($validated['mobile_number'])) {
+        // if (!empty($validated['mobile_number'])) {
 
-            $smsService = new SmsService();
+        //     $smsService = new SmsService();
 
-            $smsMessageSuccess = $smsService->sendTemplateSms($validated['mobile_number'], 'application-submitted-sms');
-            if (!$smsMessageSuccess['success']) {
-                return response([
-                    'success' => false,
-                    'message' => "SMS template not found"
-                ]);
-            }
-        }
+        //     $smsMessageSuccess = $smsService->sendTemplateSms($validated['mobile_number'], 'generate-support-ticket');
+        //     if (!$smsMessageSuccess['success']) {
+        //         return response([
+        //             'success' => false,
+        //             'message' => "SMS template not found"
+        //         ]);
+        //     }
+        // }
 
         return response()->json([
             'success' => true,
-            'message' => 'Message Sent successfully',
+            'message' => 'Your inquiry has been submitted, We will contact you within 24-48 hours for a follow-up. Passport Suvidha',
             'data' => [
                 'id' => $contact->id,
             ]

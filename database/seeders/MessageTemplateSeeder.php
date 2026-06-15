@@ -54,6 +54,8 @@ class MessageTemplateSeeder extends Seeder
 
             ['slug' => 'ticket-closed-sms', 'name' => 'Ticket Closed SMS'],
 
+            ['slug' => 'generate-support-ticket', 'name' => 'Generate Support Ticket'],
+
         ];
 
 
@@ -67,7 +69,6 @@ class MessageTemplateSeeder extends Seeder
                     'name' => $item['name']
                 ]
             );
-
         }
     }
 }

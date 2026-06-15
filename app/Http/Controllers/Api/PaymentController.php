@@ -394,10 +394,10 @@ class PaymentController extends Controller
                 ]
             );
 
-            Log::info('Tracking Debug sucessfull', [
-                'user_track' => $userTrack,
-                'event_track' => $eventTrack,
-            ]);
+            // Log::info('Tracking Debug sucessfull', [
+            //     'user_track' => $userTrack,
+            //     'event_track' => $eventTrack,
+            // ]);
         } catch (\Exception $e) {
             Log::error('Interakt Tracking Failed', [
                 'message' => $e->getMessage()

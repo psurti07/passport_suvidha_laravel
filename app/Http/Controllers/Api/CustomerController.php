@@ -529,10 +529,10 @@ class CustomerController extends Controller
                 ]
             );
 
-            Log::info('Tracking Debug', [
-                'user_track' => $userResponse,
-                'event_track' => $eventResponse,
-            ]);
+            // Log::info('Tracking Debug', [
+            //     'user_track' => $userResponse,
+            //     'event_track' => $eventResponse,
+            // ]);
         } catch (\Exception $e) {
             Log::error('Interakt Tracking Failed', [
                 'message' => $e->getMessage()

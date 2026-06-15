@@ -347,7 +347,7 @@ class SupportTicketController extends Controller
 
         $smsService = new SmsService();
 
-        $smsMessageSuccess = $smsService->sendTemplateSms($customer->mobile_number, 'application-submitted-sms');
+        $smsMessageSuccess = $smsService->sendTemplateSms($customer->mobile_number, 'generate-support-ticket');
         if (!$smsMessageSuccess['success']) {
           return response([
             'success' => false,
