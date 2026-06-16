@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\PincodeLocationController;
 use App\Http\Controllers\Admin\ApplicationDocumentController;
 use App\Http\Controllers\Admin\ApplicationProgressController;
 use App\Http\Controllers\Admin\LeadController;
-use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Admin\OtpController;
 use App\Http\Controllers\Admin\FinalDetailController;
@@ -176,8 +176,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Schedule Routes
     Route::resource('schedule-slots', ScheduleSlotController::class);
     Route::get('/schedule-slots-data', [ScheduleSlotController::class, 'data'])->name('schedule-slots.data');
-    Route::post('/schedule-slots/{scheduleSlot}/remark', [ScheduleSlotController::class, 'updateRemark'])->name('schedule-slots.remark.update'); 
-    Route::patch('schedule-slots/{scheduleSlot}/status',[ScheduleSlotController::class, 'updateStatus'])->name('schedule-slots.update-status');
+    Route::post('/schedule-slots/{scheduleSlot}/remark', [ScheduleSlotController::class, 'updateRemark'])->name('schedule-slots.remark.update');
+    Route::patch('schedule-slots/{scheduleSlot}/status', [ScheduleSlotController::class, 'updateStatus'])->name('schedule-slots.update-status');
 
     // Predefined Messages Routes
     Route::resource('predefined-messages', PreDefinedMessageController::class);
@@ -194,4 +194,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Users Routes
     Route::resource('users', UserController::class);
     Route::get('/users-data', [UserController::class, 'data'])->name('users.data');
+
+    Route::prefix('/report')->group(function () {
+        Route::get('/lead', [ReportController::class, 'leadReport'])->name('report.lead');
+        Route::get('/lead/month-details', [ReportController::class, 'leadMonthDetails'])
+            ->name('report.lead.month.details');
+    });
 });

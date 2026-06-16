@@ -28,13 +28,13 @@ class OfferOrderController extends Controller
             'service_code' => 'required',
         ]);
 
-        $customer = Customer::where('mobile_number', $request->mobile)->first();
-        if ($customer && $customer->is_paid === true) {
-            return response()->json([
-                "success" => false,
-                "message" => "You are already registered customer"
-            ], 200);
-        }
+        // $customer = Customer::where('mobile_number', $request->mobile)->first();
+        // if ($customer && $customer->is_paid === true) {
+        //     return response()->json([
+        //         "success" => false,
+        //         "message" => "You are already registered customer"
+        //     ], 200);
+        // }
 
         $service = Service::where('service_code', $request->service_code)->first();
         if (!$service) {
@@ -60,17 +60,17 @@ class OfferOrderController extends Controller
             ], 422);
         }
 
-        $existingOrder = OfferOrder::where('mobile', $request->mobile)
-            ->where('offer_type', $offer_type)
-            ->whereNotNull('payment_id') // means already paid
-            ->first();
+        // $existingOrder = OfferOrder::where('mobile', $request->mobile)
+        //     ->where('offer_type', $offer_type)
+        //     ->whereNotNull('payment_id') // means already paid
+        //     ->first();
 
-        if ($existingOrder) {
-            return response()->json([
-                "success" => false,
-                "message" => "You have already purchased this offer"
-            ], 200);
-        }
+        // if ($existingOrder) {
+        //     return response()->json([
+        //         "success" => false,
+        //         "message" => "You have already purchased this offer"
+        //     ], 200);
+        // }
 
         $finalAmount = floor($amount);
 
