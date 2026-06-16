@@ -567,16 +567,16 @@ scrollToActive()" x-cloak>
                         </div>
                         <div class="user-info">
                             @auth
-                            <span class="user-name">Hello, <span
-                                    class="font-bold">{{ Auth::user()->name }}</span></span>
-                            <a href="{{ route('logout') }}"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                class="btn-primary">
-                                Logout
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                                @csrf
-                            </form>
+                                <span class="user-name">Hello, <span
+                                        class="font-bold">{{ Auth::user()->name }}</span></span>
+                                <a href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                    class="btn-primary">
+                                    Logout
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                                    @csrf
+                                </form>
                             @endauth
                         </div>
                     </div>
@@ -629,13 +629,16 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text font-semibold text-lg">Search Customer</span>
                 </a>
 
-                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">CUSTOMER MANAGEMENT</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">CUSTOMER MANAGEMENT
+                </div>
 
                 <a href="{{ route('admin.leads.today') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.leads.today') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Today\'s Leads' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect>
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"
+                            stroke-width="2"></rect>
                         <line x1="16" y1="2" x2="16" y2="6" stroke-width="2"></line>
                         <line x1="8" y1="2" x2="8" y2="6" stroke-width="2"></line>
                         <line x1="3" y1="10" x2="21" y2="10" stroke-width="2"></line>
@@ -648,7 +651,8 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.leads.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.leads.index') && !request()->routeIs('admin.leads.today') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Leads' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <circle cx="9" cy="8" r="3" stroke-width="2"></circle>
                         <circle cx="17" cy="8" r="3" stroke-width="2"></circle>
                         <path stroke-width="2" d="M5 20c0-3 4-4 4-4s4 1 4 4"></path>
@@ -660,7 +664,8 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.customers.today') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.today') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Today\'s Customers' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                         </path>
@@ -671,7 +676,8 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.customers.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.index') && !request()->routeIs('admin.customers.today') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Customers' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
                         </path>
@@ -682,7 +688,8 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.customers.create') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.create') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Create An Account' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
                         </path>
                     </svg>
@@ -706,8 +713,10 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.final-details.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.final-details.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Final Details' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <rect x="9" y="2" width="6" height="4" rx="1" ry="1" stroke-width="2"></rect>
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <rect x="9" y="2" width="6" height="4" rx="1" ry="1"
+                            stroke-width="2"></rect>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 4H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-2" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6M9 16h6" />
@@ -718,7 +727,8 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.appointment-letters.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.appointment-letters.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Appointment Letters' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 5h6m2 0a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2m2 0a2 2 0 104 0 2 2 0 00-4 0zm-1 9l2 2 4-4">
                         </path>
@@ -775,21 +785,35 @@ scrollToActive()" x-cloak>
 
                 <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">REPORTS</div>
 
-                <a href="{{ route('admin.invoices.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}"
+                <a href="{{ route('admin.report.lead') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.lead') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
                         </path>
                     </svg>
-                    <span class="nav-link-text font-semibold text-lg">Invoice List</span>
+                    <span class="nav-link-text font-semibold text-lg">Lead</span>
+                </a>
+
+                <a href="{{ route('admin.invoices.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text font-semibold text-lg">Invoice</span>
                 </a>
 
                 <a href="{{ route('admin.gst.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.gst.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'GST Data' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-width="2" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
                         <path stroke-width="2" d="M14 2v6h6" />
                         <path stroke-width="2" d="M8 17v-4M12 17v-6M16 17v-2" />
@@ -802,8 +826,10 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.card-offers.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.card-offers.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Card Offer' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2" stroke-width="2"></rect>
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2"
+                            stroke-width="2"></rect>
                         <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 15h2m4 0h4">
                         </path>
@@ -816,8 +842,10 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.star-offers.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.star-offers.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Star Offer' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2" stroke-width="2"></rect>
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2"
+                            stroke-width="2"></rect>
                         <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 15h2m4 0h4">
                         </path>
@@ -827,13 +855,16 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text font-semibold text-lg">Star Offer</span>
                 </a>
 
-                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">PAYMENT GATEWAY LOG</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">PAYMENT GATEWAY LOG
+                </div>
 
                 <a href="{{ route('admin.razorpay-logs.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.razorpay-logs.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Razorpay Log' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2" stroke-width="2"></rect>
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2"
+                            stroke-width="2"></rect>
                         <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">Razorpay Log</span>
@@ -842,8 +873,10 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.cashfree-logs.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.cashfree-logs.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Cashfree Log' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2" stroke-width="2"></rect>
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2"
+                            stroke-width="2"></rect>
                         <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">Cashfree Log</span>
@@ -852,8 +885,10 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.phonepe-logs.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.phonepe-logs.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'PhonePe Log' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2" stroke-width="2"></rect>
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2"
+                            stroke-width="2"></rect>
                         <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">PhonePe Log</span>
@@ -888,7 +923,8 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.contact.enquiry') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.contact.enquiry') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Contact Enquiry' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 0v8a2 2 0 002 2h14a2 2 0 002-2V8m-18 0a2 2 0 012-2h14a2 2 0 012 2">
                         </path>
@@ -901,7 +937,8 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.otps.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
                         </path>
@@ -912,7 +949,8 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.sms.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.sms.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'SMS Messages' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4-.8L3 20l1.3-3.9A7.93 7.93 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
                         </path>
@@ -923,7 +961,8 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.remarketing-logs.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.remarketing-logs.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Remarketing Logs' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17V7"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17v-3"></path>
@@ -935,19 +974,22 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.dnd.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.dnd.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'DND List' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5l14 14"></path>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">DND List</span>
                 </a>
 
-                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">SCHEDULES SLOTS</div>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">SCHEDULES SLOTS
+                </div>
 
                 <a href="{{ route('admin.schedule-slots.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.schedule-slots.*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Schedule Slots' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                         </path>
@@ -988,8 +1030,9 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.site-options') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.site-options*') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Site Options' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0 feather feather-settings" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0 feather feather-settings" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
                         <circle cx="12" cy="12" r="3"></circle>
                         <path
                             d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
@@ -1000,18 +1043,20 @@ scrollToActive()" x-cloak>
 
                 {{-- Staff Management Section --}}
                 @if (Auth::check() && Auth::user()->isAdmin())
-                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">STAFF MANAGEMENT</div>
+                    <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">STAFF
+                        MANAGEMENT</div>
 
-                <a href="{{ route('admin.users.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Staff Members' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Staff Members</span>
-                </a>
+                    <a href="{{ route('admin.users.index') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Staff Members' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                            </path>
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">Staff Members</span>
+                    </a>
                 @endif
 
 
