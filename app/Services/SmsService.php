@@ -120,7 +120,7 @@ class SmsService
 
             return [
                 'success' => $response->successful(),
-                'response' => $response->body(),
+                'response' => str_replace(["\n","\r","\t"], '', $response->body()),
             ];
         } catch (\Exception $e) {
 

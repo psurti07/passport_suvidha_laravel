@@ -138,7 +138,7 @@ class RemarketingSmsCommand extends Command
             'crontype' => 'customer sms',
             'cronname' => 'SMS - ' . $scheduleDay,
             'msgcount' => count($mobiles),
-            'msgresponse' => json_encode($response),
+            'msgresponse' => json_encode($response, JSON_UNESCAPED_SLASHES),
         ]);
 
         $this->info(
