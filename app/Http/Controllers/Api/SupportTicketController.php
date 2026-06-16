@@ -175,7 +175,7 @@ class SupportTicketController extends Controller
                 style="background: rgb(0 51 102); padding: 18px;"
               >
                 <img
-                  src="https://passportsuvidha.com/logo/passport-suvidha.png"
+                  src="https://passportsuvidha.com/logo/logo.png"
                   width="120"
                   alt="Passport Suvidha"
                   style="display:block; padding-top:20px"
