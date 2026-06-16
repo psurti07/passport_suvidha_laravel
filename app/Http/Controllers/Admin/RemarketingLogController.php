@@ -45,8 +45,6 @@ class RemarketingLogController extends Controller
             ->editColumn('type', function ($row) {
                 if ($row->type == 'sms') {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800">SMS</span>';
-                } else if($row->type == 'aisensy') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Aisensy</span>';
                 } else if($row->type == 'interakt') {
                     return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Interakt</span>';
                 } else if($row->type == 'rcs') {
