@@ -38,7 +38,7 @@
                                 <select id="type" class="border rounded-lg px-3 py-2 text-sm sm:w-32 w-[150px]">
                                     <option value="">All</option>
                                     <option value="sms">SMS</option>
-                                    <option value="aisensy">Aisensy</option>
+                                    <!-- <option value="aisensy">Aisensy</option> -->
                                     <option value="interakt">Interakt</option>
                                     <option value="rcs">RCS</option>
                                 </select>

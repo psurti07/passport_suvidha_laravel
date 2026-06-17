@@ -56,11 +56,6 @@
                                     class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full {{ $smsLog->type ? 'bg-blue-100 text-blue-800' : 'bg-blue-100 text-blue-800' }}">
                                     {{ 'SMS' }}
                                 </span>
-                                @elseif($smsLog->type == 'aisensy')
-                                <span
-                                    class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full {{ $smsLog->type ? 'bg-green-100 text-green-800' : 'bg-green-100 text-green-800' }}">
-                                    {{ 'Aisensy' }}
-                                </span>
                                 @elseif($smsLog->type == 'interakt')
                                 <span
                                     class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full {{ $smsLog->type ? 'bg-yellow-100 text-yellow-800' : 'bg-yellow-100 text-yellow-800' }}">
