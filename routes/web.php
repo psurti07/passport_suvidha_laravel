@@ -107,6 +107,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/application-status/current', [ApplicationStatusController::class, 'current'])->name('application.status.current');
     Route::get('/application-status/completed', [ApplicationStatusController::class, 'completed'])->name('application.status.completed');
 
+    // Reports Routes
+    Route::prefix('/report')->group(function () {
+
+        // Lead Routes
+        Route::get('/lead', [ReportController::class, 'leadReport'])->name('report.lead');
+        Route::get('/lead/month-details', [ReportController::class, 'leadMonthDetails'])
+            ->name('report.lead.month.details');
+
+        // Customer Routes
+        Route::get('/customer', [ReportController::class, 'customerReport'])->name('report.customer');
+        Route::get('/customer/month-details', [ReportController::class, 'customerMonthDetails'])
+            ->name('report.customer.month.details');
+    });
+
     // Invoice Routes
     Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
     Route::get('/invoices-data', [InvoiceController::class, 'data'])->name('invoices.data');
@@ -194,10 +208,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Users Routes
     Route::resource('users', UserController::class);
     Route::get('/users-data', [UserController::class, 'data'])->name('users.data');
-
-    Route::prefix('/report')->group(function () {
-        Route::get('/lead', [ReportController::class, 'leadReport'])->name('report.lead');
-        Route::get('/lead/month-details', [ReportController::class, 'leadMonthDetails'])
-            ->name('report.lead.month.details');
-    });
 });
