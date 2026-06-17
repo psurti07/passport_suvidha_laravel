@@ -97,7 +97,8 @@ class TodayStatisticsController extends Controller
                     return [
                         'label' => 'Razorpay - ' . $item->service_type,
                         'count' => $item->total,
-                        'icon' => 'fa-credit-card'
+                        'icon' => 'fa-credit-card',
+                        'route' => '/admin/razorpay-logs'
                     ];
                 }
             );
@@ -123,14 +124,16 @@ class TodayStatisticsController extends Controller
         $paymentStats[] = [
             'label' => 'Cashfree - Card Offer',
             'count' => $cashfreeCardOffer,
-            'icon' => 'fa-gift'
+            'icon' => 'fa-gift',
+            'route' => '/admin/cashfree-logs'
         ];
 
         // Add Star Offer
         $paymentStats[] = [
             'label' => 'PhonePe - Star Offer',
             'count' => $phonepeStarOffer,
-            'icon' => 'fa-star'
+            'icon' => 'fa-star',
+            'route' => '/admin/phonepe-logs'
         ];
 
         // ================= MAIN STATS =================
@@ -146,19 +149,19 @@ class TodayStatisticsController extends Controller
         ];
 
         $appointmentStats = [
-            ['count' => $yesterdayAppointments, 'label' => 'Yesterday Appointment', 'icon' => 'fa-calendar-minus'],
-            ['count' => $todayAppointments, 'label' => 'Today Appointment', 'icon' => 'fa-calendar-day'],
-            ['count' => $tomorrowAppointments, 'label' => 'Tomorrow Appointment', 'icon' => 'fa-calendar-plus'],
+            ['count' => $yesterdayAppointments, 'label' => 'Yesterday Appointment', 'icon' => 'fa-calendar-minus', 'route' => '/admin/appointment-letters'],
+            ['count' => $todayAppointments, 'label' => 'Today Appointment', 'icon' => 'fa-calendar-day', 'route' => '/admin/appointment-letters'],
+            ['count' => $tomorrowAppointments, 'label' => 'Tomorrow Appointment', 'icon' => 'fa-calendar-plus', 'route' => '/admin/appointment-letters'],
         ];
 
         $otpStats = [
-            ['count' => $totalOtpToday, 'label' => 'Today OTP', 'icon' => 'fa-key'],
-            ['count' => $loginOtpToday, 'label' => 'Portal Login - OTP', 'icon' => 'fa-sign-in-alt'],
-            ['count' => $registrationOtpToday, 'label' => 'Passport Application - OTP', 'icon' => 'fa-passport']
+            ['count' => $totalOtpToday, 'label' => 'Today OTP', 'icon' => 'fa-key', 'route' => '/admin/otps'],
+            ['count' => $loginOtpToday, 'label' => 'Portal Login - OTP', 'icon' => 'fa-sign-in-alt', 'route' => '/admin/otps'],
+            ['count' => $registrationOtpToday, 'label' => 'Passport Application - OTP', 'icon' => 'fa-passport', 'route' => '/admin/otps']
         ];
 
         $ticketStats = [
-            ['count' => $openTicketToday, 'label' => 'Support Request - Open', 'icon' => 'fa-headset'],
+            ['count' => $openTicketToday, 'label' => 'Support Request - Open', 'icon' => 'fa-headset', 'route' => '/admin/support/customer'],
         ];
 
         $currentDate = Date::now()->format('j M, Y');

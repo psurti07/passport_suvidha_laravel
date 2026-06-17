@@ -13,6 +13,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($customerStats as $stat)
                 {{-- Added 'group' class for hover effect on icon --}}
+
                 <div
                     class="group bg-white border border-gray-200 rounded-lg p-5 flex justify-between items-center shadow-sm transition duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1">
                     <div class="info">
@@ -33,18 +34,20 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($appointmentStats as $stat)
                 {{-- Added 'group' class for hover effect on icon --}}
-                <div
-                    class="group bg-white border border-gray-200 rounded-lg p-5 flex justify-between items-center shadow-sm transition duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1">
-                    <div class="info">
-                        <div class="text-xl md:text-3xl font-semibold text-blue-900 mb-1">{{ $stat['count'] }}</div>
-                        <div class="text-sm font-medium text-gray-600">{{ $stat['label'] }}</div>
-                    </div>
-                    {{-- Adjusted icon size and color, added group-hover effect --}}
+                <a href="{{ $stat['route'] }}">
                     <div
-                        class="icon text-4xl text-blue-700 opacity-80 group-hover:opacity-100 transition duration-200 ease-in-out group-hover:scale-105">
-                        <i class="fas {{ $stat['icon'] }}"></i>
+                        class="group bg-white border border-gray-200 rounded-lg p-5 flex justify-between items-center shadow-sm transition duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1">
+                        <div class="info">
+                            <div class="text-xl md:text-3xl font-semibold text-blue-900 mb-1">{{ $stat['count'] }}</div>
+                            <div class="text-sm font-medium text-gray-600">{{ $stat['label'] }}</div>
+                        </div>
+                        {{-- Adjusted icon size and color, added group-hover effect --}}
+                        <div
+                            class="icon text-4xl text-blue-700 opacity-80 group-hover:opacity-100 transition duration-200 ease-in-out group-hover:scale-105">
+                            <i class="fas {{ $stat['icon'] }}"></i>
+                        </div>
                     </div>
-                </div>
+                </a>
             @endforeach
         </div>
 
@@ -53,19 +56,21 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($otpStats as $stat)
                 {{-- Added 'group' class for hover effect on icon --}}
-                <div
-                    class="group bg-white border border-gray-200 rounded-lg p-5 flex justify-between items-center shadow-sm transition duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1">
-                    <div class="info">
-                        <div class="text-xl md:text-3xl  font-semibold text-blue-900 mb-1">{{ $stat['count'] }}
-                        </div>
-                        <div class="text-sm font-medium text-gray-600">{{ $stat['label'] }}</div>
-                    </div>
-                    {{-- Adjusted icon size and color, added group-hover effect --}}
+                <a href="{{ $stat['route'] }}">
                     <div
-                        class="icon text-4xl text-blue-700 opacity-80 group-hover:opacity-100 transition duration-200 ease-in-out group-hover:scale-105">
-                        <i class="fas {{ $stat['icon'] }}"></i>
+                        class="group bg-white border border-gray-200 rounded-lg p-5 flex justify-between items-center shadow-sm transition duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1">
+                        <div class="info">
+                            <div class="text-xl md:text-3xl  font-semibold text-blue-900 mb-1">{{ $stat['count'] }}
+                            </div>
+                            <div class="text-sm font-medium text-gray-600">{{ $stat['label'] }}</div>
+                        </div>
+                        {{-- Adjusted icon size and color, added group-hover effect --}}
+                        <div
+                            class="icon text-4xl text-blue-700 opacity-80 group-hover:opacity-100 transition duration-200 ease-in-out group-hover:scale-105">
+                            <i class="fas {{ $stat['icon'] }}"></i>
+                        </div>
                     </div>
-                </div>
+                </a>
             @endforeach
         </div>
 
@@ -74,18 +79,20 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($ticketStats as $stat)
                 {{-- Added 'group' class for hover effect on icon --}}
-                <div
-                    class="group bg-white border border-gray-200 rounded-lg p-5 flex justify-between items-center shadow-sm transition duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1">
-                    <div class="info">
-                        <div class="text-xl md:text-3xl font-semibold text-blue-900 mb-1">{{ $stat['count'] }}</div>
-                        <div class="text-sm font-medium text-gray-600">{{ $stat['label'] }}</div>
-                    </div>
-                    {{-- Adjusted icon size and color, added group-hover effect --}}
+                <a href="{{ $stat['route'] }}">
                     <div
-                        class="icon text-4xl text-blue-700 opacity-80 group-hover:opacity-100 transition duration-200 ease-in-out group-hover:scale-105">
-                        <i class="fas {{ $stat['icon'] }}"></i>
+                        class="group bg-white border border-gray-200 rounded-lg p-5 flex justify-between items-center shadow-sm transition duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1">
+                        <div class="info">
+                            <div class="text-xl md:text-3xl font-semibold text-blue-900 mb-1">{{ $stat['count'] }}</div>
+                            <div class="text-sm font-medium text-gray-600">{{ $stat['label'] }}</div>
+                        </div>
+                        {{-- Adjusted icon size and color, added group-hover effect --}}
+                        <div
+                            class="icon text-4xl text-blue-700 opacity-80 group-hover:opacity-100 transition duration-200 ease-in-out group-hover:scale-105">
+                            <i class="fas {{ $stat['icon'] }}"></i>
+                        </div>
                     </div>
-                </div>
+                </a>
             @endforeach
         </div>
 
@@ -113,16 +120,18 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($paymentStats as $stat)
-                <div
-                    class="group bg-white border border-gray-200 rounded-lg p-5 flex justify-between items-center shadow-sm hover:shadow-lg hover:-translate-y-1">
-                    <div class="info">
-                        <div class="text-xl md:text-3xl font-semibold text-blue-900 mb-1">{{ $stat['count'] }}</div>
-                        <div class="text-sm font-medium text-gray-600">{{ $stat['label'] }}</div>
+                <a href="{{ $stat['route'] }}">
+                    <div
+                        class="group bg-white border border-gray-200 rounded-lg p-5 flex justify-between items-center shadow-sm hover:shadow-lg hover:-translate-y-1">
+                        <div class="info">
+                            <div class="text-xl md:text-3xl font-semibold text-blue-900 mb-1">{{ $stat['count'] }}</div>
+                            <div class="text-sm font-medium text-gray-600">{{ $stat['label'] }}</div>
+                        </div>
+                        <div class="icon text-4xl text-blue-700">
+                            <i class="fas {{ $stat['icon'] }}"></i>
+                        </div>
                     </div>
-                    <div class="icon text-4xl text-blue-700">
-                        <i class="fas {{ $stat['icon'] }}"></i>
-                    </div>
-                </div>
+                </a>
             @endforeach
         </div>
 
