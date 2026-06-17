@@ -213,13 +213,20 @@ class CustomerController extends Controller
                 'string',
                 'max:20',
                 Rule::unique('customers', 'mobile_number')
-                    ->where('is_paid', 1),
+                    ->where(function ($query) {
+                        $query->where('is_paid', 1)
+                            ->whereNull('deleted_at');
+                    }),
             ],
+
             'email' => [
                 'required',
                 'email',
                 Rule::unique('customers', 'email')
-                    ->where('is_paid', 1),
+                    ->where(function ($query) {
+                        $query->where('is_paid', 1)
+                            ->whereNull('deleted_at');
+                    }),
             ],
         ]);
 

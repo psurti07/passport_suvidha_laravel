@@ -38,12 +38,12 @@
                     <table id="customer-reports-table" class="min-w-full divide-y divide-gray-200 border-separate">
                         <thead class="bg-blue-50">
                             <tr>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Year</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Month</th>
-                                <th class="px-6 py-4 !text-right text-xs font-semibold text-gray-600 uppercase">Total
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Year</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Month</th>
+                                <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">Total
                                     Customers
                                 </th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase w-40">
+                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase w-40">
                                     Datewise</th>
                             </tr>
                         </thead>
@@ -167,11 +167,11 @@
                 success: function(res) {
 
                     let html = `
-                <table class="w-full border">
+                <table class="w-full border text-sm">
                     <thead>
                         <tr>
-                            <th class="border !text-left p-4">Date</th>
-                            <th class="border !text-right p-4">Customers</th>
+                            <th class="border font-semibold text-gray-600 !text-left p-4 uppercase">Date</th>
+                            <th class="border font-semibold text-gray-600 !text-right p-4 uppercase">Customers</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -181,8 +181,8 @@
                         res.data.forEach(row => {
                             html += `
                         <tr>
-                            <td class="border p-4">${row.date ?? '-'}</td>
-                            <td class="border p-4 !text-right">${row.total ?? 0}</td>
+                            <td class="border text-gray-700 p-4">${row.date ?? '-'}</td>
+                            <td class="border text-gray-700 p-4 !text-right">${row.total ?? 0}</td>
                         </tr>
                     `;
                         });
@@ -198,8 +198,8 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th class="border p-4 !text-right">Total</th>
-                            <th class="border p-4 !text-right">${res.grand_total ?? 0}</th>
+                            <th class="border font-bold text-gray-600 p-4 !text-right">Total</th>
+                            <th class="border font-bold text-gray-600 p-4 !text-right">${res.grand_total ?? 0}</th>
                         </tr>
                     </tfoot>
                 </table>

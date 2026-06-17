@@ -793,7 +793,7 @@ scrollToActive()" x-cloak>
 
                 <a href="{{ route('admin.report.lead') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.lead') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
+                    x-bind:title="sidebarCollapsed ? 'Lead List' : ''">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -805,7 +805,7 @@ scrollToActive()" x-cloak>
 
                 <a href="{{ route('admin.report.customer') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.customer') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
+                    x-bind:title="sidebarCollapsed ? 'Customer List' : ''">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -813,6 +813,18 @@ scrollToActive()" x-cloak>
                         </path>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">Customer</span>
+                </a>
+
+                <a href="{{ route('admin.report.service') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.service') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Service List' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text font-semibold text-lg">Service</span>
                 </a>
 
                 <a href="{{ route('admin.invoices.index') }}"

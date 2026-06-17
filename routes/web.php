@@ -119,6 +119,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/customer', [ReportController::class, 'customerReport'])->name('report.customer');
         Route::get('/customer/month-details', [ReportController::class, 'customerMonthDetails'])
             ->name('report.customer.month.details');
+
+        // Service Routes
+        Route::get('/service', [ReportController::class, 'serviceReport'])
+            ->name('report.service');
+        Route::get('/service/month-details', [ReportController::class, 'serviceReportMonthDetails'])
+            ->name('report.service.month.details');
+        // Route::get('/service/page', function () {
+        //     return view('admin.reports.service');
+        // })->name('report.service.page');
     });
 
     // Invoice Routes
