@@ -14,6 +14,7 @@ class ApplicationStatus extends Model
         'status_name',
         'slug',
         'priority_no',
+        'colorclass',
         'step'
     ];
 
