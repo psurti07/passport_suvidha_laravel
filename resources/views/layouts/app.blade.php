@@ -788,6 +788,32 @@ scrollToActive()" x-cloak>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">Completed Applications</span>
                 </a>
+                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">INVOICES</div>
+
+
+                <a href="{{ route('admin.invoices.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text font-semibold text-lg">Invoice</span>
+                </a>
+
+                <a href="{{ route('admin.gst.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.gst.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'GST Data' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-width="2" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <path stroke-width="2" d="M14 2v6h6" />
+                        <path stroke-width="2" d="M8 17v-4M12 17v-6M16 17v-2" />
+                    </svg>
+                    <span class="nav-link-text font-semibold text-lg">GST Data</span>
+                </a>
 
                 <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">REPORTS</div>
 
@@ -827,8 +853,8 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text font-semibold text-lg">Service</span>
                 </a>
 
-                <a href="{{ route('admin.invoices.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}"
+                <a href="{{ route('admin.report.invoice') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.invoice') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
@@ -837,18 +863,6 @@ scrollToActive()" x-cloak>
                         </path>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">Invoice</span>
-                </a>
-
-                <a href="{{ route('admin.gst.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.gst.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'GST Data' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-width="2" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                        <path stroke-width="2" d="M14 2v6h6" />
-                        <path stroke-width="2" d="M8 17v-4M12 17v-6M16 17v-2" />
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">GST Data</span>
                 </a>
 
                 <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">OFFER</div>
