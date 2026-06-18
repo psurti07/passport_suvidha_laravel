@@ -131,7 +131,7 @@
                 autoWidth: false,
 
                 order: [
-                    [0, 'desc']
+                    [5, 'desc']
                 ],
 
                 ajax: {
@@ -147,8 +147,17 @@
                 },
 
                 columns: [{
-                        data: 'id',
-                        name: 'id'
+                        data: null,
+                        name: 'sr_no',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row, meta) {
+
+                            let total = meta.settings._iRecordsDisplay;
+                            let index = meta.row + meta.settings._iDisplayStart;
+
+                            return total - index;
+                        }
                     },
                     {
                         data: 'customer_name',

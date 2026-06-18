@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
@@ -46,6 +47,40 @@ class ReportController extends Controller
         return view('admin.reports.lead_report');
     }
 
+    public function leadMonthDetails(Request $request)
+    {
+        $year = $request->year;
+        $month = $request->month;
+
+        $start = Carbon::create($year, $month, 1);
+
+        $end = $start->copy()->endOfMonth();
+
+        $end = $end->gt(now()) ? now() : $end;
+
+        $leads = Customer::selectRaw("DATE(created_at) as date, COUNT(*) as total")
+            ->where('is_paid', 0)
+            ->whereBetween('created_at', [$start, $end])
+            ->groupBy('date')
+            ->pluck('total', 'date');
+
+        $data = [];
+
+        for ($date = $start; $date->lte($end); $date->addDay()) {
+            $day = $date->format('Y-m-d');
+
+            $data[] = [
+                'date' => $day,
+                'total' => $leads[$day] ?? 0
+            ];
+        }
+
+        return response()->json([
+            'data' => $data,
+            'grand_total' => array_sum(array_column($data, 'total'))
+        ]);
+    }
+
     public function customerReport(Request $request)
     {
         if ($request->ajax()) {
@@ -76,42 +111,6 @@ class ReportController extends Controller
         }
 
         return view('admin.reports.customer_report');
-    }
-
-    public function leadMonthDetails(Request $request)
-    {
-        $year = $request->year;
-        $month = $request->month;
-
-        $start = Carbon::create($year, $month, 1);
-
-        $end = $start->copy()->endOfMonth();
-
-        // 🚀 limit future dates
-        $end = $end->gt(now()) ? now() : $end;
-
-        // get grouped leads
-        $leads = Customer::selectRaw("DATE(created_at) as date, COUNT(*) as total")
-            ->where('is_paid', 0)
-            ->whereBetween('created_at', [$start, $end])
-            ->groupBy('date')
-            ->pluck('total', 'date');
-
-        $data = [];
-
-        for ($date = $start; $date->lte($end); $date->addDay()) {
-            $day = $date->format('Y-m-d');
-
-            $data[] = [
-                'date' => $day,
-                'total' => $leads[$day] ?? 0
-            ];
-        }
-
-        return response()->json([
-            'data' => $data,
-            'grand_total' => array_sum(array_column($data, 'total'))
-        ]);
     }
 
     public function customerMonthDetails(Request $request)
@@ -252,6 +251,83 @@ class ReportController extends Controller
         return response()->json([
             'data' => $data,
             'grand_total' => $grand
+        ]);
+    }
+
+
+    public function invoiceReport(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $query = Invoice::selectRaw("
+                YEAR(inv_date) as year,
+                MONTH(inv_date) as month_no,
+                MONTHNAME(inv_date) as month_name,
+                SUM(total_amount) as total_amount
+            ")
+                ->whereNull('deleted_at')
+                ->groupByRaw("
+                YEAR(inv_date),
+                MONTH(inv_date),
+                MONTHNAME(inv_date)
+            ");
+
+            $grandTotal = Invoice::whereNull('deleted_at')
+                ->sum('total_amount');
+
+            return DataTables::of($query)
+                ->with([
+                    'grand_total' => number_format($grandTotal, 2, '.', '')
+                ])
+                ->make(true);
+        }
+
+        return view('admin.reports.invoice_report');
+    }
+
+    public function invoiceReportMonthDetails(Request $request)
+    {
+        $year = $request->year;
+        $month = $request->month;
+
+        $start = Carbon::create($year, $month, 1);
+
+        $end = $start->copy()->endOfMonth();
+
+        // Prevent future dates
+        if ($end->gt(now())) {
+            $end = now();
+        }
+
+        $invoices = Invoice::selectRaw("
+            DATE(inv_date) as date,
+            SUM(total_amount) as total_amount
+        ")
+            ->whereNull('deleted_at')
+            ->whereBetween('inv_date', [$start, $end])
+            ->groupBy('date')
+            ->pluck('total_amount', 'date');
+
+        $data = [];
+        $grandTotal = 0;
+
+        for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+
+            $day = $date->format('Y-m-d');
+
+            $amount = $invoices[$day] ?? 0;
+
+            $grandTotal += $amount;
+
+            $data[] = [
+                'date' => $day,
+                'total_amount' => number_format($amount, 2, '.', '')
+            ];
+        }
+
+        return response()->json([
+            'data' => $data,
+            'grand_total' => number_format($grandTotal, 2, '.', '')
         ]);
     }
 }
