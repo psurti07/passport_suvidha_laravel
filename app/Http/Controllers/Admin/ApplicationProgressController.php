@@ -130,7 +130,6 @@ class ApplicationProgressController extends Controller
             }
         }
 
-
         $progress = ApplicationProgress::create($data);
 
         $customer = Customer::find($request->customer_id);
@@ -157,87 +156,70 @@ class ApplicationProgressController extends Controller
             }
         }
 
-        // if ($customer && $customer->email) {
-        //     $attachments = [];
-        //     if (
-        //         $progress->file_type === 'final_details'
-        //     ) {
-        //         $finalDetail =
-        //             FinalDetail::find(
-        //                 $progress->file
-        //             );
+        if ($customer && $customer->email) {
+            $attachments = [];
+            if ($progress->file_type === 'final_details') {
+                $finalDetail = FinalDetail::find($progress->file);
 
-        //         if ($finalDetail) {
-        //             $attachments[] =
-        //                 $this->prepareAttachment(
-        //                     $finalDetail->file_path,
-        //                     'final-details'
-        //                 );
-        //         }
-        //     }
+                if ($finalDetail) {
+                    $attachment = $this->prepareAttachment(
+                        $finalDetail->file_path,
+                        'Passport-Suvidha-Details-Verification-' . time()
+                    );
 
-        //     if (
-        //         $progress->file_type ===
-        //         'appointment_letters'
-        //     ) {
-        //         $appointmentLetter =
-        //             AppointmentLetter::find(
-        //                 $progress->file
-        //             );
-        //         if ($appointmentLetter) {
-        //             $attachments[] =
-        //                 $this->prepareAttachment(
-        //                     $appointmentLetter->file_path,
-        //                     'appointment-letter'
-        //                 );
-        //         }
-        //     }
+                    if ($attachment) {
+                        $attachments[] = $attachment;
+                    }
+                }
+            }
 
-        //     $html = "
-        //         <h2>
-        //         Dear {$customer->first_name} {$customer->last_name} 
-        //         </h2>
+            if ($progress->file_type === 'appointment_letters') {
+                $appointmentLetter =
+                    AppointmentLetter::find($progress->file);
+                if ($appointmentLetter) {
+                    $attachment = $this->prepareAttachment(
+                        $appointmentLetter->file_path,
+                        'Passport-Suvidha-Appointment-Letter-' . time()
+                    );
 
-        //         <p>
-        //         Your application status has been updated.
-        //         </p>
+                    if ($attachment) {
+                        $attachments[] = $attachment;
+                    }
+                }
+            }
 
-        //         <p>
-        //         <b>Status:</b>
-        //         {$status->status_name}
-        //         </p>
+            $html = view(
+                'emails.application_status',
+                [
+                    'customer'    => $customer,
+                    'status'      => $status,
+                    'status_date' => $request->status_date,
+                    'remark'      => $request->remark,
+                    'file'        => !empty($attachments),
+                ]
+            )->render();
 
-        //         <p>
-        //         <b>Remark:</b>
-        //         {$request->remark}
-        //         </p>
+            $subject = 'Application Status Update';
 
-        //         <br>
-
-        //         Thanks,<br>
-        //         Passport Suvidha
-
-        //         ";
-
-        //     if (!empty($attachments)) {
-        //         $brevoMailService
-        //             ->sendBrevoHtmlMailWithAttachments(
-        //                 $customer->email,
-        //                 $customer->first_name,
-        //                 'Application Status Update',
-        //                 $html,
-        //                 $attachments
-        //             );
-        //     } else {
-        //         $brevoMailService
-        //             ->sendBrevoHtmlMail(
-        //                 $customer->email,
-        //                 $customer->first_name,
-        //                 'Application Status Update',
-        //                 $html
-        //             );
-        //     }
-        // }
+            if (!empty($attachments)) {
+                $brevoMailService
+                    ->sendBrevoHtmlMailWithAttachments(
+                        $customer->email,
+                        $customer->first_name,
+                        $subject,
+                        $html,
+                        $attachments
+                    );
+            } else {
+                $brevoMailService
+                    ->sendBrevoHtmlMail(
+                        $customer->email,
+                        $customer->first_name,
+                        $subject,
+                        $html
+                    );
+            }
+        }
 
         if ($status && $status->step) {
             $customer = Customer::find($request->customer_id);
@@ -276,13 +258,13 @@ class ApplicationProgressController extends Controller
                 'name' => $name . '.pdf',
                 'content' => base64_encode(
                     file_get_contents($filePath)
-                )
-
+                ),
+                'contentType' => 'application/pdf'
             ];
         }
 
         $pdf = Pdf::loadView(
-            'pdf.document-preview',
+            'emails.pdf',
             [
                 'file' => $filePath
             ]
@@ -292,8 +274,8 @@ class ApplicationProgressController extends Controller
             'name' => $name . '.pdf',
             'content' => base64_encode(
                 $pdf->output()
-            )
-
+            ),
+            'contentType' => 'application/pdf'
         ];
     }
 
