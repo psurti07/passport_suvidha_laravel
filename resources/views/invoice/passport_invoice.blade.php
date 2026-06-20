@@ -221,7 +221,7 @@
             <td colspan="4" class="header-info">
                 <div class="section-heading">Invoice</div>
                 <strong>Invoice No :</strong>
-                {{ $invoice->id ?? 'N/A' }}
+                {{ $invoice->inv_no ?? 'N/A' }}
                 <br />
                 <strong>Invoice Date :</strong>
                 {{ $invoice->created_at ? \Carbon\Carbon::parse($invoice->created_at)->format('d-m-Y') : date('d-m-Y') }}

@@ -12,6 +12,7 @@ use App\Models\CashfreeLog;
 use App\Models\Customer;
 use App\Models\Service;
 use App\Models\PhonepeLog;
+use App\Services\BrevoMailService;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -172,8 +173,9 @@ class OfferOrderController extends Controller
         ]);
     }
 
-    public function cashfreeWebhook(Request $request)
+    public function cashfreeWebhook(Request $request, BrevoMailService $brevoMailService)
     {
+        Log::info('WEBHOOK HIT');
         try {
 
             // Log::info('CASHFREE WEBHOOK', $request->all());
@@ -230,7 +232,7 @@ class OfferOrderController extends Controller
                 ]);
             }
 
-
+            $order = OfferOrder::find($log->order_id);
             if ($paymentStatus === 'SUCCESS') {
 
                 $order = OfferOrder::find($log->order_id);
@@ -272,6 +274,30 @@ class OfferOrderController extends Controller
                     'tx_status' => 'failed'
                 ]);
 
+                try {
+                    $failePayment = view('emails.payment_failed', [
+                        'customer' => $order
+                    ])->render();
+
+                    $brevoMailService
+                        ->sendBrevoHtmlMail(
+                            $order->email,
+                            $order->full_name,
+                            'Payment Failed',
+                            $failePayment
+                        );
+                } catch (\Exception $e) {
+
+                    Log::error('EMAIL FAILED', [
+                        'message' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'customer_id' => $customer->id ?? null,
+                        'invoice_id' => $invoice->id ?? null,
+                        'trace' => $e->getTraceAsString(),
+                    ]);
+                }
+
                 return response()->json([
                     'status' => 'failed'
                 ]);
@@ -302,7 +328,7 @@ class OfferOrderController extends Controller
         return config('services.app.url');
     }
 
-    public function checkPaymentStatus(Request $request)
+    public function checkPaymentStatus(Request $request, BrevoMailService $brevoMailService)
     {
         try {
 
@@ -366,6 +392,8 @@ class OfferOrderController extends Controller
                 'SUCCESS'
             );
 
+            $order = OfferOrder::find($log->order_id);
+
             if ($successPayment) {
 
                 $cfPaymentId = $successPayment['cf_payment_id'] ?? null;
@@ -384,6 +412,40 @@ class OfferOrderController extends Controller
                     'payment_id' => $cfPaymentId,
                     'tx_status'  => 'success',
                 ]);
+
+
+                try {
+                    Log::info('CASHFREE SUCCESS EMAIL START');
+
+                    Log::info('Order Email', [
+                        'email' => $order->email ?? null,
+                        'name' => $order->full_name ?? null,
+                    ]);
+
+                    $successPayment = view('emails.payment_success', [
+                        'customer' => $order
+                    ])->render();
+
+                    Log::info('EMAIL VIEW RENDERED');
+
+                    $brevoMailService->sendBrevoHtmlMail(
+                        $order->email,
+                        $order->full_name,
+                        'Payment Success',
+                        $successPayment
+                    );
+
+                    Log::info('EMAIL SENT SUCCESSFULLY');
+                } catch (\Exception $e) {
+
+                    Log::error('EMAIL FAILED', [
+                        'message' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'order_id' => $order->id ?? null,
+                        'email' => $order->email ?? null,
+                    ]);
+                }
 
                 return response()->json([
                     'status' => 'success'
@@ -409,6 +471,30 @@ class OfferOrderController extends Controller
                 $log->update([
                     'tx_status' => 'failed'
                 ]);
+
+                try {
+                    $failePayment = view('emails.payment_failed', [
+                        'customer' => $order
+                    ])->render();
+
+                    $brevoMailService
+                        ->sendBrevoHtmlMail(
+                            $order->email,
+                            $order->full_name,
+                            'Payment Failed',
+                            $failePayment
+                        );
+                } catch (\Exception $e) {
+
+                    Log::error('EMAIL FAILED', [
+                        'message' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'customer_id' => $customer->id ?? null,
+                        'invoice_id' => $invoice->id ?? null,
+                        'trace' => $e->getTraceAsString(),
+                    ]);
+                }
 
                 return response()->json([
                     'status' => 'failed'
@@ -750,7 +836,7 @@ class OfferOrderController extends Controller
     //     }
     // }
 
-    public function phonepeVerify(Request $request)
+    public function phonepeVerify(Request $request, BrevoMailService $brevoMailService)
     {
         $orderId = $request->query('order_id');
 
@@ -799,6 +885,8 @@ class OfferOrderController extends Controller
         $paymentId = $data['paymentDetails'][0]['transactionId'] ?? null;
         $paymentMode = $data['paymentDetails'][0]['paymentMode'] ?? null;
 
+        $order = OfferOrder::find($log->order_id);
+
         if ($state === 'COMPLETED') {
 
             $order = OfferOrder::find($log->order_id);
@@ -816,6 +904,30 @@ class OfferOrderController extends Controller
                 'payment_mode' => $paymentMode,
             ]);
 
+            try {
+                $successPayment = view('emails.payment_success', [
+                    'customer' => $order
+                ])->render();
+
+                $brevoMailService
+                    ->sendBrevoHtmlMail(
+                        $order->email,
+                        $order->full_name,
+                        'Payment Success',
+                        $successPayment
+                    );
+            } catch (\Exception $e) {
+
+                Log::error('EMAIL Success', [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'customer_id' => $customer->id ?? null,
+                    'invoice_id' => $invoice->id ?? null,
+                    'trace' => $e->getTraceAsString(),
+                ]);
+            }
+
             return redirect(
                 config('services.app.frontend_url') . '/staroffer-response?status=success'
             );
@@ -826,6 +938,30 @@ class OfferOrderController extends Controller
             $log->update([
                 'tx_status' => 'failed',
             ]);
+
+            try {
+                $failePayment = view('emails.payment_failed', [
+                    'customer' => $order
+                ])->render();
+
+                $brevoMailService
+                    ->sendBrevoHtmlMail(
+                        $order->email,
+                        $order->full_name,
+                        'Payment Failed',
+                        $failePayment
+                    );
+            } catch (\Exception $e) {
+
+                Log::error('EMAIL FAILED', [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'customer_id' => $customer->id ?? null,
+                    'invoice_id' => $invoice->id ?? null,
+                    'trace' => $e->getTraceAsString(),
+                ]);
+            }
 
             return redirect(
                 config('services.app.frontend_url') . '/staroffer'

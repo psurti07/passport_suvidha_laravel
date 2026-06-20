@@ -48,67 +48,67 @@
 
             <!-- Normal Passport 36 Page Customer -->
             <div class="card p-6 bg-white rounded-lg">
-                <h2 class="text-md md:text-lg font-medium text-primary-blue mb-6">Normal 36 Pages - Customer</h2>
+                <h2 class="text-md md:text-lg font-medium text-primary-blue mb-6">Normal Pages - Customer</h2>
                 <div class="h-[400px]">
-                    <canvas id="normal36CustChart"></canvas>
+                    <canvas id="normalPageCustChart"></canvas>
                 </div>
             </div>
 
             <!-- Normal Passport 36 Page Lead -->
             <div class="card p-6 bg-white rounded-lg">
-                <h2 class="text-md md:text-lg font-medium text-primary-blue mb-6">Normal 36 Pages - Lead</h2>
+                <h2 class="text-md md:text-lg font-medium text-primary-blue mb-6">Normal Pages - Lead</h2>
                 <div class="h-[400px]">
-                    <canvas id="normal36LeadChart"></canvas>
+                    <canvas id="normalPageLeadChart"></canvas>
                 </div>
             </div>
 
             <!-- Tatkal Passport 36 Page Customer -->
             <div class="card p-6 bg-white rounded-lg">
-                <h2 class="text-md md:text-lg font-medium text-primary-blue mb-6">Tatkal 36 Pages - Customer</h2>
+                <h2 class="text-md md:text-lg font-medium text-primary-blue mb-6">Tatkal Pages - Customer</h2>
                 <div class="h-[400px]">
-                    <canvas id="tatkal36CustChart"></canvas>
+                    <canvas id="tatkalPageCustChart"></canvas>
                 </div>
             </div>
 
             <!-- Tatkal Passport 36 Page Lead -->
             <div class="card p-6 bg-white rounded-lg">
-                <h2 class="text-md md:text-lg font-medium text-primary-blue mb-6">Tatkal 36 Pages - Lead</h2>
+                <h2 class="text-md md:text-lg font-medium text-primary-blue mb-6">Tatkal Pages - Lead</h2>
                 <div class="h-[400px]">
-                    <canvas id="tatkal36LeadChart"></canvas>
+                    <canvas id="tatkalPageLeadChart"></canvas>
                 </div>
             </div>
 
             <!-- Normal Passport 60 Page Customer -->
-            <div class="card p-6 bg-white rounded-lg">
+            {{-- <div class="card p-6 bg-white rounded-lg">
                 <h2 class="text-md md:text-lg font-medium text-primary-blue mb-6">Normal 60 Pages - Customer</h2>
                 <div class="h-[400px]">
                     <canvas id="normal60CustChart"></canvas>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Normal Passport 60 Page Lead -->
-            <div class="card p-6 bg-white rounded-lg">
+            {{-- <div class="card p-6 bg-white rounded-lg">
                 <h2 class="text-md md:text-lg font-medium text-primary-blue mb-6">Normal 60 Pages - Lead</h2>
                 <div class="h-[400px]">
                     <canvas id="normal60LeadChart"></canvas>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Tatkal Passport 60 Page Customer -->
-            <div class="card p-6 bg-white rounded-lg">
+            {{-- <div class="card p-6 bg-white rounded-lg">
                 <h2 class="text-md md:text-lg font-medium text-primary-blue mb-6">Tatkal 60 Pages - Customer</h2>
                 <div class="h-[400px]">
                     <canvas id="tatkal60CustChart"></canvas>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Tatkal Passport 60 Page Lead -->
-            <div class="card p-6 bg-white rounded-lg">
+            {{-- <div class="card p-6 bg-white rounded-lg">
                 <h2 class="text-md md:text-lg font-medium text-primary-blue mb-6">Tatkal 60 Pages - Lead</h2>
                 <div class="h-[400px]">
                     <canvas id="tatkal60LeadChart"></canvas>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 
@@ -194,28 +194,16 @@
                         data: @json($normalleaddata)
                     },
                     {
-                        id: 'normal36CustChart',
-                        label: 'Normal 36p',
-                        labels: @json($normal36pcustlabel),
-                        data: @json($normal36pcustdata)
+                        id: 'normalPageCustChart',
+                        label: 'Normal page',
+                        labels: @json($normalpagecustlabel),
+                        data: @json($normalpagecustdata)
                     },
                     {
-                        id: 'normal36LeadChart',
-                        label: 'Normal 36p',
-                        labels: @json($normal36pleadlabel),
-                        data: @json($normal36pleaddata)
-                    },
-                    {
-                        id: 'normal60CustChart',
-                        label: 'Normal 60p',
-                        labels: @json($normal60pcustlabel),
-                        data: @json($normal60pcustdata)
-                    },
-                    {
-                        id: 'normal60LeadChart',
-                        label: 'Normal 60p',
-                        labels: @json($normal60pleadlabel),
-                        data: @json($normal60pleaddata)
+                        id: 'normalPageLeadChart',
+                        label: 'Normal page',
+                        labels: @json($normalpageleadlabel),
+                        data: @json($normalpageleaddata)
                     },
                     {
                         id: 'tatkalCustChart',
@@ -230,29 +218,17 @@
                         data: @json($tatkalleaddata)
                     },
                     {
-                        id: 'tatkal36CustChart',
-                        label: 'Tatkal 36p',
-                        labels: @json($tatkal36pcustlabel),
-                        data: @json($tatkal36pleaddata)
+                        id: 'tatkalPageCustChart',
+                        label: 'Tatkal page',
+                        labels: @json($tatkalpagecustlabel),
+                        data: @json($tatkalpageleaddata)
                     },
                     {
-                        id: 'tatkal36LeadChart',
-                        label: 'Tatkal 36p',
-                        labels: @json($tatkal36pleadlabel),
-                        data: @json($tatkal36pleaddata)
+                        id: 'tatkalPageLeadChart',
+                        label: 'Tatkal page',
+                        labels: @json($tatkalpageleadlabel),
+                        data: @json($tatkalpageleaddata)
                     },
-                    {
-                        id: 'tatkal60CustChart',
-                        label: 'Tatkal 60p',
-                        labels: @json($tatkal60pcustlabel),
-                        data: @json($tatkal60pcustdata)
-                    },
-                    {
-                        id: 'tatkal60LeadChart',
-                        label: 'Tatkal 60p',
-                        labels: @json($tatkal60pleadlabel),
-                        data: @json($tatkal60pleaddata)
-                    }
                 ];
 
                 // Create Charts

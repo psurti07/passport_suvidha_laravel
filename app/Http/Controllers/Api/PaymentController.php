@@ -10,11 +10,13 @@ use Illuminate\Http\Request;
 use Razorpay\Api\Api;
 use App\Models\RazorpayLog;
 use App\Models\Service;
+use App\Services\BrevoMailService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\SmsService;
 use App\Services\FacebookConversionService;
 use App\Services\ConversionTrackingService;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PaymentController extends Controller
 {
@@ -82,7 +84,7 @@ class PaymentController extends Controller
             'mobile' => $customer?->mobile_number,
         ]);
     }
-    public function verifyPayment(Request $request)
+    public function verifyPayment(Request $request, BrevoMailService $brevoMailService)
     {
         $api = new Api(config("services.razorpay.key"), config("services.razorpay.secret"));
 
@@ -218,6 +220,110 @@ class PaymentController extends Controller
 
             DB::commit();
 
+            try {
+
+                Log::info('EMAIL PROCESS STARTED', [
+                    'customer_id' => $customer->id ?? null,
+                    'email' => $customer->email ?? null,
+                ]);
+
+                if ($customer && !empty($customer->email)) {
+
+                    Log::info('Customer found for email sending', [
+                        'customer_id' => $customer->id,
+                        'email' => $customer->email,
+                    ]);
+
+                    $invoice = Invoice::with(['customer', 'order', 'service'])
+                        ->find($invoice->id);
+
+                    Log::info('Invoice loaded', [
+                        'invoice_id' => $invoice?->id,
+                        'invoice_no' => $invoice?->inv_no,
+                    ]);
+
+                    $pdf = InvoiceController::getInvoicePdf($customer->id);
+
+                    Log::info('Invoice PDF generated successfully');
+
+                    $attachments = [
+                        [
+                            'name' =>  'Passport-Suvidha-Invoice-' . time() . '.pdf',
+                            'content' => base64_encode($pdf->output()),
+                            'contentType' => 'application/pdf'
+                        ]
+                    ];
+
+                    Log::info('Attachment prepared', [
+                        'file_name' => 'Passport-Suvidha-Invoice-' . time() . '.pdf',
+                    ]);
+
+                    Log::info('Email HTML rendered successfully');
+
+                    /*
+                    |------------------------------------------------
+                    |1. WELCOME EMAIL (NO ATTACHMENT)
+                    |------------------------------------------------
+                    */
+
+                    $welcomeHtml = view('emails.welcome', [
+                        'customer' => $customer
+                    ])->render();
+
+                    $brevoMailService
+                        ->sendBrevoHtmlMail(
+                            $customer->email,
+                            $customer->first_name,
+                            'Welcome to Passport Suvidha',
+                            $welcomeHtml
+                        );
+
+                    /*
+                    |------------------------------------------------
+                    | 2. INVOICE EMAIL (WITH ATTACHMENT)
+                    |------------------------------------------------
+                    */
+                    $invoiceHtml  = view(
+                        'emails.invoice',
+                        [
+                            'customer' => $customer,
+                            'invoice' => $invoice,
+                            'payment_id' => $request->razorpay_payment_id,
+                            'payment_date' => now(),
+                        ]
+                    )->render();
+
+                    $brevoMailService->sendBrevoHtmlMailWithAttachments(
+                        $customer->email,
+                        $customer->first_name,
+                        'Payment Successful',
+                        $invoiceHtml,
+                        $attachments
+                    );
+
+                    Log::info('EMAIL SENT SUCCESSFULLY', [
+                        'customer_id' => $customer->id,
+                        'invoice_no' => $invoice->inv_no,
+                        'email' => $customer->email,
+                    ]);
+                } else {
+
+                    Log::warning('Email skipped because customer email is missing', [
+                        'customer_id' => $customer->id ?? null
+                    ]);
+                }
+            } catch (\Exception $e) {
+
+                Log::error('EMAIL FAILED', [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'customer_id' => $customer->id ?? null,
+                    'invoice_id' => $invoice->id ?? null,
+                    'trace' => $e->getTraceAsString(),
+                ]);
+            }
+
             $facebookService = new FacebookConversionService();
             $facebookService->send($customer);
 
@@ -303,6 +409,30 @@ class PaymentController extends Controller
                 // $smsService->sendSms($customer->mobile_number, $message);
             }
 
+            try {
+                $failePayment = view('emails.payment_failed', [
+                    'customer' => $customer
+                ])->render();
+
+                $brevoMailService
+                    ->sendBrevoHtmlMail(
+                        $customer->email,
+                        $customer->first_name,
+                        'Payment Failed',
+                        $failePayment
+                    );
+            } catch (\Exception $e) {
+
+                Log::error('EMAIL FAILED', [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'customer_id' => $customer->id ?? null,
+                    'invoice_id' => $invoice->id ?? null,
+                    'trace' => $e->getTraceAsString(),
+                ]);
+            }
+
             return response()->json([
                 'success' => false,
                 'message' => 'Payment verification failed'
@@ -310,7 +440,7 @@ class PaymentController extends Controller
         }
     }
 
-    public function paymentFailed(Request $request)
+    public function paymentFailed(Request $request, BrevoMailService $brevoMailService)
     {
         $request->validate([
             'razorpay_order_id' => 'required',
@@ -362,6 +492,30 @@ class PaymentController extends Controller
 
                 // $message = str_replace('{#var_method#}', $paymentMode ?? '', $smsMessage['message']);
                 // $smsService->sendSms($mobileNumber, $message);
+            }
+
+            try {
+                $failePayment = view('emails.payment_failed', [
+                    'customer' => $customer
+                ])->render();
+
+                $brevoMailService
+                    ->sendBrevoHtmlMail(
+                        $customer->email,
+                        $customer->first_name,
+                        'Payment Failed',
+                        $failePayment
+                    );
+            } catch (\Exception $e) {
+
+                Log::error('EMAIL FAILED', [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'customer_id' => $customer->id ?? null,
+                    'invoice_id' => $invoice->id ?? null,
+                    'trace' => $e->getTraceAsString(),
+                ]);
             }
         }
 

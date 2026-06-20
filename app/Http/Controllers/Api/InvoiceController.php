@@ -90,4 +90,73 @@ class InvoiceController extends Controller
 
         return $pdf->stream($fileName);
     }
+
+    public static function getInvoicePdf($customer_id)
+    {
+        $customer = Customer::find($customer_id);
+
+        $invoice = Invoice::where('customer_id', $customer->id)
+            ->latest()
+            ->first();
+
+        $service = $invoice
+            ? Service::find($invoice->service_id)
+            : null;
+
+        $order = ApplicationOrder::where('customer_id', $customer->id)
+            ->latest()
+            ->first();
+
+        $paymentLog = $order
+            ? RazorpayLog::where('order_id', $order->id)->latest()->first()
+            : null;
+
+        $payment_amount = $paymentLog->order_amount
+            ?? $order->amount
+            ?? $invoice->total_amount
+            ?? 0;
+
+        $payment_mode = $paymentLog->payment_mode ?? 'Online';
+
+        $payment_id = $paymentLog->reference_id
+            ?? $order->payment_id
+            ?? 'N/A';
+
+        $customer_state = strtoupper($customer->state);
+        $is_gujarat = $customer_state === 'GUJARAT';
+
+        $gov_amount = $service->service_gov_amount ?? 0;
+        $service_charges = $service->service_charges ?? 0;
+
+        $gst_rate = 18;
+
+        if ($is_gujarat) {
+            $cgst = round($service_charges * 0.09, 2);
+            $sgst = round($service_charges * 0.09, 2);
+            $igst = 0;
+        } else {
+            $cgst = 0;
+            $sgst = 0;
+            $igst = round($service_charges * 0.18, 2);
+        }
+
+        $grand_total = $gov_amount + $service_charges + $cgst + $sgst + $igst;
+
+        return PDF::loadView('invoice.passport_invoice', [
+            'customer'        => $customer,
+            'service'         => $service,
+            'invoice'         => $invoice,
+            'payment_amount'  => $payment_amount,
+            'payment_mode'    => $payment_mode,
+            'payment_id'      => $payment_id,
+            'gov_amount'      => $gov_amount,
+            'service_charges' => $service_charges,
+            'cgst'            => $cgst,
+            'sgst'            => $sgst,
+            'igst'            => $igst,
+            'grand_total'     => $grand_total,
+            'is_gujarat'      => $is_gujarat,
+            'gst_rate'        => $gst_rate,
+        ]);
+    }
 }
