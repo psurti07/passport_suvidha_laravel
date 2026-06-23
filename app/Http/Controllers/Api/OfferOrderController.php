@@ -73,7 +73,7 @@ class OfferOrderController extends Controller
         //     ], 200);
         // }
 
-        $finalAmount = floor($amount);
+        $finalAmount = $amount;
 
         $testNumbers = array_map('trim', explode(',', config('services.testnumbers.test_numbers', '')));
 
@@ -621,7 +621,7 @@ class OfferOrderController extends Controller
             $merchantOrderId =
                 'order_' . strtoupper(Str::random(8));
 
-            $finalAmount = floor($order->amount);
+            $finalAmount = $order->amount;
 
             $testNumbers = array_map('trim', explode(',', config('services.testnumbers.test_numbers', '')));
 
@@ -631,7 +631,7 @@ class OfferOrderController extends Controller
 
             $payload = [
                 "merchantOrderId" => $merchantOrderId,
-                "amount" => (int) round($finalAmount * 100),
+                "amount" => $finalAmount * 100,
                 "expireAfter" => 1200,
 
                 "metaInfo" => [
@@ -680,7 +680,7 @@ class OfferOrderController extends Controller
             PhonepeLog::create([
                 'offer_type'   => $order->offer_type,
                 'order_id'     => $order->id,
-                'order_amount' => $finalAmount,
+                'order_amount' => $order->amount,
                 'reference_id' => $merchantOrderId,
                 'tx_status'    => 'pending',
                 'service_type' => $request->service_code,

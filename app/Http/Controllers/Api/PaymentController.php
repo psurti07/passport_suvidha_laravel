@@ -45,7 +45,7 @@ class PaymentController extends Controller
         }
 
         $amount = $service->service_total_amount;
-        $finalAmount = floor($amount);
+        $finalAmount = $amount;
 
         $testNumbers = explode(',', config('services.testnumbers.test_numbers', ''));
 
@@ -189,7 +189,7 @@ class PaymentController extends Controller
             $govAmount = $service->service_gov_amount ?? 0;
             $serviceCharges = $service->service_charges ?? 0;
 
-            $netAmount = $govAmount + $serviceCharges;
+            $netAmount = $serviceCharges;
 
             $cgst = $sgst = $igst = 0;
 
