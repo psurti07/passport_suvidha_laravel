@@ -19,7 +19,7 @@ class ServiceSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Service::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        
+
         // Normal Passport (36 pages)
         Service::create([
             'service_name' => 'Normal Passport (36 pages)',
@@ -29,7 +29,7 @@ class ServiceSeeder extends Seeder
             'service_gst' => 180,
             'service_total_amount' => 2680,
         ]);
-        
+
         // Normal Passport (60 pages)
         Service::create([
             'service_name' => 'Normal Passport (60 pages)',
@@ -39,7 +39,7 @@ class ServiceSeeder extends Seeder
             'service_gst' => 180,
             'service_total_amount' => 3180,
         ]);
-        
+
         // Tatkal Passport (36 pages)
         Service::create([
             'service_name' => 'Tatkal Passport (36 pages)',
@@ -49,7 +49,7 @@ class ServiceSeeder extends Seeder
             'service_gst' => 180,
             'service_total_amount' => 4680,
         ]);
-        
+
         // Tatkal Passport (60 pages)
         Service::create([
             'service_name' => 'Tatkal Passport (60 pages)',

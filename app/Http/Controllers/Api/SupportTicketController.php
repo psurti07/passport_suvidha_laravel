@@ -53,7 +53,7 @@ class SupportTicketController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\JsonResponse|TicketResource
    */
-  public function store(Request $request)
+  public function store(Request $request, BrevoMailService $brevoMailService)
   {
     $customer = Auth::guard('sanctum')->user();
 
@@ -132,210 +132,30 @@ class SupportTicketController extends Controller
 
       if (!empty($ticketData['email'])) {
 
-        $html = '
-            <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Support Ticket Received</title>
-  </head>
+        $supportTicketMail = view('emails.support', [
+          'ticketData' => $ticketData,
+          'ticket'     => $ticket,
+          'subject' => $ticket->subject,
+        ])->render();
 
-  <body
-    style="
-      margin: 0;
-      padding: 20px 10px;
-      background: #eef2f7;
-      font-family: Arial, Helvetica, sans-serif;
-    "
-  >
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td align="center">
-
-          <!-- MAIN CONTAINER -->
-          <table
-            width="100%"
-            cellpadding="0"
-            cellspacing="0"
-            border="0"
-            style="
-              max-width: 600px;
-              background: #ffffff;
-              border-radius: 14px;
-              overflow: hidden;
-              box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            "
-          >
-
-            <!-- HEADER -->
-            <tr>
-              <td
-                align="center"
-                style="background: rgb(0 51 102); padding: 18px;"
-              >
-                <img
-                  src="https://passportsuvidha.com/logo/passport-suvidha.png"
-                  width="120"
-                  alt="Passport Suvidha"
-                  style="display:block; padding-top:20px"
-                />
-              </td>
-            </tr>
-
-            <!-- BODY -->
-            <tr>
-              <td style="padding: 34px 38px;">
-
-                <!-- TITLE -->
-                <div
-                  style="
-                    font-size: 26px;
-                    font-weight: 700;
-                    color: #002c85;
-                    margin-bottom: 12px;
-                  "
-                >
-                  Support Ticket Received
-                </div>
-
-                <!-- DESCRIPTION -->
-                <div style="color:#4d5b72;font-size:15px;line-height:26px;">
-                  Dear <strong>{{customer_name}}</strong>,<br><br>
-
-                  Thank you for contacting Passport Suvidha.
-                  We have successfully received your support request.
-                </div>
-
-                <!-- DIVIDER -->
-                <div style="border-top:1px dashed #d8e0ed;margin:24px 0;"></div>
-
-                <!-- TICKET BOX -->
-                <table
-                  width="100%"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  style="
-                    border: 1px solid #dbe6ff;
-                    background: #f8fbff;
-                    border-radius: 10px;
-                  "
-                >
-                  <tr>
-                    <td style="padding: 18px 22px;">
-
-                      <!-- TICKET ID -->
-                      <table width="100%" cellpadding="0" cellspacing="0">
-                        <tr>
-                          <td style="font-size:14px;color:#1e2a3d;">
-                            <strong>Ticket ID:</strong> {{ticket_id}}
-                          </td>
-                        </tr>
-                      </table>
-
-                      <div style="height:14px;"></div>
-
-                      <!-- SUBJECT -->
-                      <table width="100%" cellpadding="0" cellspacing="0">
-                        <tr>
-                          <td style="font-size:14px;color:#1e2a3d;">
-                            <strong>Subject:</strong> {{ticket_subject}}
-                          </td>
-                        </tr>
-                      </table>
-
-                      <div style="height:14px;"></div>
-
-                      <!-- DATE -->
-                      <table width="100%" cellpadding="0" cellspacing="0">
-                        <tr>
-                          <td style="font-size:14px;color:#1e2a3d;">
-                            <strong>Date:</strong> {{ticket_date}}
-                          </td>
-                        </tr>
-                      </table>
-
-                    </td>
-                  </tr>
-                </table>
-
-                <!-- NOTE -->
-                <div style="margin-top:20px;color:#4d5b72;font-size:15px;">
-                  Our support team will contact you shortly.
-                </div>
-
-                <div style="margin-top:18px;color:#3d4b63;font-size:14px;">
-                  Regards,<br>
-                  <strong>Passport Suvidha Support Team</strong>
-                </div>
-
-              </td>
-            </tr>
-
-            <!-- FOOTER -->
-            <tr>
-              <td
-                align="center"
-                style="background: rgba(0, 0, 0, 0); padding: 20px;"
-              >
-                <div style="color:#4d5b72;font-size:12px;">
-                  © {{year}} Passport Suvidha. All rights reserved.
-                </div>
-              </td>
-            </tr>
-
-          </table>
-
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
-            ';
-
-        $html = str_replace(
-          [
-            '{{customer_name}}',
-            '{{ticket_id}}',
-            '{{ticket_subject}}',
-            '{{ticket_date}}',
-            '{{year}}'
-          ],
-          [
-            $ticketData['name'],
-            $ticket->id,
-            $ticket->subject,
-            now()->format('d M Y h:i A'),
-            date('Y')
-          ],
-          $html
-        );
-
-        $brevoMailService = new BrevoMailService();
-
-        $response = $brevoMailService->sendBrevoHtmlMail(
+        $brevoMailService->sendBrevoHtmlMail(
           $ticketData['email'],
           $ticketData['name'],
           'Support Ticket Received - #' . $ticket->id,
-          $html
+          $supportTicketMail
         );
-
-        if (!$response['success']) {
-          Log::error('BREVO MAIL FAILED', [
-            'ticket_id' => $ticket->id,
-            'response'  => $response,
-          ]);
-        }
       }
     } catch (\Exception $e) {
 
-      Log::error('BREVO MAIL ERROR', [
-        'ticket_id' => $ticket->id,
-        'message'   => $e->getMessage(),
+      Log::error('SUPPORT TICKET EMAIL FAILED', [
+        'message'     => $e->getMessage(),
+        'file'        => $e->getFile(),
+        'line'        => $e->getLine(),
+        'ticket_id'   => $ticket->id ?? null,
+        'customer_id' => $ticket->customer_id ?? null,
+        'trace'       => $e->getTraceAsString(),
       ]);
     }
-
     /*
     |--------------------------------------------------------------------------
     | Send SMS
