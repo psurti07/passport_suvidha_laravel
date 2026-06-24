@@ -38,10 +38,12 @@ class InvoiceController extends Controller
             $paymentLog = RazorpayLog::where('order_id', $order->id)->orderBy('id', 'desc')->first();
         }
 
-        $payment_amount = $paymentLog->order_amount
-            ?? $order->amount
-            ?? $invoice->total_amount
-            ?? 0;
+        // $payment_amount = $paymentLog->order_amount
+        //     ?? $order->amount
+        //     ?? $invoice->total_amount
+        //     ?? 0;
+
+        $payment_amount = $invoice->net_amount;
 
         $payment_mode = optional($paymentLog)->payment_mode ?? 'Online';
 
@@ -52,22 +54,22 @@ class InvoiceController extends Controller
         $customer_state = strtoupper($customer->state);
         $is_gujarat = ($customer_state == 'GUJARAT');
 
-        $gov_amount = $service->service_gov_amount ?? 0;
+        // $gov_amount = $service->service_gov_amount ?? 0;
         $service_charges = $service->service_charges ?? 0;
 
         $gst_rate = 18;
 
-        if ($is_gujarat) {
-            $cgst = round($service_charges * ($gst_rate / 2) / 100, 2);
-            $sgst = round($service_charges * ($gst_rate / 2) / 100, 2);
-            $igst = 0;
-        } else {
-            $cgst = 0;
-            $sgst = 0;
-            $igst = round($service_charges * ($gst_rate / 100), 2);
-        }
+        // if ($is_gujarat) {
+        //     $cgst = round($service_charges * ($gst_rate / 2) / 100, 2);
+        //     $sgst = round($service_charges * ($gst_rate / 2) / 100, 2);
+        //     $igst = 0;
+        // } else {
+        //     $cgst = 0;
+        //     $sgst = 0;
+        //     $igst = round($service_charges * ($gst_rate / 100), 2);
+        // }
 
-        $grand_total = $gov_amount + $service_charges + $cgst + $sgst + $igst;
+        // $grand_total = $gov_amount + $service_charges + $cgst + $sgst + $igst;
 
         $pdf = PDF::loadView('invoice.passport_invoice', [
             'customer'       => $customer,
@@ -76,12 +78,12 @@ class InvoiceController extends Controller
             'payment_amount' => $payment_amount,
             'payment_mode'   => $payment_mode,
             'payment_id'     => $payment_id,
-            'gov_amount'      => $gov_amount,
+            'net_amount'      => $invoice->net_amount,
             'service_charges' => $service_charges,
-            'cgst'           => $cgst,
-            'sgst'           => $sgst,
-            'igst'           => $igst,
-            'grand_total'    => $grand_total,
+            'cgst'            => $invoice->cgst,
+            'sgst'            => $invoice->sgst,
+            'igst'            => $invoice->igst,
+            'grand_total'     => $invoice->total_amount,
             'is_gujarat'     => $is_gujarat,
             'gst_rate'       => $gst_rate,
         ]);
@@ -125,22 +127,22 @@ class InvoiceController extends Controller
         $customer_state = strtoupper($customer->state);
         $is_gujarat = $customer_state === 'GUJARAT';
 
-        $gov_amount = $service->service_gov_amount ?? 0;
+        // $gov_amount = $service->service_gov_amount ?? 0;
         $service_charges = $service->service_charges ?? 0;
 
         $gst_rate = 18;
 
-        if ($is_gujarat) {
-            $cgst = round($service_charges * 0.09, 2);
-            $sgst = round($service_charges * 0.09, 2);
-            $igst = 0;
-        } else {
-            $cgst = 0;
-            $sgst = 0;
-            $igst = round($service_charges * 0.18, 2);
-        }
+        // if ($is_gujarat) {
+        //     $cgst = round($service_charges * 0.09, 2);
+        //     $sgst = round($service_charges * 0.09, 2);
+        //     $igst = 0;
+        // } else {
+        //     $cgst = 0;
+        //     $sgst = 0;
+        //     $igst = round($service_charges * 0.18, 2);
+        // }
 
-        $grand_total = $gov_amount + $service_charges + $cgst + $sgst + $igst;
+        // $grand_total = $gov_amount + $service_charges + $cgst + $sgst + $igst;
 
         return PDF::loadView('invoice.passport_invoice', [
             'customer'        => $customer,
@@ -149,12 +151,12 @@ class InvoiceController extends Controller
             'payment_amount'  => $payment_amount,
             'payment_mode'    => $payment_mode,
             'payment_id'      => $payment_id,
-            'gov_amount'      => $gov_amount,
+            'net_amount'      => $invoice->net_amount,
             'service_charges' => $service_charges,
-            'cgst'            => $cgst,
-            'sgst'            => $sgst,
-            'igst'            => $igst,
-            'grand_total'     => $grand_total,
+            'cgst'            => $invoice->cgst,
+            'sgst'            => $invoice->sgst,
+            'igst'            => $invoice->igst,
+            'grand_total'     => $invoice->total_amount,
             'is_gujarat'      => $is_gujarat,
             'gst_rate'        => $gst_rate,
         ]);

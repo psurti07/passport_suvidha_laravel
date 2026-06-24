@@ -186,7 +186,7 @@ class PaymentController extends Controller
 
             $service = $customer->service;
 
-            $govAmount = $service->service_gov_amount ?? 0;
+            // $govAmount = $service->service_gov_amount ?? 0;
             $serviceCharges = $service->service_charges ?? 0;
 
             $netAmount = $serviceCharges;

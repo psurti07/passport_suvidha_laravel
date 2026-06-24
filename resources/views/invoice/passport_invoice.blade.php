@@ -260,25 +260,24 @@
             </td>
         </tr>
 
-        <tr>
+        {{-- <tr>
             <td class="center">1</td>
-            {{-- <td>Government Passport Fee</td> --}}
             <td>Government Passport Fee: <br>{{ $service->service_name ?? 'Passport Assistance Service' }}</td>
             <td class="right">₹{{ number_format($gov_amount, 2) }}</td>
             <td class="right">0%</td>
             <td class="center">-</td>
             <td class="right">0.00</td>
             <td class="right">₹{{ number_format($gov_amount, 2) }}</td>
-        </tr>
+        </tr> --}}
 
         @if (strtolower(trim($is_gujarat)))
             <tr>
-                <td class="center">2</td>
+                <td class="center">1</td>
 
                 <td>Service Charges</td>
 
 
-                <td class="right">₹{{ number_format($service_charges, 2) }}</td>
+                <td class="right">₹{{ number_format($net_amount, 2) }}</td>
 
                 <td class="right">{{ $gst_rate / 2 }}%</td>
 
@@ -286,7 +285,7 @@
                 <td class="right">₹{{ number_format($cgst, 2) }}</td>
 
                 <td class="right">
-                    ₹{{ number_format($service_charges + $cgst, 2) }}
+                    ₹{{ number_format($net_amount + $cgst, 2) }}
                 </td>
             </tr>
             <tr>
@@ -309,13 +308,13 @@
             </tr>
         @else
             <tr>
-                <td class="center">2</td>
+                <td class="center">1</td>
 
                 <td>Service Charges</td>
 
                 {{-- <td class="center">998599</td> --}}
 
-                <td class="right">₹{{ number_format($service_charges, 2) }}</td>
+                <td class="right">₹{{ number_format($net_amount, 2) }}</td>
 
                 <td class="right">{{ $gst_rate }}%</td>
 
@@ -331,7 +330,7 @@
             <td colspan="2" class="right">TOTAL</td>
 
             <td class="right">
-                ₹{{ number_format($gov_amount + $service_charges, 2) }}
+                ₹{{ number_format($net_amount, 2) }}
             </td>
             <td></td>
             <td></td>
@@ -339,7 +338,7 @@
             <td class="right">₹{{ number_format($cgst + $sgst + $igst, 2) }}</td>
 
             <td class="right">
-                ₹{{ number_format($gov_amount + $service_charges + $cgst + $sgst + $igst, 2) }}
+                ₹{{ number_format($net_amount + $cgst + $sgst + $igst, 2) }}
             </td>
         </tr>
         {{--
