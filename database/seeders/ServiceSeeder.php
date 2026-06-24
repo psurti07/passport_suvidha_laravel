@@ -25,9 +25,9 @@ class ServiceSeeder extends Seeder
             'service_name' => 'Normal Passport (36 pages)',
             'service_code' => 'NP36',
             'service_gov_amount' => 1500,
-            'service_charges' => 999,
-            'service_gst' => 179.82,
-            'service_total_amount' => 1178.82,
+            'service_charges' => 846.61,
+            'service_gst' => 152.39,
+            'service_total_amount' => 999,
         ]);
 
         // Normal Passport (60 pages)
@@ -35,9 +35,9 @@ class ServiceSeeder extends Seeder
             'service_name' => 'Normal Passport (60 pages)',
             'service_code' => 'NP60',
             'service_gov_amount' => 2000,
-            'service_charges' => 999,
-            'service_gst' => 179.82,
-            'service_total_amount' => 1178.82,
+            'service_charges' => 846.61,
+            'service_gst' => 152.39,
+            'service_total_amount' => 999,
         ]);
 
         // Tatkal Passport (36 pages)
@@ -45,9 +45,9 @@ class ServiceSeeder extends Seeder
             'service_name' => 'Tatkal Passport (36 pages)',
             'service_code' => 'TP36',
             'service_gov_amount' => 3500,
-            'service_charges' => 999,
-            'service_gst' => 179.82,
-            'service_total_amount' => 1178.82,
+            'service_charges' => 846.61,
+            'service_gst' => 152.39,
+            'service_total_amount' => 999,
         ]);
 
         // Tatkal Passport (60 pages)
@@ -55,9 +55,9 @@ class ServiceSeeder extends Seeder
             'service_name' => 'Tatkal Passport (60 pages)',
             'service_code' => 'TP60',
             'service_gov_amount' => 4000,
-            'service_charges' => 999,
-            'service_gst' => 179.82,
-            'service_total_amount' => 1178.82,
+            'service_charges' => 846.61,
+            'service_gst' => 152.39,
+            'service_total_amount' => 999,
         ]);
     }
 }

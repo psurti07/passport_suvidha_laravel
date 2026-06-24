@@ -338,7 +338,7 @@
             <td class="right">₹{{ number_format($cgst + $sgst + $igst, 2) }}</td>
 
             <td class="right">
-                ₹{{ number_format($net_amount + $cgst + $sgst + $igst, 2) }}
+                ₹{{ number_format($grand_total, 2) }}
             </td>
         </tr>
         {{--

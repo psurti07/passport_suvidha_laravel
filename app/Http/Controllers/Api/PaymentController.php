@@ -194,8 +194,8 @@ class PaymentController extends Controller
             $cgst = $sgst = $igst = 0;
 
             if (strtoupper($customer->state) == 'GUJARAT') {
-                $cgst = round($serviceCharges * 0.09, 2);
-                $sgst = round($serviceCharges * 0.09, 2);
+                $cgst = round($serviceCharges * 0.09, 4);
+                $sgst = round($serviceCharges * 0.09, 4);
                 $total = $netAmount + $cgst + $sgst;
             } else {
                 $igst = round($serviceCharges * 0.18, 2);

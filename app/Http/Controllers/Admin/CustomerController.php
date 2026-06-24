@@ -397,12 +397,24 @@ class CustomerController extends Controller
                 return $customer;
             }
 
-            $netAmount = $validated['amount'] ?? 0;
+            // $netAmount = $validated['amount'] ?? 0;
 
             $cardNumber = $validated['card_number'] ?? generateCardNumber();
             $paymentId  = $validated['payment_id'] ?? generatePaymentId();
 
             $cgst = $sgst = $igst = 0;
+
+            // if (strtolower($validated['state']) === 'gujarat') {
+            //     $cgst = round($netAmount * 0.09, 2);
+            //     $sgst = round($netAmount * 0.09, 2);
+            // } else {
+            //     $igst = round($netAmount * 0.18, 2);
+            // }
+
+            // $totalAmount = $netAmount + $cgst + $sgst + $igst;
+
+            $totalAmount = $validated['amount'] ?? 0;
+            $netAmount = ($totalAmount * 100) / 118;
 
             if (strtolower($validated['state']) === 'gujarat') {
                 $cgst = round($netAmount * 0.09, 2);
@@ -411,7 +423,6 @@ class CustomerController extends Controller
                 $igst = round($netAmount * 0.18, 2);
             }
 
-            $totalAmount = $netAmount + $cgst + $sgst + $igst;
 
             $order = ApplicationOrder::create([
                 'customer_id' => $customer->id,
