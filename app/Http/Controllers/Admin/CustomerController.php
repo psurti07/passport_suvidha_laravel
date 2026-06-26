@@ -219,6 +219,8 @@ class CustomerController extends Controller
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
             // 'place_of_birth' => 'required|string|max:255',
+            'education_qualification' => 'required|string|max:255',
+            'employment_type' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
             'card_number' => 'nullable|string|size:16',
             'amount' => 'nullable|numeric|min:1',
@@ -294,6 +296,8 @@ class CustomerController extends Controller
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
+            'education_qualification' => 'required|string|max:255',
+            'employment_type' => 'required|string|max:255',
             // 'place_of_birth' => 'required|string|max:255',
         ];
 
@@ -342,6 +346,8 @@ class CustomerController extends Controller
             'state' => 'required|string|max:255',
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
+            'education_qualification' => 'required|string|max:255',
+            'employment_type' => 'required|string|max:255',
             // 'place_of_birth' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
             'card_number' => 'nullable|string|size:16',

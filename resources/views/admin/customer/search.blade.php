@@ -215,6 +215,46 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div> --}}
+
+                                            <div>
+                                                <label for="education_qualification"
+                                                    class="block text-sm font-medium text-gray-700 mb-1"> Education
+                                                    Qualification
+                                                    <span class="text-red-500">*</span></label>
+                                                <select id="education_qualification" name="education_qualification"
+                                                    required
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
+                                                    <option value="" disabled selected>Select Education</option>
+                                                    <option value="Below 10th">Below 10th</option>
+                                                    <option value="10th Pass And Above">10th Pass And Above</option>
+                                                    <option value="Graduate And Above">Graduate And Above</option>
+                                                </select>
+                                                @error('education_qualification')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            <div>
+                                                <label for="employment_type"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Employment Type
+                                                    <span class="text-red-500">*</span></label>
+                                                <select id="employment_type" name="employment_type" required
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
+                                                    <option value="" disabled selected>Select Employment Type
+                                                    </option>
+                                                    <option value="Government">Government</option>
+                                                    <option value="Private">Private</option>
+                                                    <option value="Self Employed">Self Employede</option>
+                                                    <option value="Student">Student</option>
+                                                    <option value="Homemaker">Homemaker</option>
+                                                    <option value="Retired">Retired</option>
+                                                    <option value="Others">Others</option>
+                                                </select>
+                                                @error('employment_type')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
                                             <div>
                                                 <label for="nationality"
                                                     class="block text-sm font-medium text-gray-700 mb-1">Nationality <span
