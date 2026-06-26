@@ -70,7 +70,7 @@ class CustomerController extends Controller
             'address' => 'required|string',
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
-            'place_of_birth' => 'required|string|max:255',
+            // 'place_of_birth' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
             'payment_info_id' => 'required|numeric',
             'service_code' => 'required|string|max:255',
@@ -93,7 +93,7 @@ class CustomerController extends Controller
         $data = $validator->validated();
         $data['is_paid'] = $isPaid;
 
-        $nullableFields = ['address', 'gender', 'date_of_birth', 'place_of_birth', 'nationality', 'payment_info_id', 'service_code'];
+        $nullableFields = ['address', 'gender', 'date_of_birth', 'nationality', 'payment_info_id', 'service_code'];
         foreach ($nullableFields as $field) {
             if (!isset($data[$field])) {
                 $data[$field] = null;
@@ -155,7 +155,7 @@ class CustomerController extends Controller
             'address' => 'nullable|string',
             'gender' => 'nullable|in:male,female,other',
             'date_of_birth' => 'nullable|date',
-            'place_of_birth' => 'nullable|string|max:255',
+            // 'place_of_birth' => 'nullable|string|max:255',
             'nationality' => 'nullable|string|max:255',
             'service_code' => 'nullable|string|max:255',
         ];
@@ -164,7 +164,7 @@ class CustomerController extends Controller
             $rules['address'] = 'required|string';
             $rules['gender'] = 'required|in:male,female,other';
             $rules['date_of_birth'] = 'required|date';
-            $rules['place_of_birth'] = 'required|string|max:255';
+            // $rules['place_of_birth'] = 'required|string|max:255';
             $rules['nationality'] = 'required|string|max:255';
         }
 
@@ -315,7 +315,7 @@ class CustomerController extends Controller
             'state' => 'required|string|max:100',
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
-            'place_of_birth' => 'required|string|max:255',
+            // 'place_of_birth' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {

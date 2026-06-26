@@ -30,7 +30,7 @@ class Customer extends Authenticatable
         'state',
         'gender',
         'date_of_birth',
-        'place_of_birth',
+        // 'place_of_birth',
         'nationality',
         'is_paid',
         'registration_step',
@@ -59,7 +59,7 @@ class Customer extends Authenticatable
     {
         return "{$this->first_name} {$this->last_name}";
     }
-    
+
     // Relationships
     public function service(): BelongsTo
     {
@@ -129,7 +129,7 @@ class Customer extends Authenticatable
         }
 
         if ($service) {
-            $query->where('services.service_code', $service);
+            $query->where('services.service_code', 'like', $service . '%');
         }
 
         return $query->groupByRaw('YEAR(customers.created_at), MONTH(customers.created_at), DAY(customers.created_at)')

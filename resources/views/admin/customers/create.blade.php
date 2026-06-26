@@ -298,7 +298,7 @@
                                         </p>
                                     @enderror
                                 </div>
-                                <div>
+                                {{-- <div>
                                     <label for="place_of_birth" class="block text-sm font-semibold text-gray-900">
                                         Place of Birth
                                         <span class="text-red-500" x-show="isPaid">*</span>
@@ -322,7 +322,7 @@
                                             {{ $message }}
                                         </p>
                                     @enderror
-                                </div>
+                                </div> --}}
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

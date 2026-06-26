@@ -294,7 +294,7 @@
                                     </p>
                                 @enderror
                             </div>
-                            <div>
+                            {{-- <div>
                                 <label for="place_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Place of
                                     Birth <span class="text-red-500">*</span></label>
                                 <input type="text" id="place_of_birth" name="place_of_birth"
@@ -311,7 +311,7 @@
                                         {{ $message }}
                                     </p>
                                 @enderror
-                            </div>
+                            </div> --}}
                         </div>
                         {{-- Save Button --}}
                         <div class="pt-6 mt-4 border-t border-gray-200 flex justify-end">
@@ -599,7 +599,7 @@
                             showAppointmentFields: false,
                             filteredMessages: [],
                             remarks: '{{ old('
-                                                                                                                                        remark ') }}',
+                                                                                                                                                                    remark ') }}',
                             isInitialLoad: true,
 
                             init() {
@@ -881,7 +881,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse ($customer->applicationProgress()->orderBy('created_at', 'desc')->get() as
-                                            $progress)
+                                                $progress)
                                     <tr class="hover:bg-gray-50 transition duration-150">
                                         <td class="px-6 py-4">
                                             @php
