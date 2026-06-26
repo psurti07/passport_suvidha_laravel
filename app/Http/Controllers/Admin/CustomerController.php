@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 use App\Services\SmsService;
+use App\Models\MessageTemplate;
+use App\Services\BrevoMailService;
 
 class CustomerController extends Controller
 {
@@ -188,7 +190,7 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function store(Request $request, SmsService $smsService)
+    public function store(Request $request, SmsService $smsService, BrevoMailService $brevoMailService)
     {
         $baseRules = [
             'first_name' => 'required|string|max:255',
@@ -231,7 +233,7 @@ class CustomerController extends Controller
 
         $validated['is_paid'] = $isPaid;
 
-        $this->createOrConvert($validated, null, 'create', $smsService);
+        $this->createOrConvert($validated, null, 'create', $smsService, $brevoMailService);
 
         return back()->with('success', 'Customer created successfully');
     }
@@ -326,7 +328,7 @@ class CustomerController extends Controller
             ->with('success', 'Customer deleted successfully.');
     }
 
-    public function convertToCustomer(Request $request, Customer $customer, SmsService $smsService)
+    public function convertToCustomer(Request $request, Customer $customer, SmsService $smsService, BrevoMailService $brevoMailService)
     {
         if ($customer->is_paid) {
             return back()->with('error', 'Already converted');
@@ -361,7 +363,7 @@ class CustomerController extends Controller
         $validated = $validator->validated();
         $validated['is_paid'] = true;
 
-        $this->createOrConvert($validated, $customer, 'convert', $smsService);
+        $this->createOrConvert($validated, $customer, 'convert', $smsService, $brevoMailService);
 
         return redirect()
             ->route('admin.customers.show', $customer->id)
@@ -369,9 +371,9 @@ class CustomerController extends Controller
             ->withFragment('info');
     }
 
-    private function createOrConvert($validated, $customer = null, $type = 'create', SmsService $smsService)
+    private function createOrConvert($validated, $customer = null, $type = 'create', SmsService $smsService, BrevoMailService $brevoMailService)
     {
-        return DB::transaction(function () use ($validated, $customer, $type, $smsService) {
+        return DB::transaction(function () use ($validated, $customer, $type, $smsService, $brevoMailService) {
 
             $isPaid = $validated['is_paid'];
 
@@ -460,6 +462,28 @@ class CustomerController extends Controller
                     $customer->mobile_number,
                     'account-sms'
                 );
+            }
+
+            if (!empty($customer->email)) {
+                $messageTemplate = MessageTemplate::where('slug', 'application-submitted-sms')->first();
+                if ($messageTemplate) {
+                    $html = view(
+                        'emails.sms_message',
+                        [
+                            'customer' => $customer,
+                            'message'  => $messageTemplate->message,
+                        ]
+                    )->render();
+
+                    $subject = 'Welcome to Passport Suvidha';
+
+                    $brevoMailService->sendBrevoHtmlMail(
+                        $customer->email,
+                        $customer->first_name,
+                        $subject,
+                        $html
+                    );
+                }
             }
 
             return $customer;
