@@ -294,6 +294,102 @@
                                     </p>
                                 @enderror
                             </div>
+                            <div>
+                                <label for="education_qualification" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Education Qualification <span class="text-red-500">*</span>
+                                </label>
+
+                                <select id="education_qualification" name="education_qualification" required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm
+        @error('education_qualification') border-red-300 text-red-900 focus:border-red-500 focus:ring-red-500 @enderror">
+
+                                    <option value="">Select Education Qualification</option>
+
+                                    <option value="Below 10th"
+                                        {{ old('education_qualification', $customer->education_qualification) == 'Below 10th' ? 'selected' : '' }}>
+                                        Below 10th
+                                    </option>
+
+                                    <option value="10th Pass And Above"
+                                        {{ old('education_qualification', $customer->education_qualification) == '10th Pass And Above' ? 'selected' : '' }}>
+                                        10th Pass And Above
+                                    </option>
+
+                                    <option value="Graduate And Above"
+                                        {{ old('education_qualification', $customer->education_qualification) == 'Graduate And Above' ? 'selected' : '' }}>
+                                        Graduate And Above
+                                    </option>
+                                </select>
+
+                                @error('education_qualification')
+                                    <p class="mt-1 text-sm text-red-600 flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="employment_type" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Employment Type <span class="text-red-500">*</span>
+                                </label>
+
+                                <select id="employment_type" name="employment_type" required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm
+        @error('employment_type') border-red-300 text-red-900 focus:border-red-500 focus:ring-red-500 @enderror">
+
+                                    <option value="">Select Employment Type</option>
+
+                                    <option value="Government"
+                                        {{ old('employment_type', $customer->employment_type) == 'Government' ? 'selected' : '' }}>
+                                        Government
+                                    </option>
+
+                                    <option value="Private"
+                                        {{ old('employment_type', $customer->employment_type) == 'Private' ? 'selected' : '' }}>
+                                        Private
+                                    </option>
+
+                                    <option value="Self Employed"
+                                        {{ old('employment_type', $customer->employment_type) == 'Self Employed' ? 'selected' : '' }}>
+                                        Self Employed
+                                    </option>
+
+                                    <option value="Student"
+                                        {{ old('employment_type', $customer->employment_type) == 'Student' ? 'selected' : '' }}>
+                                        Student
+                                    </option>
+
+                                    <option value="Homemaker"
+                                        {{ old('employment_type', $customer->employment_type) == 'Homemaker' ? 'selected' : '' }}>
+                                        Homemaker
+                                    </option>
+
+                                    <option value="Retired"
+                                        {{ old('employment_type', $customer->employment_type) == 'Retired' ? 'selected' : '' }}>
+                                        Retired
+                                    </option>
+
+                                    <option value="Others"
+                                        {{ old('employment_type', $customer->employment_type) == 'Others' ? 'selected' : '' }}>
+                                        Others
+                                    </option>
+                                </select>
+
+                                @error('employment_type')
+                                    <p class="mt-1 text-sm text-red-600 flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
                             {{-- <div>
                                 <label for="place_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Place of
                                     Birth <span class="text-red-500">*</span></label>
@@ -599,7 +695,7 @@
                             showAppointmentFields: false,
                             filteredMessages: [],
                             remarks: '{{ old('
-                                                                                                                                                                    remark ') }}',
+                                                                                                                                                                                                                                                        remark ') }}',
                             isInitialLoad: true,
 
                             init() {
@@ -881,7 +977,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse ($customer->applicationProgress()->orderBy('created_at', 'desc')->get() as
-                                                $progress)
+                                                            $progress)
                                     <tr class="hover:bg-gray-50 transition duration-150">
                                         <td class="px-6 py-4">
                                             @php
