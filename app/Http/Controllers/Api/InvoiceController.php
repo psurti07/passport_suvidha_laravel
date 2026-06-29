@@ -9,7 +9,7 @@ use App\Models\Invoice;
 use App\Models\RazorpayLog;
 use App\Models\Service;
 use Illuminate\Support\Facades\Log;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InvoiceController extends Controller
 {
@@ -58,7 +58,7 @@ class InvoiceController extends Controller
     {
         $data = $this->getInvoiceData($customer_id);
 
-        $pdf = PDF::loadView('invoice.passport_invoice', $data);
+        $pdf = Pdf::loadView('invoice.passport_invoice', $data);
 
         $fileName = "Invoice_" .
             ($data['invoice']->inv_no ?? time()) .
@@ -73,6 +73,6 @@ class InvoiceController extends Controller
 
         $data = $controller->getInvoiceData($customer_id);
 
-        return PDF::loadView('invoice.passport_invoice', $data);
+        return Pdf::loadView('invoice.passport_invoice', $data);
     }
 }
