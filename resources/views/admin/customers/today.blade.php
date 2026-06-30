@@ -65,7 +65,8 @@
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
                                     </th>
 
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment
+                                        Date
                                     </th>
 
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
@@ -148,8 +149,8 @@
                         name: 'is_paid'
                     },
                     {
-                        data: 'created_at',
-                        name: 'created_at'
+                        data: 'payment_date',
+                        name: 'payment_date'
                     },
                     {
                         data: 'actions',

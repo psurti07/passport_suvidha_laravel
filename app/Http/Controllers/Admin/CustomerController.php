@@ -44,11 +44,11 @@ class CustomerController extends Controller
             'email',
             'mobile_number',
             'is_paid',
-            'created_at'
+            'payment_date'
         ])->where('is_paid', 1);
 
         if ($request->from_date && $request->to_date) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('payment_date', [
                 $from . ' 00:00:00',
                 $to . ' 23:59:59'
             ]);
@@ -82,8 +82,8 @@ class CustomerController extends Controller
                 }
             })
 
-            ->editColumn('created_at', function ($row) {
-                return $row->created_at->format('d M Y, h:i A');
+            ->editColumn('payment_date', function ($row) {
+                return $row->payment_date->format('d M Y, h:i A');
             })
 
             ->addColumn('actions', function ($row) {
@@ -124,8 +124,8 @@ class CustomerController extends Controller
             'email',
             'mobile_number',
             'is_paid',
-            'created_at'
-        ])->whereDate('created_at', now())->where('is_paid', 1);
+            'payment_date'
+        ])->whereDate('payment_date', now())->where('is_paid', 1);
 
         if ($request->service) {
             $query->where('service_id', $request->service);
@@ -155,8 +155,8 @@ class CustomerController extends Controller
                 }
             })
 
-            ->editColumn('created_at', function ($row) {
-                return $row->created_at->format('d M Y, h:i A');
+            ->editColumn('payment_date', function ($row) {
+                return $row->payment_date->format('d M Y, h:i A');
             })
 
             ->addColumn('actions', function ($row) {
@@ -386,8 +386,13 @@ class CustomerController extends Controller
             $customerData = collect($validated)->except([
                 'amount',
                 'card_number',
-                'payment_id'
+                'payment_id',
+                'payment_date',
             ])->toArray();
+
+
+            $customerData['payment_date'] = $isPaid ? now() : null;
+
 
             $customerData['registration_step'] = $isPaid ? 4 : 1;
 
@@ -436,7 +441,7 @@ class CustomerController extends Controller
                 'customer_id' => $customer->id,
                 'card_number' => $cardNumber,
                 'amount' => $totalAmount,
-                'payment_id' => $paymentId
+                'payment_id' => $paymentId,
             ]);
 
             $invoice = Invoice::create([
