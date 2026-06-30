@@ -86,19 +86,22 @@ class ReportController extends Controller
         if ($request->ajax()) {
 
             $query = Customer::selectRaw("
-                YEAR(created_at) as year,
-                MONTH(created_at) as month_no,
-                MONTHNAME(created_at) as month_name,
+                YEAR(payment_date) as year,
+                MONTH(payment_date) as month_no,
+                MONTHNAME(payment_date) as month_name,
                 COUNT(*) as total
             ")
                 ->where('is_paid', 1)
+                ->whereNotNull('payment_date')
                 ->groupByRaw("
-                YEAR(created_at),
-                MONTH(created_at),
-                MONTHNAME(created_at)
+                YEAR(payment_date),
+                MONTH(payment_date),
+                MONTHNAME(payment_date)
             ");
 
-            $grandTotal = Customer::where('is_paid', 1)->count();
+            $grandTotal = Customer::where('is_paid', 1)
+                ->whereNotNull('payment_date')
+                ->count();
 
             return DataTables::of($query)
                 ->editColumn('datewise_date', function ($row) {
@@ -125,9 +128,9 @@ class ReportController extends Controller
         $end = $end->gt(now()) ? now() : $end;
 
         // get grouped leads
-        $leads = Customer::selectRaw("DATE(created_at) as date, COUNT(*) as total")
+        $leads = Customer::selectRaw("DATE(payment_date) as date, COUNT(*) as total")
             ->where('is_paid', 1)
-            ->whereBetween('created_at', [$start, $end])
+            ->whereBetween('payment_date', [$start, $end])
             ->groupBy('date')
             ->pluck('total', 'date');
 
