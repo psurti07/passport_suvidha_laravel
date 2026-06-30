@@ -231,7 +231,8 @@ class PaymentController extends Controller
 
             $customer->update([
                 'is_paid' => 1,
-                'is_active' => 1
+                'is_active' => 1,
+                'payment_date' => now()
             ]);
 
             // Log::info('RAZORPAY LOG UPDATED SUCCESS 12');

@@ -108,7 +108,7 @@
                         class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-gray-200 gap-y-2">
                         <p class="text-sm text-gray-600">
                             Registration on: <strong
-                                class="text-gray-800 font-semibold">{{ $customer->created_at ? $customer->created_at->format('d M Y, H:i A') : 'N/A' }}</strong>
+                                class="text-gray-800 font-semibold">{{ $customer->payment_date ? $customer->payment_date->format('d M Y, H:i A') : 'N/A' }}</strong>
                         </p>
                         @if ($invoice)
                             <a href="{{ route('admin.invoices.download', $invoice->id) }}"
@@ -695,7 +695,7 @@
                             showAppointmentFields: false,
                             filteredMessages: [],
                             remarks: '{{ old('
-                                                                                                                                                                                                                                                        remark ') }}',
+                                                                                                                                                                                                                                                                                                                                                                                                    remark ') }}',
                             isInitialLoad: true,
 
                             init() {
@@ -977,7 +977,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse ($customer->applicationProgress()->orderBy('created_at', 'desc')->get() as
-                                                            $progress)
+                                                                                $progress)
                                     <tr class="hover:bg-gray-50 transition duration-150">
                                         <td class="px-6 py-4">
                                             @php
