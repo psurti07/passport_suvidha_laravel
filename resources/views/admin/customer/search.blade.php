@@ -224,10 +224,22 @@
                                                 <select id="education_qualification" name="education_qualification"
                                                     required
                                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
-                                                    <option value="" disabled selected>Select Education</option>
-                                                    <option value="Below 10th">Below 10th</option>
-                                                    <option value="10th Pass And Above">10th Pass And Above</option>
-                                                    <option value="Graduate And Above">Graduate And Above</option>
+                                                    <option value="">Select Education Qualification</option>
+
+                                    <option value="Below 10th"
+                                        {{ old('education_qualification', $customer->education_qualification) == 'Below 10th' ? 'selected' : '' }}>
+                                        Below 10th
+                                    </option>
+
+                                    <option value="10th Pass And Above"
+                                        {{ old('education_qualification', $customer->education_qualification) == '10th Pass And Above' ? 'selected' : '' }}>
+                                        10th Pass And Above
+                                    </option>
+
+                                    <option value="Graduate And Above"
+                                        {{ old('education_qualification', $customer->education_qualification) == 'Graduate And Above' ? 'selected' : '' }}>
+                                        Graduate And Above
+                                    </option>
                                                 </select>
                                                 @error('education_qualification')
                                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -240,15 +252,42 @@
                                                     <span class="text-red-500">*</span></label>
                                                 <select id="employment_type" name="employment_type" required
                                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
-                                                    <option value="" disabled selected>Select Employment Type
-                                                    </option>
-                                                    <option value="Government">Government</option>
-                                                    <option value="Private">Private</option>
-                                                    <option value="Self Employed">Self Employede</option>
-                                                    <option value="Student">Student</option>
-                                                    <option value="Homemaker">Homemaker</option>
-                                                    <option value="Retired">Retired</option>
-                                                    <option value="Others">Others</option>
+                                                    <option value="">Select Employment Type</option>
+
+                                    <option value="Government"
+                                        {{ old('employment_type', $customer->employment_type) == 'Government' ? 'selected' : '' }}>
+                                        Government
+                                    </option>
+
+                                    <option value="Private"
+                                        {{ old('employment_type', $customer->employment_type) == 'Private' ? 'selected' : '' }}>
+                                        Private
+                                    </option>
+
+                                    <option value="Self Employed"
+                                        {{ old('employment_type', $customer->employment_type) == 'Self Employed' ? 'selected' : '' }}>
+                                        Self Employed
+                                    </option>
+
+                                    <option value="Student"
+                                        {{ old('employment_type', $customer->employment_type) == 'Student' ? 'selected' : '' }}>
+                                        Student
+                                    </option>
+
+                                    <option value="Homemaker"
+                                        {{ old('employment_type', $customer->employment_type) == 'Homemaker' ? 'selected' : '' }}>
+                                        Homemaker
+                                    </option>
+
+                                    <option value="Retired"
+                                        {{ old('employment_type', $customer->employment_type) == 'Retired' ? 'selected' : '' }}>
+                                        Retired
+                                    </option>
+
+                                    <option value="Others"
+                                        {{ old('employment_type', $customer->employment_type) == 'Others' ? 'selected' : '' }}>
+                                        Others
+                                    </option>
                                                 </select>
                                                 @error('employment_type')
                                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
