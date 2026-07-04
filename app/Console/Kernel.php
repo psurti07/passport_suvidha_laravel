@@ -16,9 +16,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('remarketing:rcs')->everyFifteenMinutes();
-        $schedule->command('remarketing:interakt')->everyFifteenMinutes();
-        $schedule->command('remarketing:sms')->everyFifteenMinutes();
+        // $schedule->command('remarketing:rcs')->everyFifteenMinutes();
+        // $schedule->command('remarketing:interakt')->everyFifteenMinutes();
+        // $schedule->command('remarketing:sms')->everyFifteenMinutes();
     }
 
     /**
