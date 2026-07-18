@@ -194,7 +194,7 @@
             <td colspan="3" class="left">
                 <strong>Mobile :</strong> +91 7486046591<br />
                 <strong>Email :</strong> support@passportsuvidha.com<br />
-                <strong>GSTIN :</strong> 24AAHFU1938J1ZZ
+                <strong>GSTIN :</strong> 24ABEFB9441P1Z1
             </td>
         </tr>
 
