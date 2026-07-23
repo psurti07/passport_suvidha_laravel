@@ -24,8 +24,7 @@ class LeadController extends Controller
         $query = Customer::with('service')->select([
             'id',
             'service_id',
-            'first_name',
-            'last_name',
+            'full_name',
             'email',
             'mobile_number',
             'is_paid',
@@ -58,7 +57,7 @@ class LeadController extends Controller
             })
 
             ->addColumn('customer_name', function ($row) {
-                return $row->first_name . ' ' . $row->last_name;
+                return $row->full_name;
             })
 
             ->editColumn('is_paid', function ($row) {
@@ -106,8 +105,7 @@ class LeadController extends Controller
         $query = Customer::select([
             'id',
             'service_id',
-            'first_name',
-            'last_name',
+            'full_name',
             'email',
             'mobile_number',
             'is_paid',
@@ -133,7 +131,7 @@ class LeadController extends Controller
             })
 
             ->addColumn('customer_name', function ($row) {
-                return $row->first_name . ' ' . $row->last_name;
+                return $row->full_name;
             })
 
             ->editColumn('is_paid', function ($row) {

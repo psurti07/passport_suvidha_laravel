@@ -89,7 +89,7 @@ class RazorpayLogController extends Controller
 
                     $customer = \App\Models\Customer::find($row->customer_id);
 
-                    $fullName = trim(($customer->first_name ?? '') . ' ' . ($customer->last_name ?? ''));
+                    $fullName = trim(($customer->full_name ?? ''));
 
                     return "
                         <div>

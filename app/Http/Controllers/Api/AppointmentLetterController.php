@@ -28,7 +28,7 @@ class AppointmentLetterController extends Controller
                 ->paginate(10);
         } else {
             // Get all appointment letters if no customer_id is provided
-            $appointmentLetters = AppointmentLetter::with(['customer:id,first_name,last_name', 'uploader:id,name'])
+            $appointmentLetters = AppointmentLetter::with(['customer:id,full_name', 'uploader:id,name'])
                 ->latest()
                 ->paginate(10);
         }
@@ -92,7 +92,7 @@ class AppointmentLetterController extends Controller
      */
     public function show($id)
     {
-        $appointmentLetter = AppointmentLetter::with(['customer:id,first_name,last_name', 'uploader:id,name'])
+        $appointmentLetter = AppointmentLetter::with(['customer:id,full_name', 'uploader:id,name'])
             ->findOrFail($id);
 
         return response()->json([

@@ -45,11 +45,8 @@ class ApplicationDocumentController extends Controller
             ->addIndexColumn()
 
             ->addColumn('customer_name', function ($row) {
-                $firstName = $row->customer->first_name ?? '';
-                $lastName  = $row->customer->last_name ?? '';
+                $fullName = $row->customer->full_name ?? '';
                 $email     = $row->customer->email ?? '';
-
-                $fullName = trim($firstName . ' ' . $lastName);
 
                 return '
                     <div>
@@ -79,8 +76,7 @@ class ApplicationDocumentController extends Controller
 
             ->filterColumn('customer_name', function ($query, $keyword) {
                 $query->whereHas('customer', function ($q) use ($keyword) {
-                    $q->where('first_name', 'like', "%{$keyword}%")
-                        ->orWhere('last_name', 'like', "%{$keyword}%")
+                    $q->where('full_name', 'like', "%{$keyword}%")
                         ->orWhere('email', 'like', "%{$keyword}%")
                         ->orWhere('mobile_number', 'like', "%{$keyword}%");
                 });

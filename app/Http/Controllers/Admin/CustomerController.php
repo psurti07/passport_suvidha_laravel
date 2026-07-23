@@ -39,8 +39,7 @@ class CustomerController extends Controller
         $query = Customer::with('service')->select([
             'id',
             'service_id',
-            'first_name',
-            'last_name',
+            'full_name',
             'email',
             'mobile_number',
             'is_paid',
@@ -73,7 +72,7 @@ class CustomerController extends Controller
             })
 
             ->addColumn('customer_name', function ($row) {
-                return $row->first_name . ' ' . $row->last_name;
+                return $row->full_name;
             })
 
             ->editColumn('is_paid', function ($row) {
@@ -119,8 +118,7 @@ class CustomerController extends Controller
         $query = Customer::select([
             'id',
             'service_id',
-            'first_name',
-            'last_name',
+            'full_name',
             'email',
             'mobile_number',
             'is_paid',
@@ -146,7 +144,7 @@ class CustomerController extends Controller
             })
 
             ->addColumn('customer_name', function ($row) {
-                return $row->first_name . ' ' . $row->last_name;
+                return $row->full_name;
             })
 
             ->editColumn('is_paid', function ($row) {
@@ -193,8 +191,7 @@ class CustomerController extends Controller
     public function store(Request $request, SmsService $smsService, BrevoMailService $brevoMailService)
     {
         $baseRules = [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'mobile_number' => [
                 'required',
                 'regex:/^[6-9][0-9]{9}$/',
@@ -275,8 +272,7 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $rules = [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'mobile_number' => [
                 'required',
                 'regex:/^[6-9][0-9]{9}$/',
@@ -490,7 +486,7 @@ class CustomerController extends Controller
 
                     $brevoMailService->sendBrevoHtmlMail(
                         $customer->email,
-                        $customer->first_name,
+                        $customer->full_name,
                         $subject,
                         $html
                     );
