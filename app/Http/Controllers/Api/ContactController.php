@@ -14,8 +14,7 @@ class ContactController extends Controller
     // public function create(Request $request, BrevoMailService $brevoMailService)
     // {
     //     $validated = $request->validate([
-    //         'first_name' => 'required|string',
-    //         'last_name' => 'required|string',
+    //         'full_name' => 'required|string',
     //         'email' => 'required|email|max:255',
     //         'subject' => 'required|string|max:255',
     //         'message' => 'required|string|max:255',
@@ -23,8 +22,7 @@ class ContactController extends Controller
     //     ]);
 
     //     $contact = Contact::create([
-    //         'first_name' => $validated['first_name'],
-    //         'last_name' => $validated['last_name'],
+    //         'full_name' => $validated['full_name'],
     //         'email' => $validated['email'],
     //         'subject' => $validated['subject'],
     //         'message' => $validated['message'],
@@ -89,8 +87,7 @@ class ContactController extends Controller
     public function create(Request $request, BrevoMailService $brevoMailService)
     {
         $validated = $request->validate([
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
+            'full_name' => 'required|string',
             'email' => 'required|email|max:255',
             'subject' => 'required|string|max:255',
             'message' => 'required|string|max:255',
@@ -98,8 +95,7 @@ class ContactController extends Controller
         ]);
 
         $contact = Contact::create([
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
+            'full_name' => $validated['full_name'],
             'email' => $validated['email'],
             'subject' => $validated['subject'],
             'message' => $validated['message'],
@@ -111,12 +107,12 @@ class ContactController extends Controller
             if (!empty($contact->email)) {
 
                 $contactMail = view('emails.support', [
-                    'ticketData' => ['name' => $contact->first_name . ' ' . $contact->last_name,],
+                    'ticketData' => ['name' => $contact->full_name],
                     'ticket' => null,
                     'subject' => $contact->subject,
                 ])->render();
 
-                $response = $brevoMailService->sendBrevoHtmlMail($contact->email, $contact->first_name . ' ' . $contact->last_name, 'Contact Enquiry Received', $contactMail);
+                $response = $brevoMailService->sendBrevoHtmlMail($contact->email, $contact->full_name, 'Contact Enquiry Received', $contactMail);
                 if (!$response['success']) {
 
                     Log::error('CONTACT ENQUIRY EMAIL FAILED', [

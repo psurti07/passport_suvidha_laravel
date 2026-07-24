@@ -6,7 +6,7 @@
 </h2>
 
 <p style="font-size:15px;color:#555;">
-    Dear <b>{{ $customer->first_name }} {{ $customer->last_name }}</b>,
+    Dear <b>{{ $customer->full_name }}</b>,
 </p>
 
 <div style="background:#f7f9fc;border:1px solid #e3e8ef;border-radius:10px;padding:25px;">

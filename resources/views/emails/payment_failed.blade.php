@@ -9,7 +9,7 @@
         @if ($customer->full_name)
             Dear <b>{{ $customer->full_name }}</b>,
         @else
-            Dear <b>{{ $customer->first_name }} {{ $customer->last_name }}</b>,
+            Dear <b>{{ $customer->full_name }}</b>,
         @endif
     </p>
 

@@ -38,7 +38,7 @@ class FacebookConversionService
                         'fn' => [
                             hash(
                                 'sha256',
-                                strtolower($customer->first_name)
+                                strtolower($customer->full_name)
                             )
                         ],
 

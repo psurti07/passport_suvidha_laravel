@@ -20,20 +20,20 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="first_name" class="block text-sm font-semibold text-gray-900">
-                                    First Name
+                                <label for="full_name" class="block text-sm font-semibold text-gray-900">
+                                    Full Name
                                     <span class="text-red-500 ml-1">*</span>
                                 </label>
                                 <div class="relative group">
-                                    <input type="text" id="first_name" name="first_name"
-                                        value="{{ old('first_name', $customer->first_name) }}" required
+                                    <input type="text" id="full_name" name="full_name"
+                                        value="{{ old('full_name', $customer->full_name) }}" required
                                         placeholder="Enter first name"
                                         class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                         hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                         transition-all duration-200 placeholder-gray-400
-                                        @error('first_name') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                        @error('full_name') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
                                 </div>
-                                @error('first_name')
+                                @error('full_name')
                                     <p class="mt-1 text-sm text-red-600 flex items-center">
                                         <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"

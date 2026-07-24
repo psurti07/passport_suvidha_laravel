@@ -52,8 +52,7 @@
                     <div class="flex justify-between">
                         <dt class="text-sm font-medium text-gray-500">Customer</dt>
                         <dd class="text-sm text-gray-900 font-semibold">
-                            {{ $scheduleSlot->customer->first_name ?? 'N/A' }}
-                            {{ $scheduleSlot->customer->last_name ?? 'N/A' }}
+                            {{ $scheduleSlot->customer->full_name ?? 'N/A' }}
                         </dd>
                     </div>
                     <div class="flex justify-between">

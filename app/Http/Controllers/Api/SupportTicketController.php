@@ -78,7 +78,7 @@ class SupportTicketController extends Controller
       $validatedData = $validator->validated();
 
       $customerName = trim(
-        "{$customer->first_name} {$customer->last_name}"
+        "{$customer->full_name}"
       );
 
       if (empty($customerName)) {
@@ -269,7 +269,7 @@ class SupportTicketController extends Controller
 
     if ($customer) {
 
-      $name = trim("{$customer->first_name} {$customer->last_name}");
+      $name = trim("{$customer->full_name}");
 
       if (empty($name)) {
         $name = explode('@', $customer->email)[0] ?? "Customer";

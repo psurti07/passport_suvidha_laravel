@@ -19,8 +19,7 @@ class Customer extends Authenticatable
 
     protected $fillable = [
         'service_id',
-        'first_name',
-        'last_name',
+        'full_name',
         'mobile_number',
         'fbclid',
         'email',
@@ -61,7 +60,7 @@ class Customer extends Authenticatable
 
     public function getFullNameAttribute()
     {
-        return "{$this->first_name} {$this->last_name}";
+        return "{$this->full_name}";
     }
 
     // Relationships

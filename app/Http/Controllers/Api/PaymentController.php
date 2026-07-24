@@ -74,7 +74,7 @@ class PaymentController extends Controller
 
         $customer = auth()->user();
 
-        $full_name = $customer?->first_name . ' ' . $customer?->last_name;
+        $full_name = $customer?->full_name;
 
         return response()->json([
             'id' => $order['id'],
@@ -334,7 +334,7 @@ class PaymentController extends Controller
                     $brevoMailService
                         ->sendBrevoHtmlMail(
                             $customer->email,
-                            $customer->first_name,
+                            $customer->full_name,
                             'Welcome to Passport Suvidha',
                             $welcomeHtml
                         );
@@ -356,7 +356,7 @@ class PaymentController extends Controller
 
                     $brevoMailService->sendBrevoHtmlMailWithAttachments(
                         $customer->email,
-                        $customer->first_name,
+                        $customer->full_name,
                         'Payment Successful',
                         $invoiceHtml,
                         $attachments
@@ -527,7 +527,7 @@ class PaymentController extends Controller
                 $brevoMailService
                     ->sendBrevoHtmlMail(
                         $customer->email,
-                        $customer->first_name,
+                        $customer->full_name,
                         'Payment Failed',
                         $failePayment
                     );
@@ -634,7 +634,7 @@ class PaymentController extends Controller
                 $brevoMailService
                     ->sendBrevoHtmlMail(
                         $customer->email,
-                        $customer->first_name,
+                        $customer->full_name,
                         'Payment Failed',
                         $failePayment
                     );
@@ -667,7 +667,7 @@ class PaymentController extends Controller
                 "phoneNumber" => $customer->mobile_number,
                 "countryCode" => "+91",
                 "traits" => [
-                    "name" => $customer->first_name . " " . $customer->last_name
+                    "name" => $customer->full_name
                 ],
                 "tags" => ["Payment Successful"]
 

@@ -23,8 +23,7 @@ class CustomerApiTest extends TestCase
     public function it_can_create_a_customer_with_minimum_fields()
     {
         $data = [
-            'first_name' => 'John',
-            'last_name' => 'Doe',
+            'full_name' => 'John Doe',
             'mobile_number' => '1234567890',
             'email' => 'john@example.com',
         ];
@@ -47,8 +46,7 @@ class CustomerApiTest extends TestCase
     {
         $customer = Customer::factory()->create();
         $data = [
-            'first_name' => 'Jane',
-            'last_name' => 'Smith',
+            'full_name' => 'Jane Smith',
             'mobile_number' => $customer->mobile_number,
             'email' => 'jane@example.com',
         ];
@@ -71,7 +69,7 @@ class CustomerApiTest extends TestCase
     {
         $response = $this->postJson('/api/customers', []);
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['first_name', 'last_name', 'mobile_number', 'email']);
+        $response->assertJsonValidationErrors(['full_name', 'mobile_number', 'email']);
     }
 
     /** @test */
@@ -79,8 +77,7 @@ class CustomerApiTest extends TestCase
     {
         $customer = Customer::factory()->create(['email' => 'john@example.com']);
         $data = [
-            'first_name' => 'John',
-            'last_name' => 'Doe',
+            'full_name' => 'John Doe',
             'mobile_number' => '1234567890',
             'email' => 'john@example.com',
         ];
@@ -94,8 +91,7 @@ class CustomerApiTest extends TestCase
     {
         // Step 1: Create customer (basic info)
         $data = [
-            'first_name' => 'Step',
-            'last_name' => 'User',
+            'full_name' => 'Step User',
             'mobile_number' => '9998887777',
             'email' => 'stepuser@example.com',
         ];

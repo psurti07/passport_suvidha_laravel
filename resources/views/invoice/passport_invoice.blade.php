@@ -203,7 +203,7 @@
                 <div class="section-heading">Bill To</div>
 
                 <strong>Name :</strong>
-                {{ $customer->first_name ?? '' }} {{ $customer->last_name ?? '' }}
+                {{ $customer->full_name ?? '' }}
                 <br />
 
                 <strong>Mobile :</strong>

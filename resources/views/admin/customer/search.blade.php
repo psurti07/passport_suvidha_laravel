@@ -67,9 +67,9 @@
                 <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                     <dt class="text-sm font-medium text-gray-500">Full Name</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {{ $customer->first_name ?? '' }} {{ $customer->last_name ?? 'N/A' }}
+                        {{ $customer->full_name ?? '' }}
                     </dd>
-                    {{-- Assuming first_name, last_name exist --}}
+                    {{-- Assuming full_name exist --}}
                 </div>
                 <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                     <dt class="text-sm font-medium text-gray-500">Email Address</dt>
