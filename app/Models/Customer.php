@@ -58,10 +58,10 @@ class Customer extends Authenticatable
         'deleted_at' => 'datetime',
     ];
 
-    public function getFullNameAttribute()
-    {
-        return "{$this->full_name}";
-    }
+    // public function getFullNameAttribute()
+    // {
+    //     return "{$this->full_name}";
+    // }
 
     // Relationships
     public function service(): BelongsTo
