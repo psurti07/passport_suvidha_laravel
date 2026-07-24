@@ -235,7 +235,7 @@ class CustomerController extends Controller
 
         $validated['is_paid'] = $isPaid;
 
-        $this->createOrConvert($validated, null, 'create', $smsService, $brevoMailService);
+        $this->createOrConvert($validated, $smsService, $brevoMailService, null, 'create');
 
         return back()->with('success', 'Customer created successfully');
     }
@@ -369,7 +369,7 @@ class CustomerController extends Controller
         $validated = $validator->validated();
         $validated['is_paid'] = true;
 
-        $this->createOrConvert($validated, $customer, 'convert', $smsService, $brevoMailService);
+        $this->createOrConvert($validated, $smsService, $brevoMailService, $customer, 'convert');
 
         return redirect()
             ->route('admin.customers.show', $customer->id)
@@ -377,7 +377,7 @@ class CustomerController extends Controller
             ->withFragment('info');
     }
 
-    private function createOrConvert($validated, $customer = null, $type = 'create', SmsService $smsService, BrevoMailService $brevoMailService)
+    private function createOrConvert($validated, SmsService $smsService, BrevoMailService $brevoMailService, $customer = null, $type = 'create')
     {
         return DB::transaction(function () use ($validated, $customer, $type, $smsService, $brevoMailService) {
 
