@@ -24,8 +24,7 @@ class DndController extends Controller
         $query = Customer::with('service')->select([
             'id',
             'service_id',
-            'first_name',
-            'last_name',
+            'full_name',
             'mobile_number',
             'is_dnd',
             'created_at'
@@ -51,7 +50,7 @@ class DndController extends Controller
             })
 
             ->addColumn('customer_name', function ($row) {
-                return $row->first_name . ' ' . $row->last_name;
+                return $row->full_name;
             })
 
             ->editColumn('created_at', function ($row) {
@@ -66,8 +65,7 @@ class DndController extends Controller
 
             ->filterColumn('customer_name', function ($query, $keyword) {
                 $query->where(function ($q) use ($keyword) {
-                    $q->where('first_name', 'like', "%{$keyword}%")
-                        ->orWhere('last_name', 'like', "%{$keyword}%");
+                    $q->where('full_name', 'like', "%{$keyword}%");
                 });
             })
 
@@ -78,7 +76,7 @@ class DndController extends Controller
                         ' . csrf_field() . '
                         ' . method_field('DELETE') . '
                         <button type="button" 
-                            onclick="confirmDelete(\'' . $row->first_name . ' Customer\', this.form)"
+                            onclick="confirmDelete(\'' . $row->full_name . ' Customer\', this.form)"
                             class="text-red-600 hover:text-red-900" 
                             title="Delete">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"

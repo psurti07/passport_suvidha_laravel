@@ -66,7 +66,7 @@
 
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ID</th>
 
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Full Name
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Name
                                     </th>
 
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile

@@ -263,7 +263,7 @@ class ApplicationProgressController extends Controller
     //         ], 404);
     //     }
 
-    //     $name = "$customer->first_name $customer->last_name";
+    //     $name = "$customer->full_name";
 
     //     $progressEntries = ApplicationProgress::with('status')
     //         ->where('customer_id', $customer->id)
@@ -304,7 +304,7 @@ class ApplicationProgressController extends Controller
             ], 404);
         }
 
-        $name = $customer->first_name . ' ' . $customer->last_name;
+        $name = $customer->full_name;
 
         $latestProgress = ApplicationProgress::where('customer_id', $customer->id)->orderByDesc('id')->first();
         $currentStage = null;

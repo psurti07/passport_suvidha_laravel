@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Customer Details - ' . ($customer->first_name ?? 'N/A'))
+@section('title', 'Customer Details - ' . ($customer->full_name ?? 'N/A'))
 
 @php
     // REMOVE PHP Helper function - Replaced by Alpine
@@ -12,7 +12,7 @@
     <div class="mb-6 flex justify-between items-center">
         <div>
             <h1 class="text-2xl font-bold text-gray-800 mt-2">CUSTOMER DETAILS</h1>
-            <p class="text-xl text-gray-700 font-medium mt-1">{{ strtoupper($customer->first_name ?? 'N/A') }} -
+            <p class="text-xl text-gray-700 font-medium mt-1">{{ strtoupper($customer->full_name ?? 'N/A') }} -
                 {{ $customer->mobile_number ?? 'N/A' }}
             </p>
         </div>
@@ -127,31 +127,13 @@
                         @method('PUT')
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                             <div>
-                                <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">First Name
+                                <label for="full_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name
                                     <span class="text-red-500">*</span></label>
-                                <input type="text" id="first_name" name="first_name"
-                                    value="{{ old('first_name', $customer->first_name) }}" required
+                                <input type="text" id="full_name" name="full_name"
+                                    value="{{ old('full_name', $customer->full_name) }}" required
                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
-                                    @error('first_name') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
-                                @error('first_name')
-                                    <p class="mt-1 text-sm text-red-600 flex items-center">
-                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        {{ $message }}
-                                    </p>
-                                @enderror
-                            </div>
-                            <div>
-                                <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">Last Name
-                                    <span class="text-red-500">*</span></label>
-                                <input type="text" id="last_name" name="last_name"
-                                    value="{{ old('last_name', $customer->last_name ?? '') }}" required
-                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
-                                    @error('last_name') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
-                                @error('last_name')
+                                    @error('full_name') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                                @error('full_name')
                                     <p class="mt-1 text-sm text-red-600 flex items-center">
                                         <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
@@ -1163,7 +1145,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="button"
-                                            onclick="confirmDelete('{{ $customer->first_name }} Customer', this.form)"
+                                            onclick="confirmDelete('{{ $customer->full_name }} Customer', this.form)"
                                             class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">

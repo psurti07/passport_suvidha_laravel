@@ -22,8 +22,7 @@ class ContactController extends Controller
 
         $query = Contact::select([
             'id',
-            'first_name',
-            'last_name',
+            'full_name',
             'email',
             'mobile',
             'subject',
@@ -40,7 +39,7 @@ class ContactController extends Controller
             ->addIndexColumn()
 
             ->addColumn('name', function ($row) {
-                return $row->first_name . ' ' . $row->last_name;
+                return $row->full_name;
             })
 
             ->editColumn('created_at', function ($row) {
@@ -56,7 +55,7 @@ class ContactController extends Controller
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
                             <button type="button" 
-                                onclick="confirmDelete(\'' . $row->first_name . ' Contact Enquiry\', this.form)"
+                                onclick="confirmDelete(\'' . $row->full_name . ' Contact Enquiry\', this.form)"
                                 class="text-red-600 hover:text-red-900" 
                                 title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"

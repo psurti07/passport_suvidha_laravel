@@ -12,7 +12,7 @@
 <p style="
     font-size:15px;
     color:#555;">
-    Dear <b> {{ $customer->first_name }} {{ $customer->last_name }}</b>
+    Dear <b> {{ $customer->full_name }}</b>
 </p>
 
 <p style="

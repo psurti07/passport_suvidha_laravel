@@ -67,9 +67,9 @@
                 <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                     <dt class="text-sm font-medium text-gray-500">Full Name</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {{ $customer->first_name ?? '' }} {{ $customer->last_name ?? 'N/A' }}
+                        {{ $customer->full_name ?? '' }}
                     </dd>
-                    {{-- Assuming first_name, last_name exist --}}
+                    {{-- Assuming full_name exist --}}
                 </div>
                 <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                     <dt class="text-sm font-medium text-gray-500">Email Address</dt>
@@ -309,7 +309,7 @@
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
-                        <div>
+                        <!-- <div>
                             <label for="service_id"
                                 class="block text-sm font-medium text-gray-700 mb-1">Service
                                 Name <span class="text-red-500">*</span></label>
@@ -326,7 +326,7 @@
                             @error('service_id')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
-                        </div>
+                        </div> -->
                         <div>
                             <label for="card_number"
                                 class="block text-sm font-semibold text-gray-900">
@@ -342,7 +342,7 @@
                             </div>
                         </div>
                         <div>
-                            <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                            <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 mt-5">
                                 <div class="flex items-center">
                                     <label class="ml-2 block text-sm font-semibold text-gray-900">Note:
                                         18% GST

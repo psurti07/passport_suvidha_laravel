@@ -43,11 +43,8 @@ class AppointmentLetterController extends Controller
             ->addIndexColumn()
 
             ->addColumn('customer_name', function ($row) {
-                $firstName = $row->customer->first_name ?? '';
-                $lastName  = $row->customer->last_name ?? '';
+                $fullName = $row->customer->full_name ?? '';
                 $email     = $row->customer->email ?? '';
-
-                $fullName = trim($firstName . ' ' . $lastName);
 
                 return '
                     <div>
@@ -82,8 +79,7 @@ class AppointmentLetterController extends Controller
 
             ->filterColumn('customer_name', function ($query, $keyword) {
                 $query->whereHas('customer', function ($q) use ($keyword) {
-                    $q->where('first_name', 'like', "%{$keyword}%")
-                        ->orWhere('last_name', 'like', "%{$keyword}%")
+                    $q->where('full_name', 'like', "%{$keyword}%")
                         ->orWhere('email', 'like', "%{$keyword}%")
                         ->orWhere('mobile_number', 'like', "%{$keyword}%");
                 });
@@ -139,7 +135,7 @@ class AppointmentLetterController extends Controller
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
                             <button type="button" 
-                                onclick="confirmDelete(\'' . $row->customer->first_name . ' Appointment Letter\', this.form)"
+                                onclick="confirmDelete(\'' . $row->customer->full_name . ' Appointment Letter\', this.form)"
                                 class="text-red-600 hover:text-red-900" 
                                 title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
@@ -161,7 +157,7 @@ class AppointmentLetterController extends Controller
 
     public function create()
     {
-        $customers = Customer::orderBy('first_name')->get();
+        $customers = Customer::orderBy('full_name')->get();
         return view('admin.appointment-letters.create', compact('customers'));
     }
 
@@ -199,7 +195,7 @@ class AppointmentLetterController extends Controller
 
     public function edit(AppointmentLetter $appointmentLetter)
     {
-        $customers = Customer::orderBy('first_name')->get();
+        $customers = Customer::orderBy('full_name')->get();
         return view('admin.appointment-letters.edit', compact('appointmentLetter', 'customers'));
     }
 

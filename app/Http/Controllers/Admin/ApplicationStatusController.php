@@ -102,7 +102,7 @@ class ApplicationStatusController extends Controller
             ->addIndexColumn()
 
             ->addColumn('customer_name', function ($row) {
-                return $row->customer->first_name . ' ' . $row->customer->last_name;
+                return $row->customer->full_name;
             })
 
             ->addColumn('customer_mobile', function ($row) {
@@ -137,8 +137,7 @@ class ApplicationStatusController extends Controller
 
             ->filterColumn('customer_name', function ($query, $keyword) {
                 $query->whereHas('customer', function ($q) use ($keyword) {
-                    $q->where('first_name', 'like', "%{$keyword}%")
-                        ->orWhere('last_name', 'like', "%{$keyword}%");
+                    $q->where('full_name', 'like', "%{$keyword}%");
                 });
             })
 

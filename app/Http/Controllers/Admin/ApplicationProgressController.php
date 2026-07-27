@@ -32,8 +32,7 @@ class ApplicationProgressController extends Controller
         if ($request->has('search')) {
             $search = $request->search;
             $query->whereHas('customer', function ($q) use ($search) {
-                $q->where('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%")
+                $q->where('full_name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
                     ->orWhere('mobile_number', 'like', "%{$search}%");
             });
@@ -205,7 +204,7 @@ class ApplicationProgressController extends Controller
                 $brevoMailService
                     ->sendBrevoHtmlMailWithAttachments(
                         $customer->email,
-                        $customer->first_name,
+                        $customer->full_name,
                         $subject,
                         $html,
                         $attachments
@@ -214,7 +213,7 @@ class ApplicationProgressController extends Controller
                 $brevoMailService
                     ->sendBrevoHtmlMail(
                         $customer->email,
-                        $customer->first_name,
+                        $customer->full_name,
                         $subject,
                         $html
                     );

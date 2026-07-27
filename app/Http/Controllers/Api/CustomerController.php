@@ -48,8 +48,7 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $baseRules = [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'mobile_number' => [
                 'required',
                 'string',
@@ -129,8 +128,7 @@ class CustomerController extends Controller
         $isPaid = $request->input('is_paid', $customer->is_paid);
 
         $rules = [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'mobile_number' => [
                 'required',
                 'string',
@@ -212,8 +210,7 @@ class CustomerController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'mobile_number' => [
                 'required',
                 'string',
@@ -530,7 +527,7 @@ class CustomerController extends Controller
                 "phoneNumber" => $customer["mobile_number"],
                 "countryCode" => "+91",
                 "traits" => [
-                    "name" => $customer['first_name'] . " " . $customer['last_name']
+                    "name" => $customer['full_name']
                 ],
                 "tags" => ["Lead Gen"]
 

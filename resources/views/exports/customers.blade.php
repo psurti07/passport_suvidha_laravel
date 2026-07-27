@@ -58,7 +58,7 @@
             @forelse($customers as $customer)
                 <tr>
                     <td>{{ $customer->id }}</td>
-                    <td>{{ $customer->first_name }} {{ $customer->last_name }}</td>
+                    <td>{{ $customer->full_name }}</td>
                     <td>{{ $customer->email }}</td>
                     <td>{{ $customer->mobile_number }}</td>
                     <td class="{{ $customer->is_paid ? 'status-paid' : 'status-lead' }}">

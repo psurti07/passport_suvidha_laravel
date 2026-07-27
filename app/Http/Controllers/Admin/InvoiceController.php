@@ -47,7 +47,7 @@ class InvoiceController extends Controller
             ->addIndexColumn()
 
             ->addColumn('customer_name', function ($row) {
-                return $row->customer->first_name . ' ' . $row->customer->last_name;
+                return $row->customer->full_name;
             })
 
             ->addColumn('customer_mobile', function ($row) {
@@ -72,8 +72,7 @@ class InvoiceController extends Controller
 
             ->filterColumn('customer_name', function ($query, $keyword) {
                 $query->whereHas('customer', function ($q) use ($keyword) {
-                    $q->where('first_name', 'like', "%{$keyword}%")
-                        ->orWhere('last_name', 'like', "%{$keyword}%")
+                    $q->where('full_name', 'like', "%{$keyword}%")
                         ->orWhere('mobile_number', 'like', "%{$keyword}%");
                 });
             })
@@ -115,7 +114,7 @@ class InvoiceController extends Controller
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
                             <button type="button" 
-                                onclick="confirmDelete(\'' . $row->customer->first_name . ' Invoice\', this.form)"
+                                onclick="confirmDelete(\'' . $row->customer->full_name . ' Invoice\', this.form)"
                                 class="text-red-600 hover:text-red-900" 
                                 title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
@@ -251,11 +250,8 @@ class InvoiceController extends Controller
             ->addIndexColumn()
 
             ->addColumn('customer_name', function ($row) {
-                $firstName = $row->customer->first_name ?? '';
-                $lastName  = $row->customer->last_name ?? '';
+                $fullName = $row->customer->full_name ?? '';
                 $email     = $row->customer->email ?? '';
-
-                $fullName = trim($firstName . ' ' . $lastName);
 
                 return '
                     <div>
@@ -311,8 +307,7 @@ class InvoiceController extends Controller
 
             ->filterColumn('customer_name', function ($query, $keyword) {
                 $query->whereHas('customer', function ($q) use ($keyword) {
-                    $q->where('first_name', 'like', "%{$keyword}%")
-                        ->orWhere('last_name', 'like', "%{$keyword}%")
+                    $q->where('full_name', 'like', "%{$keyword}%")
                         ->orWhere('email', 'like', "%{$keyword}%")
                         ->orWhere('mobile_number', 'like', "%{$keyword}%");
                 });
