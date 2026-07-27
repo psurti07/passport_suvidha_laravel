@@ -204,11 +204,11 @@ class CustomerController extends Controller
                 Rule::unique('customers', 'email')
                     ->whereNull('deleted_at'),
             ],
+            'service_id' => 'required|exists:services,id',
             'is_paid' => 'sometimes|boolean',
         ];
 
         $paidRules = [
-            'service_id' => 'required|exists:services,id',
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',
             'city' => 'required|string|max:255',

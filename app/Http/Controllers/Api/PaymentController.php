@@ -257,6 +257,7 @@ class PaymentController extends Controller
 
             $invoice = Invoice::create([
                 'customer_id' => $log->customer_id,
+                'service_id' => $customer->service_id,
                 'order_id' => $order->id,
                 'inv_date' => now(),
                 'net_amount' => $netAmount,
@@ -264,7 +265,6 @@ class PaymentController extends Controller
                 'sgst' => $sgst,
                 'igst' => $igst,
                 'total_amount' => $total,
-                'service_id' => $customer->service_id,
             ]);
 
             $invoice->update([
