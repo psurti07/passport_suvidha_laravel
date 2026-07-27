@@ -328,6 +328,8 @@ class CustomerController extends Controller
         ], 201);
     }
 
+    
+
     /**
      * Add additional customer information (Step 3)
      * 
@@ -402,65 +404,65 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function selectService(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'book_size' => 'required|string|max:10',
-            'passport_type' => 'required|string|max:10',
-            'nationality' => 'required|string|max:255',
-        ]);
+    // public function selectService(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'book_size' => 'required|string|max:10',
+    //         'passport_type' => 'required|string|max:10',
+    //         'nationality' => 'required|string|max:255',
+    //     ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+    //     if ($validator->fails()) {
+    //         return response()->json(['errors' => $validator->errors()], 422);
+    //     }
 
-        $customer = $request->user();
+    //     $customer = $request->user();
 
-        if ($customer->registration_step < 3) {
-            return response()->json([
-                'errors' => ['registration' => ['Please complete additional information first.']]
-            ], 422);
-        }
+    //     if ($customer->registration_step < 3) {
+    //         return response()->json([
+    //             'errors' => ['registration' => ['Please complete additional information first.']]
+    //         ], 422);
+    //     }
 
-        $passportType = strtolower($request->passport_type);
-        $bookSize = $request->book_size;
+    //     $passportType = strtolower($request->passport_type);
+    //     $bookSize = $request->book_size;
 
-        $serviceCode = match (true) {
-            $passportType === 'normal' && $bookSize == '36' => 'NP36',
-            $passportType === 'normal' && $bookSize == '60' => 'NP60',
-            $passportType === 'tatkal' && $bookSize == '36' => 'TP36',
-            $passportType === 'tatkal' && $bookSize == '60' => 'TP60',
-            default => null,
-        };
+    //     $serviceCode = match (true) {
+    //         $passportType === 'normal' && $bookSize == '36' => 'NP36',
+    //         $passportType === 'normal' && $bookSize == '60' => 'NP60',
+    //         $passportType === 'tatkal' && $bookSize == '36' => 'TP36',
+    //         $passportType === 'tatkal' && $bookSize == '60' => 'TP60',
+    //         default => null,
+    //     };
 
-        if (!$serviceCode) {
-            return response()->json([
-                'error' => 'Invalid selection'
-            ], 422);
-        }
+    //     if (!$serviceCode) {
+    //         return response()->json([
+    //             'error' => 'Invalid selection'
+    //         ], 422);
+    //     }
 
-        $service = Service::where('service_code', $serviceCode)->first();
+    //     $service = Service::where('service_code', $serviceCode)->first();
 
-        if (!$service) {
-            return response()->json([
-                'error' => 'Service not found'
-            ], 404);
-        }
+    //     if (!$service) {
+    //         return response()->json([
+    //             'error' => 'Service not found'
+    //         ], 404);
+    //     }
 
-        $customer->update([
-            'service_id' => $service->id,
-            // 'book_size' => $bookSize,
-            // 'passport_type' => $passportType,
-            'nationality' => $request->nationality,
-            'registration_step' => 4,
-        ]);
+    //     $customer->update([
+    //         'service_id' => $service->id,
+    //         // 'book_size' => $bookSize,
+    //         // 'passport_type' => $passportType,
+    //         'nationality' => $request->nationality,
+    //         'registration_step' => 4,
+    //     ]);
 
-        return response()->json([
-            'message' => 'Service selected successfully',
-            'customer' => $customer,
-            'next_step' => 'payment'
-        ]);
-    }
+    //     return response()->json([
+    //         'message' => 'Service selected successfully',
+    //         'customer' => $customer,
+    //         'next_step' => 'payment'
+    //     ]);
+    // }
     /**
      * Handle login request for customers 
      * 
