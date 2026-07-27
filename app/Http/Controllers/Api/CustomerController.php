@@ -231,12 +231,25 @@ class CustomerController extends Controller
                             ->whereNull('deleted_at');
                     }),
             ],
+
+            'service_code' => 'required|in:NP36,NP60,TP36,TP60',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        // Get Service
+        $service = Service::where('service_code', $request->service_code)->first();
+
+        if (!$service) {
+            return response()->json([
+                'errors' => [
+                    'service_code' => ['Invalid service selected.']
+                ]
+            ], 422);
+        }
+        
         // Check if customer already exists with this mobile number
         $existingCustomer = Customer::where('mobile_number', $request->mobile_number)->first();
 
@@ -250,21 +263,27 @@ class CustomerController extends Controller
 
             $data = $validator->validated();
 
-            if ($existingCustomer->email !== $request->email) {
-                $emailValidator = Validator::make(['email' => $request->email], [
-                    'email' => 'required|email'
-                ]);
+            // Remove service_code because it doesn't exist in customers table
+            unset($data['service_code']);
 
-                if ($emailValidator->fails()) {
-                    return response()->json(['errors' => $emailValidator->errors()], 422);
-                }
-            }
+            // Save service_id
+            $data['service_id'] = $service->id;
+
+            // if ($existingCustomer->email !== $request->email) {
+            //     $emailValidator = Validator::make(['email' => $request->email], [
+            //         'email' => 'required|email'
+            //     ]);
+
+            //     if ($emailValidator->fails()) {
+            //         return response()->json(['errors' => $emailValidator->errors()], 422);
+            //     }
+            // }
 
             $existingCustomer->update($data);
 
             return response()->json([
                 'message' => 'Customer information updated successfully',
-                'customer' => $existingCustomer,
+                'customer' => $existingCustomer->fresh(),
                 'next_step' => 'otp_verification',
                 'registration_step' => $existingCustomer->registration_step,
                 // 'next_step' => $this->getNextStep($existingCustomer->registration_step)
@@ -273,13 +292,19 @@ class CustomerController extends Controller
 
         $data = $validator->validated();
 
-        $emailValidator = Validator::make(['email' => $request->email], [
-            'email' => 'required|email'
-        ]);
+        // Remove service_code
+        unset($data['service_code']);
 
-        if ($emailValidator->fails()) {
-            return response()->json(['errors' => $emailValidator->errors()], 422);
-        }
+        // Save service_id
+        $data['service_id'] = $service->id;
+
+        // $emailValidator = Validator::make(['email' => $request->email], [
+        //     'email' => 'required|email'
+        // ]);
+
+        // if ($emailValidator->fails()) {
+        //     return response()->json(['errors' => $emailValidator->errors()], 422);
+        // }
 
         $data['registration_step'] = 1;
 
