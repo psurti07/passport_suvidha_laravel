@@ -144,3 +144,5 @@ Route::get('/phonepe/verify', [OfferOrderController::class, 'phonepeVerify']);
 // Route::match(['GET', 'POST'], '/phonepe/redirect', [OfferOrderController::class, 'phonepeRedirect'])->name('phonepe.redirect');
 
 // Route::post('/fee-calculate', [ServiceController::class, 'feeCalculate']);
+
+Route::post('/customer/family-details', [CustomerController::class, 'addFamilyDetails'])->name('api.customers.family-details');

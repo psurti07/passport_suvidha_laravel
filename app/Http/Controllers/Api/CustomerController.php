@@ -328,7 +328,72 @@ class CustomerController extends Controller
         ], 201);
     }
 
-    
+    public function addFamilyDetails(Request $request){
+        $validator = Validator::make($request->all(), [
+            'father_name' => 'required|string|max255',
+            'mother_name' => 'required|string|max255',
+
+            'marital_status' => [
+                'required',
+                Rule::in([
+                    'single',
+                    'married',
+                    'widow',
+                    'widower',
+                    'seperated',
+                    'divorced'
+                ]),
+            ],
+
+            'spouse_name' => 'required_if::marital_status,married|nullable|string|max:255',
+            'emergency_contact_name' => 'required|string|max:255',
+            'emergency_contact_mobile' => [
+                'required',
+                'digits:10',
+                'different:mobile_number'
+            ],
+
+            'emergency_contact_email' => 'required|email|max:255',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Authenticated Customer
+        $customer = $request->user();
+
+        // Verify Registration Step
+        if($customer->registration_step < 2){
+            return response()->json([
+                'errors' => [
+                    'registration' => [
+                        'Please complete OTP verification first.'
+                    ]
+                ]
+            ], 422);
+        }
+
+        $data = $validator->validated();
+
+        // If customer is not married, spouse name should be NULL
+        if($request->marital_status !== 'married'){
+            $data['spouse_name'] = null;
+        }
+
+        // Next Registration Step
+        $data['registration_step'] = 3;
+
+        $customer->update($data);
+
+        return response()->json([
+            'message' => 'Family details saved successfully.',
+            'customer' => $customer->fresh(),
+            'next_step' => 'personal_details'
+        ], 200);
+    }
 
     /**
      * Add additional customer information (Step 3)
