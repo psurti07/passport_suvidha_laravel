@@ -330,8 +330,8 @@ class CustomerController extends Controller
 
     public function addFamilyDetails(Request $request){
         $validator = Validator::make($request->all(), [
-            'father_name' => 'required|string|max255',
-            'mother_name' => 'required|string|max255',
+            'father_name' => 'required|string|max:255',
+            'mother_name' => 'required|string|max:255',
 
             'marital_status' => [
                 'required',
@@ -341,16 +341,18 @@ class CustomerController extends Controller
                     'widow',
                     'widower',
                     'seperated',
-                    'divorced'
+                    'divorced',
                 ]),
             ],
 
-            'spouse_name' => 'required_if::marital_status,married|nullable|string|max:255',
+            'spouse_name' => 'required_if:marital_status,married|nullable|string|max:255',
+
             'emergency_contact_name' => 'required|string|max:255',
+
             'emergency_contact_mobile' => [
                 'required',
                 'digits:10',
-                'different:mobile_number'
+                'different:mobile_number',
             ],
 
             'emergency_contact_email' => 'required|email|max:255',
