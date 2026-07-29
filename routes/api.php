@@ -58,7 +58,7 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
     Route::get('/support/tickets/{ticket_number}', [SupportTicketController::class, 'show'])->name('api.support.tickets.show');
 
     Route::post('/customer/family-details', [CustomerController::class, 'addFamilyDetails'])->name('api.customers.family-details');
-    Route::post('/customer/additional-info', [CustomerController::class, 'addAdditionalInfo'])->name('api.customers.additional-info');
+    Route::post('/customer/personal-details', [CustomerController::class, 'addPersonalDetails'])->name('api.customers.personal-details');
     Route::post('/customer/select-service', [CustomerController::class, 'selectService'])->name('api.customers.select-service');
 
     Route::prefix('application-review')->group(function () {

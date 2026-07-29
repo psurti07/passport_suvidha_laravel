@@ -24,11 +24,6 @@ class CustomerController extends Controller
         $this->trakingService = $trakingService;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         $query = Customer::query();
@@ -39,90 +34,70 @@ class CustomerController extends Controller
         return response()->json($customers);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $baseRules = [
-            'full_name' => 'required|string|max:255',
-            'mobile_number' => [
-                'required',
-                'string',
-                'max:20',
-                Rule::unique('customers', 'mobile_number')
-                    ->where('is_paid', 1),
-            ],
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('customers', 'email')
-                    ->where('is_paid', 1),
-            ],
-            'is_paid' => 'sometimes|boolean',
-        ];
+    // public function store(Request $request)
+    // {
+    //     $baseRules = [
+    //         'full_name' => 'required|string|max:255',
+    //         'mobile_number' => [
+    //             'required',
+    //             'string',
+    //             'max:20',
+    //             Rule::unique('customers', 'mobile_number')
+    //                 ->where('is_paid', 1),
+    //         ],
+    //         'email' => [
+    //             'required',
+    //             'email',
+    //             Rule::unique('customers', 'email')
+    //                 ->where('is_paid', 1),
+    //         ],
+    //         'is_paid' => 'sometimes|boolean',
+    //     ];
 
-        $paidRules = [
-            'address' => 'required|string',
-            'gender' => 'required|in:male,female,other',
-            'date_of_birth' => 'required|date',
-            'education_qualification' => 'required|string|max:255',
-            'employment_type' => 'required|string|max:255',
-            // 'place_of_birth' => 'required|string|max:255',
-            'nationality' => 'required|string|max:255',
-            'payment_info_id' => 'required|numeric',
-            'service_code' => 'required|string|max:255',
-        ];
+    //     $paidRules = [
+    //         'address' => 'required|string',
+    //         'gender' => 'required|in:male,female,other',
+    //         'date_of_birth' => 'required|date',
+    //         'education_qualification' => 'required|string|max:255',
+    //         'employment_type' => 'required|string|max:255',
+    //         'nationality' => 'required|string|max:255',
+    //         'payment_info_id' => 'required|numeric',
+    //         'service_code' => 'required|string|max:255',
+    //     ];
 
-        $isPaid = $request->input('is_paid', false) ||
-            $request->filled(array_keys($paidRules));
+    //     $isPaid = $request->input('is_paid', false) ||
+    //         $request->filled(array_keys($paidRules));
 
-        $rules = $baseRules;
-        if ($isPaid) {
-            $rules = array_merge($rules, $paidRules);
-        }
+    //     $rules = $baseRules;
+    //     if ($isPaid) {
+    //         $rules = array_merge($rules, $paidRules);
+    //     }
 
-        $validator = Validator::make($request->all(), $rules);
+    //     $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+    //     if ($validator->fails()) {
+    //         return response()->json(['errors' => $validator->errors()], 422);
+    //     }
 
-        $data = $validator->validated();
-        $data['is_paid'] = $isPaid;
+    //     $data = $validator->validated();
+    //     $data['is_paid'] = $isPaid;
 
-        $nullableFields = ['address', 'gender', 'date_of_birth', 'nationality', 'education_qualification', 'employment_type', 'payment_info_id', 'service_code'];
-        foreach ($nullableFields as $field) {
-            if (!isset($data[$field])) {
-                $data[$field] = null;
-            }
-        }
+    //     $nullableFields = ['address', 'gender', 'date_of_birth', 'nationality', 'education_qualification', 'employment_type', 'payment_info_id', 'service_code'];
+    //     foreach ($nullableFields as $field) {
+    //         if (!isset($data[$field])) {
+    //             $data[$field] = null;
+    //         }
+    //     }
 
-        $customer = Customer::create($data);
-        return response()->json($customer, 201);
-    }
+    //     $customer = Customer::create($data);
+    //     return response()->json($customer, 201);
+    // }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  Customer $customer
-     * @return \Illuminate\Http\Response
-     */
     public function show(Customer $customer)
     {
         return response()->json($customer);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Customer $customer
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Customer $customer)
     {
         $isPaid = $request->input('is_paid', $customer->is_paid);
@@ -157,7 +132,6 @@ class CustomerController extends Controller
             'date_of_birth' => 'nullable|date',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
-            // 'place_of_birth' => 'nullable|string|max:255',
             'nationality' => 'nullable|string|max:255',
             'service_code' => 'nullable|string|max:255',
         ];
@@ -168,7 +142,6 @@ class CustomerController extends Controller
             $rules['date_of_birth'] = 'required|date';
             $rules['education_qualification'] = 'required|string|max:255';
             $rules['employment_type'] = 'required|string|max:255';
-            // $rules['place_of_birth'] = 'required|string|max:255';
             $rules['nationality'] = 'required|string|max:255';
         }
 
@@ -189,24 +162,12 @@ class CustomerController extends Controller
         return response()->json($customer);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  Customer $customer
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Customer $customer)
     {
         $customer->delete();
         return response()->json(null, 204);
     }
 
-    /**
-     * Create a customer with basic information and send OTP
-     * 
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -239,7 +200,6 @@ class CustomerController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // Get Service
         $service = Service::where('service_code', $request->service_code)->first();
 
         if (!$service) {
@@ -250,11 +210,9 @@ class CustomerController extends Controller
             ], 422);
         }
         
-        // Check if customer already exists with this mobile number
         $existingCustomer = Customer::where('mobile_number', $request->mobile_number)->first();
 
         if ($existingCustomer) {
-            // If customer exists and is paid, return error
             if ($existingCustomer->is_paid) {
                 return response()->json([
                     'errors' => ['mobile_number' => ['Customer already registered with this mobile number.']]
@@ -263,21 +221,9 @@ class CustomerController extends Controller
 
             $data = $validator->validated();
 
-            // Remove service_code because it doesn't exist in customers table
             unset($data['service_code']);
 
-            // Save service_id
             $data['service_id'] = $service->id;
-
-            // if ($existingCustomer->email !== $request->email) {
-            //     $emailValidator = Validator::make(['email' => $request->email], [
-            //         'email' => 'required|email'
-            //     ]);
-
-            //     if ($emailValidator->fails()) {
-            //         return response()->json(['errors' => $emailValidator->errors()], 422);
-            //     }
-            // }
 
             $existingCustomer->update($data);
 
@@ -286,25 +232,14 @@ class CustomerController extends Controller
                 'customer' => $existingCustomer->fresh(),
                 'next_step' => 'otp_verification',
                 'registration_step' => $existingCustomer->registration_step,
-                // 'next_step' => $this->getNextStep($existingCustomer->registration_step)
             ], 200);
         }
 
         $data = $validator->validated();
 
-        // Remove service_code
         unset($data['service_code']);
 
-        // Save service_id
         $data['service_id'] = $service->id;
-
-        // $emailValidator = Validator::make(['email' => $request->email], [
-        //     'email' => 'required|email'
-        // ]);
-
-        // if ($emailValidator->fails()) {
-        //     return response()->json(['errors' => $emailValidator->errors()], 422);
-        // }
 
         $data['registration_step'] = 1;
 
@@ -336,7 +271,6 @@ class CustomerController extends Controller
         $validator = Validator::make($request->all(), [
             'father_name' => 'required|string|max:255',
             'mother_name' => 'required|string|max:255',
-
             'marital_status' => [
                 'required',
                 Rule::in([
@@ -348,17 +282,13 @@ class CustomerController extends Controller
                     'divorced',
                 ]),
             ],
-
             'spouse_name' => 'required_if:marital_status,married|nullable|string|max:255',
-
             'emergency_contact_name' => 'required|string|max:255',
-
             'emergency_contact_mobile' => [
                 'required',
                 'digits:10',
                 'different:mobile_number',
             ],
-
             'emergency_contact_email' => 'required|email|max:255',
         ]);
 
@@ -368,10 +298,8 @@ class CustomerController extends Controller
             ], 422);
         }
 
-        // Authenticated Customer
         $customer = $request->user();
 
-        // Verify Registration Step
         if($customer->registration_step < 2){
             return response()->json([
                 'errors' => [
@@ -384,12 +312,10 @@ class CustomerController extends Controller
 
         $data = $validator->validated();
 
-        // If customer is not married, spouse name should be NULL
         if($request->marital_status !== 'married'){
             $data['spouse_name'] = null;
         }
 
-        // Next Registration Step
         $data['registration_step'] = 3;
 
         $customer->update($data);
@@ -401,13 +327,7 @@ class CustomerController extends Controller
         ], 200);
     }
 
-    /**
-     * Add additional customer information (Step 3)
-     * 
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function addAdditionalInfo(Request $request)
+    public function addPersonalDetails(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'address' => 'required|string',
@@ -418,28 +338,24 @@ class CustomerController extends Controller
             'date_of_birth' => 'required|date',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
-            // 'place_of_birth' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // Get customer via auth
         $customer = $request->user();
 
-        // Verify registration step
-        if ($customer->registration_step < 2) {
+        if ($customer->registration_step < 3) {
             return response()->json([
-                'errors' => ['registration' => ['Please complete OTP verification first.']]
+                'errors' => ['registration' => ['Please complete Family Details first.']]
             ], 422);
         }
 
-        // Update customer with additional info
         $data = $validator->validated();
 
 
-        $data['registration_step'] = 3; // Step 3: Additional info
+        $data['registration_step'] = 4;
 
         $customer->update($data);
 
@@ -456,90 +372,15 @@ class CustomerController extends Controller
                     'message' => "SMS template not found"
                 ]);
             }
-
-            // $message = $smsMessage['message'];
-            // $response = $smsService->sendSms($mobileNumber, $message);
         }
 
         return response()->json([
-            'message' => 'Additional information saved successfully',
+            'message' => 'Personal details saved successfully.',
             'customer' => $customer,
-            'next_step' => 'service_selection'
+            'next_step' => 'payment'
         ]);
     }
 
-    /**
-     * Select service for customer (Step 4)
-     * 
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-
-    // public function selectService(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'book_size' => 'required|string|max:10',
-    //         'passport_type' => 'required|string|max:10',
-    //         'nationality' => 'required|string|max:255',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json(['errors' => $validator->errors()], 422);
-    //     }
-
-    //     $customer = $request->user();
-
-    //     if ($customer->registration_step < 3) {
-    //         return response()->json([
-    //             'errors' => ['registration' => ['Please complete additional information first.']]
-    //         ], 422);
-    //     }
-
-    //     $passportType = strtolower($request->passport_type);
-    //     $bookSize = $request->book_size;
-
-    //     $serviceCode = match (true) {
-    //         $passportType === 'normal' && $bookSize == '36' => 'NP36',
-    //         $passportType === 'normal' && $bookSize == '60' => 'NP60',
-    //         $passportType === 'tatkal' && $bookSize == '36' => 'TP36',
-    //         $passportType === 'tatkal' && $bookSize == '60' => 'TP60',
-    //         default => null,
-    //     };
-
-    //     if (!$serviceCode) {
-    //         return response()->json([
-    //             'error' => 'Invalid selection'
-    //         ], 422);
-    //     }
-
-    //     $service = Service::where('service_code', $serviceCode)->first();
-
-    //     if (!$service) {
-    //         return response()->json([
-    //             'error' => 'Service not found'
-    //         ], 404);
-    //     }
-
-    //     $customer->update([
-    //         'service_id' => $service->id,
-    //         // 'book_size' => $bookSize,
-    //         // 'passport_type' => $passportType,
-    //         'nationality' => $request->nationality,
-    //         'registration_step' => 4,
-    //     ]);
-
-    //     return response()->json([
-    //         'message' => 'Service selected successfully',
-    //         'customer' => $customer,
-    //         'next_step' => 'payment'
-    //     ]);
-    // }
-    /**
-     * Handle login request for customers 
-     * 
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -552,7 +393,6 @@ class CustomerController extends Controller
 
         $mobileNumber = $request->mobile_number;
 
-        // Check if customer exists
         $customer = Customer::where('mobile_number', $mobileNumber)->first();
 
         if (!$customer) {
@@ -567,8 +407,7 @@ class CustomerController extends Controller
             ], 403);
         }
 
-        // Check if the customer has completed registration
-        if ($customer->registration_step < 4 || $customer->is_paid == 0) {
+        if ($customer->registration_step < 5 || $customer->is_paid == 0) {
             return response()->json([
                 'errors' => ['registration' => ['Please complete your registration process first.']]
             ], 422);
@@ -580,7 +419,6 @@ class CustomerController extends Controller
             ], 403);
         }
 
-        // Return success response with next step to request OTP
         return response()->json([
             'message' => 'Customer found, proceed with OTP verification.',
             'customer' => [
@@ -609,8 +447,8 @@ class CustomerController extends Controller
     {
         return match ($step) {
             1 => 'otp_verification',
-            2 => 'additional_information',
-            3 => 'service_selection',
+            2 => 'family_details',
+            3 => 'personal_details',
             4 => 'payment',
             default => 'start',
         };
@@ -639,10 +477,6 @@ class CustomerController extends Controller
                 ]
             );
 
-            // Log::info('Tracking Debug', [
-            //     'user_track' => $userResponse,
-            //     'event_track' => $eventResponse,
-            // ]);
         } catch (\Exception $e) {
             Log::error('Interakt Tracking Failed', [
                 'message' => $e->getMessage()

@@ -175,7 +175,7 @@ class OtpController extends Controller
     */
         if ($purpose === 'login') {
 
-            if ($customer->registration_step < 4) {
+            if ($customer->registration_step < 5 || $customer->is_paid == 0) {
                 return response()->json([
                     'errors' => [
                         'registration' => [
@@ -234,8 +234,8 @@ class OtpController extends Controller
     {
         return match ($step) {
             1 => 'otp_verification',
-            2 => 'additional_information',
-            3 => 'service_selection',
+            2 => 'family_details',
+            3 => 'personal_details',
             4 => 'payment',
             default => 'start',
         };

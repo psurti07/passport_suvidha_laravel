@@ -87,9 +87,6 @@ class PaymentController extends Controller
     public function verifyPayment(Request $request, BrevoMailService $brevoMailService)
     {
 
-        // Log::info('VERIFY PAYMENT START 1', [
-        //     'request' => $request->all()
-        // ]);
         $api = new Api(config("services.razorpay.key"), config("services.razorpay.secret"));
 
         try {
@@ -100,27 +97,15 @@ class PaymentController extends Controller
                 'razorpay_signature' => 'required',
             ]);
 
-            // Log::info('VALIDATION PASSED 2');
-
             $attributes = [
                 'razorpay_order_id' => $request->razorpay_order_id,
                 'razorpay_payment_id' => $request->razorpay_payment_id,
                 'razorpay_signature' => $request->razorpay_signature
             ];
 
-            // Log::info('VERIFYING SIGNATURE 3', $attributes);
-
             $api->utility->verifyPaymentSignature($attributes);
 
-            // Log::info('SIGNATURE VERIFIED SUCCESSFULLY 4');
-
             $log = RazorpayLog::where('reference_id', $request->razorpay_order_id)->first();
-
-            // Log::info('ORDER LOG FOUND 5', [
-            //     'log_id' => $log?->id,
-            //     'customer_id' => $log?->customer_id,
-            //     'reference_id' => $log?->reference_id,
-            // ]);
 
             if (!$log) {
                 return response()->json([
@@ -130,11 +115,6 @@ class PaymentController extends Controller
             }
 
             $customer = Customer::find($log->customer_id);
-
-            // Log::info('CUSTOMER FOUND 6', [
-            //     'customer_id' => $customer?->id,
-            //     'is_paid' => $customer?->is_paid,
-            // ]);
 
             if (!$customer) {
                 return response()->json([
@@ -152,20 +132,7 @@ class PaymentController extends Controller
 
             $payment = $api->payment->fetch($request->razorpay_payment_id);
 
-            // Log::info('PAYMENT FETCHED FROM RAZORPAY 7', [
-            //     'payment_id' => $payment->id,
-            //     'status' => $payment->status,
-            //     'method' => $payment->method,
-            //     'amount' => $payment->amount,
-            //     'captured' => $payment->captured ?? null,
-            // ]);
-
             if ($payment->status !== 'captured') {
-
-                // Log::warning('PAYMENT NOT CAPTURED 8', [
-                //     'payment_id' => $payment->id,
-                //     'status' => $payment->status
-                // ]);
 
                 return response()->json([
                     'success' => false,
@@ -174,8 +141,6 @@ class PaymentController extends Controller
             }
 
             $paymentMode = $payment->method;
-
-            // Log::info('DB TRANSACTION STARTED 9');
 
             DB::beginTransaction();
 
@@ -191,7 +156,9 @@ class PaymentController extends Controller
 
                 $customer->update([
                     'is_paid' => 1,
-                    'is_active' => 1
+                    'is_active' => 1,
+                    'registration_step' => 5,
+                    'payment_date' => now(),
                 ]);
 
                 DB::commit();
@@ -216,10 +183,6 @@ class PaymentController extends Controller
                 ]
             );
 
-            // Log::info('APPLICATION ORDER CREATED 10', [
-            //     'order_id' => $order->id
-            // ]);
-
             $log->update([
                 'tx_status' => 'success',
                 'payment_mode' => $paymentMode,
@@ -227,19 +190,15 @@ class PaymentController extends Controller
                 'order_id' => $order->id
             ]);
 
-            // Log::info('RAZORPAY LOG UPDATED SUCCESS 11');
-
             $customer->update([
                 'is_paid' => 1,
                 'is_active' => 1,
-                'payment_date' => now()
+                'registration_step' => 5,
+                'payment_date' => now(),
             ]);
-
-            // Log::info('RAZORPAY LOG UPDATED SUCCESS 12');
 
             $service = $customer->service;
 
-            // $govAmount = $service->service_gov_amount ?? 0;
             $serviceCharges = $service->service_charges ?? 0;
 
             $netAmount = $serviceCharges;
@@ -271,41 +230,16 @@ class PaymentController extends Controller
                 'inv_no' => 'INV_' . $invoice->id
             ]);
 
-            // Log::info('INVOICE CREATED 13', [
-            //     'invoice_id' => $invoice->id
-            // ]);
-
-            // Log::info('DB COMMIT START 14');
-
             DB::commit();
-
-            // Log::info('DB COMMIT SUCCESS 15');
 
             try {
 
-                // Log::info('EMAIL PROCESS STARTED 16', [
-                //     'customer_id' => $customer->id ?? null,
-                //     'email' => $customer->email ?? null,
-                // ]);
-
                 if ($customer && !empty($customer->email)) {
-
-                    // Log::info('Customer found for email sending 17', [
-                    //     'customer_id' => $customer->id,
-                    //     'email' => $customer->email,
-                    // ]);
 
                     $invoice = Invoice::with(['customer', 'order', 'service'])
                         ->find($invoice->id);
 
-                    // Log::info('Invoice loaded 18', [
-                    //     'invoice_id' => $invoice?->id,
-                    //     'invoice_no' => $invoice?->inv_no,
-                    // ]);
-
                     $pdf = InvoiceController::getInvoicePdf($customer->id);
-
-                    // Log::info('Invoice PDF generated successfully 19');
 
                     $attachments = [
                         [
@@ -314,12 +248,6 @@ class PaymentController extends Controller
                             'contentType' => 'application/pdf'
                         ]
                     ];
-
-                    // Log::info('Attachment prepared 20', [
-                    //     'file_name' => 'Passport-Suvidha-Invoice-' . time() . '.pdf',
-                    // ]);
-
-                    // Log::info('Email HTML rendered successfully 21');
 
                     /*
                     |------------------------------------------------
@@ -385,13 +313,8 @@ class PaymentController extends Controller
                 ]);
             }
 
-            // Log::info('FACEBOOK EVENT START 24');
-
             $facebookService = new FacebookConversionService();
             $facebookService->send($customer);
-
-            // Log::info('FACEBOOK EVENT SUCCESS 25');
-
 
             if (isset($customer)) {
                 $this->tracking_success($customer);
@@ -399,7 +322,6 @@ class PaymentController extends Controller
 
             if (!empty($customer->mobile_number)) {
 
-                // Log::info('SMS PROCESS START 26');
                 $smsService = new SmsService();
                 $smsMessageSuccess = $smsService->sendTemplateSms($customer->mobile_number, 'application-submitted-sms');
                 if (!$smsMessageSuccess['success']) {
@@ -416,15 +338,7 @@ class PaymentController extends Controller
                         'message' => "SMS template not found"
                     ]);
                 }
-
-                // Log::info('SMS PROCESS SUCCESS 27');
-
-                // $message = $smsMessage['message'];
-
-                // $smsService->sendSms($customer->mobile_number, $message);
             }
-
-            // Log::info('VERIFY PAYMENT COMPLETED SUCCESSFULLY 28');
 
             return response()->json([
                 'success' => true,
@@ -454,23 +368,7 @@ class PaymentController extends Controller
                 }
             }
 
-            // Log::info('PAYMENT STATUS DURING EXCEPTION 31', [
-            //     'payment_id' => $payment->id ?? null,
-            //     'status' => $payment->status ?? null,
-            //     'method' => $payment->method ?? null
-            // ]);
-
             $log = RazorpayLog::where('reference_id', $request->razorpay_order_id)->first();
-
-            // if ($log) {
-            //     Log::warning('MARKING PAYMENT FAILED');
-            //     $log->update([
-            //         'tx_status' => 'failed',
-            //         'payment_id' => $request->razorpay_payment_id ?? null,
-            //         'payment_mode' => $paymentMode
-            //     ]);
-            //     Log::warning('PAYMENT MARKED FAILED IN DATABASE');
-            // }
 
             if ($log) {
 
@@ -484,15 +382,11 @@ class PaymentController extends Controller
                     ]);
                 } else {
 
-                    // Log::warning('MARKING PAYMENT FAILED 33');
-
                     $log->update([
                         'tx_status' => 'failed',
                         'payment_id' => $request->razorpay_payment_id ?? null,
                         'payment_mode' => $paymentMode
                     ]);
-
-                    // Log::warning('PAYMENT MARKED FAILED IN DATABASE 34');
                 }
             }
 
@@ -503,8 +397,6 @@ class PaymentController extends Controller
             if (isset($customer) && !empty($customer->mobile_number)) {
                 $smsService = new SmsService();
 
-                // $url = "https://passportsuvidha.com/cardoffer";
-
                 $smsMessage = $smsService->sendTemplateSms($customer->mobile_number, 'payment-failed-sms');
 
                 if (!$smsMessage['success']) {
@@ -513,10 +405,6 @@ class PaymentController extends Controller
                         'message' => "SMS template not found"
                     ]);
                 }
-
-                // $message = str_replace('{#var#}', $paymentMode ?? 'UPI', $smsMessage['message']);
-
-                // $smsService->sendSms($customer->mobile_number, $message);
             }
 
             try {
@@ -552,20 +440,13 @@ class PaymentController extends Controller
 
     public function paymentFailed(Request $request, BrevoMailService $brevoMailService)
     {
-        // Log::warning('PAYMENT FAILED API CALLED 36', [
-        //     'request' => $request->all()
-        // ]);
+
         $request->validate([
             'razorpay_order_id' => 'required',
             'razorpay_payment_id' => 'nullable'
         ]);
 
         $log = RazorpayLog::where('reference_id', $request->razorpay_order_id)->first();
-        // Log::info('PAYMENT FAILED LOG FOUND 37', [
-        //     'log_id' => $log?->id,
-        //     'tx_status' => $log?->tx_status
-        // ]);
-
 
         if ($log && $log->tx_status !== 'success') {
 
@@ -575,14 +456,8 @@ class PaymentController extends Controller
                 try {
                     $api = new Api(config("services.razorpay.key"), config("services.razorpay.secret"));
                     $payment = $api->payment->fetch($request->razorpay_payment_id);
-                    // Log::info('PAYMENT FAILED STATUS FROM RAZORPAY 38', [
-                    //     'payment_id' => $payment->id ?? null,
-                    //     'status' => $payment->status ?? null,
-                    //     'method' => $payment->method ?? null,
-                    // ]);
+                   
                     if ($payment->status == 'captured') {
-
-                        // Log::warning('PAYMENT CAPTURED IN RAZORPAY, FAILED CALLBACK IGNORED 39');
 
                         return response()->json([
                             'success' => true
@@ -593,13 +468,12 @@ class PaymentController extends Controller
                     Log::error('PAYMENT FETCH ERROR: ' . $e->getMessage());
                 }
             }
-            // Log::warning('UPDATING FAILED STATUS 40');
+
             $log->update([
                 'tx_status' => 'failed',
                 'payment_id' => $request->razorpay_payment_id ?? null,
                 'payment_mode' => $paymentMode
             ]);
-            // Log::warning('FAILED STATUS UPDATED 41');
 
             $customer = Customer::find($log->customer_id);
 
@@ -612,7 +486,7 @@ class PaymentController extends Controller
                 $mobileNumber = $customer->mobile_number;
 
                 $smsService = new SmsService();
-                // $url = "https://passportsuvidha.com/cardoffer";
+
                 $smsMessage = $smsService->sendTemplateSms($mobileNumber, 'payment-failed-sms');
 
                 if (!$smsMessage['success']) {
@@ -621,9 +495,6 @@ class PaymentController extends Controller
                         'message' => "SMS template not found"
                     ]);
                 }
-
-                // $message = str_replace('{#var_method#}', $paymentMode ?? '', $smsMessage['message']);
-                // $smsService->sendSms($mobileNumber, $message);
             }
 
             try {
@@ -650,7 +521,6 @@ class PaymentController extends Controller
                 ]);
             }
         }
-        // Log::warning('PAYMENT FAILED METHOD FINISHED 42');
 
         return response()->json([
             'success' => false,
@@ -681,10 +551,6 @@ class PaymentController extends Controller
                 ]
             );
 
-            // Log::info('Tracking Debug sucessfull', [
-            //     'user_track' => $userTrack,
-            //     'event_track' => $eventTrack,
-            // ]);
         } catch (\Exception $e) {
             Log::error('Interakt Tracking Failed', [
                 'message' => $e->getMessage()
