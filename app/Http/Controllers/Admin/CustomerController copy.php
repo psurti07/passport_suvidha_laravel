@@ -190,7 +190,7 @@ class CustomerController extends Controller
 
     public function store(Request $request, SmsService $smsService, BrevoMailService $brevoMailService)
     {
-        $validated = $request->validate([
+        $baseRules = [
             'full_name' => 'required|string|max:255',
             'mobile_number' => [
                 'required',
@@ -205,49 +205,32 @@ class CustomerController extends Controller
                     ->whereNull('deleted_at'),
             ],
             'service_id' => 'required|exists:services,id',
+            'is_paid' => 'sometimes|boolean',
+        ];
 
-            'father_name' => 'required|string|max:255',
-            'mother_name' => 'required|string|max:255',
-            'marital_status' => [
-                'required',
-                Rule::in([
-                    'single',
-                    'married',
-                    'widow',
-                    'widower',
-                    'separated',
-                    'divorced',
-                ]),
-            ],
-            'spouse_name' => 'required_if:marital_status,married|nullable|string|max:255',
-            'emergency_contact_name' => 'required|string|max:255',
-            'emergency_contact_mobile' => [
-                'required',
-                'regex:/^[6-9][0-9]{9}$/',
-                'different:mobile_number',
-            ],
-            'emergency_contact_email' => 'required|email|max:255',
-
+        $paidRules = [
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
+            // 'place_of_birth' => 'required|string|max:255',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
-
             'card_number' => 'nullable|string|size:16',
             'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
-            'is_paid' => 'sometimes|boolean',
-        ]);
+        ];
 
-        $validated['payment_date'] = now();
-        $validated['is_paid'] = 1;
-        $validated['registration_step'] = 1;
-        $validated['nationality'] = 'Indian';
+        $isPaid = $request->boolean('is_paid');
+
+        $rules = $isPaid ? array_merge($baseRules, $paidRules) : $baseRules;
+
+        $validated = $request->validate($rules);
+
+        $validated['is_paid'] = $isPaid;
 
         $this->createOrConvert($validated, $smsService, $brevoMailService, null, 'create');
 
