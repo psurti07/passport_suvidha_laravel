@@ -329,6 +329,10 @@ class CustomerController extends Controller
     }
 
     public function addFamilyDetails(Request $request){
+        $request->merge([
+            'marital_status' => strtolower(trim($request->marital_status))
+        ]);
+
         $validator = Validator::make($request->all(), [
             'father_name' => 'required|string|max:255',
             'mother_name' => 'required|string|max:255',

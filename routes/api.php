@@ -57,6 +57,7 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
     Route::get('/support/tickets', [SupportTicketController::class, 'index'])->name('api.support.tickets.index'); // For authenticated customer to view their tickets
     Route::get('/support/tickets/{ticket_number}', [SupportTicketController::class, 'show'])->name('api.support.tickets.show');
 
+    Route::post('/customer/family-details', [CustomerController::class, 'addFamilyDetails'])->name('api.customers.family-details');
     Route::post('/customer/additional-info', [CustomerController::class, 'addAdditionalInfo'])->name('api.customers.additional-info');
     Route::post('/customer/select-service', [CustomerController::class, 'selectService'])->name('api.customers.select-service');
 
@@ -145,4 +146,8 @@ Route::get('/phonepe/verify', [OfferOrderController::class, 'phonepeVerify']);
 
 // Route::post('/fee-calculate', [ServiceController::class, 'feeCalculate']);
 
-Route::post('/customer/family-details', [CustomerController::class, 'addFamilyDetails'])->name('api.customers.family-details');
+// Route::middleware('auth:sanctum')->group(function () {
+
+//     Route::post('/customer/family-details', [CustomerController::class, 'addFamilyDetails']);
+
+// });
