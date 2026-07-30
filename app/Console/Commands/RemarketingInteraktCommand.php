@@ -84,7 +84,7 @@ class RemarketingInteraktCommand extends Command
         $users = Customer::query()
             ->whereDate('created_at', $createdDate)
             ->where('is_paid', 0)
-            ->where('registration_step', '>=', 3)
+            // ->where('registration_step', '>=', 3)
             ->where('is_active', 1)
             ->where('is_dnd', 0)
             ->whereNull('deleted_at')

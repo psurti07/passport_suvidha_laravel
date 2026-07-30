@@ -232,9 +232,9 @@ class ApplicationDocumentController extends Controller
 
         $customer = Customer::find($request->customer_id);
 
-        if ($request->status == 1 && $customer->registration_step != 5) {
+        if ($request->status == 1 && $customer->registration_step != 6) {
             $customer->update([
-                'registration_step' => 5
+                'registration_step' => 6
             ]);
         }
 
@@ -261,9 +261,9 @@ class ApplicationDocumentController extends Controller
             ->where('is_verified', 0)
             ->count() === 0;
 
-        if ($allVerified && $customer->registration_step != 5) {
+        if ($allVerified && $customer->registration_step != 6) {
             $customer->update([
-                'registration_step' => 5
+                'registration_step' => 6
             ]);
         }
 
