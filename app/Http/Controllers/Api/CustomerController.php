@@ -278,7 +278,7 @@ class CustomerController extends Controller
                     'married',
                     'widow',
                     'widower',
-                    'seperated',
+                    'separated',
                     'divorced',
                 ]),
             ],

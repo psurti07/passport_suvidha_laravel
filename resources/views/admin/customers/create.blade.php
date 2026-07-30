@@ -229,9 +229,9 @@
                                         Widower
                                     </option>
 
-                                    <option value="seperated"
-                                        {{ old('marital_status') == 'seperated' ? 'selected' : '' }}>
-                                        Seperated
+                                    <option value="separated"
+                                        {{ old('marital_status') == 'separated' ? 'selected' : '' }}>
+                                        Separated
                                     </option>
 
                                     <option value="divorced"
@@ -252,14 +252,14 @@
                             </p>
                             @enderror
                         </div>
-                        <div>
+                        <div id="spouse_name_div" style="display:none;">
                             <label for="spouse_name" class="block text-sm font-semibold text-gray-900">
                                 Spouse Name
                                 <span class="text-red-500 ml-1">*</span>
                             </label>
                             <div class="relative group">
                                 <input type="text" id="spouse_name" name="spouse_name" value="{{ old('spouse_name') }}"
-                                    required placeholder="Enter spouse name"
+                                    placeholder="Enter spouse name"
                                     class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                         hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                         transition-all duration-200 placeholder-gray-400
@@ -724,8 +724,7 @@
                         </div>
                         <div>
                             <label for="amount" class="block text-sm font-semibold text-gray-900">
-                                Card Amount (Note: 18% GST
-                                amount added on card amount.)
+                                Card Amount (Note: 18% GST amount added on card amount).
                             </label>
                             <div class="relative group">
                                 <input type="number" id="amount" name="amount"
@@ -843,6 +842,23 @@
             }, 500);
         });
 
+        toggleSpouseName();
+        $('#marital_status').on('change', function() {
+            toggleSpouseName();
+        });
+
     });
+
+    function toggleSpouseName() {
+
+        if ($('#marital_status').val() === 'married') {
+            $('#spouse_name_div').show();
+            $('#spouse_name').prop('required', true);
+        } else {
+            $('#spouse_name_div').hide();
+            $('#spouse_name').prop('required', false);
+            $('#spouse_name').val('');
+        }
+    }
 </script>
 @endpush

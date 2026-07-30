@@ -244,10 +244,13 @@ class CustomerController extends Controller
             'is_paid' => 'sometimes|boolean',
         ]);
 
+        if ($validated['marital_status'] !== 'married') {
+            $validated['spouse_name'] = null;
+        }
+
         $validated['payment_date'] = now();
         $validated['is_paid'] = 1;
         $validated['registration_step'] = 1;
-        $validated['nationality'] = 'Indian';
 
         $this->createOrConvert($validated, $smsService, $brevoMailService, null, 'create');
 
@@ -304,17 +307,46 @@ class CustomerController extends Controller
                     ->ignore($customer->id)
                     ->whereNull('deleted_at'),
             ],
+
+            'father_name' => 'required|string|max:255',
+            'mother_name' => 'required|string|max:255',
+            'marital_status' => [
+                'required',
+                Rule::in([
+                    'single',
+                    'married',
+                    'widow',
+                    'widower',
+                    'separated',
+                    'divorced',
+                ]),
+            ],
+            'spouse_name' => 'required_if:marital_status,married|nullable|string|max:255',
+            'emergency_contact_name' => 'required|string|max:255',
+            'emergency_contact_mobile' => [
+                'required',
+                'regex:/^[6-9][0-9]{9}$/',
+                'different:mobile_number',
+            ],
+            'emergency_contact_email' => 'required|email|max:255',
+
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
+            'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
-            // 'place_of_birth' => 'required|string|max:255',
+            'nationality' => 'required|string|max:255'
         ];
 
         $validatedData = $request->validate($rules);
+
+        $validatedData['spouse_name'] =
+            $validatedData['marital_status'] === 'married'
+            ? $request->spouse_name
+            : null;
 
         $customer->update($validatedData);
 
@@ -352,7 +384,28 @@ class CustomerController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'service_id' => 'required|exists:services,id',
+            'father_name' => 'required|string|max:255',
+            'mother_name' => 'required|string|max:255',
+            'marital_status' => [
+                'required',
+                Rule::in([
+                    'single',
+                    'married',
+                    'widow',
+                    'widower',
+                    'separated',
+                    'divorced',
+                ]),
+            ],
+            'spouse_name' => 'required_if:marital_status,married|nullable|string|max:255',
+            'emergency_contact_name' => 'required|string|max:255',
+            'emergency_contact_mobile' => [
+                'required',
+                'regex:/^[6-9][0-9]{9}$/',
+                'different:mobile_number',
+            ],
+            'emergency_contact_email' => 'required|email|max:255',
+
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',
             'city' => 'required|string|max:255',
@@ -361,8 +414,8 @@ class CustomerController extends Controller
             'date_of_birth' => 'required|date',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
-            // 'place_of_birth' => 'required|string|max:255',
             'nationality' => 'required|string|max:255',
+
             'card_number' => 'nullable|string|size:16',
             'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
@@ -380,6 +433,11 @@ class CustomerController extends Controller
         }
 
         $validated = $validator->validated();
+
+        if ($validated['marital_status'] !== 'married') {
+            $validated['spouse_name'] = null;
+        }
+
         $validated['is_paid'] = true;
 
         $this->createOrConvert($validated, $smsService, $brevoMailService, $customer, 'convert');
@@ -406,12 +464,7 @@ class CustomerController extends Controller
 
             $customerData['payment_date'] = $isPaid ? now() : null;
 
-
-            $customerData['registration_step'] = $isPaid ? 4 : 1;
-
-            if (!$isPaid) {
-                $customerData['service_id'] = 1;
-            }
+            $customerData['registration_step'] = $isPaid ? 5 : 1;
 
             if ($customer) {
                 $customer->update($customerData);

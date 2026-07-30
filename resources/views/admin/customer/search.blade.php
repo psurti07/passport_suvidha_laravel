@@ -117,7 +117,154 @@
                         enctype="multipart/form-data" class="space-y-5" novalidate>
                         @csrf
                         @method('PUT')
-                        <div class="grid grid-cols-1 md:grid-cols-1 gap-12">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                            <div>
+                                <label for="father_name"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Father Name <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text" id="father_name" name="father_name"
+                                    value="{{ old('father_name', $customer->father_name) }}" required
+                                    placeholder="Enter Father Name"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                @error('father_name')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="mother_name"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Mother Name <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text" id="mother_name" name="mother_name"
+                                    value="{{ old('mother_name', $customer->mother_name) }}" required
+                                    placeholder="Enter Mother Name"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                @error('mother_name')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="marital_status"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Marital Status
+                                    <span class="text-red-500">*</span></label>
+                                <select id="marital_status" name="marital_status" required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
+                                    <option value="">Select Marital Status</option>
+
+                                    <option value="single"
+                                        {{ old('marital_status', $customer->marital_status) == 'single' ? 'selected' : '' }}>
+                                        Single
+                                    </option>
+
+                                    <option value="married"
+                                        {{ old('marital_status', $customer->marital_status) == 'married' ? 'selected' : '' }}>
+                                        Married
+                                    </option>
+
+                                    <option value="widow"
+                                        {{ old('marital_status', $customer->marital_status) == 'widow' ? 'selected' : '' }}>
+                                        Widow
+                                    </option>
+
+                                    <option value="widower"
+                                        {{ old('marital_status', $customer->marital_status) == 'widower' ? 'selected' : '' }}>
+                                        Widower
+                                    </option>
+
+                                    <option value="separated"
+                                        {{ old('marital_status', $customer->marital_status) == 'separated' ? 'selected' : '' }}>
+                                        Separated
+                                    </option>
+
+                                    <option value="divorced"
+                                        {{ old('marital_status', $customer->marital_status) == 'divorced' ? 'selected' : '' }}>
+                                        Divorced
+                                    </option>
+                                </select>
+                                @error('marital_status')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="spouse_name"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Spouse Name <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text" id="spouse_name" name="spouse_name"
+                                    value="{{ old('spouse_name', $customer->spouse_name) }}" required
+                                    placeholder="Enter Spouse Name"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                @error('spouse_name')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="emergency_contact_name"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact Name <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text" id="emergency_contact_name" name="emergency_contact_name"
+                                    value="{{ old('emergency_contact_name', $customer->emergency_contact_name) }}" required
+                                    placeholder="Enter Emergency Contact Name"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                @error('emergency_contact_name')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+<div>
+                            <label for="mobile_number" class="block text-sm font-semibold text-gray-900">
+                                Mobile Number
+                                <span class="text-red-500 ml-1">*</span>
+                            </label>
+                            <div class="relative group">
+                                <input type="tel" id="emergency_contact_mobile" name="emergency_contact_mobile"
+                                    value="{{ old('emergency_contact_mobile') }}" required placeholder="Enter mobile number"
+                                    maxlength="10" inputmode="numeric"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400
+                                    @error('emergency_contact_mobile') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                            </div>
+                            @error('emergency_contact_mobile')
+                            <p class="mt-1 text-sm text-red-600 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                {{ $message }}
+                            </p>
+                            @enderror
+                        </div>
+                            <div>
+                                <label for="emergency_contact_mobile"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact Mobile <span
+                                        class="text-red-500">*</span></label>
+                                <input type="tel" id="emergency_contact_mobile" name="emergency_contact_mobile"
+                                    value="{{ old('emergency_contact_mobile', $customer->emergency_contact_mobile) }}" required placeholder="Enter Emergency Contact Mobile"
+                                    maxlength="10" inputmode="numeric"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                @error('emergency_contact_mobile')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="emergency_contact_email"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact Email <span
+                                        class="text-red-500">*</span></label>
+                                <input type="tel" id="emergency_contact_email" name="emergency_contact_email"
+                                    value="{{ old('emergency_contact_email', $customer->emergency_contact_email) }}" required
+                                    placeholder="Enter Emergency Contact Email"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                @error('emergency_contact_email')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                             <div>
                                 <label for="address"
                                     class="block text-sm font-medium text-gray-700 mb-1">Address <span
@@ -128,8 +275,7 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+
                             <div>
                                 <label for="pin_code"
                                     class="block text-sm font-medium text-gray-700 mb-1">Pincode <span
@@ -144,6 +290,7 @@
                                 @enderror
                                 <span id="pincode-error" class="text-red-500 text-sm"></span>
                             </div>
+
                             <div>
                                 <label for="city"
                                     class="block text-sm font-medium text-gray-700 mb-1">City <span
@@ -156,6 +303,7 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
+
                             <div>
                                 <label for="state"
                                     class="block text-sm font-medium text-gray-700 mb-1">State <span
@@ -168,6 +316,7 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
+
                             <div>
                                 <label for="gender"
                                     class="block text-sm font-medium text-gray-700 mb-1">Gender <span
@@ -194,6 +343,7 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
+
                             <div>
                                 <label for="date_of_birth"
                                     class="block text-sm font-medium text-gray-700 mb-1">Date of
@@ -206,282 +356,246 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                            {{-- <div>
-                                <label for="place_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Place
-                                    of
-                                    Birth <span class="text-red-500">*</span></label>
-                                <input type="text" id="place_of_birth" name="place_of_birth"
-                                    value="{{ old('place_of_birth', $customer->place_of_birth ?? '') }}" required
-                            placeholder="Enter place of birth"
-                            class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                            @error('place_of_birth')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div> --}}
 
-                        <div>
-                            <label for="education_qualification"
-                                class="block text-sm font-medium text-gray-700 mb-1"> Education
-                                Qualification
-                                <span class="text-red-500">*</span></label>
-                            <select id="education_qualification" name="education_qualification"
-                                required
-                                class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
-                                <option value="">Select Education Qualification</option>
+                            <div>
+                                <label for="education_qualification"
+                                    class="block text-sm font-medium text-gray-700 mb-1"> Education
+                                    Qualification
+                                    <span class="text-red-500">*</span></label>
+                                <select id="education_qualification" name="education_qualification"
+                                    required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
+                                    <option value="">Select Education Qualification</option>
 
-                                <option value="Below 10th"
-                                    {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
-                                    Below 10th
-                                </option>
+                                    <option value="Below 10th"
+                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
+                                        Below 10th
+                                    </option>
 
-                                <option value="10th Pass And Above"
-                                    {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>
-                                    10th Pass And Above
-                                </option>
+                                    <option value="10th Pass And Above"
+                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>
+                                        10th Pass And Above
+                                    </option>
 
-                                <option value="Graduate And Above"
-                                    {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Graduate And Above') ? 'selected' : '' }}>
-                                    Graduate And Above
-                                </option>
-                            </select>
-                            @error('education_qualification')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                                    <option value="Graduate And Above"
+                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Graduate And Above') ? 'selected' : '' }}>
+                                        Graduate And Above
+                                    </option>
+                                </select>
+                                @error('education_qualification')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                        <div>
-                            <label for="employment_type"
-                                class="block text-sm font-medium text-gray-700 mb-1">Employment Type
-                                <span class="text-red-500">*</span></label>
-                            <select id="employment_type" name="employment_type" required
-                                class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
-                                <option value="">Select Employment Type</option>
+                            <div>
+                                <label for="employment_type"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Employment Type
+                                    <span class="text-red-500">*</span></label>
+                                <select id="employment_type" name="employment_type" required
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
+                                    <option value="">Select Employment Type</option>
 
-                                <option value="Government"
-                                    {{ old('employment_type', $customer->employment_type) == 'Government' ? 'selected' : '' }}>
-                                    Government
-                                </option>
+                                    <option value="Government"
+                                        {{ old('employment_type', $customer->employment_type) == 'Government' ? 'selected' : '' }}>
+                                        Government
+                                    </option>
 
-                                <option value="Private"
-                                    {{ old('employment_type', $customer->employment_type) == 'Private' ? 'selected' : '' }}>
-                                    Private
-                                </option>
+                                    <option value="Private"
+                                        {{ old('employment_type', $customer->employment_type) == 'Private' ? 'selected' : '' }}>
+                                        Private
+                                    </option>
 
-                                <option value="Self Employed"
-                                    {{ old('employment_type', $customer->employment_type) == 'Self Employed' ? 'selected' : '' }}>
-                                    Self Employed
-                                </option>
+                                    <option value="Self Employed"
+                                        {{ old('employment_type', $customer->employment_type) == 'Self Employed' ? 'selected' : '' }}>
+                                        Self Employed
+                                    </option>
 
-                                <option value="Student"
-                                    {{ old('employment_type', $customer->employment_type) == 'Student' ? 'selected' : '' }}>
-                                    Student
-                                </option>
+                                    <option value="Student"
+                                        {{ old('employment_type', $customer->employment_type) == 'Student' ? 'selected' : '' }}>
+                                        Student
+                                    </option>
 
-                                <option value="Homemaker"
-                                    {{ old('employment_type', $customer->employment_type) == 'Homemaker' ? 'selected' : '' }}>
-                                    Homemaker
-                                </option>
+                                    <option value="Homemaker"
+                                        {{ old('employment_type', $customer->employment_type) == 'Homemaker' ? 'selected' : '' }}>
+                                        Homemaker
+                                    </option>
 
-                                <option value="Retired"
-                                    {{ old('employment_type', $customer->employment_type) == 'Retired' ? 'selected' : '' }}>
-                                    Retired
-                                </option>
+                                    <option value="Retired"
+                                        {{ old('employment_type', $customer->employment_type) == 'Retired' ? 'selected' : '' }}>
+                                        Retired
+                                    </option>
 
-                                <option value="Others"
-                                    {{ old('employment_type', $customer->employment_type) == 'Others' ? 'selected' : '' }}>
-                                    Others
-                                </option>
-                            </select>
-                            @error('employment_type')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                                    <option value="Others"
+                                        {{ old('employment_type', $customer->employment_type) == 'Others' ? 'selected' : '' }}>
+                                        Others
+                                    </option>
+                                </select>
+                                @error('employment_type')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                        <div>
-                            <label for="nationality"
-                                class="block text-sm font-medium text-gray-700 mb-1">Nationality <span
-                                    class="text-red-500">*</span></label>
-                            <input type="text" id="nationality" name="nationality"
-                                value="{{ old('nationality', $customer->nationality) }}" required
-                                placeholder="Enter nationality"
-                                class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                            @error('nationality')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <!-- <div>
-                            <label for="service_id"
-                                class="block text-sm font-medium text-gray-700 mb-1">Service
-                                Name <span class="text-red-500">*</span></label>
-                            <select id="service_id" name="service_id" required
-                                class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
-                                <option value="" disabled selected>Select service name</option>
-                                @foreach ($services as $service)
-                                <option value="{{ $service->id }}"
-                                    {{ old('service_id', $customer->service_id) == $service->id ? 'selected' : '' }}>
-                                    {{ $service->service_name }}
-                                </option>
-                                @endforeach
-                            </select>
-                            @error('service_id')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div> -->
-                        <div>
-                            <label for="card_number"
-                                class="block text-sm font-semibold text-gray-900">
-                                Card Number
-                            </label>
-                            <div class="relative group">
-                                <input type="text" id="card_number" name="card_number"
-                                    value="{{ old('card_number', $cardNumber) }}"
-                                    placeholder="Enter card number"
-                                    class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
+                            <div>
+                                <label for="nationality"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Nationality <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text" id="nationality" name="nationality"
+                                    value="{{ old('nationality', $customer->nationality) }}" required
+                                    placeholder="Enter nationality"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                @error('nationality')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="card_number"
+                                    class="block text-sm font-semibold text-gray-900">
+                                    Card Number
+                                </label>
+                                <div class="relative group">
+                                    <input type="text" id="card_number" name="card_number"
+                                        value="{{ old('card_number', $cardNumber) }}"
+                                        placeholder="Enter card number"
+                                        class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                                         hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                                         transition-all duration-200 placeholder-gray-400">
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 mt-5">
-                                <div class="flex items-center">
-                                    <label class="ml-2 block text-sm font-semibold text-gray-900">Note:
-                                        18% GST
-                                        amount added on card amount.</label>
+
+                            <div>
+                                <label for="amount" class="block text-sm font-semibold text-gray-900">
+                                    Card Amount  (Note: 18% GST amount added on card amount).
+                                </label>
+                                <div class="relative group">
+                                    <input type="text" id="amount" name="amount"
+                                        value="{{ old('amount') }}" placeholder="Enter card amount"
+                                        class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
+                                                        hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
+                                                        transition-all duration-200 placeholder-gray-400">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="payment_id" class="block text-sm font-semibold text-gray-900">
+                                    Payment Id
+                                </label>
+                                <div class="relative group">
+                                    <input type="text" id="payment_id" name="payment_id"
+                                        value="{{ old('payment_id', $paymentId) }}"
+                                        placeholder="Enter payment id"
+                                        class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
+                                                        hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
+                                                        transition-all duration-200 placeholder-gray-400">
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <label for="amount" class="block text-sm font-semibold text-gray-900">
-                                Card Amount
-                            </label>
-                            <div class="relative group">
-                                <input type="text" id="amount" name="amount"
-                                    value="{{ old('amount') }}" placeholder="Enter card amount"
-                                    class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
-                                                        hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
-                                                        transition-all duration-200 placeholder-gray-400">
-                            </div>
-                        </div>
-                        <div>
-                            <label for="payment_id" class="block text-sm font-semibold text-gray-900">
-                                Payment Id
-                            </label>
-                            <div class="relative group">
-                                <input type="text" id="payment_id" name="payment_id"
-                                    value="{{ old('payment_id', $paymentId) }}"
-                                    placeholder="Enter payment id"
-                                    class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
-                                                        hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
-                                                        transition-all duration-200 placeholder-gray-400">
-                            </div>
-                        </div>
-                </div>
 
-                {{-- Form Buttons --}}
-                <div class="pt-5 mt-4 border-t border-gray-200 flex justify-end gap-3">
-                    <button type="submit"
-                        onclick="this.disabled=true; this.innerText='Creating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
-                        class="btn-primary px-8 py-2">Create An Account</button>
+                        {{-- Form Buttons --}}
+                        <div class="pt-5 mt-4 border-t border-gray-200 flex justify-end gap-3">
+                            <button type="submit"
+                                onclick="this.disabled=true; this.innerText='Creating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                                class="btn-primary px-8 py-2">Create An Account</button>
+                        </div>
+                    </form>
                 </div>
-                </form>
-            </div>
-            @endif
-            @elseif(isset($mobileNo))
-            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd"
-                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.33-.22 3.008-1.74 3.008H4.413c-1.52 0-2.49-1.678-1.74-3.008l5.58-9.92zM10 13a1 1 0 100-2 1 1 0 000 2zm-1-4a1 1 0 011-1h.008a1 1 0 110 2H10a1 1 0 01-1-1z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-yellow-700">
-                            No customer found for mobile number: <strong
-                                class="font-medium text-yellow-800">{{ $mobileNo }}</strong>
-                        </p>
+                @endif
+                @elseif(isset($mobileNo))
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.33-.22 3.008-1.74 3.008H4.413c-1.52 0-2.49-1.678-1.74-3.008l5.58-9.92zM10 13a1 1 0 100-2 1 1 0 000 2zm-1-4a1 1 0 011-1h.008a1 1 0 110 2H10a1 1 0 01-1-1z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700">
+                                No customer found for mobile number: <strong
+                                    class="font-medium text-yellow-800">{{ $mobileNo }}</strong>
+                            </p>
+                        </div>
                     </div>
                 </div>
+                @endif
             </div>
-            @endif
         </div>
+        @endif
     </div>
-    @endif
-</div>
-@endsection
+    @endsection
 
-@push('scripts')
-<script>
-    function convertCustomerComponent(show = false) {
-        return {
-            showCustomerForm: show,
+    @push('scripts')
+    <script>
+        function convertCustomerComponent(show = false) {
+            return {
+                showCustomerForm: show,
+            }
         }
-    }
 
-    let debounceTimer;
+        let debounceTimer;
 
-    $(document).ready(function() {
+        $(document).ready(function() {
 
-        $('#pin_code').on('input', function() {
+            $('#pin_code').on('input', function() {
 
-            clearTimeout(debounceTimer);
+                clearTimeout(debounceTimer);
 
-            let pincode = $(this).val().trim();
+                let pincode = $(this).val().trim();
 
-            $('#pincode-error').text('');
+                $('#pincode-error').text('');
 
-            if (!/^\d*$/.test(pincode)) {
-                $('#pincode-error').text('Only numbers allowed');
-                $('#city').val('');
-                $('#state').val('');
-                return;
-            }
+                if (!/^\d*$/.test(pincode)) {
+                    $('#pincode-error').text('Only numbers allowed');
+                    $('#city').val('');
+                    $('#state').val('');
+                    return;
+                }
 
-            if (pincode.length !== 6) {
-                $('#city').val('');
-                $('#state').val('');
-                return;
-            }
+                if (pincode.length !== 6) {
+                    $('#city').val('');
+                    $('#state').val('');
+                    return;
+                }
 
-            debounceTimer = setTimeout(function() {
+                debounceTimer = setTimeout(function() {
 
-                $.ajax({
-                    url: "{{ route('admin.pincode.location') }}",
-                    type: "POST",
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                        pincode: pincode
-                    },
-                    beforeSend: function() {
-                        $('#city').val('Loading...');
-                        $('#state').val('Loading...');
-                    },
-                    success: function(res) {
-                        if (res.status === 'success') {
-                            $('#city').val(res.city);
-                            $('#state').val(res.state);
-                            $('#pincode-error').text('');
-                        } else {
+                    $.ajax({
+                        url: "{{ route('admin.pincode.location') }}",
+                        type: "POST",
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            pincode: pincode
+                        },
+                        beforeSend: function() {
+                            $('#city').val('Loading...');
+                            $('#state').val('Loading...');
+                        },
+                        success: function(res) {
+                            if (res.status === 'success') {
+                                $('#city').val(res.city);
+                                $('#state').val(res.state);
+                                $('#pincode-error').text('');
+                            } else {
+                                $('#city').val('');
+                                $('#state').val('');
+                                $('#pincode-error').text(res.message ||
+                                    'Invalid pincode');
+                            }
+                        },
+                        error: function(xhr) {
                             $('#city').val('');
                             $('#state').val('');
-                            $('#pincode-error').text(res.message ||
-                                'Invalid pincode');
+
+                            let msg = xhr.responseJSON?.message || 'Invalid pincode';
+                            $('#pincode-error').text(msg);
                         }
-                    },
-                    error: function(xhr) {
-                        $('#city').val('');
-                        $('#state').val('');
+                    });
 
-                        let msg = xhr.responseJSON?.message || 'Invalid pincode';
-                        $('#pincode-error').text(msg);
-                    }
-                });
+                }, 500);
+            });
 
-            }, 500);
         });
-
-    });
-</script>
-@endpush
+    </script>
+    @endpush
