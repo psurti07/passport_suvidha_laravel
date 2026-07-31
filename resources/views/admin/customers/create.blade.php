@@ -588,6 +588,16 @@
                                         10th Pass And Above
                                     </option>
 
+                                    <option value="7th Pass Or Less"
+                                        {{ old('education_qualification') == '7th Pass Or Less' ? 'selected' : '' }}>
+                                        7th Pass Or Less
+                                    </option>
+
+                                    <option value="Between 8th And 9th Standard"
+                                        {{ old('education_qualification') == 'Between 8th And 9th Standard' ? 'selected' : '' }}>
+                                        Between 8th And 9th Standard
+                                    </option>
+
                                     <option value="Graduate And Above"
                                         {{ old('education_qualification') == 'Graduate And Above' ? 'selected' : '' }}>
                                         Graduate And Above

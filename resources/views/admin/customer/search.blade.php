@@ -117,7 +117,7 @@
                         enctype="multipart/form-data" class="space-y-5" novalidate>
                         @csrf
                         @method('PUT')
-                        <input type="text" name="mobile_number" value="{{ $customer->mobile_number }}">
+                        <input type="hidden" name="mobile_number" value="{{ $customer->mobile_number }}">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                             <div>
                                 <label for="father_name"
@@ -351,6 +351,16 @@
                                     <option value="10th Pass And Above"
                                         {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>
                                         10th Pass And Above
+                                    </option>
+
+                                     <option value="7th Pass Or Less"
+                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('7th Pass Or Less') ? 'selected' : '' }}>
+                                        7th Pass Or Less
+                                    </option>
+
+                                     <option value="Between 8th And 9th Standard"
+                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Between 8th And 9th Standard') ? 'selected' : '' }}>
+                                        Between 8th And 9th Standard
                                     </option>
 
                                     <option value="Graduate And Above"
