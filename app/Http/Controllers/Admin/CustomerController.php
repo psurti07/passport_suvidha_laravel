@@ -502,7 +502,6 @@ class CustomerController extends Controller
                 $igst = round($netAmount * 0.18, 2);
             }
 
-
             $order = ApplicationOrder::create([
                 'customer_id' => $customer->id,
                 'card_number' => $cardNumber,

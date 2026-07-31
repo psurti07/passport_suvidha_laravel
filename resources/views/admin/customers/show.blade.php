@@ -318,8 +318,8 @@
                             <label for="emergency_contact_mobile" class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact Mobile
                                 <span class="text-red-500">*</span></label>
                             <input type="tel" id="emergency_contact_mobile" name="emergency_contact_mobile"
-                                value="{{ old('emergency_contact_mobile', $customer->emergency_contact_mobile) }}" required maxlength="10"
-                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                value="{{ old('emergency_contact_mobile', $customer->emergency_contact_mobile) }}" required 
+                                maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                 class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
                                     @error('emergency_contact_mobile') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
                             @error('emergency_contact_mobile')
