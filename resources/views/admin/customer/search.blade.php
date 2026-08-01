@@ -58,10 +58,25 @@
                     </dd>
                     {{-- Assuming mobile_number from controller fix --}}
                 </div>
-                <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                <!-- <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                     <dt class="text-sm font-medium text-gray-500">Registration Date</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                         {{ $customer->created_at ? $customer->created_at->format('d M Y, H:i A') : 'N/A' }}
+                    </dd>
+                </div> -->
+                <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                    <dt class="text-sm font-medium text-gray-500">
+                        {{ $customer->is_paid == 1 ? 'Payment Date' : 'Registration Date' }}
+                    </dt>
+
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        @if ($customer->is_paid == 1 && $customer->payment_date)
+                        {{ \Carbon\Carbon::parse($customer->payment_date)->format('d M Y, h:i A') }}
+                        @elseif($customer->created_at)
+                        {{ $customer->created_at->format('d M Y, h:i A') }}
+                        @else
+                        N/A
+                        @endif
                     </dd>
                 </div>
                 <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
@@ -218,7 +233,7 @@
                                     class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact Mobile <span
                                         class="text-red-500">*</span></label>
                                 <input type="tel" id="emergency_contact_mobile" name="emergency_contact_mobile"
-                                    value="{{ old('emergency_contact_mobile', $customer->emergency_contact_mobile) }}" required 
+                                    value="{{ old('emergency_contact_mobile', $customer->emergency_contact_mobile) }}" required
                                     maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                     placeholder="Enter Emergency Contact Mobile"
                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
@@ -353,12 +368,12 @@
                                         10th Pass And Above
                                     </option>
 
-                                     <option value="7th Pass Or Less"
+                                    <option value="7th Pass Or Less"
                                         {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('7th Pass Or Less') ? 'selected' : '' }}>
                                         7th Pass Or Less
                                     </option>
 
-                                     <option value="Between 8th And 9th Standard"
+                                    <option value="Between 8th And 9th Standard"
                                         {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Between 8th And 9th Standard') ? 'selected' : '' }}>
                                         Between 8th And 9th Standard
                                     </option>

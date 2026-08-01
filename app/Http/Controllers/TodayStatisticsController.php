@@ -67,7 +67,7 @@ class TodayStatisticsController extends Controller
 
 
         // ================= OTP =================
-        $totalOtpToday = Otp::whereDate('created_at', $today)->count();
+        $totalOtpToday = Otp::whereDate('   ', $today)->count();
 
         $loginOtpToday = Otp::whereDate('created_at', $today)
             ->where('purpose', 'login')

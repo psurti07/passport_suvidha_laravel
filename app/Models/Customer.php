@@ -119,16 +119,48 @@ class Customer extends Authenticatable
         return $this->hasOne(ApplicationOrder::class);
     }
     
+    // public static function getDashboardData($type = null, $paid = null)
+    // {
+    //     $query = DB::table('customers')
+    //         ->join('services', 'customers.service_id', '=', 'services.id')
+    //         ->selectRaw('
+    //             YEAR(customers.created_at) as recyear,
+    //             MONTH(customers.created_at) as recmonth,
+    //             DAY(customers.created_at) as recday,
+    //             COUNT(customers.id) as totaluser
+    //         ')
+    //         ->whereNull('customers.deleted_at');
+
+    //     if ($type == 'normal') {
+    //         $query->whereIn('services.service_code', ['NP36', 'NP60']);
+    //     }
+
+    //     if ($type == 'tatkal') {
+    //         $query->whereIn('services.service_code', ['TP36', 'TP60']);
+    //     }
+
+    //     if (!is_null($paid)) {
+    //         $query->where('customers.is_paid', $paid);
+    //     }
+
+    //     return $query->groupByRaw('YEAR(customers.created_at), MONTH(customers.created_at), DAY(customers.created_at)')
+    //         ->orderByRaw('YEAR(customers.created_at) DESC, MONTH(customers.created_at) DESC, DAY(customers.created_at) DESC')
+    //         ->limit(10)
+    //         ->get();
+    // }
+
     public static function getDashboardData($type = null, $paid = null)
     {
+        $date = ($paid == 1) ? 'customers.payment_date' : 'customers.created_at';
+
         $query = DB::table('customers')
             ->join('services', 'customers.service_id', '=', 'services.id')
-            ->selectRaw('
-                YEAR(customers.created_at) as recyear,
-                MONTH(customers.created_at) as recmonth,
-                DAY(customers.created_at) as recday,
+            ->selectRaw("
+                YEAR($date) as recyear,
+                MONTH($date) as recmonth,
+                DAY($date) as recday,
                 COUNT(customers.id) as totaluser
-            ')
+            ")
             ->whereNull('customers.deleted_at');
 
         if ($type == 'normal') {
@@ -143,8 +175,20 @@ class Customer extends Authenticatable
             $query->where('customers.is_paid', $paid);
         }
 
-        return $query->groupByRaw('YEAR(customers.created_at), MONTH(customers.created_at), DAY(customers.created_at)')
-            ->orderByRaw('YEAR(customers.created_at) DESC, MONTH(customers.created_at) DESC, DAY(customers.created_at) DESC')
+        if ($paid == 1) {
+            $query->whereNotNull('customers.payment_date');
+        }
+
+        return $query->groupByRaw("
+                YEAR($date),
+                MONTH($date),
+                DAY($date)
+            ")
+            ->orderByRaw("
+                YEAR($date) DESC,
+                MONTH($date) DESC,
+                DAY($date) DESC
+            ")
             ->limit(10)
             ->get();
     }

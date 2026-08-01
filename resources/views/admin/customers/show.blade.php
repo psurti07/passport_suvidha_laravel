@@ -103,13 +103,41 @@
         {{-- Customer Info Tab Content --}}
         <div x-show="activeTab === 'info'" x-cloak>
             <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                {{-- Top Info Row --}}
+                <!-- {{-- Top Info Row --}}
                 <div
                     class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-gray-200 gap-y-2">
                     <p class="text-sm text-gray-600">
                         Registration on: <strong
                             class="text-gray-800 font-semibold">{{ $customer->payment_date ? $customer->payment_date->format('d M Y, H:i A') : 'N/A' }}</strong>
                     </p>
+                    @if ($invoice)
+                    <a href="{{ route('admin.invoices.download', $invoice->id) }}"
+                        class="inline-flex items-center text-sm px-4 py-2 w-auto bg-gradient-to-r from-green-500 to-green-600 font-medium rounded-lg border border-white text-white hover:from-green-600 hover:to-green-700">
+                        Download Invoice
+                    </a>
+                    @else
+                    <span class="text-gray-400 text-sm">No Invoice Found</span>
+                    @endif
+                </div> -->
+
+                {{-- Top Info Row --}}
+                <div
+                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-gray-200 gap-y-2">
+
+                    <p class="text-sm text-gray-600">
+                        {{ $customer->is_paid == 1 ? 'Payment on:' : 'Registration on:' }}
+
+                        <strong class="text-gray-800 font-semibold">
+                            @if ($customer->is_paid == 1 && $customer->payment_date)
+                            {{ $customer->payment_date->format('d M Y, h:i A') }}
+                            @elseif ($customer->created_at)
+                            {{ $customer->created_at->format('d M Y, h:i A') }}
+                            @else
+                            N/A
+                            @endif
+                        </strong>
+                    </p>
+
                     @if ($invoice)
                     <a href="{{ route('admin.invoices.download', $invoice->id) }}"
                         class="inline-flex items-center text-sm px-4 py-2 w-auto bg-gradient-to-r from-green-500 to-green-600 font-medium rounded-lg border border-white text-white hover:from-green-600 hover:to-green-700">
@@ -318,7 +346,7 @@
                             <label for="emergency_contact_mobile" class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact Mobile
                                 <span class="text-red-500">*</span></label>
                             <input type="tel" id="emergency_contact_mobile" name="emergency_contact_mobile"
-                                value="{{ old('emergency_contact_mobile', $customer->emergency_contact_mobile) }}" required 
+                                value="{{ old('emergency_contact_mobile', $customer->emergency_contact_mobile) }}" required
                                 maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                 class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
                                     @error('emergency_contact_mobile') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
