@@ -19,9 +19,12 @@
         <div class="bg-white rounded-xl shadow-lg border border-gray-100">
 
             <div class="p-4 lg:p-8">
-                <h2 class="text-xl font-bold text-blue-700 mb-6">
-                    Service Report
-                </h2>
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                    <h2
+                        class="text-xl mb-3 sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                        SERVICE REPORTS
+                    </h2>
+                </div>
 
                 <table id="service-reports-table" class="min-w-full divide-y divide-gray-200 border-separate text-sm">
 

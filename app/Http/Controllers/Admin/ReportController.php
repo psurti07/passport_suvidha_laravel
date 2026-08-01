@@ -155,12 +155,19 @@ class ReportController extends Controller
     {
         if ($request->ajax()) {
 
+            $dateColumn = "
+            CASE
+                WHEN customers.is_paid = 1 AND customers.payment_date IS NOT NULL THEN customers.payment_date
+                ELSE customers.created_at
+            END
+        ";
+
             $query = Customer::query()
                 ->join('services', 'services.id', '=', 'customers.service_id')
                 ->selectRaw("
-                YEAR(customers.created_at) as year,
-                MONTH(customers.created_at) as month_no,
-                MONTHNAME(customers.created_at) as month_name,
+                YEAR($dateColumn) as year,
+                MONTH($dateColumn) as month_no,
+                MONTHNAME($dateColumn) as month_name,
 
                 SUM(CASE WHEN services.service_code = 'NP36' THEN 1 ELSE 0 END) as np36,
                 SUM(CASE WHEN services.service_code = 'NP60' THEN 1 ELSE 0 END) as np60,
@@ -168,9 +175,9 @@ class ReportController extends Controller
                 SUM(CASE WHEN services.service_code = 'TP60' THEN 1 ELSE 0 END) as tp60
             ")
                 ->groupByRaw("
-                YEAR(customers.created_at),
-                MONTH(customers.created_at),
-                MONTHNAME(customers.created_at)
+                YEAR($dateColumn),
+                MONTH($dateColumn),
+                MONTHNAME($dateColumn)
             ");
 
             return DataTables::of($query)
@@ -200,18 +207,24 @@ class ReportController extends Controller
             $end = now();
         }
 
+        $dateColumn = "
+            CASE
+                WHEN customers.is_paid = 1 AND customers.payment_date IS NOT NULL THEN customers.payment_date
+                ELSE customers.created_at
+            END";
+
         $rawData = Customer::query()
             ->join('services', 'services.id', '=', 'customers.service_id')
             ->selectRaw("
-            DATE(customers.created_at) as report_date,
+            DATE($dateColumn) as report_date,
 
             SUM(CASE WHEN services.service_code = 'NP36' THEN 1 ELSE 0 END) as np36,
             SUM(CASE WHEN services.service_code = 'NP60' THEN 1 ELSE 0 END) as np60,
             SUM(CASE WHEN services.service_code = 'TP36' THEN 1 ELSE 0 END) as tp36,
             SUM(CASE WHEN services.service_code = 'TP60' THEN 1 ELSE 0 END) as tp60
         ")
-            ->whereBetween('customers.created_at', [$start, $end])
-            ->groupByRaw("DATE(customers.created_at)")
+            ->whereBetween(DB::raw($dateColumn), [$start, $end])
+            ->groupByRaw("DATE($dateColumn)")
             ->get()
             ->keyBy('report_date');
 
