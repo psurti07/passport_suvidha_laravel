@@ -118,35 +118,33 @@ class Customer extends Authenticatable
     {
         return $this->hasOne(ApplicationOrder::class);
     }
-
-    public static function getDashboardData($type = null, $paid = null, $service = null)
+    
+    public static function getDashboardData($type = null, $paid = null)
     {
         $query = DB::table('customers')
             ->join('services', 'customers.service_id', '=', 'services.id')
-            ->selectRaw('YEAR(customers.created_at) as recyear,
-                        MONTH(customers.created_at) as recmonth,
-                        DAY(customers.created_at) as recday,
-                        COUNT(customers.id) as totaluser')
+            ->selectRaw('
+                YEAR(customers.created_at) as recyear,
+                MONTH(customers.created_at) as recmonth,
+                DAY(customers.created_at) as recday,
+                COUNT(customers.id) as totaluser
+            ')
             ->whereNull('customers.deleted_at');
 
-        if ($type) {
-            if ($type == 'normal') {
-                $query->where('services.service_name', 'like', '%Normal%');
-            } elseif ($type == 'tatkal') {
-                $query->where('services.service_name', 'like', '%Tatkal%');
-            }
+        if ($type == 'normal') {
+            $query->whereIn('services.service_code', ['NP36', 'NP60']);
+        }
+
+        if ($type == 'tatkal') {
+            $query->whereIn('services.service_code', ['TP36', 'TP60']);
         }
 
         if (!is_null($paid)) {
             $query->where('customers.is_paid', $paid);
         }
 
-        if ($service) {
-            $query->where('services.service_code', 'like', $service . '%');
-        }
-
         return $query->groupByRaw('YEAR(customers.created_at), MONTH(customers.created_at), DAY(customers.created_at)')
-            ->orderByRaw('YEAR(customers.created_at) desc, MONTH(customers.created_at) desc, DAY(customers.created_at) desc')
+            ->orderByRaw('YEAR(customers.created_at) DESC, MONTH(customers.created_at) DESC, DAY(customers.created_at) DESC')
             ->limit(10)
             ->get();
     }
