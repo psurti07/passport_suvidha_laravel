@@ -29,7 +29,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-center mb-6">
                     <h2
                         class="text-xl mb-3 sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                        Invoice Report
+                        INVOICE REPORTS
                     </h2>
                 </div>
 

@@ -102,6 +102,10 @@ class CustomerController extends Controller
     {
         $isPaid = $request->input('is_paid', $customer->is_paid);
 
+        $request->merge([
+            'marital_status' => strtolower(trim($request->marital_status))
+        ]);
+
         $rules = [
             'full_name' => 'required|string|max:255',
             'mobile_number' => [
@@ -127,23 +131,57 @@ class CustomerController extends Controller
                             ->where('is_paid', 1);
                     }),
             ],
-            'address' => 'nullable|string',
+            'father_name' => 'required|string|max:255',
+            'mother_name' => 'required|string|max:255',
+            'marital_status' => [
+                'required',
+                Rule::in([
+                    'single',
+                    'married',
+                    'widow',
+                    'widower',
+                    'seperated',
+                    'divorced',
+                ]),
+            ],
+            'spouse_name' => 'required_if:marital_status,married|nullable|string|max:255',
+            'emergency_contact_name' => 'required|string|max:255',
+            'emergency_contact_mobile' => [
+                'required',
+                'digits:10',
+                'different:mobile_number',
+            ],
+            'emergency_contact_email' => 'required|email|max:255',
+            'address' => 'nullable|string|max:500',
+            'pin_code' => 'nullable|digits:6',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            // 'nearest_police_station' => 'nullable|string|max:255',
             'gender' => 'nullable|in:male,female,other',
             'date_of_birth' => 'nullable|date',
+            'place_of_birth' => 'nullable|string|max:255',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
             'nationality' => 'nullable|string|max:255',
-            'service_code' => 'nullable|string|max:255',
         ];
 
         if ($isPaid) {
-            $rules['address'] = 'required|string';
+
+            $rules['father_name'] = 'required|string|max:255';
+            $rules['mother_name'] = 'required|string|max:255';
+            $rules['marital_status'] = 'required|string|max:255';
+            $rules['address'] = 'required|string|max:255';
+            $rules['pin_code'] = 'required|digits:6';
+            $rules['city'] = 'required|string|max:255';
+            $rules['state'] = 'required|string|max:255';
+            // $rules['nearest_police_station'] = 'required|string|max:255';
             $rules['gender'] = 'required|in:male,female,other';
             $rules['date_of_birth'] = 'required|date';
+            $rules['place_of_birth'] = 'required|string|max:255';
             $rules['education_qualification'] = 'required|string|max:255';
             $rules['employment_type'] = 'required|string|max:255';
             $rules['nationality'] = 'required|string|max:255';
-        }
+        };
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -209,7 +247,7 @@ class CustomerController extends Controller
                 ]
             ], 422);
         }
-        
+
         $existingCustomer = Customer::where('mobile_number', $request->mobile_number)->first();
 
         if ($existingCustomer) {
@@ -263,7 +301,8 @@ class CustomerController extends Controller
         ], 201);
     }
 
-    public function addFamilyDetails(Request $request){
+    public function addFamilyDetails(Request $request)
+    {
         $request->merge([
             'marital_status' => strtolower(trim($request->marital_status))
         ]);
@@ -292,7 +331,7 @@ class CustomerController extends Controller
             'emergency_contact_email' => 'required|email|max:255',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors()
             ], 422);
@@ -300,7 +339,7 @@ class CustomerController extends Controller
 
         $customer = $request->user();
 
-        if($customer->registration_step < 2){
+        if ($customer->registration_step < 2) {
             return response()->json([
                 'errors' => [
                     'registration' => [
@@ -312,7 +351,7 @@ class CustomerController extends Controller
 
         $data = $validator->validated();
 
-        if($request->marital_status !== 'married'){
+        if ($request->marital_status !== 'married') {
             $data['spouse_name'] = null;
         }
 
@@ -476,7 +515,6 @@ class CustomerController extends Controller
                     "event" => "Lead Gen"
                 ]
             );
-
         } catch (\Exception $e) {
             Log::error('Interakt Tracking Failed', [
                 'message' => $e->getMessage()
