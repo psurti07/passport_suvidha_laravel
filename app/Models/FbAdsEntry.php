@@ -20,4 +20,9 @@ class FbAdsEntry extends Model
         'sent_data' => 'array',
         'received_data' => 'array'
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

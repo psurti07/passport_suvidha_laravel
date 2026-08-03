@@ -119,6 +119,11 @@ class Customer extends Authenticatable
     {
         return $this->hasOne(ApplicationOrder::class);
     }
+
+    public function fbadsentry()
+    {
+        return $this->hasMany(FbAdsEntry::class);
+    }
     
     // public static function getDashboardData($type = null, $paid = null)
     // {
