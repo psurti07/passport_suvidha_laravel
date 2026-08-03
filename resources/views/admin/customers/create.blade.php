@@ -477,7 +477,7 @@
                             </p>
                             @enderror
                         </div>
-                        <div>
+                        <!-- <div>
                             <label for="pin_code" class="block text-sm font-semibold text-gray-900">
                                 Nearest Police Station Pincode
                                 <span class="text-red-500">*</span>
@@ -503,7 +503,7 @@
                             </p>
                             @enderror
                             <span id="pincode-error" class="text-red-500 text-sm"></span>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
