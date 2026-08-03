@@ -349,6 +349,19 @@
                             </div>
 
                             <div>
+                                <label for="place_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Place
+                                    of
+                                    Birth <span class="text-red-500">*</span></label>
+                                <input type="text" id="place_of_birth" name="place_of_birth"
+                                    value="{{ old('place_of_birth', $customer->place_of_birth ?? '') }}" required
+                                    placeholder="Enter place of birth"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                @error('place_of_birth')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
                                 <label for="education_qualification"
                                     class="block text-sm font-medium text-gray-700 mb-1"> Education
                                     Qualification

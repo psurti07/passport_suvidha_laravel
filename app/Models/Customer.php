@@ -39,6 +39,7 @@ class Customer extends Authenticatable
         'state',
         'gender',
         'date_of_birth',
+        'place_of_birth',
         'education_qualification',
         'employment_type',
         'nationality',
