@@ -477,35 +477,6 @@
                             </p>
                             @enderror
                         </div>
-                        <!-- <div>
-                            <label for="pin_code" class="block text-sm font-semibold text-gray-900">
-                                Nearest Police Station Pincode
-                                <span class="text-red-500">*</span>
-                            </label>
-                            <div class="relative group">
-                                <input type="text" id="pin_code" name="pin_code" inputmode="numeric"
-                                    value="{{ old('pin_code') }}" :required="isPaid"
-                                    placeholder="Enter pincode" maxlength="6" minlength="6"
-                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                                    class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
-                                            hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
-                                            transition-all duration-200 placeholder-gray-400
-                                            @error('pin_code') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
-                            </div>
-                            @error('pin_code')
-                            <p class="mt-1 text-sm text-red-600 flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                {{ $message }}
-                            </p>
-                            @enderror
-                            <span id="pincode-error" class="text-red-500 text-sm"></span>
-                        </div> -->
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="gender" class="block text-sm font-semibold text-gray-900">
                                 Gender
@@ -536,6 +507,8 @@
                             </p>
                             @enderror
                         </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="date_of_birth" class="block text-sm font-semibold text-gray-900">
                                 Date of Birth
@@ -561,9 +534,6 @@
                             </p>
                             @enderror
                         </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="place_of_birth" class="block text-sm font-semibold text-gray-900">
                                 Place of Birth
@@ -589,6 +559,9 @@
                             </p>
                             @enderror
                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="education_qualification"
                                 class="block text-sm font-semibold text-gray-900">
@@ -641,10 +614,6 @@
                             </p>
                             @enderror
                         </div>
-
-
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="employment_type" class="block text-sm font-semibold text-gray-900">
                                 Employment Type
@@ -705,6 +674,8 @@
                             </p>
                             @enderror
                         </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="nationality" class="block text-sm font-semibold text-gray-900">
                                 Nationality
