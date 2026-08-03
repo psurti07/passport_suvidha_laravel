@@ -385,6 +385,20 @@ class CustomerController extends Controller
         ]);
     }
 
+    public function getCustomerByFbclid(Request $request)
+    {
+        $fbclid = $request->id;
+
+        $fbLead = FbAdsEntry::with('customer')
+            ->where('fbclid', $fbclid)
+            ->first();
+
+        return response()->json([
+            'success' => true,
+            'customer' => $fbLead->customer
+        ]);
+    }
+
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
