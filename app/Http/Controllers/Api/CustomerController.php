@@ -101,36 +101,81 @@ class CustomerController extends Controller
 
     public function update(Request $request, Customer $customer)
     {
-        $isPaid = $request->input('is_paid', $customer->is_paid);
+        // $isPaid = $request->input('is_paid', $customer->is_paid);
 
-        $request->merge([
-            'marital_status' => strtolower(trim($request->marital_status))
-        ]);
+        // $rules = [
+        //     'full_name' => 'required|string|max:255',
+        //     'mobile_number' => [
+        //         'required',
+        //         'string',
+        //         'max:20',
+        //         Rule::unique('customers', 'mobile_number')
+        //             ->ignore($customer->id)
+        //             ->where(function ($query) {
+        //                 return $query
+        //                     ->whereNull('deleted_at')
+        //                     ->where('is_paid', 1);
+        //             }),
+        //     ],
+        //     'email' => [
+        //         'required',
+        //         'email',
+        //         Rule::unique('customers', 'email')
+        //             ->ignore($customer->id)
+        //             ->where(function ($query) {
+        //                 return $query
+        //                     ->whereNull('deleted_at')
+        //                     ->where('is_paid', 1);
+        //             }),
+        //     ],
+        //     'address' => 'nullable|string',
+        //     'gender' => 'nullable|in:male,female,other',
+        //     'date_of_birth' => 'nullable|date',
+        //     'place_of_birth' => 'nullable|string|max:255',
+        //     'education_qualification' => 'required|string|max:255',
+        //     'employment_type' => 'required|string|max:255',
+        //     'nationality' => 'nullable|string|max:255',
+        //     'service_code' => 'nullable|string|max:255',
+        // ];
 
+        // if ($isPaid) {
+        //     $rules['address'] = 'required|string';
+        //     $rules['gender'] = 'required|in:male,female,other';
+        //     $rules['date_of_birth'] = 'required|date';
+        //     $rules['place_of_birth'] = 'required|string|max:255';
+        //     $rules['education_qualification'] = 'required|string|max:255';
+        //     $rules['employment_type'] = 'required|string|max:255';
+        //     $rules['nationality'] = 'required|string|max:255';
+        // }
+
+        // $validator = Validator::make($request->all(), $rules);
+
+        // if ($validator->fails()) {
+        //     return response()->json(['errors' => $validator->errors()], 422);
+        // }
+
+        // $data = $validator->validated();
+
+        // $data['is_paid'] = $request->has('is_paid')
+        //     ? $request->input('is_paid')
+        //     : $customer->is_paid;
+
+        // $customer->update($data);
         $rules = [
             'full_name' => 'required|string|max:255',
             'mobile_number' => [
                 'required',
-                'string',
-                'max:20',
+                'regex:/^[6-9][0-9]{9}$/',
                 Rule::unique('customers', 'mobile_number')
                     ->ignore($customer->id)
-                    ->where(function ($query) {
-                        return $query
-                            ->whereNull('deleted_at')
-                            ->where('is_paid', 1);
-                    }),
+                    ->whereNull('deleted_at'),
             ],
             'email' => [
                 'required',
                 'email',
                 Rule::unique('customers', 'email')
                     ->ignore($customer->id)
-                    ->where(function ($query) {
-                        return $query
-                            ->whereNull('deleted_at')
-                            ->where('is_paid', 1);
-                    }),
+                    ->whereNull('deleted_at'),
             ],
             'father_name' => 'required|string|max:255',
             'mother_name' => 'required|string|max:255',
@@ -141,7 +186,7 @@ class CustomerController extends Controller
                     'married',
                     'widow',
                     'widower',
-                    'seperated',
+                    'separated',
                     'divorced',
                 ]),
             ],
@@ -149,54 +194,31 @@ class CustomerController extends Controller
             'emergency_contact_name' => 'required|string|max:255',
             'emergency_contact_mobile' => [
                 'required',
-                'digits:10',
+                'regex:/^[6-9][0-9]{9}$/',
                 'different:mobile_number',
             ],
             'emergency_contact_email' => 'required|email|max:255',
-            'address' => 'nullable|string|max:500',
-            'pin_code' => 'nullable|digits:6',
-            'city' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            // 'nearest_police_station' => 'nullable|string|max:255',
-            'gender' => 'nullable|in:male,female,other',
-            'date_of_birth' => 'nullable|date',
-            'place_of_birth' => 'nullable|string|max:255',
+
+            'address' => 'required|string',
+            'pin_code' => 'required|string|max:10',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'gender' => 'required|in:male,female,other',
+            'date_of_birth' => 'required|date',
+            'place_of_birth' => 'required|string|max:255',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
-            'nationality' => 'nullable|string|max:255',
+            'nationality' => 'required|string|max:255'
         ];
 
-        if ($isPaid) {
+        $validatedData = $request->validate($rules);
 
-            $rules['father_name'] = 'required|string|max:255';
-            $rules['mother_name'] = 'required|string|max:255';
-            $rules['marital_status'] = 'required|string|max:255';
-            $rules['address'] = 'required|string|max:255';
-            $rules['pin_code'] = 'required|digits:6';
-            $rules['city'] = 'required|string|max:255';
-            $rules['state'] = 'required|string|max:255';
-            // $rules['nearest_police_station'] = 'required|string|max:255';
-            $rules['gender'] = 'required|in:male,female,other';
-            $rules['date_of_birth'] = 'required|date';
-            $rules['place_of_birth'] = 'required|string|max:255';
-            $rules['education_qualification'] = 'required|string|max:255';
-            $rules['employment_type'] = 'required|string|max:255';
-            $rules['nationality'] = 'required|string|max:255';
-        };
+        $validatedData['spouse_name'] =
+            $validatedData['marital_status'] === 'married'
+            ? $request->spouse_name
+            : null;
 
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $data = $validator->validated();
-
-        $data['is_paid'] = $request->has('is_paid')
-            ? $request->input('is_paid')
-            : $customer->is_paid;
-
-        $customer->update($data);
+        $customer->update($validatedData);
 
         return response()->json($customer);
     }
