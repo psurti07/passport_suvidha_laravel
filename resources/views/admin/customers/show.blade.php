@@ -460,7 +460,7 @@
                         </div>
 
                         <div>
-                            <label for="police_station_name" class="block text-sm font-medium text-gray-700 mb-1">Police Station Name
+                            <label for="police_station_name" class="block text-sm font-medium text-gray-700 mb-1">Nearest Police Station Name
                                 <span class="text-red-500">*</span></label>
                             <input type="text" id="police_station_name" name="police_station_name"
                                 value="{{ old('police_station_name', $customer->police_station_name) }}" required
