@@ -35,6 +35,7 @@ class Customer extends Authenticatable
 
         'address',
         'pin_code',
+        'police_station_name',
         'city',
         'state',
         'gender',

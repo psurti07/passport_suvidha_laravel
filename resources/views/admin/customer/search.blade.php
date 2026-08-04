@@ -253,9 +253,7 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                            
                             <div>
                                 <label for="address"
                                     class="block text-sm font-medium text-gray-700 mb-1">Address <span
@@ -304,6 +302,19 @@
                                     placeholder="Enter state" readonly
                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                 @error('state')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="police_station_name"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Police Station Name <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text" id="police_station_name" name="police_station_name"
+                                    value="{{ old('police_station_name', $customer->police_station_name) }}" required
+                                    placeholder="Enter Police Station Name"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                @error('police_station_name')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
