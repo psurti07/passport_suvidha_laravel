@@ -202,6 +202,7 @@ class CustomerController extends Controller
 
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',
+            'police_station_name' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'gender' => 'required|in:male,female,other',
@@ -394,6 +395,7 @@ class CustomerController extends Controller
         $validator = Validator::make($request->all(), [
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',
+            'police_station_name' => 'required|string|max:255',
             'city' => 'required|string|max:100',
             'state' => 'required|string|max:100',
             'gender' => 'required|in:male,female,other',
