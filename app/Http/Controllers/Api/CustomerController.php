@@ -426,6 +426,7 @@ class CustomerController extends Controller
 
 
         $data['registration_step'] = 4;
+        $data['nationality'] = 'Indian';
 
         $customer->update($data);
 
