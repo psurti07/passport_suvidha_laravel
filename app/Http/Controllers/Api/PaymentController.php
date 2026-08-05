@@ -28,14 +28,32 @@ class PaymentController extends Controller
 
     public function createOrder(Request $request)
     {
-        $request->validate([
-            'service_code' => 'required',
-            'mobile' => 'required'
-        ]);
+        // $request->validate([
+        //     // 'service_code' => 'required',
+        //     'mobile' => 'required'
+        // ]);
+
+        $customer = auth()->user();
+
+        if (!$customer) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated.'
+            ], 401);
+        }
+
+        $service_id = $customer->service_id;
+
+        if ($customer->is_paid) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Payment has already been completed.'
+            ], 200);
+        }
 
         $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
 
-        $service = Service::where('service_code', $request->service_code)->first();
+        $service = Service::find($service_id);
 
         if (!$service) {
             return response()->json([
@@ -49,7 +67,7 @@ class PaymentController extends Controller
 
         $testNumbers = explode(',', config('services.testnumbers.test_numbers', ''));
 
-        if (in_array($request->mobile, $testNumbers)) {
+        if (in_array($customer->mobile_number, $testNumbers)) {
             $finalAmount = 1;
         }
 
@@ -62,24 +80,20 @@ class PaymentController extends Controller
         ]);
 
         RazorpayLog::create([
-            'customer_id' => auth()->id() ?? 0,
+            'customer_id' => $customer->id,
             'order_id' => null,
             'payment_id' => null,
             'order_amount' => $finalAmount,
             'order_note' => 'Passport Application',
             'reference_id' => $order['id'],
             'tx_status' => null,
-            "service_type" => $request->service_code,
+            "service_type" => $service->service_code,
         ]);
-
-        $customer = auth()->user();
-
-        $full_name = $customer?->full_name;
 
         return response()->json([
             'id' => $order['id'],
             'amount' => $razorpayAmount,
-            'name' => $full_name,
+            'name' => $customer?->full_name,
             'email' => $customer?->email,
             'mobile' => $customer?->mobile_number,
         ]);
@@ -456,7 +470,6 @@ class PaymentController extends Controller
                 try {
                     $api = new Api(config("services.razorpay.key"), config("services.razorpay.secret"));
                     $payment = $api->payment->fetch($request->razorpay_payment_id);
-                   
                     if ($payment->status == 'captured') {
 
                         return response()->json([
@@ -550,7 +563,6 @@ class PaymentController extends Controller
                     "event" => "Payment Successful"
                 ]
             );
-
         } catch (\Exception $e) {
             Log::error('Interakt Tracking Failed', [
                 'message' => $e->getMessage()

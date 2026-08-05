@@ -58,7 +58,7 @@ class CustomerController extends Controller
     //         'address' => 'required|string',
     //         'gender' => 'required|in:male,female,other',
     //         'date_of_birth' => 'required|date',
-                // 'place_of_birth' => 'required|string|max:255',
+    // 'place_of_birth' => 'required|string|max:255',
     //         'education_qualification' => 'required|string|max:255',
     //         'employment_type' => 'required|string|max:255',
     //         'nationality' => 'required|string|max:255',
@@ -292,8 +292,8 @@ class CustomerController extends Controller
             return response()->json([
                 'message' => 'Customer information updated successfully',
                 'customer' => $existingCustomer->fresh(),
-                'next_step' => 'otp_verification',
                 'registration_step' => $existingCustomer->registration_step,
+                'next_step' => $this->getNextStep($existingCustomer->registration_step),
             ], 200);
         }
 
@@ -303,7 +303,7 @@ class CustomerController extends Controller
 
         $data['service_id'] = $service->id;
 
-        $data['registration_step'] = 1;
+        $data['registration_step'] = 2;
 
         $customer = Customer::create($data);
 
@@ -318,10 +318,15 @@ class CustomerController extends Controller
             ]);
         }
 
+        $token = $customer->createToken('customer-registration-token')->plainTextToken;
+
         return response()->json([
             'message' => 'Customer information saved successfully',
+            'token' => $token,
+            'registration_step' => $customer->registration_step,
             'customer' => $customer,
-            'next_step' => 'otp_verification'
+            'next_step' => $this->getNextStep($customer->registration_step),
+            'token_type' => 'Bearer',
         ], 201);
     }
 
@@ -450,13 +455,61 @@ class CustomerController extends Controller
     {
         $fbclid = $request->id;
 
-        $fbLead = FbAdsEntry::with('customer')
+        $fbLead = FbAdsEntry::with(['customer.service'])
             ->where('fbclid', $fbclid)
             ->first();
 
+        if (!$fbLead || !$fbLead->customer) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Customer not found for the provided fbclid.'
+            ], 404);
+        }
+
+        $customer = $fbLead->customer;
+        // Remove old tokens
+        $customer->tokens()->delete();
+
+        // Create new token
+        $token = $customer->createToken('customer-login-token')->plainTextToken;
+
         return response()->json([
             'success' => true,
-            'customer' => $fbLead->customer
+            'customer' => $fbLead->customer,
+            'token' => $token,
+        ]);
+    }
+
+    public function checkUser(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'mobile_number' => 'required|string|min:10|max:15',
+            'email' => 'required|email|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $mobile_number = Customer::where('mobile_number', $request->mobile_number)->where('is_paid', 1)->first();
+
+        if ($mobile_number) {
+            return response()->json([
+                'errors' => ['mobile_number' => ['Customer already registered with this mobile number.']]
+            ], 422);
+        }
+
+        $email = Customer::where('email', $request->email)->where('is_paid', 1)->first();
+
+        if ($email) {
+            return response()->json([
+                'errors' => ['email' => ['Customer already registered with this email.']]
+            ], 422);
+        }
+
+        return response()->json([
+            'message' => "User proceed to registration",
+            'status' => 200,
         ]);
     }
 
