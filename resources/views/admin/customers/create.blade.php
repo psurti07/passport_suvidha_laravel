@@ -626,10 +626,10 @@
                                     <option value="" disabled selected>Select Education Qualification
                                     </option>
 
-                                    <option value="Below 10th"
+                                    <!-- <option value="Below 10th"
                                         {{ old('education_qualification') == 'Below 10th' ? 'selected' : '' }}>
                                         Below 10th
-                                    </option>
+                                    </option> -->
 
                                     <option value="10th Pass And Above"
                                         {{ old('education_qualification') == '10th Pass And Above' ? 'selected' : '' }}>

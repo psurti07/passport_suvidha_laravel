@@ -395,10 +395,10 @@
                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
                                     <option value="">Select Education Qualification</option>
 
-                                    <option value="Below 10th"
+                                    <!-- <option value="Below 10th"
                                         {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
                                         Below 10th
-                                    </option>
+                                    </option> -->
 
                                     <option value="10th Pass And Above"
                                         {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>
