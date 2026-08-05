@@ -86,6 +86,7 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
 });
 
 Route::post('/customer/fbclid', [CustomerController::class, 'getCustomerByFbclid']);
+Route::post('/check-user', [CustomerController::class, 'checkUser']);
 
 Route::post('/check-status-by-mobile', [ApplicationProgressController::class, 'getStatusByMobile'])->name('api.application-progress.status-by-mobile');
 
