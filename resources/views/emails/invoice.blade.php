@@ -55,7 +55,7 @@
             <!-- Date -->
             <tr class="mobile-block">
                 <td class="mobile-label" style="padding:8px 0;width:160px;font-weight:bold;">
-                    Payment Date
+                    Registration Date
                 </td>
                 <td class="mobile-value" style="padding:8px 0;">
                     {{ \Carbon\Carbon::parse($payment_date)->format('d M Y h:i A') }}

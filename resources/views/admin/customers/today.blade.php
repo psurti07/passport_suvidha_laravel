@@ -65,7 +65,7 @@
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
                                     </th>
 
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Registration
                                         Date
                                     </th>
 

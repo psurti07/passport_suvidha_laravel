@@ -125,7 +125,7 @@
                     class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-gray-200 gap-y-2">
 
                     <p class="text-sm text-gray-600">
-                        {{ $customer->is_paid == 1 ? 'Payment on:' : 'Registration on:' }}
+                        {{ $customer->is_paid == 1 ? 'Registration on:' : 'Created on:' }}
 
                         <strong class="text-gray-800 font-semibold">
                             @if ($customer->is_paid == 1 && $customer->payment_date)

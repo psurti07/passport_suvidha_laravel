@@ -26,6 +26,31 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
+                            <label for="payment_date" class="block text-sm font-semibold text-gray-900">
+                                Registration Date
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative group">
+                                <input type="date" id="payment_date" name="payment_date"
+                                    value="{{ old('payment_date', date('Y-m-d')) }}" :required="isPaid"
+                                    placeholder="Enter payment date"
+                                    class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
+                                            hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
+                                            transition-all duration-200 placeholder-gray-400
+                                            @error('payment_date') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                            </div>
+                            @error('payment_date')
+                            <p class="mt-1 text-sm text-red-600 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                {{ $message }}
+                            </p>
+                            @enderror
+                        </div>
+                        <div>
                             <label for="full_name" class="block text-sm font-semibold text-gray-900">
                                 Full Name
                                 <span class="text-red-500 ml-1">*</span>
@@ -49,6 +74,9 @@
                             </p>
                             @enderror
                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="mobile_number" class="block text-sm font-semibold text-gray-900">
                                 Mobile Number
@@ -73,9 +101,6 @@
                             </p>
                             @enderror
                         </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="email" class="block text-sm font-semibold text-gray-900">
                                 Email Id
@@ -100,7 +125,8 @@
                             </p>
                             @enderror
                         </div>
-
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="service_id" class="block text-sm font-semibold text-gray-900">
                                 Service Name

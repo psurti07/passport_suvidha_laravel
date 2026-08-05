@@ -66,7 +66,7 @@
                 </div> -->
                 <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                     <dt class="text-sm font-medium text-gray-500">
-                        {{ $customer->is_paid == 1 ? 'Payment Date' : 'Registration Date' }}
+                        {{ $customer->is_paid == 1 ? 'Registration Date' : 'Created Date' }}
                     </dt>
 
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
@@ -134,6 +134,19 @@
                         @method('PUT')
                         <input type="hidden" name="mobile_number" value="{{ $customer->mobile_number }}">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+
+                            <div>
+                                <label for="payment_date"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Registration Date <span class="text-red-500">*</span></label>
+                                <input type="date" id="payment_date" name="payment_date"
+                                    value="{{ old('payment_date', $customer->payment_date ? $customer->payment_date->format('Y-m-d') : now()->format('Y-m-d')) }}"
+                                    required placeholder="Enter registration date"
+                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                @error('payment_date')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             <div>
                                 <label for="father_name"
                                     class="block text-sm font-medium text-gray-700 mb-1">Father Name <span

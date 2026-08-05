@@ -243,6 +243,7 @@ class CustomerController extends Controller
             'card_number' => 'nullable|string|size:16',
             'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
+            'payment_date' => 'required|date',
             'is_paid' => 'sometimes|boolean',
         ]);
 
@@ -250,7 +251,10 @@ class CustomerController extends Controller
             $validated['spouse_name'] = null;
         }
 
-        $validated['payment_date'] = now();
+        // $validated['payment_date'] = now();
+        $paymentDate = Carbon::parse($request->payment_date)->setTimeFrom(now());
+
+        $validated['payment_date'] = $paymentDate;
         $validated['is_paid'] = 1;
         $validated['registration_step'] = 1;
 
@@ -425,6 +429,7 @@ class CustomerController extends Controller
             'card_number' => 'nullable|string|size:16',
             'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
+            'payment_date' => 'required|date',
         ]);
 
         if ($validator->fails()) {
@@ -439,6 +444,10 @@ class CustomerController extends Controller
         }
 
         $validated = $validator->validated();
+
+        $paymentDate = Carbon::parse($validated['payment_date'])->setTimeFrom(now());
+
+        $validated['payment_date'] = $paymentDate;
 
         if ($validated['marital_status'] !== 'married') {
             $validated['spouse_name'] = null;
@@ -460,15 +469,25 @@ class CustomerController extends Controller
 
             $isPaid = $validated['is_paid'];
 
+            // $customerData = collect($validated)->except([
+            //     'amount',
+            //     'card_number',
+            //     'payment_id',
+            //     'payment_date',
+            // ])->toArray();
+
+
+            // $customerData['payment_date'] = $isPaid ? now() : null;
+
             $customerData = collect($validated)->except([
                 'amount',
                 'card_number',
                 'payment_id',
-                'payment_date',
             ])->toArray();
 
-
-            $customerData['payment_date'] = $isPaid ? now() : null;
+            $customerData['payment_date'] = $isPaid
+                ? $validated['payment_date']
+                : null;
 
             $customerData['registration_step'] = $isPaid ? 5 : 1;
 
@@ -519,7 +538,8 @@ class CustomerController extends Controller
                 'customer_id' => $customer->id,
                 'service_id' => $customer->service_id,
                 'order_id' => $order->id,
-                'inv_date' => now(),
+                // 'inv_date' => now(),
+                'inv_date' => $validated['payment_date']->format('Y-m-d'),
                 'net_amount' => $netAmount,
                 'cgst' => $cgst,
                 'sgst' => $sgst,
