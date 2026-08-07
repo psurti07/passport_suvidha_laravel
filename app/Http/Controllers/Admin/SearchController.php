@@ -43,11 +43,12 @@ class SearchController extends Controller
         }
 
         $mobileNo = $request->mobile_no;
-        $customer = Customer::where('mobile_number', $mobileNo)->first();
+        $customer = Customer::with('service')->where('mobile_number', $mobileNo)->first();
 
         return redirect()->route('admin.customer.search.form')->with([
             'customer_id' => $customer?->id,
-            'mobileNo' => $mobileNo
+            'mobileNo' => $mobileNo,
+            'service_name' => $customer?->service?->service_name,
         ]);
     }
 

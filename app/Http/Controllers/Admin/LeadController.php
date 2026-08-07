@@ -167,4 +167,12 @@ class LeadController extends Controller
 
             ->make(true);
     }
+
+    // public function destroy(Customer $customer)
+    // {
+    //     $customer->delete();
+    //     return redirect()
+    //         ->route('admin.customer.search')
+    //         ->with('success', 'Lead deleted successfully.');
+    // }
 }

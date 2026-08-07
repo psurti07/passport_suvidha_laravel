@@ -452,33 +452,89 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function getCustomerByFbclid(Request $request)
+    // public function getCustomerByFbclid(Request $request)
+    // {
+    //     $fbclid = $request->id;
+
+    //     $fbLead = FbAdsEntry::with(['customer.service'])
+    //         ->where('fbclid', $fbclid)
+    //         ->first();
+
+    //     if (!$fbLead || !$fbLead->customer) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Customer not found for the provided fbclid.'
+    //         ], 404);
+    //     }
+
+    //     $customer = $fbLead->customer;
+    //     // Remove old tokens
+    //     $customer->tokens()->delete();
+
+    //     // Create new token
+    //     $token = $customer->createToken('customer-login-token')->plainTextToken;
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'customer' => $fbLead->customer,
+    //         'token' => $token,
+    //     ]);
+    // }
+
+
+    public function getCustomerByEncryptId(Request $request)
     {
-        $fbclid = $request->id;
+        try {
+            // Encrypted customer ID from request
+            $encryptedId = $request->id;
 
-        $fbLead = FbAdsEntry::with(['customer.service'])
-            ->where('fbclid', $fbclid)
-            ->first();
+            if (!$encryptedId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Customer ID is required.'
+                ], 400);
+            }
 
-        if (!$fbLead || !$fbLead->customer) {
+            // Decrypt customer ID
+            $customerId = decryptData($encryptedId);
+
+            if (!$customerId || !is_numeric($customerId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid customer ID.'
+                ], 400);
+            }
+
+            // Get customer
+            $customer = Customer::with('service')
+                ->find($customerId);
+
+            if (!$customer) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Customer not found.'
+                ], 404);
+            }
+
+            // Remove old tokens
+            $customer->tokens()->delete();
+
+            // Create new token
+            $token = $customer
+                ->createToken('customer-login-token')
+                ->plainTextToken;
+
+            return response()->json([
+                'success' => true,
+                'customer' => $customer,
+                'token' => $token,
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Customer not found for the provided fbclid.'
-            ], 404);
+                'message' => 'Invalid or expired customer ID.'
+            ], 400);
         }
-
-        $customer = $fbLead->customer;
-        // Remove old tokens
-        $customer->tokens()->delete();
-
-        // Create new token
-        $token = $customer->createToken('customer-login-token')->plainTextToken;
-
-        return response()->json([
-            'success' => true,
-            'customer' => $fbLead->customer,
-            'token' => $token,
-        ]);
     }
 
     public function checkUser(Request $request)
