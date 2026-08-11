@@ -155,7 +155,6 @@
                             data-month="${row.month_no}">
                             View Datewise
                         </button>
-                        </div>
                     `;
                         }
                     }

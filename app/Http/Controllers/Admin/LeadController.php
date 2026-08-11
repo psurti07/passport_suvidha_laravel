@@ -168,11 +168,14 @@ class LeadController extends Controller
             ->make(true);
     }
 
-    // public function destroy(Customer $customer)
-    // {
-    //     $customer->delete();
-    //     return redirect()
-    //         ->route('admin.customer.search')
-    //         ->with('success', 'Lead deleted successfully.');
-    // }
+    public function destroy(Customer $customer)
+    {
+        if ($customer->is_paid == 1) {
+            return back()->with("error", 'Registered customers cannot be deleted as leads.');
+        }
+        $customer->delete();
+        return redirect()
+            ->route('admin.customer.search')
+            ->with('success', 'Lead deleted successfully.');
+    }
 }

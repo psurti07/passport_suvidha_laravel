@@ -289,10 +289,14 @@ class CustomerController extends Controller
 
             $existingCustomer->update($data);
 
+            $token = $existingCustomer->createToken('customer-registration-token')->plainTextToken;
+
             return response()->json([
                 'message' => 'Customer information updated successfully',
                 'customer' => $existingCustomer->fresh(),
                 'registration_step' => $existingCustomer->registration_step,
+                'token' => $token,
+                'token_type' => 'Bearer',
                 'next_step' => $this->getNextStep($existingCustomer->registration_step),
             ], 200);
         }

@@ -155,35 +155,71 @@ class ReportController extends Controller
     {
         if ($request->ajax()) {
 
-            $dateColumn = "
-            CASE
-                WHEN customers.is_paid = 1 AND customers.payment_date IS NOT NULL THEN customers.payment_date
-                ELSE customers.created_at
-            END
-        ";
-
-            $query = Customer::query()
+            $baseQuery = Customer::query()
                 ->join('services', 'services.id', '=', 'customers.service_id')
                 ->selectRaw("
-                YEAR($dateColumn) as year,
-                MONTH($dateColumn) as month_no,
-                MONTHNAME($dateColumn) as month_name,
+                customers.id,
+                services.service_code,
 
-                SUM(CASE WHEN services.service_code = 'NP36' THEN 1 ELSE 0 END) as np36,
-                SUM(CASE WHEN services.service_code = 'NP60' THEN 1 ELSE 0 END) as np60,
-                SUM(CASE WHEN services.service_code = 'TP36' THEN 1 ELSE 0 END) as tp36,
-                SUM(CASE WHEN services.service_code = 'TP60' THEN 1 ELSE 0 END) as tp60
+                CASE
+                    WHEN customers.is_paid = 1
+                         AND customers.payment_date IS NOT NULL
+                    THEN customers.payment_date
+                    ELSE customers.created_at
+                END AS report_date
+            ");
+
+            $query = DB::query()
+                ->fromSub($baseQuery, 'report_data')
+                ->selectRaw("
+                YEAR(report_date) AS year,
+                MONTH(report_date) AS month_no,
+                MONTHNAME(report_date) AS month_name,
+
+                SUM(
+                    CASE
+                        WHEN service_code = 'NP36'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS np36,
+
+                SUM(
+                    CASE
+                        WHEN service_code = 'NP60'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS np60,
+
+                SUM(
+                    CASE
+                        WHEN service_code = 'TP36'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS tp36,
+
+                SUM(
+                    CASE
+                        WHEN service_code = 'TP60'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS tp60
             ")
                 ->groupByRaw("
-                YEAR($dateColumn),
-                MONTH($dateColumn),
-                MONTHNAME($dateColumn)
+                YEAR(report_date),
+                MONTH(report_date),
+                MONTHNAME(report_date)
             ");
 
             return DataTables::of($query)
                 ->addColumn('datewise', function ($row) {
+
                     return '
                     <button
+                        type="button"
                         class="view-month px-4 py-1 text-sm font-medium text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition"
                         data-year="' . $row->year . '"
                         data-month="' . $row->month_no . '">
@@ -197,41 +233,87 @@ class ReportController extends Controller
 
         return view('admin.reports.service_report');
     }
+
+
     public function serviceReportMonthDetails(Request $request)
     {
-        $start = Carbon::create($request->year, $request->month, 1)->startOfMonth();
-        $end = Carbon::create($request->year, $request->month, 1)->endOfMonth();
+        $start = Carbon::create(
+            $request->year,
+            $request->month,
+            1
+        )->startOfMonth();
 
-        // ❌ no future dates allowed
+        $end = Carbon::create(
+            $request->year,
+            $request->month,
+            1
+        )->endOfMonth();
+
+        // Do not allow future dates
         if ($end->gt(now())) {
             $end = now();
         }
 
-        $dateColumn = "
-            CASE
-                WHEN customers.is_paid = 1 AND customers.payment_date IS NOT NULL THEN customers.payment_date
-                ELSE customers.created_at
-            END";
-
-        $rawData = Customer::query()
+        $baseQuery = Customer::query()
             ->join('services', 'services.id', '=', 'customers.service_id')
             ->selectRaw("
-            DATE($dateColumn) as report_date,
+            customers.id,
+            services.service_code,
 
-            SUM(CASE WHEN services.service_code = 'NP36' THEN 1 ELSE 0 END) as np36,
-            SUM(CASE WHEN services.service_code = 'NP60' THEN 1 ELSE 0 END) as np60,
-            SUM(CASE WHEN services.service_code = 'TP36' THEN 1 ELSE 0 END) as tp36,
-            SUM(CASE WHEN services.service_code = 'TP60' THEN 1 ELSE 0 END) as tp60
+            CASE
+                WHEN customers.is_paid = 1
+                     AND customers.payment_date IS NOT NULL
+                THEN customers.payment_date
+                ELSE customers.created_at
+            END AS report_date
+        ");
+
+        $rawData = DB::query()
+            ->fromSub($baseQuery, 'report_data')
+            ->selectRaw("
+            DATE(report_date) AS report_date,
+
+            SUM(
+                CASE
+                    WHEN service_code = 'NP36'
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS np36,
+
+            SUM(
+                CASE
+                    WHEN service_code = 'NP60'
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS np60,
+
+            SUM(
+                CASE
+                    WHEN service_code = 'TP36'
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS tp36,
+
+            SUM(
+                CASE
+                    WHEN service_code = 'TP60'
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS tp60
         ")
-            ->whereBetween(DB::raw($dateColumn), [$start, $end])
-            ->groupByRaw("DATE($dateColumn)")
+            ->whereBetween('report_date', [$start, $end])
+            ->groupByRaw('DATE(report_date)')
             ->get()
             ->keyBy('report_date');
 
-        // Generate full date range
         $period = CarbonPeriod::create($start, $end);
 
         $data = [];
+
         $grand = [
             'np36' => 0,
             'np60' => 0,
@@ -245,10 +327,10 @@ class ReportController extends Controller
 
             $row = $rawData[$key] ?? null;
 
-            $np36 = $row->np36 ?? 0;
-            $np60 = $row->np60 ?? 0;
-            $tp36 = $row->tp36 ?? 0;
-            $tp60 = $row->tp60 ?? 0;
+            $np36 = (int) ($row->np36 ?? 0);
+            $np60 = (int) ($row->np60 ?? 0);
+            $tp36 = (int) ($row->tp36 ?? 0);
+            $tp60 = (int) ($row->tp60 ?? 0);
 
             $data[] = [
                 'report_date' => $key,
@@ -266,9 +348,10 @@ class ReportController extends Controller
 
         return response()->json([
             'data' => $data,
-            'grand_total' => $grand
+            'grand_total' => $grand,
         ]);
     }
+
 
 
     public function invoiceReport(Request $request)

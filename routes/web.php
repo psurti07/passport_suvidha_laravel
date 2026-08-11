@@ -69,6 +69,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/leads/today', [LeadController::class, 'today'])->name('leads.today');
     Route::get('/leads/today/data', [LeadController::class, 'todayData'])->name('leads.today.data');
     Route::get('leads', [LeadController::class, 'index'])->name('leads.index');
+    Route::delete('/lead/{customer}', [LeadController::class, 'destroy'])->name('lead.delete');
     Route::get('/leads-data', [LeadController::class, 'data'])->name('leads.data');
     Route::get('/customers/today', [CustomerController::class, 'today'])->name('customers.today');
     Route::get('/customers/today/data', [CustomerController::class, 'todayData'])->name('customers.today.data');

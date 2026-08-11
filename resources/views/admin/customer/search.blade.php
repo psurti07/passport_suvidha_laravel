@@ -38,7 +38,26 @@
         {{-- Search Results Card --}}
         @if (isset($mobileNo) || isset($customer))
             <div class="md:col-span-2 bg-white p-8 rounded-lg shadow-lg border border-gray-200">
-                <h2 class="text-xl font-semibold mb-6 text-gray-800 border-b pb-3">Search Result</h2>
+                <div class="flex items-center justify-between border-b border-gray-200 pb-4 mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800">Search Result</h2>
+                    @if ($customer && $customer->is_paid == 0)
+                        <form action="{{ route('admin.lead.delete', $customer->id) }}" method="post">
+                            {{-- onsubmit="confirmDelete('{{ $customer->mobile_number }} Customer', this.form)"> --}}
+                            @csrf
+                            @method('delete')
+                            <button type="button" onclick="confirmDelete('{{ $customer->full_name }} Lead', this.form)"
+                                class="gap-2 inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                    </path>
+                                </svg>
+                                Delete Lead
+                            </button>
+                        </form>
+                    @endif
+                </div>
                 <div class="mt-6">
                     @if ($customer)
                         <dl class="divide-y divide-gray-200">
@@ -59,11 +78,11 @@
                                 {{-- Assuming mobile_number from controller fix --}}
                             </div>
                             <!-- <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                        <dt class="text-sm font-medium text-gray-500">Registration Date</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ $customer->created_at ? $customer->created_at->format('d M Y, H:i A') : 'N/A' }}
-                        </dd>
-                    </div> -->
+                                                                                                        <dt class="text-sm font-medium text-gray-500">Registration Date</dt>
+                                                                                                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                                                                                            {{ $customer->created_at ? $customer->created_at->format('d M Y, H:i A') : 'N/A' }}
+                                                                                                        </dd>
+                                                                                                    </div> -->
                             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                                 <dt class="text-sm font-medium text-gray-500">
                                     {{ $customer->is_paid == 1 ? 'Registration Date' : 'Created Date' }}
@@ -88,7 +107,8 @@
                             </div>
                             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                                 <dt class="text-sm font-medium text-gray-500">Email Address</dt>
-                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $customer->email ?? 'N/A' }}
+                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    {{ $customer->email ?? 'N/A' }}
                                 </dd>
                             </div>
                             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
@@ -408,9 +428,9 @@
                                                     <option value="">Select Education Qualification</option>
 
                                                     <!-- <option value="Below 10th"
-                                            {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
-                                            Below 10th
-                                        </option> -->
+                                                {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
+                                                Below 10th
+                                            </option> -->
 
                                                     <option value="10th Pass And Above"
                                                         {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>
