@@ -520,20 +520,12 @@ class CustomerController extends Controller
                 ], 404);
             }
 
-            if ($customer->is_paid == 1) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'This customer has already completed the registration and payment.',
-                    'errors' => ['customer' => ['Customer registration is already completed.']],
-                ], 422);
-            }
-
             // Remove old tokens
             $customer->tokens()->delete();
 
             // Create new token
             $token = $customer
-                ->createToken('customer-registration-token')
+                ->createToken('customer-login-token')
                 ->plainTextToken;
 
             return response()->json([
@@ -549,87 +541,36 @@ class CustomerController extends Controller
         }
     }
 
-    // public function checkUser(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'mobile_number' => 'required|string|min:10|max:15',
-    //         'email' => 'required|email|max:255',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json(['errors' => $validator->errors()], 422);
-    //     }
-
-    //     $mobile_number = Customer::where('mobile_number', $request->mobile_number)->where('is_paid', 1)->first();
-
-    //     if ($mobile_number) {
-    //         return response()->json([
-    //             'errors' => ['mobile_number' => ['Customer already registered with this mobile number.']]
-    //         ], 422);
-    //     }
-
-    //     $email = Customer::where('email', $request->email)->where('is_paid', 1)->first();
-
-    //     if ($email) {
-    //         return response()->json([
-    //             'errors' => ['email' => ['Customer already registered with this email.']]
-    //         ], 422);
-    //     }
-
-    //     return response()->json([
-    //         'message' => "User proceed to registration",
-    //         'status' => 200,
-    //     ]);
-    // }
-
     public function checkUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'full_name' => 'required',
-            'email' => 'required|string|email',
             'mobile_number' => 'required|string|min:10|max:15',
-            'service_code' => 'required|string',
+            'email' => 'required|email|max:255',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $customer = Customer::where('mobile_number', $request->mobile_number)->orWhere('email', $request->email)->first();
+        $mobile_number = Customer::where('mobile_number', $request->mobile_number)->where('is_paid', 1)->first();
 
-        if ($customer) {
-            if ($customer->is_paid == 1) {
-                return response()->json([
-                    'errors' => ['email' => ['Customer already registerd with this mobile or email']],
-                ], 422);
-            }
-
-            $data = $validator->validated();
-
-
-            $service = Service::where('service_code', $request->service_code)->first();
-            if (!$service) {
-                return response()->json(['errors' => 'Invalide services selection.'], 422);
-            }
-
-            unset($data['service_code']);
-
-            $data['service_id'] = $service->id;
-
-            $customer->update($data);
-
-            $token = $customer->createToken('customer-registration-token')->plainTextToken;
+        if ($mobile_number) {
             return response()->json([
-                'customer' => $customer,
-                'token' => $token,
-                'token_type' => 'Bearer',
-                'registration_step' => $customer->registration_step,
-                'next_step' => $this->getNextStep($customer->registration_step),
-            ]);
+                'errors' => ['mobile_number' => ['Customer already registered with this mobile number.']]
+            ], 422);
         }
+
+        $email = Customer::where('email', $request->email)->where('is_paid', 1)->first();
+
+        if ($email) {
+            return response()->json([
+                'errors' => ['email' => ['Customer already registered with this email.']]
+            ], 422);
+        }
+
         return response()->json([
-            'message' => "User proceed successfully.",
-            'success' => true,
+            'message' => "User proceed to registration",
+            'status' => 200,
         ]);
     }
 
