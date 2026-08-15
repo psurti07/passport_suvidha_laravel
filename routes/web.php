@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\SmsController;
 use App\Http\Controllers\Admin\ScheduleSlotController;
 use App\Http\Controllers\Admin\RemarketingLogController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\RefundController;
 
 /*
 |--------------------------------------------------------------------------
@@ -219,4 +220,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Users Routes
     Route::resource('users', UserController::class);
     Route::get('/users-data', [UserController::class, 'data'])->name('users.data');
+
+    // Refund Routes
+    Route::post('/refund/store', [RefundController::class, 'store'])->name('refund.store');
+    Route::get('/refund', [RefundController::class, 'index'])->name('refund.index');
+    Route::get('/refund/data', [RefundController::class, 'data'])
+        ->name('refund.data');
 });

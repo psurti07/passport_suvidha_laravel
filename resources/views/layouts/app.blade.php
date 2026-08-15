@@ -815,6 +815,19 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text font-semibold text-lg">GST Data</span>
                 </a>
 
+                <a href="{{ route('admin.refund.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.refund.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Refund Data' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l-4-4 4-4" />
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 10h9a5 5 0 015 5v1" />
+                    </svg>
+                    <span class="nav-link-text font-semibold text-lg">Refund</span>
+                </a>
+
                 <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">REPORTS</div>
 
                 <a href="{{ route('admin.report.lead') }}"

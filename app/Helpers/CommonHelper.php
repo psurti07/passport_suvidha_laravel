@@ -141,6 +141,15 @@ if (!function_exists('getStatusColor')) {
                 'tailwind' => 'bg-gray-100 text-gray-800'
             ],
 
+            in_array($slug, [
+                'refunded'
+            ])
+            => [
+                'bg' => '#f3e8ff',
+                'text' => '#6b21a8',
+                'tailwind' => 'bg-purple-100 text-purple-800'
+            ],
+
             default => [
                 'bg' => '#f3f4f6',
                 'text' => '#374151',

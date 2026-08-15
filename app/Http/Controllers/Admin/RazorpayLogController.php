@@ -144,6 +144,7 @@ class RazorpayLogController extends Controller
                     'pending' => '<span class="px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded">Pending</span>',
                     'failed'  => '<span class="px-2 py-0.5 text-xs bg-red-100 text-red-800 rounded">Failed</span>',
                     'success' => '<span class="px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded">Success</span>',
+                    'refund' => '<span class="px-2 py-0.5 text-xs bg-purple-100 text-purple-800 rounded">Refund</span>',
                     default   => '<span class="px-2 py-0.5 text-xs bg-gray-100 text-gray-800 rounded">' . ucfirst($row->tx_status) . '</span>',
                 };
             })
