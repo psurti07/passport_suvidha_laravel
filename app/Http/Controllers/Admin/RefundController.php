@@ -210,7 +210,7 @@ class RefundController extends Controller
 
                     ApplicationProgress::create([
                         'customer_id' => $invoice->customer_id,
-                        'status_id' => 11,
+                        'status_id' => 13,
                         'status_date' => now(),
                         'remark' => 'Application cancelled due to refund.',
                         'remarked_by' => auth()->id(),
@@ -219,11 +219,11 @@ class RefundController extends Controller
                     $invoice->delete();
 
                     Customer::where('id', $invoice->customer_id)->update([
-                        'registration_step' => 10,
+                        'registration_step' => 12,
                     ]);
 
                     RazorpayLog::where('payment_id', $paymentId)->update([
-                        'tx_status' => 'refund',
+                        'tx_status' => 'refunded',
                     ]);
                 });
             }
