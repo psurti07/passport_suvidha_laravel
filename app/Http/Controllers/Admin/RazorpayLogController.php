@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RazorpayLog;
+use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class RazorpayLogController extends Controller
@@ -79,7 +80,7 @@ class RazorpayLogController extends Controller
 
                     return "
                         <div>
-                            <div class='font-semibold text-gray-900'>" . ($offer->full_name ?? '-') . "</div>
+                            <div class='font-semibold text-gray-900'>" . (Str::title(strtolower($offer->full_name ?? '-'))) . "</div>
                             <div class='text-xs text-gray-500'>" . ($offer->email ?? '-') . "</div>
                         </div>
                     ";
@@ -93,7 +94,7 @@ class RazorpayLogController extends Controller
 
                     return "
                         <div>
-                            <div class='font-semibold text-gray-900'>" . ($fullName ?: '-') . "</div>
+                            <div class='font-semibold text-gray-900'>" . (Str::title(strtolower($fullName ?? '-'))) . "</div>
                             <div class='text-xs text-gray-500'>" . ($customer->email ?? '-') . "</div>
                         </div>
                     ";

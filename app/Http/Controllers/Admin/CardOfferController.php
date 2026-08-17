@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\OfferOrder;
+use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class CardOfferController extends Controller
@@ -48,6 +49,10 @@ class CardOfferController extends Controller
 
             ->addIndexColumn()
 
+            ->editColumn('full_name', function ($row) {
+                return Str::title(strtolower($row->full_name));
+            })
+            
             ->addColumn('is_customer', function ($row) {
                 return $row->is_customer ? '1' : '0';
             })

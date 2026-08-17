@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class ApplicationDocumentController extends Controller
 {
@@ -50,7 +51,7 @@ class ApplicationDocumentController extends Controller
 
                 return '
                     <div>
-                        <div class="font-semibold text-gray-900">' . ($fullName ?: '-') . '</div>
+                        <div class="font-semibold text-gray-900">' . (Str::title(strtolower($row->customer->full_name)) ?: '-') . '</div>
                         <div class="text-xs text-gray-500">' . $email . '</div>
                     </div>
                 ';

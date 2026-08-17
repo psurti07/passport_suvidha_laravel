@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Models\Customer;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class LeadController extends Controller
 {
@@ -57,7 +58,7 @@ class LeadController extends Controller
             })
 
             ->addColumn('customer_name', function ($row) {
-                return $row->full_name;
+                return Str::title(strtolower($row->full_name));
             })
 
             ->editColumn('is_paid', function ($row) {
@@ -131,7 +132,7 @@ class LeadController extends Controller
             })
 
             ->addColumn('customer_name', function ($row) {
-                return $row->full_name;
+                return Str::title(strtolower($row->full_name));
             })
 
             ->editColumn('is_paid', function ($row) {

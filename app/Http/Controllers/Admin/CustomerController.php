@@ -72,7 +72,7 @@ class CustomerController extends Controller
             })
 
             ->addColumn('customer_name', function ($row) {
-                return $row->full_name;
+                return Str::title(strtolower($row->full_name));
             })
 
             ->editColumn('is_paid', function ($row) {
@@ -144,7 +144,7 @@ class CustomerController extends Controller
             })
 
             ->addColumn('customer_name', function ($row) {
-                return $row->full_name;
+                return Str::title(strtolower($row->full_name));
             })
 
             ->editColumn('is_paid', function ($row) {

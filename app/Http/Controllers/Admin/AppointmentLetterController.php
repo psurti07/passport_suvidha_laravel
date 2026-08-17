@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class AppointmentLetterController extends Controller
 {
@@ -48,7 +49,7 @@ class AppointmentLetterController extends Controller
 
                 return '
                     <div>
-                        <div class="font-semibold text-gray-900">' . ($fullName ?: '-') . '</div>
+                        <div class="font-semibold text-gray-900">' . (Str::title(strtolower($fullName))  ?: '-') . '</div>
                         <div class="text-xs text-gray-500">' . $email . '</div>
                     </div>
                 ';

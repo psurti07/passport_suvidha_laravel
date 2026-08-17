@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Str;
 
 class InvoiceController extends Controller
 {
@@ -47,7 +48,7 @@ class InvoiceController extends Controller
             ->addIndexColumn()
 
             ->addColumn('customer_name', function ($row) {
-                return $row->customer->full_name;
+                return Str::title(strtolower($row->customer->full_name));
             })
 
             ->addColumn('customer_mobile', function ($row) {
@@ -320,7 +321,7 @@ class InvoiceController extends Controller
 
                 return '
                     <div>
-                        <div class="font-semibold text-gray-900">' . ($fullName ?: '-') . '</div>
+                        <div class="font-semibold text-gray-900">' . (Str::title(strtolower($fullName)) ?: '-') . '</div>
                         <div class="text-xs text-gray-500">' . $email . '</div>
                     </div>
                 ';

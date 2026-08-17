@@ -45,7 +45,8 @@
                             {{-- onsubmit="confirmDelete('{{ $customer->mobile_number }} Customer', this.form)"> --}}
                             @csrf
                             @method('delete')
-                            <button type="button" onclick="confirmDelete('{{ $customer->full_name }} Lead', this.form)"
+                            <button type="button"
+                                onclick="confirmDelete('{{ ucwords(strtolower($customer->full_name)) }} Lead', this.form)"
                                 class="gap-2 inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
@@ -77,12 +78,7 @@
                                 </dd>
                                 {{-- Assuming mobile_number from controller fix --}}
                             </div>
-                            <!-- <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                                                                                                        <dt class="text-sm font-medium text-gray-500">Registration Date</dt>
-                                                                                                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                                                                                            {{ $customer->created_at ? $customer->created_at->format('d M Y, H:i A') : 'N/A' }}
-                                                                                                        </dd>
-                                                                                                    </div> -->
+                            <!-- <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">                                                                                                               </div> -->
                             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                                 <dt class="text-sm font-medium text-gray-500">
                                     {{ $customer->is_paid == 1 ? 'Registration Date' : 'Created Date' }}
@@ -101,7 +97,7 @@
                             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                                 <dt class="text-sm font-medium text-gray-500">Full Name</dt>
                                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {{ $customer->full_name ?? '' }}
+                                    {{ ucwords(strtolower($customer->full_name)) ?? '' }}
                                 </dd>
                                 {{-- Assuming full_name exist --}}
                             </div>
@@ -428,9 +424,9 @@
                                                     <option value="">Select Education Qualification</option>
 
                                                     <!-- <option value="Below 10th"
-                                                {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
-                                                Below 10th
-                                            </option> -->
+                                                            {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
+                                                            Below 10th
+                                                        </option> -->
 
                                                     <option value="10th Pass And Above"
                                                         {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>

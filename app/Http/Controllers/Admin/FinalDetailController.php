@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class FinalDetailController extends Controller
 {
@@ -53,7 +54,7 @@ class FinalDetailController extends Controller
 
                 return '
                     <div>
-                        <div class="text-gray-900">' . ($fullName ?: '-') . '</div>
+                        <div class="text-gray-900">' . (Str::title(strtolower($fullName)) ?: '-') . '</div>
                     </div>
                 ';
             })

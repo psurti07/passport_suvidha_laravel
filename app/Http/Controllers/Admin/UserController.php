@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Log;
@@ -57,6 +58,10 @@ class UserController extends Controller
         return DataTables::of($query)
 
             ->addIndexColumn()
+
+            ->editColumn('name', function ($row) {
+                return Str::title(strtolower($row->name));
+            })
 
             ->addColumn('created_by', function ($row) {
                 return optional($row->creator)->name ?? '-';

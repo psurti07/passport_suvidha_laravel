@@ -49,6 +49,10 @@ class SupportController extends Controller
 
             ->addIndexColumn()
 
+            ->editColumn('name', function ($row) {
+                return Str::title(strtolower($row->name));
+            })
+
             ->editColumn('subject', function ($row) {
                 return Str::limit($row->subject, 50);
             })

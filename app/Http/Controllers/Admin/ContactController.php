@@ -39,7 +39,7 @@ class ContactController extends Controller
             ->addIndexColumn()
 
             ->addColumn('name', function ($row) {
-                return $row->full_name;
+                return Str::title(strtolower($row->full_name));
             })
 
             ->editColumn('created_at', function ($row) {
