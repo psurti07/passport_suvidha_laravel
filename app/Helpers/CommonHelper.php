@@ -96,8 +96,16 @@ if (!function_exists('getStatusColor')) {
         return match (true) {
 
             in_array($slug, [
+                'in_process',
+            ]) => [
+                'bg' => '#dbeafe',
+                'text' => '#1e40af',
+                'tailwind' => 'bg-blue-100 text-blue-800'
+            ],
+
+            in_array($slug, [
+                'documents_submitted',
                 'pov_success',
-                'documents_submitted'
             ]) => [
                 'bg' => '#dcfce7',
                 'text' => '#166534',
@@ -105,25 +113,20 @@ if (!function_exists('getStatusColor')) {
             ],
 
             in_array($slug, [
-                'pov_failed',
-                'rejected'
+                'details_verification',
+                'not_contact_2_days_warning'
             ]) => [
-                'bg' => '#fee2e2',
-                'text' => '#991b1b',
-                'tailwind' => 'bg-red-100 text-red-800'
+                'bg' => '#fef9c3',
+                'text' => '#854d0e',
+                'tailwind' => 'bg-yellow-100 text-yellow-800'
             ],
 
             in_array($slug, [
-                'in_process',
-                'details_verification',
-                'appointment_scheduled'
-            ]) => [
-                'bg' => '#dbeafe',
-                'text' => '#1e40af',
-                'tailwind' => 'bg-blue-100 text-blue-800'
-            ],
-
-            $slug === 'pov_insufficient_documents'
+                'appointment_scheduled',
+                'appointment_rescheduled1',
+                'appointment_rescheduled2',
+                'appointment_rescheduled3'
+            ])
             => [
                 'bg' => '#ffedd5',
                 'text' => '#9a3412',
@@ -131,13 +134,21 @@ if (!function_exists('getStatusColor')) {
             ],
 
             in_array($slug, [
-                'appointment_rescheduled1',
-                'appointment_rescheduled2',
-                'appointment_rescheduled3'
+                'pov_failed',
+                'not_contact_2_days_reject'
             ])
             => [
-                'bg' => '#e5e7eb',
-                'text' => '#1f2937',
+                'bg' => '#fee2e2',
+                'text' => '#991b1b',
+                'tailwind' => 'bg-red-100 text-red-800'
+            ],
+
+            in_array($slug, [
+                'pov_insufficient_documents'
+            ])
+            => [
+                'bg' => '#f3f4f6',
+                'text' => '#374151',
                 'tailwind' => 'bg-gray-100 text-gray-800'
             ],
 
