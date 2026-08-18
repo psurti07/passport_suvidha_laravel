@@ -11,11 +11,13 @@
                 @csrf
 
                 <div>
-                    <label for="mobile_no" class="block text-gray-700 text-sm font-bold mb-2">Mobile No *</label>
-                    <input type="text" name="mobile_no" id="mobile_no" value="{{ old('mobile_no', $mobileNo ?? '') }}"
-                        class="w-full border border-gray-300 rounded-lg text-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm @error('mobile_no') border-red-500 @enderror"
-                        title="Mobile number must be 10 digits" placeholder="Enter 10-digit mobile number">
-                    @error('mobile_no')
+                    <label for="search" class="block text-gray-700 text-sm font-bold mb-2">Mobile or Email *</label>
+                    <input type="text" name="search" id="search" value="{{ old('search', $search ?? '') }}"
+                        maxlength="255"
+                        class="w-full border border-gray-300 rounded-lg text-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm @error('search') border-red-500 @enderror"
+                        title="Mobile number must be 10 digits" placeholder="Enter 10-digit mobile or email">
+                    <p id="search-error" class="text-red-600 text-sm italic mt-2 hidden"></p>
+                    @error('search')
                         <p class="text-red-600 text-sm italic mt-2">{{ $message }}</p>
                     @enderror
                 </div>
@@ -36,7 +38,7 @@
         </div>
 
         {{-- Search Results Card --}}
-        @if (isset($mobileNo) || isset($customer))
+        @if (isset($search) || isset($customer))
             <div class="md:col-span-2 bg-white p-8 rounded-lg shadow-lg border border-gray-200">
                 <div class="flex items-center justify-between border-b border-gray-200 pb-4 mb-6">
                     <h2 class="text-xl font-semibold text-gray-800">Search Result</h2>
@@ -427,10 +429,10 @@
                                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
                                                     <option value="">Select Education Qualification</option>
 
-                                                        <!-- <option value="Below 10th"
+                                                    <!-- <option value="Below 10th"
                                                                 {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
                                                                 Below 10th
-                                                            </option> -->                                         </option> -->
+                                                            </option> --> 
 
                                                     <option value="10th Pass And Above"
                                                         {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>
@@ -590,7 +592,7 @@
                                     </form>
                                 </div>
                         @endif
-                    @elseif(isset($mobileNo))
+                    @elseif(isset($search))
                         <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
                             <div class="flex">
                                 <div class="flex-shrink-0">
@@ -603,8 +605,13 @@
                                 </div>
                                 <div class="ml-3">
                                     <p class="text-sm text-yellow-700">
-                                        No customer found for mobile number: <strong
-                                            class="font-medium text-yellow-800">{{ $mobileNo }}</strong>
+                                        No customer found for
+                                        <strong class="font-medium text-yellow-800">
+                                            {{ preg_match('/^\d+$/', $search) ? 'mobile number' : 'email' }}:
+                                        </strong>
+                                        <strong class="font-medium text-yellow-800">
+                                            {{ $search }}
+                                        </strong>
                                     </p>
                                 </div>
                             </div>
@@ -723,6 +730,55 @@
             toggleOrganisation();
             $('#employment_type').on('change', function() {
                 toggleOrganisation();
+            });
+
+        });
+
+
+        $(document).ready(function() {
+
+            $('#search').on('input', function() {
+
+                let value = $(this).val().trim();
+                let error = $('#search-error');
+
+                error.text('');
+                error.addClass('hidden');
+
+                if (value === '') {
+                    return;
+                }
+
+                if (/^\d+$/.test(value)) {
+
+                    if (value.length > 10) {
+                        value = value.substring(0, 10);
+                        $(this).val(value);
+                    }
+
+                    if (value.length === 10) {
+
+                        if (!/^[6-9][0-9]{9}$/.test(value)) {
+                            error
+                                .text('Mobile number must be 10 digits and start with 6-9.')
+                                .removeClass('hidden');
+                        }
+                    }
+
+                    return;
+                }
+
+                const emailRegex =
+                    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
+
+                if (value.includes('@') || value.includes('.')) {
+
+                    if (!emailRegex.test(value)) {
+                        error
+                            .text('Please enter a valid email address.')
+                            .removeClass('hidden');
+                    }
+                }
             });
 
         });
