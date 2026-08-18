@@ -43,8 +43,8 @@ class Customer extends Authenticatable
         'place_of_birth',
         'education_qualification',
         'employment_type',
+        'organisation_name',
         'nationality',
-        
         'registration_step',
         'is_paid',
         'payment_date',
@@ -125,7 +125,6 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(FbAdsEntry::class);
     }
-    
     // public static function getDashboardData($type = null, $paid = null)
     // {
     //     $query = DB::table('customers')

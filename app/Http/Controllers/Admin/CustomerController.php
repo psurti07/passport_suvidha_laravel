@@ -238,8 +238,8 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
+            'organisation_name' => 'required_if:employment_type,Government|string|max:255|nullable',
             'nationality' => 'required|string|max:255',
-
             'card_number' => 'nullable|string|size:16',
             'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
@@ -249,6 +249,10 @@ class CustomerController extends Controller
 
         if ($validated['marital_status'] !== 'married') {
             $validated['spouse_name'] = null;
+        }
+
+        if ($validated['employment_type'] !== 'Government') {
+            $validated['organisation_name'] = null;
         }
 
         // $validated['payment_date'] = now();
@@ -346,6 +350,7 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
+            'organisation_name' => 'required_if:employment_type,Government|string|nullable|max:255',
             'nationality' => 'required|string|max:255'
         ];
 
@@ -354,6 +359,11 @@ class CustomerController extends Controller
         $validatedData['spouse_name'] =
             $validatedData['marital_status'] === 'married'
             ? $request->spouse_name
+            : null;
+
+        $validatedData['organisation_name'] =
+            $validatedData['employment_type'] === 'Government'
+            ? $request->organisation_name
             : null;
 
         $customer->update($validatedData);
@@ -424,8 +434,8 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
+            'organisation_name' => 'required_if:employment_type,Government|string|nullable|max:255',
             'nationality' => 'required|string|max:255',
-
             'card_number' => 'nullable|string|size:16',
             'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
@@ -451,6 +461,10 @@ class CustomerController extends Controller
 
         if ($validated['marital_status'] !== 'married') {
             $validated['spouse_name'] = null;
+        }
+
+        if ($validated['employment_type'] !== 'Government') {
+            $validated['organisation_name'] = null;
         }
 
         $validated['is_paid'] = true;

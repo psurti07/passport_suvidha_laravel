@@ -465,6 +465,29 @@
                     </p>
                     @enderror
                 </div>
+
+                {{-- Organisation Name --}}
+                <div id="organisation-wrapper"
+                    class="{{ old('employment_type', $customer->employment_type) == 'Government' ? '' : 'hidden' }}">
+
+                    <label for="organisation_name"
+                        class="block text-sm font-medium text-gray-700 mb-1">
+                        Organisation Name
+                        <span class="text-red-500">*</span>
+                    </label>
+
+                    <input type="text"
+                        id="organisation_name"
+                        name="organisation_name"
+                        value="{{ old('organisation_name', $customer->organisation_name) }}"
+                        placeholder="Enter Organisation Name"
+                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
+
+                    @error('organisation_name')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
