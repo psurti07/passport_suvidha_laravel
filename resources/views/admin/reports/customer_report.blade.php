@@ -68,7 +68,7 @@
     <div id="monthModal"
         class="fixed inset-0 hidden bg-black bg-opacity-50 flex items-start justify-center pt-10 z-50 p-4 lg:p-0">
 
-        <div class="bg-white w-[500px] rounded-lg shadow-lg">
+        <div class="bg-white w-[700px] rounded-lg shadow-lg">
 
             <div class="flex justify-between items-center border-b p-3">
                 <h2 class="text-lg font-bold">Monthly Customer Details</h2>
@@ -96,15 +96,13 @@
             $('#customer-reports-table').DataTable({
                 processing: true,
                 serverSide: true,
-                responsive: true,
+                responsive: false,
+                scrollX: true,
+                autoWidth: false,
 
                 paging: false,
                 searching: false,
                 info: false,
-
-                scrollY: false,
-                scrollX: false,
-                scrollCollapse: false,
 
                 order: [
                     [0, 'desc']
@@ -168,7 +166,7 @@
 
                     let html = `
                 <table class="w-full border text-sm">
-                    <thead>
+                    <thead class="bg-blue-50">
                         <tr>
                             <th class="border font-semibold text-gray-600 !text-left p-4 uppercase">Date</th>
                             <th class="border font-semibold text-gray-600 !text-right p-4 uppercase">Customers</th>

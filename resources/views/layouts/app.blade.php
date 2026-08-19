@@ -994,6 +994,18 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text font-semibold text-lg">Invoice</span>
                 </a>
 
+                <a href="{{ route('admin.report.application-status') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.application-status') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text font-semibold text-lg">Application Status</span>
+                </a>
+
                 <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">OFFER</div>
 
                 <a href="{{ route('admin.card-offers.index') }}"

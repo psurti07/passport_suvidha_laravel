@@ -11,7 +11,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Carbon\CarbonPeriod;
-
+use App\Models\ApplicationStatus;
 
 class ReportController extends Controller
 {
@@ -352,8 +352,6 @@ class ReportController extends Controller
         ]);
     }
 
-
-
     public function invoiceReport(Request $request)
     {
         if ($request->ajax()) {
@@ -427,6 +425,435 @@ class ReportController extends Controller
         return response()->json([
             'data' => $data,
             'grand_total' => number_format($grandTotal, 2, '.', '')
+        ]);
+    }
+    public function applicationStatusReport(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $statusSlugs = [
+                'in_process',
+                'appointment_scheduled',
+                'pov_success',
+                'pov_failed',
+                'pov_insufficient_documents',
+            ];
+
+            $latestProgress = DB::table('application_progress as ap')
+                ->whereNull('ap.deleted_at')
+
+                ->whereNotExists(function ($subQuery) {
+
+                    $subQuery->select(DB::raw(1))
+                        ->from('application_progress as newer')
+                        ->whereColumn(
+                            'newer.customer_id',
+                            'ap.customer_id'
+                        )
+                        ->whereNull('newer.deleted_at')
+
+                        ->where(function ($query) {
+
+                            $query->whereColumn(
+                                'newer.status_date',
+                                '>',
+                                'ap.status_date'
+                            )
+
+                                ->orWhere(function ($query) {
+
+                                    $query->whereColumn(
+                                        'newer.status_date',
+                                        'ap.status_date'
+                                    )
+                                        ->whereColumn(
+                                            'newer.id',
+                                            '>',
+                                            'ap.id'
+                                        );
+                                });
+                        });
+                });
+
+            $baseQuery = $latestProgress
+                ->join(
+                    'application_statuses',
+                    'application_statuses.id',
+                    '=',
+                    'ap.status_id'
+                )
+
+                ->whereIn(
+                    'application_statuses.slug',
+                    $statusSlugs
+                )
+
+                ->select([
+                    'ap.id',
+                    'ap.customer_id',
+                    'ap.status_id',
+                    'ap.status_date',
+                    'application_statuses.slug',
+                    'application_statuses.status_name',
+                ]);
+
+            $query = DB::query()
+                ->fromSub($baseQuery, 'report_data')
+
+                ->selectRaw("
+                YEAR(status_date) AS year,
+
+                MONTH(status_date) AS month_no,
+
+                MONTHNAME(status_date) AS month_name,
+
+                SUM(
+                    CASE
+                        WHEN slug = 'in_process'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS in_process,
+
+                SUM(
+                    CASE
+                        WHEN slug = 'appointment_scheduled'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS appointment_scheduled,
+
+                SUM(
+                    CASE
+                        WHEN slug = 'pov_success'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS payment_success,
+
+                SUM(
+                    CASE
+                        WHEN slug = 'pov_failed'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS payment_failed,
+
+                SUM(
+                    CASE
+                        WHEN slug = 'pov_insufficient_documents'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS insufficient_documents
+            ")
+
+                ->groupByRaw("
+                YEAR(status_date),
+                MONTH(status_date),
+                MONTHNAME(status_date)
+            ")
+
+                ->orderByRaw("
+                YEAR(status_date) DESC,
+                MONTH(status_date) DESC
+            ");
+
+            $grandTotal = DB::query()
+                ->fromSub($baseQuery, 'latest_status')
+
+                ->selectRaw("
+                SUM(
+                    CASE
+                        WHEN slug = 'in_process'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS in_process,
+
+                SUM(
+                    CASE
+                        WHEN slug = 'appointment_scheduled'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS appointment_scheduled,
+
+                SUM(
+                    CASE
+                        WHEN slug = 'pov_success'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS payment_success,
+
+                SUM(
+                    CASE
+                        WHEN slug = 'pov_failed'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS payment_failed,
+
+                SUM(
+                    CASE
+                        WHEN slug = 'pov_insufficient_documents'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS insufficient_documents
+            ")
+
+                ->first();
+
+            $dataTable = DataTables::of($query)
+
+                ->addColumn('datewise', function ($row) {
+
+                    return '
+                    <button
+                        type="button"
+                        class="view-month px-4 py-1 text-sm font-medium
+                               text-blue-600 border border-blue-600
+                               rounded-lg hover:bg-blue-600
+                               hover:text-white transition"
+                        data-year="' . $row->year . '"
+                        data-month="' . $row->month_no . '">
+
+                        View Datewise
+
+                    </button>
+                ';
+                })
+
+                ->rawColumns(['datewise'])
+
+                ->make(true);
+
+            $json = $dataTable->getData(true);
+
+            $json['grand_total'] = [
+
+                'in_process' =>
+                (int) ($grandTotal->in_process ?? 0),
+
+                'appointment_scheduled' =>
+                (int) ($grandTotal->appointment_scheduled ?? 0),
+
+                'payment_success' =>
+                (int) ($grandTotal->payment_success ?? 0),
+
+                'payment_failed' =>
+                (int) ($grandTotal->payment_failed ?? 0),
+
+                'insufficient_documents' =>
+                (int) ($grandTotal->insufficient_documents ?? 0),
+
+            ];
+
+            return response()->json($json);
+        }
+
+        return view(
+            'admin.reports.application_status_report'
+        );
+    }
+
+    public function applicationStatusReportMonthDetails(Request $request)
+    {
+        $year = $request->year;
+        $month = $request->month;
+
+        $start = Carbon::create($year, $month, 1);
+
+        $end = $start->copy()->endOfMonth();
+
+        // Prevent future dates
+        if ($end->gt(now())) {
+            $end = now();
+        }
+
+        $statusSlugs = [
+            'in_process',
+            'appointment_scheduled',
+            'pov_success',
+            'pov_failed',
+            'pov_insufficient_documents',
+        ];
+
+        $latestProgress = DB::table('application_progress as ap')
+
+            ->whereNull('ap.deleted_at')
+
+            ->whereNotExists(function ($subQuery) {
+
+                $subQuery->select(DB::raw(1))
+
+                    ->from('application_progress as newer')
+
+                    ->whereColumn(
+                        'newer.customer_id',
+                        'ap.customer_id'
+                    )
+
+                    ->whereNull('newer.deleted_at')
+
+                    ->where(function ($query) {
+
+                        $query->whereColumn(
+                            'newer.status_date',
+                            '>',
+                            'ap.status_date'
+                        )
+
+                            ->orWhere(function ($query) {
+
+                                $query->whereColumn(
+                                    'newer.status_date',
+                                    'ap.status_date'
+                                )
+
+                                    ->whereColumn(
+                                        'newer.id',
+                                        '>',
+                                        'ap.id'
+                                    );
+                            });
+                    });
+            });
+
+        $rawData = $latestProgress
+
+            ->join(
+                'application_statuses',
+                'application_statuses.id',
+                '=',
+                'ap.status_id'
+            )
+
+            ->selectRaw("
+            DATE(ap.status_date) AS report_date,
+
+            SUM(
+                CASE
+                    WHEN application_statuses.slug = 'in_process'
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS in_process,
+
+            SUM(
+                CASE
+                    WHEN application_statuses.slug = 'appointment_scheduled'
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS appointment_scheduled,
+
+            SUM(
+                CASE
+                    WHEN application_statuses.slug = 'pov_success'
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS payment_success,
+
+            SUM(
+                CASE
+                    WHEN application_statuses.slug = 'pov_failed'
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS payment_failed,
+
+            SUM(
+                CASE
+                    WHEN application_statuses.slug = 'pov_insufficient_documents'
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS insufficient_documents
+        ")
+
+            ->whereIn(
+                'application_statuses.slug',
+                $statusSlugs
+            )
+
+            ->whereBetween(
+                'ap.status_date',
+                [$start, $end]
+            )
+
+            ->groupByRaw(
+                'DATE(ap.status_date)'
+            )
+
+            ->get()
+
+            ->keyBy('report_date');
+
+        $period = CarbonPeriod::create(
+            $start,
+            $end
+        );
+
+        $data = [];
+
+        $grand = [
+            'in_process' => 0,
+            'appointment_scheduled' => 0,
+            'payment_success' => 0,
+            'payment_failed' => 0,
+            'insufficient_documents' => 0,
+        ];
+
+        foreach ($period as $date) {
+
+            $key = $date->format('Y-m-d');
+
+            $row = $rawData[$key] ?? null;
+
+
+            $inProcess = (int) (
+                $row->in_process ?? 0
+            );
+
+            $appointmentScheduled = (int) (
+                $row->appointment_scheduled ?? 0
+            );
+
+            $paymentSuccess = (int) (
+                $row->payment_success ?? 0
+            );
+
+            $paymentFailed = (int) (
+                $row->payment_failed ?? 0
+            );
+
+            $insufficientDocuments = (int) (
+                $row->insufficient_documents ?? 0
+            );
+
+            $data[] = [
+                'report_date' => $key,
+                'in_process' => $inProcess,
+                'appointment_scheduled' => $appointmentScheduled,
+                'payment_success' => $paymentSuccess,
+                'payment_failed' => $paymentFailed,
+                'insufficient_documents' => $insufficientDocuments,
+            ];
+
+            $grand['in_process'] += $inProcess;
+            $grand['appointment_scheduled'] += $appointmentScheduled;
+            $grand['payment_success'] += $paymentSuccess;
+            $grand['payment_failed'] += $paymentFailed;
+            $grand['insufficient_documents'] += $insufficientDocuments;
+        }
+
+        return response()->json([
+            'data' => $data,
+            'grand_total' => $grand,
         ]);
     }
 }

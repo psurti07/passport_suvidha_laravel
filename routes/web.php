@@ -131,6 +131,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         // Invoice Routes
         Route::get('/invoice', [ReportController::class, 'invoiceReport'])->name('report.invoice');
         Route::get('/invoice/month-details', [ReportController::class, 'invoiceReportMonthDetails'])->name('report.invoice.month.details');
+
+        // Application Status Routes
+        Route::get('/application-status-report', [ReportController::class, 'applicationStatusReport'])->name('report.application-status');
+        Route::get('/application-status-report/month-details', [ReportController::class, 'applicationStatusReportMonthDetails'])->name('report.application-status.month.details');
     });
 
     // Invoice Routes
