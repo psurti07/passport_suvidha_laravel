@@ -50,7 +50,7 @@ return [
     ],
 
     'rcs' => [
-        'test_mode'=> env('RCS_TEST_MODE', false),
+        'test_mode' => env('RCS_TEST_MODE', false),
     ],
 
     'brevo' => [
@@ -58,7 +58,7 @@ return [
         'sender_name'  => env('BREVO_SENDER_NAME'),
         'sender_email' => env('BREVO_SENDER_EMAIL'),
     ],
-    
+
     'razorpay' => [
         'mode' => env('RAZORPAY_MODE'),
         'key' => env('RAZORPAY_KEY'),
@@ -82,5 +82,4 @@ return [
         'key' => env('INTERAKT_API_KEY'),
         'url' => env('INTERAKT_BASE_URL')
     ],
-
 ];

@@ -17,10 +17,14 @@
                     @csrf
                     <div class="border-b border-gray-200">
                         <div style="opacity: 1; transform: none;">
-                            <div class="md:text-xl font-semibold tracking-tight text-xl flex items-center gap-2 mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user h-5 w-5 text-navy">
+                            <div class="md:text-xl font-semibold tracking-tight text-xl flex items-center gap-2 mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-user h-5 w-5 text-navy">
                                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
-                                </svg>Basic Information</div>
+                                </svg>Basic Information
+                            </div>
                         </div>
                         <div style="opacity: 1; transform: none;"></div>
                     </div>
@@ -160,15 +164,16 @@
 
                     <div class="border-b border-gray-200">
                         <div style="opacity: 1; transform: none;">
-                            <div class="md:text-xl font-semibold tracking-tight text-xl flex items-center gap-2 mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                    class="h-5 w-5 text-navy">
+                            <div class="md:text-xl font-semibold tracking-tight text-xl flex items-center gap-2 mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="h-5 w-5 text-navy">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                     <circle cx="9" cy="7" r="4" />
                                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                </svg>Family Details</div>
+                                </svg>Family Details
+                            </div>
                         </div>
                         <div style="opacity: 1; transform: none;"></div>
                     </div>
@@ -235,23 +240,19 @@
 
                                     <option value="" disabled selected>Select Marital Status</option>
 
-                                    <option value="single"
-                                        {{ old('marital_status') == 'single' ? 'selected' : '' }}>
+                                    <option value="single" {{ old('marital_status') == 'single' ? 'selected' : '' }}>
                                         Single
                                     </option>
 
-                                    <option value="married"
-                                        {{ old('marital_status') == 'married' ? 'selected' : '' }}>
+                                    <option value="married" {{ old('marital_status') == 'married' ? 'selected' : '' }}>
                                         Married
                                     </option>
 
-                                    <option value="widow"
-                                        {{ old('marital_status') == 'widow' ? 'selected' : '' }}>
+                                    <option value="widow" {{ old('marital_status') == 'widow' ? 'selected' : '' }}>
                                         Widow
                                     </option>
 
-                                    <option value="widower"
-                                        {{ old('marital_status') == 'widower' ? 'selected' : '' }}>
+                                    <option value="widower" {{ old('marital_status') == 'widower' ? 'selected' : '' }}>
                                         Widower
                                     </option>
 
@@ -310,8 +311,9 @@
                                 <span class="text-red-500 ml-1">*</span>
                             </label>
                             <div class="relative group">
-                                <input type="text" id="emergency_contact_name" name="emergency_contact_name" value="{{ old('emergency_contact_name') }}"
-                                    required placeholder="Enter emergency contact name"
+                                <input type="text" id="emergency_contact_name" name="emergency_contact_name"
+                                    value="{{ old('emergency_contact_name') }}" required
+                                    placeholder="Enter emergency contact name"
                                     class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                         hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                         transition-all duration-200 placeholder-gray-400
@@ -335,8 +337,8 @@
                             </label>
                             <div class="relative group">
                                 <input type="tel" id="emergency_contact_mobile" name="emergency_contact_mobile"
-                                    value="{{ old('emergency_contact_mobile') }}" required placeholder="Enter emergency contact mobile"
-                                    maxlength="10" inputmode="numeric"
+                                    value="{{ old('emergency_contact_mobile') }}" required
+                                    placeholder="Enter emergency contact mobile" maxlength="10" inputmode="numeric"
                                     oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                     class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400
                                     @error('emergency_contact_mobile') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
@@ -361,7 +363,8 @@
                                 <span class="text-red-500 ml-1">*</span>
                             </label>
                             <div class="relative group">
-                                <input type="emergency_contact_email" id="emergency_contact_email" name="emergency_contact_email" value="{{ old('emergency_contact_email') }}" required
+                                <input type="emergency_contact_email" id="emergency_contact_email"
+                                    name="emergency_contact_email" value="{{ old('emergency_contact_email') }}" required
                                     placeholder="Enter emergency contact email"
                                     class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                         hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
@@ -383,19 +386,14 @@
 
                     <div class="border-b border-gray-200">
                         <div style="opacity: 1; transform: none;">
-                            <div class="md:text-xl font-semibold tracking-tight text-xl flex items-center gap-2 mb-4"><svg xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    class="h-5 w-5 text-navy">
+                            <div class="md:text-xl font-semibold tracking-tight text-xl flex items-center gap-2 mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="h-5 w-5 text-navy">
                                     <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z" />
                                     <circle cx="12" cy="10" r="3" />
-                                </svg>Personal Details</div>
+                                </svg>Personal Details
+                            </div>
                         </div>
                         <div style="opacity: 1; transform: none;"></div>
                     </div>
@@ -406,7 +404,8 @@
                                 <span class="text-red-500">*</span>
                             </label>
                             <div class="relative group">
-                                <textarea id="address" name="address" :required="isPaid" placeholder="Enter address" rows="3"
+                                <textarea id="address" name="address" :required="isPaid" placeholder="Enter address"
+                                    rows="3"
                                     class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                             hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                             transition-all duration-200 placeholder-gray-400
@@ -432,9 +431,8 @@
                             </label>
                             <div class="relative group">
                                 <input type="text" id="pin_code" name="pin_code" inputmode="numeric"
-                                    value="{{ old('pin_code') }}" :required="isPaid"
-                                    placeholder="Enter pincode" maxlength="6" minlength="6"
-                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    value="{{ old('pin_code') }}" :required="isPaid" placeholder="Enter pincode"
+                                    maxlength="6" minlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                     class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                             hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                             transition-all duration-200 placeholder-gray-400
@@ -458,8 +456,8 @@
                                 <span class="text-red-500">*</span>
                             </label>
                             <div class="relative group">
-                                <input type="text" id="city" name="city" value="{{ old('city') }}"
-                                    :required="isPaid" placeholder="Enter city" readonly
+                                <input type="text" id="city" name="city" value="{{ old('city') }}" :required="isPaid"
+                                    placeholder="Enter city" readonly
                                     class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                             hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                             transition-all duration-200 placeholder-gray-400
@@ -485,8 +483,8 @@
                                 <span class="text-red-500">*</span>
                             </label>
                             <div class="relative group">
-                                <input type="text" id="state" name="state" value="{{ old('state') }}"
-                                    :required="isPaid" placeholder="Enter state" readonly
+                                <input type="text" id="state" name="state" value="{{ old('state') }}" :required="isPaid"
+                                    placeholder="Enter state" readonly
                                     class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                             hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                             transition-all duration-200 placeholder-gray-400
@@ -509,8 +507,9 @@
                                 <span class="text-red-500 ml-1">*</span>
                             </label>
                             <div class="relative group">
-                                <input type="text" id="police_station_name" name="police_station_name" value="{{ old('police_station_name') }}"
-                                    required placeholder="Enter police station name"
+                                <input type="text" id="police_station_name" name="police_station_name"
+                                    value="{{ old('police_station_name') }}" required
+                                    placeholder="Enter police station name"
                                     class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                         hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                         transition-all duration-200 placeholder-gray-400
@@ -613,8 +612,7 @@
                             @enderror
                         </div>
                         <div>
-                            <label for="education_qualification"
-                                class="block text-sm font-semibold text-gray-900">
+                            <label for="education_qualification" class="block text-sm font-semibold text-gray-900">
                                 Education Qualification
                                 <span class="text-red-500">*</span>
                             </label>
@@ -683,8 +681,7 @@
                                         Government
                                     </option>
 
-                                    <option value="Private"
-                                        {{ old('employment_type') == 'Private' ? 'selected' : '' }}>
+                                    <option value="Private" {{ old('employment_type') == 'Private' ? 'selected' : '' }}>
                                         Private
                                     </option>
 
@@ -693,8 +690,7 @@
                                         Self Employed
                                     </option>
 
-                                    <option value="Student"
-                                        {{ old('employment_type') == 'Student' ? 'selected' : '' }}>
+                                    <option value="Student" {{ old('employment_type') == 'Student' ? 'selected' : '' }}>
                                         Student
                                     </option>
 
@@ -703,13 +699,11 @@
                                         Homemaker
                                     </option>
 
-                                    <option value="Retired"
-                                        {{ old('employment_type') == 'Retired' ? 'selected' : '' }}>
+                                    <option value="Retired" {{ old('employment_type') == 'Retired' ? 'selected' : '' }}>
                                         Retired
                                     </option>
 
-                                    <option value="Others"
-                                        {{ old('employment_type') == 'Others' ? 'selected' : '' }}>
+                                    <option value="Others" {{ old('employment_type') == 'Others' ? 'selected' : '' }}>
                                         Others
                                     </option>
                                 </select>
@@ -732,9 +726,8 @@
                                 <span class="text-red-500" x-show="isPaid">*</span>
                             </label>
                             <div class="relative group">
-                                <input type="text" id="nationality" name="nationality"
-                                    value="{{ old('nationality') }}" :required="isPaid"
-                                    placeholder="Enter nationality"
+                                <input type="text" id="nationality" name="nationality" value="{{ old('nationality') }}"
+                                    :required="isPaid" placeholder="Enter nationality"
                                     class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                             hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                             transition-all duration-200 placeholder-gray-400
@@ -755,13 +748,14 @@
 
                     <div class="border-b border-gray-200">
                         <div style="opacity: 1; transform: none;">
-                            <div class="md:text-xl font-semibold tracking-tight text-xl flex items-center gap-2 mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                    class="h-5 w-5 text-navy">
+                            <div class="md:text-xl font-semibold tracking-tight text-xl flex items-center gap-2 mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="h-5 w-5 text-navy">
                                     <rect x="2" y="5" width="20" height="14" rx="2" />
                                     <line x1="2" y1="10" x2="22" y2="10" />
-                                </svg>Application Card Details</div>
+                                </svg>Application Card Details
+                            </div>
                         </div>
                         <div style="opacity: 1; transform: none;"></div>
                     </div>
@@ -772,9 +766,7 @@
                             </label>
                             <div class="relative group">
                                 <input type="text" id="card_number" name="card_number"
-                                    value="{{ old('card_number', $cardNumber) }}"
-                                    placeholder="Enter card number"
-                                    class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
+                                    value="{{ old('card_number', $cardNumber) }}" placeholder="Enter card number" class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                                 hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                                 transition-all duration-200 placeholder-gray-400">
                             </div>
@@ -784,9 +776,8 @@
                                 Card Amount (Note: 18% GST amount added on card amount).
                             </label>
                             <div class="relative group">
-                                <input type="number" id="amount" name="amount"
-                                    value="{{ old('amount') }}" placeholder="Enter card amount"
-                                    class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
+                                <input type="number" id="amount" name="amount" value="{{ old('amount') }}"
+                                    placeholder="Enter card amount" class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                                 hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                                 transition-all duration-200 placeholder-gray-400">
                             </div>
@@ -799,9 +790,7 @@
                             </label>
                             <div class="relative group">
                                 <input type="text" id="payment_id" name="payment_id"
-                                    value="{{ old('payment_id', $paymentId) }}"
-                                    placeholder="Enter payment id"
-                                    class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
+                                    value="{{ old('payment_id', $paymentId) }}" placeholder="Enter payment id" class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                                 hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                                 transition-all duration-200 placeholder-gray-400">
                             </div>
