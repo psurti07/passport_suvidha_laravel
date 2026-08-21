@@ -34,7 +34,7 @@ class AppointmentLetterController extends Controller
             'appointment_letters.uploaded_by',
         ])
 
-            ->whereBetween('appointment_letters.upload_date', [
+            ->whereBetween('appointment_letters.appointment_date', [
                 $from . ' 00:00:00',
                 $to . ' 23:59:59'
             ]);

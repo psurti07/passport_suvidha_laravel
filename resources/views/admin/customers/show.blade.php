@@ -82,6 +82,19 @@
                         </svg>
                         Application Process
                     </a>
+                    <a href="#" @click.prevent="setActiveTab('passport-credential')"
+                        :class="{ 'bg-blue-600 text-white': activeTab === 'passport-credential', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'passport-credential' }"
+                        class="flex items-center px-6 py-4 text-sm font-medium transition duration-150 ease-in-out">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <rect x="4" y="10" width="11" height="10" rx="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 10V7a4 4 0 018 0v3" />
+                            <circle cx="17" cy="15" r="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M18.8 16.8L22 20m-1.5-1.5l1.2-1.2" />
+                        </svg>
+                        Passport Credential
+                    </a>
                     <a href="#" @click.prevent="setActiveTab('actions')"
                         :class="{ 'bg-blue-600 text-white': activeTab === 'actions', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'actions' }"
                         class="flex items-center px-6 py-4 text-sm font-medium transition duration-150 ease-in-out">
@@ -104,21 +117,21 @@
             <div x-show="activeTab === 'info'" x-cloak>
                 <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
                     <!-- {{-- Top Info Row --}}
-                                            <div
-                                                class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-gray-200 gap-y-2">
-                                                <p class="text-sm text-gray-600">
-                                                    Registration on: <strong
-                                                        class="text-gray-800 font-semibold">{{ $customer->payment_date ? $customer->payment_date->format('d M Y, H:i A') : 'N/A' }}</strong>
-                                                </p>
-                                                @if ($invoice)
+                                                                                                                                                            <div
+                                                                                                                                                                class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-gray-200 gap-y-2">
+                                                                                                                                                                <p class="text-sm text-gray-600">
+                                                                                                                                                                    Registration on: <strong
+                                                                                                                                                                        class="text-gray-800 font-semibold">{{ $customer->payment_date ? $customer->payment_date->format('d M Y, H:i A') : 'N/A' }}</strong>
+                                                                                                                                                                </p>
+                                                                                                                                                                @if ($invoice)
     <a href="{{ route('admin.invoices.download', $invoice->id) }}"
-                                                    class="inline-flex items-center text-sm px-4 py-2 w-auto bg-gradient-to-r from-green-500 to-green-600 font-medium rounded-lg border border-white text-white hover:from-green-600 hover:to-green-700">
-                                                    Download Invoice
-                                                </a>
+                                                                                                                                                                    class="inline-flex items-center text-sm px-4 py-2 w-auto bg-gradient-to-r from-green-500 to-green-600 font-medium rounded-lg border border-white text-white hover:from-green-600 hover:to-green-700">
+                                                                                                                                                                    Download Invoice
+                                                                                                                                                                </a>
 @else
     <span class="text-gray-400 text-sm">No Invoice Found</span>
     @endif
-                                            </div> -->
+                                                                                                                                                            </div> -->
 
                     {{-- Top Info Row --}}
                     <div
@@ -576,7 +589,6 @@
                                                                 {{ old('education_qualification', $customer->education_qualification) == 'Below 10th' ? 'selected' : '' }}>
                                                                 Below 10th
                                                             </option> -->
-
                                     <option value="10th Pass And Above"
                                         {{ old('education_qualification', $customer->education_qualification) == '10th Pass And Above' ? 'selected' : '' }}>
                                         10th Pass And Above
@@ -991,8 +1003,7 @@
                             showFileUpload: false,
                             showAppointmentFields: false,
                             filteredMessages: [],
-                            remarks: '{{ old('
-                                                                                                                                                                                                                            remark ') }}',
+                            remarks: '{{ old('remark ') }}',
                             isInitialLoad: true,
 
                             init() {
@@ -1222,7 +1233,8 @@
                                         <option value="" selected>Select Message (Optional)</option>
                                         <template x-for="msg in filteredMessages" :key="msg.id">
                                             <option :value="msg.message_name"
-                                                :selected="msg.message_name === selectedMessage" x-text="msg.message_name">
+                                                :selected="msg.message_name === selectedMessage"
+                                                x-text="msg.message_name">
                                             </option>
                                         </template>
                                     </select>
@@ -1274,7 +1286,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse ($customer->applicationProgress()->orderBy('created_at', 'desc')->get() as
-                                                        $progress)
+                                                                                                                                                                        $progress)
                                     <tr class="hover:bg-gray-50 transition duration-150">
                                         <td class="px-6 py-4">
                                             @php
@@ -1343,6 +1355,204 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+
+            {{-- Passport Credential Tab Content --}}
+            <div x-show="activeTab === 'passport-credential'" x-cloak>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+
+                    {{-- Top Info Row --}}
+                    <div
+                        class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-gray-200 gap-y-2">
+
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-800">
+                                Passport Credentials
+                            </h3>
+                            <p class="text-sm text-gray-500 mt-1">
+                                Manage the customer's Passport Seva login credentials.
+                            </p>
+                        </div>
+
+                        @if ($passportAccount && $passportAccount->is_email)
+                            <span
+                                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                                Credentials Emailed
+                            </span>
+                        @else
+                            <span
+                                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z" />
+                                </svg>
+                                Not Emailed
+                            </span>
+                        @endif
+
+                    </div>
+
+                    {{-- Credentials Form --}}
+                    <form action="{{ route('admin.customers.passport-account.store', $customer->id) }}" method="POST"
+                        class="space-y-5" x-data="passportCredentialForm()">
+
+                        @csrf
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+
+                            {{-- Username --}}
+                            <div>
+                                <label for="passport_username" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Passport Username
+                                    <span class="text-red-500">*</span>
+                                </label>
+
+                                <div class="relative">
+                                    <input type="text" id="passport_username" name="username"
+                                        value="{{ old('username', $passportAccount->username ?? '') }}" required
+                                        autocomplete="off" placeholder="Enter Passport username"
+                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 pl-3 pr-12 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                            @error('username') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+
+                                    {{-- Copy Username --}}
+                                    <button type="button"
+                                        @click="copyText(document.getElementById('passport_username').value, 'username')"
+                                        class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-blue-600 transition"
+                                        title="Copy Username">
+                                        {{-- Copy --}}
+                                        <svg x-show="copiedField !== 'password'" class="w-5 h-5" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M8 8V5a2 2 0 012-2h9a2 2 0 012 2v9a2 2 0 01-2 2h-3" />
+
+                                            <rect x="3" y="8" width="12" height="12" rx="2"
+                                                ry="2" />
+                                        </svg>
+
+                                        {{-- Copied --}}
+                                        <svg x-show="copiedField === 'password'" x-cloak class="w-5 h-5 text-teal-600"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                @error('username')
+                                    <p class="mt-1 text-sm text-red-600 flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+
+
+                            {{-- Password --}}
+                            <div>
+                                <label for="passport_password" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Passport Password
+                                    <span class="text-red-500">*</span>
+                                </label>
+
+                                <div class="relative">
+
+                                    <input :type="showPassword ? 'text' : 'password'" id="passport_password"
+                                        name="password" value="{{ old('password', $passportPassword ?? '') }}" required
+                                        autocomplete="new-password" placeholder="Enter Passport password"
+                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 pl-3 pr-20 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                            @error('password') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+
+                                    <div class="absolute inset-y-0 right-0 flex items-center">
+
+                                        {{-- Show / Hide Password --}}
+                                        <button type="button" @click="showPassword = !showPassword"
+                                            class="px-2 text-gray-400 hover:text-blue-600 transition"
+                                            :title="showPassword ? 'Hide Password' : 'Show Password'">
+
+                                            {{-- Eye --}}
+                                            <svg x-show="!showPassword" class="w-5 h-5" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+
+                                            {{-- Eye Off --}}
+                                            <svg x-show="showPassword" x-cloak class="w-5 h-5" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.956 9.956 0 012.223-3.592M6.228 6.228A9.956 9.956 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.96 9.96 0 01-4.132 5.168M6.228 6.228L3 3m3.228 3.228l11.544 11.544M9.88 9.88a3 3 0 104.24 4.24" />
+                                            </svg>
+                                        </button>
+
+                                        {{-- Copy Password --}}
+                                        <button type="button"
+                                            @click="copyText(document.getElementById('passport_password').value, 'password')"
+                                            class="px-2 pr-3 text-gray-400 hover:text-blue-600 transition"
+                                            title="Copy Password">
+
+                                            {{-- Copy --}}
+                                            <svg x-show="copiedField !== 'password'" class="w-5 h-5" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M8 8V5a2 2 0 012-2h9a2 2 0 012 2v9a2 2 0 01-2 2h-3" />
+
+                                                <rect x="3" y="8" width="12" height="12" rx="2"
+                                                    ry="2" />
+                                            </svg>
+
+                                            {{-- Copied --}}
+                                            <svg x-show="copiedField === 'password'" x-cloak class="w-5 h-5 text-teal-600"
+                                                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </button>
+
+                                    </div>
+                                </div>
+
+                                @error('password')
+                                    <p class="mt-1 text-sm text-red-600 flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1 1 1 0 00-1-1z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+
+                        </div>
+
+                        {{-- Buttons --}}
+                        <div class="pt-6 mt-4 border-t border-gray-200 flex flex-col sm:flex-row justify-end gap-3">
+
+                            {{-- Save --}}
+                            <button type="submit" name="action" value="save" class="btn-primary px-8 py-2.5"
+                                this.classList.add('opacity-50','cursor-not-allowed');>
+                                SAVE
+                            </button>
+
+                            {{-- Send Email --}}
+                            <button type="submit" name="action" value="send_email"
+                                this.classList.add('opacity-50','cursor-not-allowed'); class="btn-primary px-8 py-2.5">
+                                SEND EMAIL
+                            </button>
+
+                        </div>
+
+                    </form>
                 </div>
             </div>
 
@@ -1442,7 +1652,8 @@
                                 <div class="mb-3 md:mb-0">
                                     <h3 class="text-lg font-medium text-red-800 flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                            stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                         </svg>
@@ -1585,5 +1796,26 @@
             });
 
         });
+
+        function passportCredentialForm() {
+            return {
+                showPassword: false,
+                copiedField: null,
+
+                copyText(text, field) {
+                    if (!text) {
+                        return;
+                    }
+
+                    navigator.clipboard.writeText(text).then(() => {
+                        this.copiedField = field;
+
+                        setTimeout(() => {
+                            this.copiedField = null;
+                        }, 1500);
+                    });
+                }
+            }
+        }
     </script>
 @endpush

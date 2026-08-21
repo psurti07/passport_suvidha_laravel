@@ -75,7 +75,7 @@ class LeadController extends Controller
                 return '
                     <form action="' . route('admin.customer.search') . '" method="POST" style="display:inline;">
                         ' . csrf_field() . '
-                        <input type="hidden" name="mobile_no" value="' . $row->mobile_number . '">
+                        <input type="hidden" name="search" value="' . $row->mobile_number . '">
                         <button type="submit" class="text-blue-600 hover:text-blue-900" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -149,7 +149,7 @@ class LeadController extends Controller
                 return '
                     <form action="' . route('admin.customer.search') . '" method="POST" style="display:inline;">
                         ' . csrf_field() . '
-                        <input type="hidden" name="mobile_no" value="' . $row->mobile_number . '">
+                        <input type="hidden" name="search" value="' . $row->mobile_number . '">
                         <button type="submit" class="text-blue-600 hover:text-blue-900" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">

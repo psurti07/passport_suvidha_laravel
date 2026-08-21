@@ -198,4 +198,9 @@ class Customer extends Authenticatable
             ->limit(10)
             ->get();
     }
+
+    public function passportAccount()
+    {
+        return $this->hasOne(PassportAccount::class);
+    }
 }

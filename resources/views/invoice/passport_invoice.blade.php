@@ -192,7 +192,7 @@
                 Singanpore Road, Surat - 395004<br />
             </td>
             <td colspan="3" class="left">
-                <strong>Mobile :</strong> +91 7486046591<br />
+                <strong>Mobile :</strong> +91 6358292349<br />
                 <strong>Email :</strong> support@passportsuvidha.com<br />
                 <strong>GSTIN :</strong> 24ABEFB9441P1Z1
             </td>

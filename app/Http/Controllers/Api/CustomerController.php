@@ -209,7 +209,7 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
-            'organisation_name' => 'required_if:employment_type,Government|string|max:255',
+            'organisation_name' => 'required_if:employment_type,Government|nullable|string|max:255',
             'nationality' => 'required|string|max:255'
         ];
 
@@ -413,7 +413,7 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
-            'organisation_name' => 'required_if:employment_type,Government|string|max:255',
+            'organisation_name' => 'required_if:employment_type,Government|nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {

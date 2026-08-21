@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Services\SmsService;
 use App\Models\MessageTemplate;
 use App\Services\BrevoMailService;
+use Illuminate\Support\Facades\Crypt;
 
 class CustomerController extends Controller
 {
@@ -280,6 +281,25 @@ class CustomerController extends Controller
 
         $statuses = ApplicationStatus::orderBy('priority_no')->get();
 
+        $passportAccount = $customer->passportAccount;
+
+        $passportPassword = '';
+
+        if ($passportAccount && $passportAccount->password) {
+            try {
+                $passportPassword = Crypt::decryptString(
+                    $passportAccount->password
+                );
+            } catch (\Throwable $e) {
+                Log::error('Unable to decrypt Passport password.', [
+                    'customer_id' => $customer->id,
+                    'passport_account_id' => $passportAccount->id,
+                    'error' => $e->getMessage(),
+                ]);
+
+                $passportPassword = '';
+            }
+        }
         $predefinedMessages = \App\Models\PreDefinedMessage::select(
             'id',
             'message_name',
@@ -287,7 +307,7 @@ class CustomerController extends Controller
             'status_id'
         )->get();
 
-        return view('admin.customers.show', compact('customer', 'statuses', 'predefinedMessages', 'invoice'));
+        return view('admin.customers.show', compact('customer', 'statuses', 'predefinedMessages', 'invoice', 'passportAccount', 'passportPassword'));
     }
 
     public function edit(Customer $customer)

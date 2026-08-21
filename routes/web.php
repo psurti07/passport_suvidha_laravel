@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\ScheduleSlotController;
 use App\Http\Controllers\Admin\RemarketingLogController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\RefundController;
+use App\Http\Controllers\Admin\PassportAccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,6 +109,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/application-status/new', [ApplicationStatusController::class, 'new'])->name('application.status.new');
     Route::get('/application-status/current', [ApplicationStatusController::class, 'current'])->name('application.status.current');
     Route::get('/application-status/completed', [ApplicationStatusController::class, 'completed'])->name('application.status.completed');
+
+    // Passport Credentials Routes
+    Route::post('/customers/{customer}/passport-account', [PassportAccountController::class, 'store'])->name('customers.passport-account.store');
+    Route::get('/customers/{customer}/passport-account', [PassportAccountController::class, 'show'])->name('customers.passport-account.show');
+    Route::delete('/customers/{customer}/passport-account', [PassportAccountController::class, 'destroy'])->name('customers.passport-account.destroy');
 
     // Reports Routes
     Route::prefix('/report')->group(function () {
