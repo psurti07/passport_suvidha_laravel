@@ -103,11 +103,11 @@ class SearchController extends Controller
                 ->first();
         }
 
-        Log::info('Customer search', [
-            'search' => $search,
-            'customer_id' => $customer?->id,
-            'customer' => $customer,
-        ]);
+        // Log::info('Customer search', [
+        //     'search' => $search,
+        //     'customer_id' => $customer?->id,
+        //     'customer' => $customer,
+        // ]);
 
         return redirect()
             ->route('admin.customer.search.form')

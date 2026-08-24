@@ -277,7 +277,9 @@ class RefundController extends Controller
             ->addIndexColumn()
 
             ->addColumn('customer_name', function ($row) {
-                return Str::title(strtolower($row->customer->full_name))  ?? '-';
+                return $row->customer?->full_name
+                    ? Str::title(strtolower($row->customer->full_name))
+                    : '-';
             })
 
             ->addColumn('customer_mobile', function ($row) {
