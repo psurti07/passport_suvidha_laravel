@@ -220,6 +220,7 @@ class RefundController extends Controller
 
                     Customer::where('id', $invoice->customer_id)->update([
                         'registration_step' => 12,
+                        'is_active' => 0,
                     ]);
 
                     RazorpayLog::where('payment_id', $paymentId)->update([
