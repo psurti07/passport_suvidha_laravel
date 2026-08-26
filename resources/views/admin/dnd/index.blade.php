@@ -99,7 +99,7 @@
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile
                                     </th>
 
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Updated
                                     </th>
 
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
@@ -176,8 +176,8 @@
                         name: 'mobile_number'
                     },
                     {
-                        data: 'created_at',
-                        name: 'created_at'
+                        data: 'updated_at',
+                        name: 'updated_at'
                     },
                     {
                         data: 'actions',
@@ -215,7 +215,10 @@
                     }
                 ],
 
-                pageLength: 10
+                lengthMenu: [
+                    [50, 100, 250, 500],
+                    [50, 100, 250, 500]
+                ]
 
             });
 

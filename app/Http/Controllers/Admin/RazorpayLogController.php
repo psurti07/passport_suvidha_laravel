@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RazorpayLog;
+use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class RazorpayLogController extends Controller
@@ -79,7 +80,7 @@ class RazorpayLogController extends Controller
 
                     return "
                         <div>
-                            <div class='font-semibold text-gray-900'>" . ($offer->full_name ?? '-') . "</div>
+                            <div class='font-semibold text-gray-900'>" . (Str::title(strtolower($offer->full_name ?? '-'))) . "</div>
                             <div class='text-xs text-gray-500'>" . ($offer->email ?? '-') . "</div>
                         </div>
                     ";
@@ -93,7 +94,7 @@ class RazorpayLogController extends Controller
 
                     return "
                         <div>
-                            <div class='font-semibold text-gray-900'>" . ($fullName ?: '-') . "</div>
+                            <div class='font-semibold text-gray-900'>" . (Str::title(strtolower($fullName ?? '-'))) . "</div>
                             <div class='text-xs text-gray-500'>" . ($customer->email ?? '-') . "</div>
                         </div>
                     ";
@@ -144,6 +145,7 @@ class RazorpayLogController extends Controller
                     'pending' => '<span class="px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded">Pending</span>',
                     'failed'  => '<span class="px-2 py-0.5 text-xs bg-red-100 text-red-800 rounded">Failed</span>',
                     'success' => '<span class="px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded">Success</span>',
+                    'refund' => '<span class="px-2 py-0.5 text-xs bg-purple-100 text-purple-800 rounded">Refund</span>',
                     default   => '<span class="px-2 py-0.5 text-xs bg-gray-100 text-gray-800 rounded">' . ucfirst($row->tx_status) . '</span>',
                 };
             })

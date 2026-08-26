@@ -31,6 +31,8 @@ use App\Http\Controllers\Admin\SmsController;
 use App\Http\Controllers\Admin\ScheduleSlotController;
 use App\Http\Controllers\Admin\RemarketingLogController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\RefundController;
+use App\Http\Controllers\Admin\PassportAccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +71,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/leads/today', [LeadController::class, 'today'])->name('leads.today');
     Route::get('/leads/today/data', [LeadController::class, 'todayData'])->name('leads.today.data');
     Route::get('leads', [LeadController::class, 'index'])->name('leads.index');
+    Route::delete('/lead/{customer}', [LeadController::class, 'destroy'])->name('lead.delete');
     Route::get('/leads-data', [LeadController::class, 'data'])->name('leads.data');
     Route::get('/customers/today', [CustomerController::class, 'today'])->name('customers.today');
     Route::get('/customers/today/data', [CustomerController::class, 'todayData'])->name('customers.today.data');
@@ -107,6 +110,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/application-status/current', [ApplicationStatusController::class, 'current'])->name('application.status.current');
     Route::get('/application-status/completed', [ApplicationStatusController::class, 'completed'])->name('application.status.completed');
 
+    // Passport Credentials Routes
+    Route::post('/customers/{customer}/passport-account', [PassportAccountController::class, 'store'])->name('customers.passport-account.store');
+    Route::get('/customers/{customer}/passport-account', [PassportAccountController::class, 'show'])->name('customers.passport-account.show');
+    Route::delete('/customers/{customer}/passport-account', [PassportAccountController::class, 'destroy'])->name('customers.passport-account.destroy');
+
     // Reports Routes
     Route::prefix('/report')->group(function () {
 
@@ -129,6 +137,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         // Invoice Routes
         Route::get('/invoice', [ReportController::class, 'invoiceReport'])->name('report.invoice');
         Route::get('/invoice/month-details', [ReportController::class, 'invoiceReportMonthDetails'])->name('report.invoice.month.details');
+
+        // Application Status Routes
+        Route::get('/application-status-report', [ReportController::class, 'applicationStatusReport'])->name('report.application-status');
+        Route::get('/application-status-report/month-details', [ReportController::class, 'applicationStatusReportMonthDetails'])->name('report.application-status.month.details');
     });
 
     // Invoice Routes
@@ -218,4 +230,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Users Routes
     Route::resource('users', UserController::class);
     Route::get('/users-data', [UserController::class, 'data'])->name('users.data');
+
+    // Refund Routes
+    Route::post('/refund/store', [RefundController::class, 'store'])->name('refund.store');
+    Route::get('/refund', [RefundController::class, 'index'])->name('refund.index');
+    Route::get('/refund/data', [RefundController::class, 'data'])
+        ->name('refund.data');
 });

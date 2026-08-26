@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\ApplicationProgress;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\ApplicationStatus;
+use Illuminate\Support\Str;
 
 class ApplicationStatusController extends Controller
 {
@@ -102,7 +103,7 @@ class ApplicationStatusController extends Controller
             ->addIndexColumn()
 
             ->addColumn('customer_name', function ($row) {
-                return $row->customer->full_name;
+                return Str::title(strtolower($row->customer->full_name));
             })
 
             ->addColumn('customer_mobile', function ($row) {

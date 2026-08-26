@@ -861,7 +861,7 @@ class OfferOrderController extends Controller
 
         if (!$accessToken) {
             return redirect(
-                config('services.app.frontend_url') . '/staroffer?status=pending&order_id=' . $orderId
+                config('services.app.frontend_url') . '/staroffer-response?status=failed'
             );
         }
 
@@ -872,7 +872,7 @@ class OfferOrderController extends Controller
 
         if (!$response->successful()) {
             return redirect(
-                config('services.app.frontend_url') . '/staroffer?status=pending&order_id=' . $orderId
+                config('services.app.frontend_url') . '/staroffer-response?status=failed'
             );
         }
 
@@ -969,7 +969,7 @@ class OfferOrderController extends Controller
         }
 
         return redirect(
-            config('services.app.frontend_url') . '/staroffer?status=pending&order_id=' . $orderId
+            config('services.app.frontend_url') . '/staroffer-response?status=failed'
         );
     }
 }

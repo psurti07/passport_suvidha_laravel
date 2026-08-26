@@ -82,4 +82,9 @@ return [
         'key' => env('INTERAKT_API_KEY'),
         'url' => env('INTERAKT_BASE_URL')
     ],
+
+    'login_short_link' => [
+        'url' => env('LOGIN_SHORT_LINK'),
+    ],
+
 ];

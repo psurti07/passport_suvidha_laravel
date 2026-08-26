@@ -67,7 +67,7 @@
     <div id="monthModal"
         class="fixed inset-0 hidden bg-black bg-opacity-50 flex items-start justify-center pt-10 z-50 p-4 lg:p-0">
 
-        <div class="bg-white w-[500px] rounded-lg shadow-lg">
+        <div class="bg-white w-[700px] rounded-lg shadow-lg">
 
             <div class="flex justify-between items-center border-b p-3">
                 <h2 class="text-lg font-bold">Monthly Lead Details</h2>
@@ -167,7 +167,7 @@
 
                     let html = `
                 <table class="w-full border text-sm">
-                    <thead>
+                    <thead class="bg-blue-50">
                         <tr>
                             <th class="border text-gray-600 font-semibold !text-left p-4 uppercase">Date</th>
                             <th class="border text-gray-600 font-semibold !text-right p-4 uppercase">Leads</th>

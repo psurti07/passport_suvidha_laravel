@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\OfferOrder;
+use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class StarOfferController extends Controller
@@ -47,6 +48,10 @@ class StarOfferController extends Controller
         return DataTables::of($query)
 
             ->addIndexColumn()
+
+            ->editColumn('full_name', function ($row) {
+                return Str::title(strtolower($row->full_name));
+            })
 
             ->addColumn('is_customer', function ($row) {
                 return $row->is_customer ? '1' : '0';

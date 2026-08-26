@@ -97,10 +97,98 @@
 
     </div>
 
+    <!-- Refund Modal -->
+    <div id="refundModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 px-4">
+
+        <div class="w-full max-w-md rounded-xl bg-white shadow-2xl">
+
+            <!-- Header -->
+            <div class="flex items-center justify-between border-b px-6 py-4">
+
+                <h3 class="text-lg font-semibold text-gray-800">
+                    Process Refund
+                </h3>
+
+                <button type="button" onclick="closeRefundModal()" class="text-gray-400 hover:text-gray-600">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+
+                    </svg>
+                </button>
+
+            </div>
+
+            <!-- Body -->
+            <form id="refundForm" action="{{ route('admin.refund.store') }}" method="POST">
+                @csrf
+
+                <input type="hidden" id="refund_invoice_id" name="invoice_id">
+
+                <div class="space-y-5 px-6 py-5">
+
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-700">
+                            Payment ID
+                        </label>
+
+                        <input type="text" id="payment_id" name="payment_id" readonly
+                            class="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2.5 text-sm text-gray-600 cursor-not-allowed">
+                    </div>
+
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-700">
+                            Refund Remark
+                        </label>
+
+                        <textarea id="refund_remark" name="remark" rows="4" required placeholder="Enter reason for refund..."
+                            class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="flex justify-end gap-3 border-t bg-gray-50 px-6 py-4">
+                    <button type="button" onclick="closeRefundModal()"
+                        class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100">
+                        Cancel
+                    </button>
+
+                    <button type="submit" id="refundSubmitButton"
+                        onclick="this.disabled=true; this.innerText='Processing...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                        class="rounded-lg bg-purple-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50">
+                        Refund
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
 @endsection
 
 @push('scripts')
     <script>
+        function openRefundModal(invoiceId, paymentId, amount) {
+
+            $('#refund_invoice_id').val(invoiceId);
+            $('#payment_id').val(paymentId);
+            $('#refund_remark').val('');
+
+            $('#refundModal')
+                .removeClass('hidden')
+                .addClass('flex');
+        }
+
+        function closeRefundModal() {
+
+            $('#refundModal')
+                .removeClass('flex')
+                .addClass('hidden');
+
+            $('#refundForm')[0].reset();
+        }
         $(function() {
 
             let table = $('#invoice-table').DataTable({
@@ -197,7 +285,10 @@
                     }
                 ],
 
-                pageLength: 10
+                lengthMenu: [
+                    [50, 100, 250, 500],
+                    [50, 100, 250, 500]
+                ]
 
             });
 

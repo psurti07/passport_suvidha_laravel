@@ -59,20 +59,26 @@
     </div>
 
     {{-- MODAL --}}
-    <div id="monthModal" class="fixed inset-0 hidden bg-black bg-opacity-50 flex items-start justify-center pt-10 z-50">
-
-        <div class="bg-white w-[500px] rounded-lg shadow-lg">
-
-            <div class="flex justify-between items-center border-b p-3">
-                <h2 class="text-lg font-bold">Monthly Service Details</h2>
-                <button onclick="closeModal()" class="text-gray-500 font-bold">X</button>
+    <div id="monthModal"
+        class="fixed inset-0 hidden bg-black bg-opacity-50 flex items-start justify-center
+           pt-5 sm:pt-10 px-3 sm:px-5 z-50 overflow-y-auto">
+        <div class="bg-white w-full max-w-[700px] rounded-lg shadow-lg my-5 sm:my-0">
+            <div class="flex justify-between items-center border-b p-3 sm:p-4">
+                <h2 class="text-base sm:text-lg font-bold">
+                    Monthly Service Details
+                </h2>
+                <button type="button" onclick="closeModal()"
+                    class="text-gray-500 hover:text-red-500 font-bold text-lg sm:text-xl
+                       px-2 py-1">
+                    &times;
+                </button>
             </div>
 
-            <div id="modalContent" class="p-3 max-h-[70vh] overflow-y-auto">
+            <div id="modalContent" class="p-3 sm:p-4 max-h-[75vh] overflow-y-auto overflow-x-auto">
                 Loading...
             </div>
-
         </div>
+
     </div>
 
 @endsection
@@ -155,7 +161,6 @@
                             data-month="${row.month_no}">
                             View Datewise
                         </button>
-                        </div>
                     `;
                         }
                     }

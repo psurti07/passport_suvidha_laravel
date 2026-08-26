@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Str;
 
 class InvoiceController extends Controller
 {
@@ -33,7 +34,7 @@ class InvoiceController extends Controller
             'sgst',
             'igst',
             'total_amount'
-        )->latest('inv_date');
+        )->latest('created_at');
 
         if ($request->from_date && $request->to_date) {
             $query->whereBetween('inv_date', [
@@ -47,7 +48,7 @@ class InvoiceController extends Controller
             ->addIndexColumn()
 
             ->addColumn('customer_name', function ($row) {
-                return $row->customer->full_name;
+                return Str::title(strtolower($row->customer->full_name));
             })
 
             ->addColumn('customer_mobile', function ($row) {
@@ -83,50 +84,115 @@ class InvoiceController extends Controller
 
             ->addColumn('actions', function ($row) {
                 return '
-                    <div class="flex items-center gap-2">
-                        <!-- View -->
-                        <a href="' . route('admin.customers.show', $row->customer->id) . '#info" 
-                        class="text-blue-600 hover:text-blue-900" 
-                        title="View">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                        </a>
+                        <div class="flex items-center gap-2">
 
-                        <!-- Download -->
-                        <a href="' . route('admin.invoices.download', $row->id) . '" 
-                            class="text-green-600 hover:text-green-900" target="_blank" title="Download">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                            </svg>
-                        </a>
+                            <!-- View -->
+                            <a href="' . route('admin.customers.show', $row->customer->id) . '#info"
+                                class="text-blue-600 hover:text-blue-900"
+                                title="View">
 
-                        <!-- Delete -->
-                        <form action="' . route('admin.invoices.destroy', $row->id) . '" method="POST" class="inline">
-                            ' . csrf_field() . '
-                            ' . method_field('DELETE') . '
-                            <button type="button" 
-                                onclick="confirmDelete(\'' . $row->customer->full_name . ' Invoice\', this.form)"
-                                class="text-red-600 hover:text-red-900" 
-                                title="Delete">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
                                         stroke-width="2"
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+
                                 </svg>
+                            </a>
+
+
+                            <!-- Download -->
+                            <a href="' . route('admin.invoices.download', $row->id) . '"
+                                class="text-green-600 hover:text-green-900"
+                                target="_blank"
+                                title="Download">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+
+                                </svg>
+                            </a>
+
+
+                             <!-- Refund -->
+                            <button type="button"
+                                onclick="openRefundModal(
+                                    \'' . $row->id . '\',
+                                    \'' . ($row->order->payment_id ?? '') . '\',
+                                    \'' . $row->total_amount . '\'
+                                )"
+                                class="text-purple-600 hover:text-purple-800"
+                                title="Refund">
+                                
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 14l-4-4 4-4" />
+
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M5 10h9a5 5 0 015 5v1" />
+
+                                </svg>
+
                             </button>
-                        </form>
-                    </div>
-                ';
+
+
+                            <!-- Delete -->
+                            <form action="' . route('admin.invoices.destroy', $row->id) . '"
+                                method="POST"
+                                class="inline">
+
+                                ' . csrf_field() . '
+                                ' . method_field('DELETE') . '
+
+                                <button type="button"
+                                    onclick="confirmDelete(\'' . addslashes($row->customer->full_name) . ' Invoice\', this.form)"
+                                    class="text-red-600 hover:text-red-900"
+                                    title="Delete">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-5 w-5"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor">
+
+                                        <path stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+
+                                    </svg>
+                                </button>
+                            </form>
+
+                        </div>
+                    ';
             })
 
             ->rawColumns(['actions'])
@@ -255,7 +321,7 @@ class InvoiceController extends Controller
 
                 return '
                     <div>
-                        <div class="font-semibold text-gray-900">' . ($fullName ?: '-') . '</div>
+                        <div class="font-semibold text-gray-900">' . (Str::title(strtolower($fullName)) ?: '-') . '</div>
                         <div class="text-xs text-gray-500">' . $email . '</div>
                     </div>
                 ';

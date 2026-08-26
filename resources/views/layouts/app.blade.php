@@ -614,7 +614,122 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text font-semibold text-lg">Dashboard</span>
                 </a>
 
-                <a href="{{ route('admin.todaystatistics') }}"
+                @php
+                    $todayDataActive = request()->routeIs(
+                        'admin.todaystatistics',
+                        'admin.leads.today',
+                        'admin.customers.today',
+                    );
+                @endphp
+
+                <div x-data="{ todayDataOpen: {{ $todayDataActive ? 'true' : 'false' }} }">
+
+                    <!-- Today's Data Heading -->
+                    <button type="button" @click="todayDataOpen = !todayDataOpen"
+                        class="nav-link flex items-center justify-between w-full px-4 py-3 rounded-lg mb-1
+                         {{ $todayDataActive ? 'bg-blue font-semibold text-text-gray' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Today\'s Data' : ''">
+
+                        <div class="flex items-center">
+
+                            <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+
+                            <span class="nav-link-text font-semibold text-lg">
+                                Today's Data
+                            </span>
+
+                        </div>
+
+                        <!-- Arrow -->
+                        <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': todayDataOpen }"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7" />
+                        </svg>
+
+                    </button>
+
+
+                    <!-- Dropdown Items -->
+                    <div x-show="todayDataOpen" x-transition class="ml-4 pl-4 border-l border-gray-300">
+
+                        <!-- Today Statistics -->
+                        <a href="{{ route('admin.todaystatistics') }}"
+                            class="nav-link flex items-center px-4 py-2.5 rounded-lg mb-1
+                {{ request()->routeIs('admin.todaystatistics') ? 'active' : '' }}"
+                            x-bind:title="sidebarCollapsed ? 'Today Statistics' : ''">
+
+                            <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+
+                            <span class="nav-link-text font-semibold text-lg">
+                                Today Statistics
+                            </span>
+
+                        </a>
+
+
+                        <!-- Today's Leads -->
+                        <a href="{{ route('admin.leads.today') }}"
+                            class="nav-link flex items-center px-4 py-2.5 rounded-lg mb-1
+                {{ request()->routeIs('admin.leads.today') ? 'active' : '' }}"
+                            x-bind:title="sidebarCollapsed ? 'Today\'s Leads' : ''">
+
+                            <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="18" rx="2" stroke-width="2" />
+
+                                <line x1="16" y1="2" x2="16" y2="6"
+                                    stroke-width="2" />
+
+                                <line x1="8" y1="2" x2="8" y2="6"
+                                    stroke-width="2" />
+
+                                <line x1="3" y1="10" x2="21" y2="10"
+                                    stroke-width="2" />
+
+                                <circle cx="12" cy="15" r="2" stroke-width="2" />
+
+                                <path stroke-width="2" d="M8 20c1.5-2 6.5-2 8 0" />
+                            </svg>
+
+                            <span class="nav-link-text font-semibold text-lg">
+                                Today's Leads
+                            </span>
+
+                        </a>
+
+
+                        <!-- Today's Customers -->
+                        <a href="{{ route('admin.customers.today') }}"
+                            class="nav-link flex items-center px-4 py-2.5 rounded-lg mb-1
+                {{ request()->routeIs('admin.customers.today') ? 'active' : '' }}"
+                            x-bind:title="sidebarCollapsed ? 'Today\'s Customers' : ''">
+
+                            <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+
+                            <span class="nav-link-text font-semibold text-lg">
+                                Today's Customers
+                            </span>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                {{-- <a href="{{ route('admin.todaystatistics') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.todaystatistics') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Today Statistics' : ''">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -623,12 +738,13 @@ scrollToActive()" x-cloak>
                         </path>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">Today Statistics</span>
-                </a>
+                </a> --}}
 
                 <a href="{{ route('admin.customer.search.form') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customer.search.form') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Search Customer' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
@@ -638,7 +754,7 @@ scrollToActive()" x-cloak>
                 <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">CUSTOMER MANAGEMENT
                 </div>
 
-                <a href="{{ route('admin.leads.today') }}"
+                {{-- <a href="{{ route('admin.leads.today') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.leads.today') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Today\'s Leads' : ''">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -652,7 +768,7 @@ scrollToActive()" x-cloak>
                         <path stroke-width="2" d="M8 20c1.5-2 6.5-2 8 0"></path>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">Today's Leads</span>
-                </a>
+                </a> --}}
 
                 <a href="{{ route('admin.leads.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.leads.index') && !request()->routeIs('admin.leads.today') ? 'active' : '' }}"
@@ -667,7 +783,7 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text font-semibold text-lg">Leads</span>
                 </a>
 
-                <a href="{{ route('admin.customers.today') }}"
+                {{-- <a href="{{ route('admin.customers.today') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.today') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Today\'s Customers' : ''">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -677,7 +793,7 @@ scrollToActive()" x-cloak>
                         </path>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">Today's Customers</span>
-                </a>
+                </a> --}}
 
                 <a href="{{ route('admin.customers.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.customers.index') && !request()->routeIs('admin.customers.today') ? 'active' : '' }}"
@@ -815,6 +931,19 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text font-semibold text-lg">GST Data</span>
                 </a>
 
+                <a href="{{ route('admin.refund.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.refund.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Refund Data' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l-4-4 4-4" />
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 10h9a5 5 0 015 5v1" />
+                    </svg>
+                    <span class="nav-link-text font-semibold text-lg">Refund</span>
+                </a>
+
                 <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">REPORTS</div>
 
                 <a href="{{ route('admin.report.lead') }}"
@@ -863,6 +992,18 @@ scrollToActive()" x-cloak>
                         </path>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">Invoice</span>
+                </a>
+
+                <a href="{{ route('admin.report.application-status') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.application-status') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text font-semibold text-lg">Application Status</span>
                 </a>
 
                 <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">OFFER</div>

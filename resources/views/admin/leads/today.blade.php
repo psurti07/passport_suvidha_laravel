@@ -168,7 +168,7 @@
                             format: {
                                 body: function(data, row, column, node) {
                                     if (column === 1) {
-                                        return $(node).text().replace('🟢', '').replace('⚪', '')
+                                        return $(node).text().replace('🔴 ', '').replace('🟢', '')
                                             .trim();
                                     }
                                     return $(node).text();
@@ -183,7 +183,7 @@
                             format: {
                                 body: function(data, row, column, node) {
                                     if (column === 1) {
-                                        return $(node).text().replace('🟢', '').replace('⚪', '')
+                                        return $(node).text().replace('🔴 ', '').replace('🟢', '')
                                             .trim();
                                     }
                                     return $(node).text();
@@ -198,7 +198,7 @@
                             format: {
                                 body: function(data, row, column, node) {
                                     if (column === 1) {
-                                        return $(node).text().replace('🟢', '').replace('⚪', '')
+                                        return $(node).text().replace('🔴 ', '').replace('🟢', '')
                                             .trim();
                                     }
                                     return $(node).text();
@@ -213,7 +213,7 @@
                             format: {
                                 body: function(data, row, column, node) {
                                     if (column === 1) {
-                                        return $(node).text().replace('🟢', '').replace('⚪', '')
+                                        return $(node).text().replace('🔴 ', '').replace('🟢', '')
                                             .trim();
                                     }
                                     return $(node).text();
@@ -223,7 +223,10 @@
                     }
                 ],
 
-                pageLength: 10
+                lengthMenu: [
+                    [50, 100, 250, 500],
+                    [50, 100, 250, 500]
+                ],
 
             });
 

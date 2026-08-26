@@ -209,6 +209,7 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
+            'organisation_name' => 'required_if:employment_type,Government|nullable|string|max:255',
             'nationality' => 'required|string|max:255'
         ];
 
@@ -289,10 +290,14 @@ class CustomerController extends Controller
 
             $existingCustomer->update($data);
 
+            $token = $existingCustomer->createToken('customer-registration-token')->plainTextToken;
+
             return response()->json([
                 'message' => 'Customer information updated successfully',
                 'customer' => $existingCustomer->fresh(),
                 'registration_step' => $existingCustomer->registration_step,
+                'token' => $token,
+                'token_type' => 'Bearer',
                 'next_step' => $this->getNextStep($existingCustomer->registration_step),
             ], 200);
         }
@@ -408,6 +413,7 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
+            'organisation_name' => 'required_if:employment_type,Government|nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -426,6 +432,7 @@ class CustomerController extends Controller
 
 
         $data['registration_step'] = 4;
+        $data['nationality'] = 'Indian';
 
         $customer->update($data);
 
@@ -451,33 +458,89 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function getCustomerByFbclid(Request $request)
+    // public function getCustomerByFbclid(Request $request)
+    // {
+    //     $fbclid = $request->id;
+
+    //     $fbLead = FbAdsEntry::with(['customer.service'])
+    //         ->where('fbclid', $fbclid)
+    //         ->first();
+
+    //     if (!$fbLead || !$fbLead->customer) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Customer not found for the provided fbclid.'
+    //         ], 404);
+    //     }
+
+    //     $customer = $fbLead->customer;
+    //     // Remove old tokens
+    //     $customer->tokens()->delete();
+
+    //     // Create new token
+    //     $token = $customer->createToken('customer-login-token')->plainTextToken;
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'customer' => $fbLead->customer,
+    //         'token' => $token,
+    //     ]);
+    // }
+
+
+    public function getCustomerByEncryptId(Request $request)
     {
-        $fbclid = $request->id;
+        try {
+            // Encrypted customer ID from request
+            $encryptedId = $request->id;
 
-        $fbLead = FbAdsEntry::with(['customer.service'])
-            ->where('fbclid', $fbclid)
-            ->first();
+            if (!$encryptedId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Customer ID is required.'
+                ], 400);
+            }
 
-        if (!$fbLead || !$fbLead->customer) {
+            // Decrypt customer ID
+            $customerId = decryptData($encryptedId);
+
+            if (!$customerId || !is_numeric($customerId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid customer ID.'
+                ], 400);
+            }
+
+            // Get customer
+            $customer = Customer::with('service')
+                ->find($customerId);
+
+            if (!$customer) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Customer not found.'
+                ], 404);
+            }
+
+            // Remove old tokens
+            $customer->tokens()->delete();
+
+            // Create new token
+            $token = $customer
+                ->createToken('customer-login-token')
+                ->plainTextToken;
+
+            return response()->json([
+                'success' => true,
+                'customer' => $customer,
+                'token' => $token,
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Customer not found for the provided fbclid.'
-            ], 404);
+                'message' => 'Invalid or expired customer ID.'
+            ], 400);
         }
-
-        $customer = $fbLead->customer;
-        // Remove old tokens
-        $customer->tokens()->delete();
-
-        // Create new token
-        $token = $customer->createToken('customer-login-token')->plainTextToken;
-
-        return response()->json([
-            'success' => true,
-            'customer' => $fbLead->customer,
-            'token' => $token,
-        ]);
     }
 
     public function checkUser(Request $request)
@@ -485,32 +548,94 @@ class CustomerController extends Controller
         $validator = Validator::make($request->all(), [
             'mobile_number' => 'required|string|min:10|max:15',
             'email' => 'required|email|max:255',
+            'name' => 'required|string|max:255',
+            'service_code' => 'required|string|exists:services,service_code',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $mobile_number = Customer::where('mobile_number', $request->mobile_number)->where('is_paid', 1)->first();
+        $mobile_number = $request->mobile_number;
+        $email = $request->email;
+        $name = $request->name;
+        $service_code = $request->service_code;
 
-        if ($mobile_number) {
+        $service = Service::where('service_code', $service_code)->first();
+
+        if (!$service) {
             return response()->json([
-                'errors' => ['mobile_number' => ['Customer already registered with this mobile number.']]
+                'message' => 'Invalid service selected.'
             ], 422);
         }
 
-        $email = Customer::where('email', $request->email)->where('is_paid', 1)->first();
+        $paidCustomer = Customer::where(function ($query) use ($mobile_number, $email) {
+            $query->where('mobile_number', $mobile_number)
+                ->orWhere('email', $email);
+        })
+            ->where('is_paid', 1)
+            ->first();
 
-        if ($email) {
+        if ($paidCustomer) {
+            $errors = [];
+
+            if ($paidCustomer->mobile_number === $mobile_number) {
+                $errors['mobile_number'] = ["Customer already registered with this mobile number."];
+            }
+
+            if ($paidCustomer->email === $email) {
+                $errors['email'] = ["Customer already registered with this email."];
+            }
+
             return response()->json([
-                'errors' => ['email' => ['Customer already registered with this email.']]
+                'errors' => $errors
             ], 422);
         }
+
+        $leadCustomer = Customer::with('service')->where(function ($query) use ($mobile_number, $email) {
+            $query->where('mobile_number', $mobile_number)
+                ->orWhere('email', $email);
+        })
+            ->where('is_paid', 0)
+            ->first();
+
+
+        if ($leadCustomer) {
+            $leadCustomer->mobile_number = $mobile_number;
+            $leadCustomer->full_name = $name;
+            $leadCustomer->service_id = $service->id;
+            $leadCustomer->email = $email;
+
+            $leadCustomer->save();
+
+            $leadCustomer->load('service');
+
+            $token = $leadCustomer->createToken('customer-registration-token')->plainTextToken;
+
+            $customer = $leadCustomer->toArray();
+
+            $customer['date_of_birth'] = $leadCustomer->date_of_birth
+                ? $leadCustomer->date_of_birth->format('d-m-Y')
+                : null;
+
+            return response()->json([
+                'is_lead' => true,
+                'status' => 200,
+                'token' => $token,
+                'token_type' => 'Bearer',
+                'customer' => $customer,
+                'registration_step' => $leadCustomer->registration_step,
+            ], 200);
+        }
+
 
         return response()->json([
-            'message' => "User proceed to registration",
+            'message' => 'User proceed to registration',
             'status' => 200,
-        ]);
+            'is_lead' => false,
+            'customer' => null,
+            'registration_step' => null,
+        ], 200);
     }
 
     public function login(Request $request)

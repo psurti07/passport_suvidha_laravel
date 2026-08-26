@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Models\Customer;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class LeadController extends Controller
 {
@@ -52,12 +53,12 @@ class LeadController extends Controller
                 }
                 $isTatkal = str_starts_with($row->service->service_code, 'TP');
                 return '<span>
-                    ' . ($isTatkal ? '🟢 ' : '⚪') . $row->service->service_name . '
+                    ' . ($isTatkal ? '🔴 ' : '🟢 ') . $row->service->service_name . '
                 </span>';
             })
 
             ->addColumn('customer_name', function ($row) {
-                return $row->full_name;
+                return Str::title(strtolower($row->full_name));
             })
 
             ->editColumn('is_paid', function ($row) {
@@ -74,7 +75,7 @@ class LeadController extends Controller
                 return '
                     <form action="' . route('admin.customer.search') . '" method="POST" style="display:inline;">
                         ' . csrf_field() . '
-                        <input type="hidden" name="mobile_no" value="' . $row->mobile_number . '">
+                        <input type="hidden" name="search" value="' . $row->mobile_number . '">
                         <button type="submit" class="text-blue-600 hover:text-blue-900" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -126,12 +127,12 @@ class LeadController extends Controller
                 }
                 $isTatkal = str_starts_with($row->service->service_code, 'TP');
                 return '<span>
-                            ' . ($isTatkal ? '🟢 ' : '⚪') . $row->service->service_name . '
+                            ' . ($isTatkal ? '🔴  ' : '🟢 ') . $row->service->service_name . '
                         </span>';
             })
 
             ->addColumn('customer_name', function ($row) {
-                return $row->full_name;
+                return Str::title(strtolower($row->full_name));
             })
 
             ->editColumn('is_paid', function ($row) {
@@ -148,7 +149,7 @@ class LeadController extends Controller
                 return '
                     <form action="' . route('admin.customer.search') . '" method="POST" style="display:inline;">
                         ' . csrf_field() . '
-                        <input type="hidden" name="mobile_no" value="' . $row->mobile_number . '">
+                        <input type="hidden" name="search" value="' . $row->mobile_number . '">
                         <button type="submit" class="text-blue-600 hover:text-blue-900" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -166,5 +167,16 @@ class LeadController extends Controller
             ->rawColumns(['service_name', 'is_paid', 'actions'])
 
             ->make(true);
+    }
+
+    public function destroy(Customer $customer)
+    {
+        if ($customer->is_paid == 1) {
+            return back()->with("error", 'Registered customers cannot be deleted as leads.');
+        }
+        $customer->delete();
+        return redirect()
+            ->route('admin.customer.search')
+            ->with('success', 'Lead deleted successfully.');
     }
 }

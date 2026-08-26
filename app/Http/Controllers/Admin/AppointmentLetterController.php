@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class AppointmentLetterController extends Controller
 {
@@ -33,7 +34,7 @@ class AppointmentLetterController extends Controller
             'appointment_letters.uploaded_by',
         ])
 
-            ->whereBetween('appointment_letters.upload_date', [
+            ->whereBetween('appointment_letters.appointment_date', [
                 $from . ' 00:00:00',
                 $to . ' 23:59:59'
             ]);
@@ -48,7 +49,7 @@ class AppointmentLetterController extends Controller
 
                 return '
                     <div>
-                        <div class="font-semibold text-gray-900">' . ($fullName ?: '-') . '</div>
+                        <div class="font-semibold text-gray-900">' . (Str::title(strtolower($fullName))  ?: '-') . '</div>
                         <div class="text-xs text-gray-500">' . $email . '</div>
                     </div>
                 ';

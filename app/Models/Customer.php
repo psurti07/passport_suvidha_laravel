@@ -43,8 +43,8 @@ class Customer extends Authenticatable
         'place_of_birth',
         'education_qualification',
         'employment_type',
+        'organisation_name',
         'nationality',
-        
         'registration_step',
         'is_paid',
         'payment_date',
@@ -91,6 +91,12 @@ class Customer extends Authenticatable
         return $this->hasMany(ApplicationProgress::class);
     }
 
+    public function latestApplicationProgress()
+    {
+        return $this->hasOne(ApplicationProgress::class)
+            ->latestOfMany('id');
+    }
+
     public function applicationDocuments(): HasMany
     {
         return $this->hasMany(ApplicationDocument::class);
@@ -125,7 +131,6 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(FbAdsEntry::class);
     }
-    
     // public static function getDashboardData($type = null, $paid = null)
     // {
     //     $query = DB::table('customers')
@@ -198,5 +203,10 @@ class Customer extends Authenticatable
             ")
             ->limit(10)
             ->get();
+    }
+
+    public function passportAccount()
+    {
+        return $this->hasOne(PassportAccount::class);
     }
 }

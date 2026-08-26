@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Cashfree Logs')
+@section('title', 'Refunds')
 
 @section('content')
 
@@ -13,13 +13,12 @@
                 <form id="filterForm">
 
                     <div class="flex flex-col lg:flex-row justify-between items-center mb-6">
-                        <div class="flex items-center gap-4">
-                            <h2
-                                class="text-xl mb-3 sm:text-2xl md:mb-6 md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                                CASHFREE LOGS
-                            </h2>
-                        </div>
-                        <div class="flex flex-wrap gap-2 lg:gap-3">
+
+                        <h2
+                            class="text-xl sm:text-2xl mb-3 md:mb-6 md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                            REFUNDS
+                        </h2>
+                        <div class="flex flex-wrap gap-3">
 
                             <div>
                                 <label class="text-sm">From</label>
@@ -31,16 +30,6 @@
                                 <label class="text-sm">To</label>
                                 <input type="date" id="to_date" value="{{ now()->format('Y-m-d') }}"
                                     class="border rounded-lg px-3 py-2 text-sm">
-                            </div>
-
-                            <div>
-                                <label class="text-sm">Status</label>
-                                <select id="tx_status" class="border rounded-lg px-3 py-2 text-sm sm:w-32 w-[150px]">
-                                    <option value="">All</option>
-                                    <option value="success">Success</option>
-                                    <option value="failed">Failed</option>
-                                    <option value="pending">Pending</option>
-                                </select>
                             </div>
 
                             <div class="flex items-end">
@@ -60,7 +49,7 @@
                 <div class="mt-4 overflow-x-auto">
                     <div class="whitespace-nowrap text-sm text-gray-700">
 
-                        <table id="cashfree-logs-table" class="min-w-full divide-y divide-gray-200">
+                        <table id="refund-table" class="min-w-full divide-y divide-gray-200">
 
                             <thead class="bg-blue-50">
 
@@ -74,28 +63,27 @@
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Mobile
                                     </th>
 
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Order
-                                        Amount</th>
-
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Order Note
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Refund No
                                     </th>
 
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Reference
-                                        ID</th>
-
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment
-                                        ID</th>
-
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">TX Status
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment ID
                                     </th>
 
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment
-                                        Mode</th>
-
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Type
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Refund ID
                                     </th>
 
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created At
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Amount
+                                    </th>
+
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
+
+                                    </th>
+
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Refunded
+                                        At
+                                    </th>
+
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Remark
                                     </th>
 
                                 </tr>
@@ -121,7 +109,7 @@
     <script>
         $(function() {
 
-            let table = $('#cashfree-logs-table').DataTable({
+            let table = $('#refund-table').DataTable({
 
                 processing: true,
                 serverSide: true,
@@ -131,88 +119,116 @@
                 autoWidth: false,
 
                 order: [
-                    [10, 'desc']
+                    [0, 'desc']
                 ],
 
                 ajax: {
-                    url: "{{ route('admin.cashfree-logs.data') }}",
+                    url: "{{ route('admin.refund.data') }}",
+
                     data: function(d) {
                         d.from_date = $('#from_date').val();
                         d.to_date = $('#to_date').val();
-                        d.tx_status = $('#tx_status').val();
                     }
                 },
 
-                columns: [{
+                columns: [
+
+                    {
                         data: null,
                         name: 'sr_no',
                         orderable: false,
                         searchable: false,
+
                         render: function(data, type, row, meta) {
 
                             let total = meta.settings._iRecordsDisplay;
-                            let index = meta.row + meta.settings._iDisplayStart;
+
+                            let index =
+                                meta.row +
+                                meta.settings._iDisplayStart;
 
                             return total - index;
                         }
                     },
+
                     {
                         data: 'customer_name',
                         name: 'customer_name'
                     },
+
                     {
-                        data: 'customer_mobile_number',
-                        name: 'customer_mobile_number'
+                        data: 'customer_mobile',
+                        name: 'customer_mobile'
                     },
+
                     {
-                        data: 'order_amount',
-                        name: 'order_amount'
+                        data: 'refund_no',
+                        name: 'refund_no'
                     },
-                    {
-                        data: 'order_note',
-                        name: 'order_note'
-                    },
-                    {
-                        data: 'reference_id',
-                        name: 'reference_id'
-                    },
+
                     {
                         data: 'payment_id',
                         name: 'payment_id'
                     },
+
                     {
-                        data: 'tx_status',
-                        name: 'tx_status'
+                        data: 'refund_id',
+                        name: 'refund_id'
                     },
+
                     {
-                        data: 'payment_mode',
-                        name: 'payment_mode'
+                        data: 'amount',
+                        name: 'amount'
                     },
+
                     {
-                        data: 'type',
-                        name: 'type'
+                        data: 'status',
+                        name: 'status'
                     },
+
                     {
-                        data: 'created_at',
-                        name: 'created_at'
+                        data: 'refunded_at',
+                        name: 'refunded_at'
+                    },
+
+                    {
+                        data: 'remark',
+                        name: 'remark'
                     }
                 ],
 
                 dom: 'Blfrtip',
 
-                buttons: [{
-                        extend: 'copy'
-                    },
+                buttons: [
+
                     {
-                        extend: 'excel'
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
                     },
+
                     {
-                        extend: 'csv'
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
                     },
+
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+
                     {
                         extend: 'pdf',
                         orientation: 'landscape',
                         pageSize: 'A3',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
                     }
                 ],
 

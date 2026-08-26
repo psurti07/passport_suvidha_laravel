@@ -27,11 +27,11 @@ class DndController extends Controller
             'full_name',
             'mobile_number',
             'is_dnd',
-            'created_at'
+            'updated_at'
         ])->where('is_dnd', 1);
 
         if ($request->from_date && $request->to_date) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('updated_at', [
                 $from . ' 00:00:00',
                 $to . ' 23:59:59'
             ]);
@@ -53,8 +53,8 @@ class DndController extends Controller
                 return $row->full_name;
             })
 
-            ->editColumn('created_at', function ($row) {
-                return $row->created_at->format('d M Y, h:i A');
+            ->editColumn('updated_at', function ($row) {
+                return $row->updated_at->format('d M Y, h:i A');
             })
 
             ->filterColumn('service_name', function ($query, $keyword) {

@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Services\SmsService;
 use App\Models\MessageTemplate;
 use App\Services\BrevoMailService;
+use Illuminate\Support\Facades\Crypt;
 
 class CustomerController extends Controller
 {
@@ -36,15 +37,7 @@ class CustomerController extends Controller
         $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
-        $query = Customer::with('service')->select([
-            'id',
-            'service_id',
-            'full_name',
-            'email',
-            'mobile_number',
-            'is_paid',
-            'payment_date'
-        ])->where('is_paid', 1);
+        $query = Customer::with(['service', 'latestApplicationProgress.status'])->select(['id', 'service_id', 'full_name', 'email', 'mobile_number', 'is_paid', 'payment_date'])->where('is_paid', 1);
 
         if ($request->from_date && $request->to_date) {
             $query->whereBetween('payment_date', [
@@ -67,12 +60,12 @@ class CustomerController extends Controller
                 }
                 $isTatkal = str_starts_with($row->service->service_code, 'TP');
                 return '<span>
-                    ' . ($isTatkal ? '🟢 ' : '⚪') . $row->service->service_name . '
+                    ' . ($isTatkal ? '🔴' : '🟢') . $row->service->service_name . '
                 </span>';
             })
 
             ->addColumn('customer_name', function ($row) {
-                return $row->full_name;
+                return Str::title(strtolower($row->full_name));
             })
 
             ->editColumn('is_paid', function ($row) {
@@ -83,6 +76,16 @@ class CustomerController extends Controller
 
             ->editColumn('payment_date', function ($row) {
                 return $row->payment_date->format('d M Y, h:i A');
+            })
+
+            ->addColumn('application_status', function ($row) {
+                $status = $row->latestApplicationProgress?->status;
+                if (!$status) {
+                    return '-';
+                }
+                $colorMap = ['green' => 'bg-green-100 text-green-800', 'red' => 'bg-red-100 text-red-800', 'blue' => 'bg-blue-100 text-blue-800', 'orange' => 'bg-orange-100 text-orange-800', 'yellow' => 'bg-yellow-100 text-yellow-800', 'purple' => 'bg-purple-100 text-purple-800', 'gray' => 'bg-gray-100 text-gray-800',];
+                $classes = $colorMap[$status->colorclass] ?? 'bg-gray-100 text-gray-800';
+                return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ' . $classes . '">' . e($status->status_name) . '</span>';
             })
 
             ->addColumn('actions', function ($row) {
@@ -102,7 +105,7 @@ class CustomerController extends Controller
                 ';
             })
 
-            ->rawColumns(['service_name', 'is_paid', 'actions'])
+            ->rawColumns(['service_name', 'is_paid', 'application_status', 'actions'])
 
             ->make(true);
     }
@@ -139,12 +142,12 @@ class CustomerController extends Controller
                 }
                 $isTatkal = str_starts_with($row->service->service_code, 'TP');
                 return '<span>
-                            ' . ($isTatkal ? '🟢 ' : '⚪') . $row->service->service_name . '
+                            ' . ($isTatkal ? '🔴 ' : '🟢 ') . $row->service->service_name . '
                         </span>';
             })
 
             ->addColumn('customer_name', function ($row) {
-                return $row->full_name;
+                return Str::title(strtolower($row->full_name));
             })
 
             ->editColumn('is_paid', function ($row) {
@@ -238,8 +241,8 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
+            'organisation_name' => 'required_if:employment_type,Government|string|max:255|nullable',
             'nationality' => 'required|string|max:255',
-
             'card_number' => 'nullable|string|size:16',
             'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
@@ -249,6 +252,10 @@ class CustomerController extends Controller
 
         if ($validated['marital_status'] !== 'married') {
             $validated['spouse_name'] = null;
+        }
+
+        if ($validated['employment_type'] !== 'Government') {
+            $validated['organisation_name'] = null;
         }
 
         // $validated['payment_date'] = now();
@@ -276,6 +283,25 @@ class CustomerController extends Controller
 
         $statuses = ApplicationStatus::orderBy('priority_no')->get();
 
+        $passportAccount = $customer->passportAccount;
+
+        $passportPassword = '';
+
+        if ($passportAccount && $passportAccount->password) {
+            try {
+                $passportPassword = Crypt::decryptString(
+                    $passportAccount->password
+                );
+            } catch (\Throwable $e) {
+                Log::error('Unable to decrypt Passport password.', [
+                    'customer_id' => $customer->id,
+                    'passport_account_id' => $passportAccount->id,
+                    'error' => $e->getMessage(),
+                ]);
+
+                $passportPassword = '';
+            }
+        }
         $predefinedMessages = \App\Models\PreDefinedMessage::select(
             'id',
             'message_name',
@@ -283,7 +309,7 @@ class CustomerController extends Controller
             'status_id'
         )->get();
 
-        return view('admin.customers.show', compact('customer', 'statuses', 'predefinedMessages', 'invoice'));
+        return view('admin.customers.show', compact('customer', 'statuses', 'predefinedMessages', 'invoice', 'passportAccount', 'passportPassword'));
     }
 
     public function edit(Customer $customer)
@@ -346,6 +372,7 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
+            'organisation_name' => 'required_if:employment_type,Government|string|nullable|max:255',
             'nationality' => 'required|string|max:255'
         ];
 
@@ -354,6 +381,11 @@ class CustomerController extends Controller
         $validatedData['spouse_name'] =
             $validatedData['marital_status'] === 'married'
             ? $request->spouse_name
+            : null;
+
+        $validatedData['organisation_name'] =
+            $validatedData['employment_type'] === 'Government'
+            ? $request->organisation_name
             : null;
 
         $customer->update($validatedData);
@@ -424,8 +456,8 @@ class CustomerController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
+            'organisation_name' => 'required_if:employment_type,Government|string|nullable|max:255',
             'nationality' => 'required|string|max:255',
-
             'card_number' => 'nullable|string|size:16',
             'amount' => 'nullable|numeric|min:1',
             'payment_id' => 'nullable|string|max:50',
@@ -451,6 +483,10 @@ class CustomerController extends Controller
 
         if ($validated['marital_status'] !== 'married') {
             $validated['spouse_name'] = null;
+        }
+
+        if ($validated['employment_type'] !== 'Government') {
+            $validated['organisation_name'] = null;
         }
 
         $validated['is_paid'] = true;

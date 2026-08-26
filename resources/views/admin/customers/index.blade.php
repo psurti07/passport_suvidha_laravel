@@ -82,8 +82,13 @@
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
                                     </th>
 
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Registration
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                                        Registration
                                         Date
+                                    </th>
+
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                                        Application Status
                                     </th>
 
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
@@ -173,6 +178,10 @@
                         name: 'payment_date'
                     },
                     {
+                        data: 'application_status',
+                        name: 'application_status'
+                    },
+                    {
                         data: 'actions',
                         name: 'actions',
                         orderable: false,
@@ -189,7 +198,7 @@
                             format: {
                                 body: function(data, row, column, node) {
                                     if (column === 1) {
-                                        return $(node).text().replace('🟢', '').replace('⚪', '')
+                                        return $(node).text().replace('🔴 ', '').replace('🟢', '')
                                             .trim();
                                     }
                                     return $(node).text();
@@ -204,7 +213,7 @@
                             format: {
                                 body: function(data, row, column, node) {
                                     if (column === 1) {
-                                        return $(node).text().replace('🟢', '').replace('⚪', '')
+                                        return $(node).text().replace('🔴 ', '').replace('🟢', '')
                                             .trim();
                                     }
                                     return $(node).text();
@@ -219,7 +228,7 @@
                             format: {
                                 body: function(data, row, column, node) {
                                     if (column === 1) {
-                                        return $(node).text().replace('🟢', '').replace('⚪', '')
+                                        return $(node).text().replace('🔴 ', '').replace('🟢', '')
                                             .trim();
                                     }
                                     return $(node).text();
@@ -234,7 +243,7 @@
                             format: {
                                 body: function(data, row, column, node) {
                                     if (column === 1) {
-                                        return $(node).text().replace('🟢', '').replace('⚪', '')
+                                        return $(node).text().replace('🔴 ', '').replace('🟢', '')
                                             .trim();
                                     }
                                     return $(node).text();
@@ -244,7 +253,10 @@
                     }
                 ],
 
-                pageLength: 10
+                lengthMenu: [
+                    [50, 100, 250, 500],
+                    [50, 100, 250, 500]
+                ],
 
             });
 

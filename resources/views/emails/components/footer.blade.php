@@ -6,7 +6,8 @@
         color:#d9e4ff;
         font-family:Arial, Helvetica, sans-serif;">
 
-        <p style="
+        <p
+            style="
             margin:0;
             font-size:14px;
             font-weight:600;
@@ -15,12 +16,13 @@
             Need help? Contact us
         </p>
 
-        <p style="
+        <p
+            style="
             font-size:13px;
             line-height:20px;
             margin:14px 0;
             color:#d9e4ff;">
-            Phone: +91-7486046591<br>
+            Phone: +91-6358292349<br>
 
             Email:
             <a href="mailto:support@passportsuvidha.com"
@@ -31,7 +33,8 @@
             </a>
         </p>
 
-        <p style="
+        <p
+            style="
             font-size:12px;
             line-height:18px;
             margin:14px 0;
@@ -45,12 +48,14 @@
             Gujar&#8203;at - 395004
         </p>
 
-        <hr style="
+        <hr
+            style="
             border:0;
             border-top:1px solid rgba(255,255,255,0.25);
             margin:18px 0;">
 
-        <p style="
+        <p
+            style="
             font-size:12px;
             line-height:18px;
             margin:0;
