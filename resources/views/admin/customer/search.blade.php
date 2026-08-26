@@ -65,7 +65,7 @@
                     @if ($customer)
                         <dl class="divide-y divide-gray-200">
                             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                                <dt class="text-sm font-medium text-gray-500">Module</dt>
+                                <dt class="text-md font-bold text-gray-500">Module</dt>
                                 @if ($customer->is_paid == 1)
                                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 font-semibold">CUSTOMER</dd>
                                 @else
@@ -74,7 +74,7 @@
                                 @endif
                             </div>
                             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                                <dt class="text-sm font-medium text-gray-500">Mobile</dt>
+                                <dt class="text-md font-bold text-gray-500">Mobile</dt>
                                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                     {{ $customer->mobile_number ?? 'N/A' }}
                                 </dd>
@@ -82,7 +82,7 @@
                             </div>
                             <!-- <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">                                                                                                               </div> -->
                             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                                <dt class="text-sm font-medium text-gray-500">
+                                <dt class="text-md font-bold text-gray-500">
                                     {{ $customer->is_paid == 1 ? 'Registration Date' : 'Created Date' }}
                                 </dt>
 
@@ -97,26 +97,26 @@
                                 </dd>
                             </div>
                             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                                <dt class="text-sm font-medium text-gray-500">Full Name</dt>
+                                <dt class="text-md font-bold text-gray-500">Full Name</dt>
                                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                     {{ ucwords(strtolower($customer->full_name)) ?? '' }}
                                 </dd>
                                 {{-- Assuming full_name exist --}}
                             </div>
                             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                                <dt class="text-sm font-medium text-gray-500">Email Address</dt>
+                                <dt class="text-md font-bold text-gray-500">Email Address</dt>
                                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                     {{ $customer->email ?? 'N/A' }}
                                 </dd>
                             </div>
                             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                                <dt class="text-sm font-medium text-gray-500">Services</dt>
+                                <dt class="text-md font-bold text-gray-500">Services</dt>
                                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                     {{ session('service_name') ?? 'N/A' }}
                                 </dd>
                             </div>
                             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                                <dt class="text-sm font-medium text-gray-500">Status</dt>
+                                <dt class="text-md font-bold text-gray-500">Status</dt>
                                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                     @if ($customer->is_paid == 1)
                                         <span
@@ -430,9 +430,9 @@
                                                     <option value="">Select Education Qualification</option>
 
                                                     <!-- <option value="Below 10th"
-                                                                {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
-                                                                Below 10th
-                                                            </option> --> 
+                                                                                {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
+                                                                                Below 10th
+                                                                            </option> -->
 
                                                     <option value="10th Pass And Above"
                                                         {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>

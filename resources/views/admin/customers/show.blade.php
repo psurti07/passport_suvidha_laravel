@@ -54,7 +54,7 @@
                     {{-- Update links for Alpine --}}
                     <a href="#" @click.prevent="setActiveTab('info')"
                         :class="{ 'bg-blue-600 text-white': activeTab === 'info', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'info' }"
-                        class="flex items-center px-6 py-4 text-sm font-medium transition duration-150 ease-in-out">
+                        class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -64,7 +64,7 @@
                     </a>
                     <a href="#" @click.prevent="setActiveTab('documents')"
                         :class="{ 'bg-blue-600 text-white': activeTab === 'documents', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'documents' }"
-                        class="flex items-center px-6 py-4 text-sm font-medium transition duration-150 ease-in-out">
+                        class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -74,7 +74,7 @@
                     </a>
                     <a href="#" @click.prevent="setActiveTab('application-process')"
                         :class="{ 'bg-blue-600 text-white': activeTab === 'application-process', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'application-process' }"
-                        class="flex items-center px-6 py-4 text-sm font-medium transition duration-150 ease-in-out">
+                        class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -84,7 +84,7 @@
                     </a>
                     <a href="#" @click.prevent="setActiveTab('passport-credential')"
                         :class="{ 'bg-blue-600 text-white': activeTab === 'passport-credential', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'passport-credential' }"
-                        class="flex items-center px-6 py-4 text-sm font-medium transition duration-150 ease-in-out">
+                        class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <rect x="4" y="10" width="11" height="10" rx="2" stroke-linecap="round"
@@ -97,7 +97,7 @@
                     </a>
                     <a href="#" @click.prevent="setActiveTab('actions')"
                         :class="{ 'bg-blue-600 text-white': activeTab === 'actions', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'actions' }"
-                        class="flex items-center px-6 py-4 text-sm font-medium transition duration-150 ease-in-out">
+                        class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -117,21 +117,21 @@
             <div x-show="activeTab === 'info'" x-cloak>
                 <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
                     <!-- {{-- Top Info Row --}}
-                                                                                                                                                            <div
-                                                                                                                                                                class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-gray-200 gap-y-2">
-                                                                                                                                                                <p class="text-sm text-gray-600">
-                                                                                                                                                                    Registration on: <strong
-                                                                                                                                                                        class="text-gray-800 font-semibold">{{ $customer->payment_date ? $customer->payment_date->format('d M Y, H:i A') : 'N/A' }}</strong>
-                                                                                                                                                                </p>
-                                                                                                                                                                @if ($invoice)
+                                                                                                                                                                                <div
+                                                                                                                                                                                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-gray-200 gap-y-2">
+                                                                                                                                                                                    <p class="text-sm text-gray-600">
+                                                                                                                                                                                        Registration on: <strong
+                                                                                                                                                                                            class="text-gray-800 font-semibold">{{ $customer->payment_date ? $customer->payment_date->format('d M Y, H:i A') : 'N/A' }}</strong>
+                                                                                                                                                                                    </p>
+                                                                                                                                                                                    @if ($invoice)
     <a href="{{ route('admin.invoices.download', $invoice->id) }}"
-                                                                                                                                                                    class="inline-flex items-center text-sm px-4 py-2 w-auto bg-gradient-to-r from-green-500 to-green-600 font-medium rounded-lg border border-white text-white hover:from-green-600 hover:to-green-700">
-                                                                                                                                                                    Download Invoice
-                                                                                                                                                                </a>
+                                                                                                                                                                                        class="inline-flex items-center text-sm px-4 py-2 w-auto bg-gradient-to-r from-green-500 to-green-600 font-medium rounded-lg border border-white text-white hover:from-green-600 hover:to-green-700">
+                                                                                                                                                                                        Download Invoice
+                                                                                                                                                                                    </a>
 @else
     <span class="text-gray-400 text-sm">No Invoice Found</span>
     @endif
-                                                                                                                                                            </div> -->
+                                                                                                                                                                                </div> -->
 
                     {{-- Top Info Row --}}
                     <div
@@ -586,9 +586,9 @@
                                     <option value="">Select Education Qualification</option>
 
                                     <!-- <option value="Below 10th"
-                                                                {{ old('education_qualification', $customer->education_qualification) == 'Below 10th' ? 'selected' : '' }}>
-                                                                Below 10th
-                                                            </option> -->
+                                                                                    {{ old('education_qualification', $customer->education_qualification) == 'Below 10th' ? 'selected' : '' }}>
+                                                                                    Below 10th
+                                                                                </option> -->
                                     <option value="10th Pass And Above"
                                         {{ old('education_qualification', $customer->education_qualification) == '10th Pass And Above' ? 'selected' : '' }}>
                                         10th Pass And Above
@@ -1286,7 +1286,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse ($customer->applicationProgress()->orderBy('created_at', 'desc')->get() as
-                                                                                                                                                                        $progress)
+                                                                                                                                                                                            $progress)
                                     <tr class="hover:bg-gray-50 transition duration-150">
                                         <td class="px-6 py-4">
                                             @php
