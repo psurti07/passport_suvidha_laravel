@@ -87,6 +87,10 @@
                                         Date
                                     </th>
 
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                                        Application Status
+                                    </th>
+
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
                                     </th>
 
@@ -174,6 +178,10 @@
                         name: 'payment_date'
                     },
                     {
+                        data: 'application_status',
+                        name: 'application_status'
+                    },
+                    {
                         data: 'actions',
                         name: 'actions',
                         orderable: false,
@@ -190,7 +198,7 @@
                             format: {
                                 body: function(data, row, column, node) {
                                     if (column === 1) {
-                                        return $(node).text().replace('🟢', '').replace('⚪', '')
+                                        return $(node).text().replace('🔴 ', '').replace('🟢', '')
                                             .trim();
                                     }
                                     return $(node).text();
@@ -205,7 +213,7 @@
                             format: {
                                 body: function(data, row, column, node) {
                                     if (column === 1) {
-                                        return $(node).text().replace('🟢', '').replace('⚪', '')
+                                        return $(node).text().replace('🔴 ', '').replace('🟢', '')
                                             .trim();
                                     }
                                     return $(node).text();
@@ -220,7 +228,7 @@
                             format: {
                                 body: function(data, row, column, node) {
                                     if (column === 1) {
-                                        return $(node).text().replace('🟢', '').replace('⚪', '')
+                                        return $(node).text().replace('🔴 ', '').replace('🟢', '')
                                             .trim();
                                     }
                                     return $(node).text();
@@ -235,7 +243,7 @@
                             format: {
                                 body: function(data, row, column, node) {
                                     if (column === 1) {
-                                        return $(node).text().replace('🟢', '').replace('⚪', '')
+                                        return $(node).text().replace('🔴 ', '').replace('🟢', '')
                                             .trim();
                                     }
                                     return $(node).text();

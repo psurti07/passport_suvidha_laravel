@@ -91,6 +91,12 @@ class Customer extends Authenticatable
         return $this->hasMany(ApplicationProgress::class);
     }
 
+    public function latestApplicationProgress()
+    {
+        return $this->hasOne(ApplicationProgress::class)
+            ->latestOfMany('id');
+    }
+
     public function applicationDocuments(): HasMany
     {
         return $this->hasMany(ApplicationDocument::class);

@@ -37,15 +37,7 @@ class CustomerController extends Controller
         $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
-        $query = Customer::with('service')->select([
-            'id',
-            'service_id',
-            'full_name',
-            'email',
-            'mobile_number',
-            'is_paid',
-            'payment_date'
-        ])->where('is_paid', 1);
+        $query = Customer::with(['service', 'latestApplicationProgress.status'])->select(['id', 'service_id', 'full_name', 'email', 'mobile_number', 'is_paid', 'payment_date'])->where('is_paid', 1);
 
         if ($request->from_date && $request->to_date) {
             $query->whereBetween('payment_date', [
@@ -68,7 +60,7 @@ class CustomerController extends Controller
                 }
                 $isTatkal = str_starts_with($row->service->service_code, 'TP');
                 return '<span>
-                    ' . ($isTatkal ? '🟢 ' : '⚪') . $row->service->service_name . '
+                    ' . ($isTatkal ? '🔴' : '🟢') . $row->service->service_name . '
                 </span>';
             })
 
@@ -84,6 +76,16 @@ class CustomerController extends Controller
 
             ->editColumn('payment_date', function ($row) {
                 return $row->payment_date->format('d M Y, h:i A');
+            })
+
+            ->addColumn('application_status', function ($row) {
+                $status = $row->latestApplicationProgress?->status;
+                if (!$status) {
+                    return '-';
+                }
+                $colorMap = ['green' => 'bg-green-100 text-green-800', 'red' => 'bg-red-100 text-red-800', 'blue' => 'bg-blue-100 text-blue-800', 'orange' => 'bg-orange-100 text-orange-800', 'yellow' => 'bg-yellow-100 text-yellow-800', 'purple' => 'bg-purple-100 text-purple-800', 'gray' => 'bg-gray-100 text-gray-800',];
+                $classes = $colorMap[$status->colorclass] ?? 'bg-gray-100 text-gray-800';
+                return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ' . $classes . '">' . e($status->status_name) . '</span>';
             })
 
             ->addColumn('actions', function ($row) {
@@ -103,7 +105,7 @@ class CustomerController extends Controller
                 ';
             })
 
-            ->rawColumns(['service_name', 'is_paid', 'actions'])
+            ->rawColumns(['service_name', 'is_paid', 'application_status', 'actions'])
 
             ->make(true);
     }
@@ -140,7 +142,7 @@ class CustomerController extends Controller
                 }
                 $isTatkal = str_starts_with($row->service->service_code, 'TP');
                 return '<span>
-                            ' . ($isTatkal ? '🟢 ' : '⚪') . $row->service->service_name . '
+                            ' . ($isTatkal ? '🔴 ' : '🟢 ') . $row->service->service_name . '
                         </span>';
             })
 

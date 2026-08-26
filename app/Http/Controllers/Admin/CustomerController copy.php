@@ -67,7 +67,7 @@ class CustomerController extends Controller
                 }
                 $isTatkal = str_starts_with($row->service->service_code, 'TP');
                 return '<span>
-                    ' . ($isTatkal ? '🟢 ' : '⚪') . $row->service->service_name . '
+                    ' . ($isTatkal ? '🔴' : '🟢') . $row->service->service_name . '
                 </span>';
             })
 
@@ -139,7 +139,7 @@ class CustomerController extends Controller
                 }
                 $isTatkal = str_starts_with($row->service->service_code, 'TP');
                 return '<span>
-                            ' . ($isTatkal ? '🟢 ' : '⚪') . $row->service->service_name . '
+                            ' . ($isTatkal ? '🔴 ' : '🟢 ') . $row->service->service_name . '
                         </span>';
             })
 
