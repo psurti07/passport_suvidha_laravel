@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Razorpay\Api\Api;
 use Illuminate\Support\Str;
 use App\Models\ApplicationProgress;
+use App\Models\ApplicationStatus;
 use App\Models\Customer;
 use App\Models\RazorpayLog;
 use Illuminate\Support\Facades\DB;
@@ -207,10 +208,11 @@ class RefundController extends Controller
 
             if ($refundStatus == 'processed') {
                 DB::transaction(function () use ($invoice, $paymentId) {
+                    $status = ApplicationStatus::where('slug', 'refunded')->first();
 
                     ApplicationProgress::create([
                         'customer_id' => $invoice->customer_id,
-                        'status_id' => 13,
+                        'status_id' => $status->id,
                         'status_date' => now(),
                         'remark' => 'Application cancelled due to refund.',
                         'remarked_by' => auth()->id(),
@@ -219,7 +221,7 @@ class RefundController extends Controller
                     $invoice->delete();
 
                     Customer::where('id', $invoice->customer_id)->update([
-                        'registration_step' => 12,
+                        'registration_step' => $status->step,
                         'is_active' => 0,
                     ]);
 

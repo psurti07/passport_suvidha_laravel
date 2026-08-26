@@ -93,12 +93,15 @@ class PassportAccountController extends Controller
                 $passportAccount->password
             );
 
+            $login_short_url = config('services.login_short_link.url');
+
             $passportCredentials = view(
                 'emails.passport-credentials',
                 [
                     'customer' => $customer,
                     'username' => $passportAccount->username,
                     'password' => $password,
+                    'login_short_url' => $login_short_url,
                 ]
             )->render();
 

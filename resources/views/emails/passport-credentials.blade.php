@@ -99,6 +99,7 @@
             border-left:4px solid #0f9d8a;
             border-radius:7px;
             padding:13px 15px;
+            margin-bottom:12px;
         ">
 
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -124,6 +125,46 @@
                         word-break:break-all;
                     ">
                         {{ $password }}
+                    </td>
+
+                </tr>
+            </table>
+
+        </div>
+
+        {{-- URL ROW --}}
+        <div
+            style="
+            background:#ffffff;
+            border:1px solid #d5e4e7;
+            border-left:4px solid #0f9d8a;
+            border-radius:7px;
+            padding:13px 15px;
+        ">
+
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+
+                    <td
+                        style="
+                        width:18%;
+                        font-size:13px;
+                        color:#667085;
+                        font-weight:600;
+                        vertical-align:middle;
+                    ">
+                        Login url :
+                    </td>
+
+                    <td
+                        style="
+                        font-size:15px;
+                        color:#0f2a43;
+                        font-weight:bold;
+                        vertical-align:middle;
+                        word-break:break-all;
+                    ">
+                        {{ $login_short_url }}
                     </td>
 
                 </tr>
