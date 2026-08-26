@@ -40,6 +40,12 @@
                             <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">POV Failed</th>
                             <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">POV Insufficient
                                 Documents</th>
+                            <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">
+                                Other
+                            </th>
+                            <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">
+                                Total
+                            </th>
                             <th class="px-4 py-3 !text-center text-xs font-semibold text-gray-600 uppercase">Action</th>
                         </tr>
                     </thead>
@@ -56,6 +62,13 @@
                             <th id="grandPaymentSuccess" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0</th>
                             <th id="grandPaymentFailed" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0</th>
                             <th id="grandInsufficientDocuments" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0
+                            </th>
+                            <th id="grandOther" class="!px-4 !py-3 !text-right text-gray-600 font-bold">
+                                0
+                            </th>
+
+                            <th id="grandTotal" class="!px-4 !py-3 !text-right text-gray-600 font-bold">
+                                0
                             </th>
                             <th></th>
                         </tr>
@@ -158,6 +171,18 @@
                             ).toLocaleString()
                         );
 
+                        $('#grandOther').text(
+                            Number(
+                                grandTotal.other || 0
+                            ).toLocaleString()
+                        );
+
+                        $('#grandTotal').text(
+                            Number(
+                                grandTotal.total || 0
+                            ).toLocaleString()
+                        );
+
                         return json.data || [];
 
                     },
@@ -234,6 +259,26 @@
                         }
                     },
                     {
+                        data: 'other',
+                        name: 'other',
+                        className: 'text-gray-700 text-right',
+                        render: function(data) {
+                            return Number(
+                                data || 0
+                            ).toLocaleString();
+                        }
+                    },
+                    {
+                        data: 'total',
+                        name: 'total',
+                        className: 'text-gray-700 text-right font-bold',
+                        render: function(data) {
+                            return Number(
+                                data || 0
+                            ).toLocaleString();
+                        }
+                    },
+                    {
                         data: null,
                         name: 'action',
                         orderable: false,
@@ -298,6 +343,8 @@
                                             <th class="border text-gray-600 font-semibold p-2 text-left uppercase">POV Success</th>
                                             <th class="border text-gray-600 font-semibold p-2 text-left uppercase">POV Failed</th>
                                             <th class="border text-gray-600 font-semibold p-2 text-left uppercase">POV Insufficient Documents</th>
+                                            <th class="border text-gray-600 font-semibold p-2 text-right uppercase">Other</th>
+                                            <th class="border text-gray-600 font-semibold p-2 text-right uppercase">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -314,13 +361,15 @@
                                         <td class="border p-2 text-gray-700 text-right">${Number(row.payment_success || 0).toLocaleString()}</td>
                                         <td class="border p-2 text-gray-700 text-right">${Number(row.payment_failed || 0).toLocaleString()}</td>
                                         <td class="border p-2 text-gray-700 text-right">${Number(row.insufficient_documents || 0).toLocaleString()}</td>
+                                        <td class="border p-2 text-gray-700 text-right">${Number(row.other || 0).toLocaleString()}</td>
+                                        <td class="border p-2 text-gray-700 text-right font-bold">${Number(row.total || 0).toLocaleString()}</td>
                                     </tr>
                                 `;
                             });
                         } else {
                             html += `
                                 <tr>
-                                    <td colspan="5" class="border p-3 text-center">No data found</td>
+                                    <td colspan="8" class="border p-3 text-center">No data found</td>
                                 </tr>
                             `;
                         }
@@ -355,6 +404,17 @@
                                             <td class="border text-gray-600 font-bold p-2 text-right">
                                                 ${Number(
                                                     grandTotal.insufficient_documents || 0
+                                                ).toLocaleString()}
+                                            </td>
+                                            <td class="border text-gray-600 font-bold p-2 text-right">
+                                                ${Number(
+                                                    grandTotal.other || 0
+                                                ).toLocaleString()}
+                                            </td>
+                                            
+                                            <td class="border text-gray-600 font-bold p-2 text-right">
+                                                ${Number(
+                                                    grandTotal.total || 0
                                                 ).toLocaleString()}
                                             </td>
                                         </tr>

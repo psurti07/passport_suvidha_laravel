@@ -483,10 +483,10 @@ class ReportController extends Controller
                     'ap.status_id'
                 )
 
-                ->whereIn(
-                    'application_statuses.slug',
-                    $statusSlugs
-                )
+                // ->whereIn(
+                //     'application_statuses.slug',
+                //     $statusSlugs
+                // )
 
                 ->select([
                     'ap.id',
@@ -545,7 +545,23 @@ class ReportController extends Controller
                         THEN 1
                         ELSE 0
                     END
-                ) AS insufficient_documents
+                ) AS insufficient_documents,
+                 
+                SUM(
+                    CASE
+                        WHEN slug NOT IN (
+                            'in_process',
+                            'appointment_scheduled',
+                            'pov_success',
+                            'pov_failed',
+                            'pov_insufficient_documents'
+                        )
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS other,
+
+                 COUNT(*) AS total
             ")
 
                 ->groupByRaw("
@@ -601,7 +617,23 @@ class ReportController extends Controller
                         THEN 1
                         ELSE 0
                     END
-                ) AS insufficient_documents
+                ) AS insufficient_documents,
+
+                SUM(
+                    CASE
+                        WHEN slug NOT IN (
+                            'in_process',
+                            'appointment_scheduled',
+                            'pov_success',
+                            'pov_failed',
+                            'pov_insufficient_documents'
+                        )
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS other,
+
+                COUNT(*) AS total
             ")
 
                 ->first();
@@ -649,6 +681,12 @@ class ReportController extends Controller
                 'insufficient_documents' =>
                 (int) ($grandTotal->insufficient_documents ?? 0),
 
+                'other' =>
+                (int) ($grandTotal->other ?? 0),
+
+                'total' =>
+                (int) ($grandTotal->total ?? 0),
+
             ];
 
             return response()->json($json);
@@ -658,7 +696,6 @@ class ReportController extends Controller
             'admin.reports.application_status_report'
         );
     }
-
     public function applicationStatusReportMonthDetails(Request $request)
     {
         $year = $request->year;
@@ -772,13 +809,29 @@ class ReportController extends Controller
                     THEN 1
                     ELSE 0
                 END
-            ) AS insufficient_documents
+            ) AS insufficient_documents,
+
+                SUM(
+                    CASE
+                        WHEN application_statuses.slug NOT IN (
+                            'in_process',
+                            'appointment_scheduled',
+                            'pov_success',
+                            'pov_failed',
+                            'pov_insufficient_documents'
+                        )
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS other,
+
+                COUNT(*) AS total
         ")
 
-            ->whereIn(
-                'application_statuses.slug',
-                $statusSlugs
-            )
+            // ->whereIn(
+            //     'application_statuses.slug',
+            //     $statusSlugs
+            // )
 
             ->whereBetween(
                 'ap.status_date',
@@ -806,6 +859,8 @@ class ReportController extends Controller
             'payment_success' => 0,
             'payment_failed' => 0,
             'insufficient_documents' => 0,
+            'other' => 0,
+            'total' => 0,
         ];
 
         foreach ($period as $date) {
@@ -835,6 +890,14 @@ class ReportController extends Controller
                 $row->insufficient_documents ?? 0
             );
 
+            $other = (int) (
+                $row->other ?? 0
+            );
+
+            $total = (int) (
+                $row->total ?? 0
+            );
+
             $data[] = [
                 'report_date' => $key,
                 'in_process' => $inProcess,
@@ -842,6 +905,8 @@ class ReportController extends Controller
                 'payment_success' => $paymentSuccess,
                 'payment_failed' => $paymentFailed,
                 'insufficient_documents' => $insufficientDocuments,
+                'other' => $other,
+                'total' => $total,
             ];
 
             $grand['in_process'] += $inProcess;
@@ -849,6 +914,8 @@ class ReportController extends Controller
             $grand['payment_success'] += $paymentSuccess;
             $grand['payment_failed'] += $paymentFailed;
             $grand['insufficient_documents'] += $insufficientDocuments;
+            $grand['other'] += $other;
+            $grand['total'] += $total;
         }
 
         return response()->json([
