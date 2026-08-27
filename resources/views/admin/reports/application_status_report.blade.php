@@ -18,62 +18,12 @@ body {
 <div class="mx-auto">
     <div class="bg-white rounded-xl shadow-lg border border-gray-100">
 
-            <div class="p-4 lg:p-8">
-                <div class="flex flex-col md:flex-row justify-between items-center mb-6">
-                    <h2
-                        class="text-xl mb-3 sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                        APPLICATION STATUS REPORTS
-                    </h2>
-                </div>
-
-                <table id="application-status-reports-table"
-                    class="min-w-full divide-y divide-gray-200 border-separate text-sm">
-
-                    <thead class="bg-blue-50">
-                        <tr>
-                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Year</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Month</th>
-                            <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">Verification Ohk</th>
-                            <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">Appointment
-                                Scheduled</th>
-                            <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">POV Success</th>
-                            <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">POV Failed</th>
-                            <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">POV Insufficient
-                                Documents</th>
-                            <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">
-                                Other
-                            </th>
-                            <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">
-                                Total
-                            </th>
-                            <th class="px-4 py-3 !text-center text-xs font-semibold text-gray-600 uppercase">Action</th>
-                        </tr>
-                    </thead>
-
-                    <tbody></tbody>
-
-                    <tfoot>
-                        <tr>
-
-                            <th colspan="2" class="!px-4 !py-3 !text-right text-gray-600 font-bold">Grand Total</th>
-                            <th id="grandInProcess" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0</th>
-                            <th id="grandAppointmentScheduled" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0
-                            </th>
-                            <th id="grandPaymentSuccess" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0</th>
-                            <th id="grandPaymentFailed" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0</th>
-                            <th id="grandInsufficientDocuments" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0
-                            </th>
-                            <th id="grandOther" class="!px-4 !py-3 !text-right text-gray-600 font-bold">
-                                0
-                            </th>
-
-                            <th id="grandTotal" class="!px-4 !py-3 !text-right text-gray-600 font-bold">
-                                0
-                            </th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
-                </table>
+        <div class="p-4 lg:p-8">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                <h2
+                    class="text-xl mb-3 sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                    APPLICATION STATUS REPORTS
+                </h2>
             </div>
 
             <table id="application-status-reports-table"
@@ -91,6 +41,12 @@ body {
                         <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">POV Failed</th>
                         <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">POV Insufficient
                             Documents</th>
+                        <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">
+                            Other
+                        </th>
+                        <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">
+                            Total
+                        </th>
                         <th class="px-4 py-3 !text-center text-xs font-semibold text-gray-600 uppercase">Action</th>
                     </tr>
                 </thead>
@@ -101,12 +57,19 @@ body {
                     <tr>
 
                         <th colspan="2" class="!px-4 !py-3 !text-right text-gray-600 font-bold">Grand Total</th>
-                        <th id="grandVerificationOhk" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0</th>
+                        <th id="grandInProcess" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0</th>
                         <th id="grandAppointmentScheduled" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0
                         </th>
                         <th id="grandPaymentSuccess" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0</th>
                         <th id="grandPaymentFailed" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0</th>
                         <th id="grandInsufficientDocuments" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0
+                        </th>
+                        <th id="grandOther" class="!px-4 !py-3 !text-right text-gray-600 font-bold">
+                            0
+                        </th>
+
+                        <th id="grandTotal" class="!px-4 !py-3 !text-right text-gray-600 font-bold">
+                            0
                         </th>
                         <th></th>
                     </tr>
@@ -114,6 +77,7 @@ body {
             </table>
         </div>
     </div>
+</div>
 </div>
 
 <div id="monthModal" class="fixed inset-0 hidden bg-black bg-opacity-50
@@ -206,19 +170,19 @@ $(document).ready(function() {
                     ).toLocaleString()
                 );
 
-                        $('#grandOther').text(
-                            Number(
-                                grandTotal.other || 0
-                            ).toLocaleString()
-                        );
+                $('#grandOther').text(
+                    Number(
+                        grandTotal.other || 0
+                    ).toLocaleString()
+                );
 
-                        $('#grandTotal').text(
-                            Number(
-                                grandTotal.total || 0
-                            ).toLocaleString()
-                        );
+                $('#grandTotal').text(
+                    Number(
+                        grandTotal.total || 0
+                    ).toLocaleString()
+                );
 
-                        return json.data || [];
+                return json.data || [];
 
             },
 
@@ -233,94 +197,94 @@ $(document).ready(function() {
 
         },
 
-                columns: [{
-                        data: 'year',
-                        name: 'year',
-                        className: 'text-gray-700'
-                    },
-                    {
-                        data: 'month_name',
-                        name: 'month_name',
-                        className: 'text-gray-700'
-                    },
-                    {
-                        data: 'verification_ohk',
-                        name: 'verification_ohk',
-                        className: 'text-gray-700 text-right',
-                        render: function(data) {
-                            return Number(
-                                data || 0
-                            ).toLocaleString();
-                        }
-                    },
-                    {
-                        data: 'appointment_scheduled',
-                        name: 'appointment_scheduled',
-                        className: 'text-gray-700 text-right',
-                        render: function(data) {
-                            return Number(
-                                data || 0
-                            ).toLocaleString();
-                        }
-                    },
-                    {
-                        data: 'payment_success',
-                        name: 'payment_success',
-                        className: 'text-gray-700 text-right',
-                        render: function(data) {
-                            return Number(
-                                data || 0
-                            ).toLocaleString();
-                        }
-                    },
-                    {
-                        data: 'payment_failed',
-                        name: 'payment_failed',
-                        className: 'text-gray-700 text-right',
-                        render: function(data) {
-                            return Number(
-                                data || 0
-                            ).toLocaleString();
-                        }
-                    },
-                    {
-                        data: 'insufficient_documents',
-                        name: 'insufficient_documents',
-                        className: 'text-gray-700 text-right',
-                        render: function(data) {
-                            return Number(
-                                data || 0
-                            ).toLocaleString();
-                        }
-                    },
-                    {
-                        data: 'other',
-                        name: 'other',
-                        className: 'text-gray-700 text-right',
-                        render: function(data) {
-                            return Number(
-                                data || 0
-                            ).toLocaleString();
-                        }
-                    },
-                    {
-                        data: 'total',
-                        name: 'total',
-                        className: 'text-gray-700 text-right font-bold',
-                        render: function(data) {
-                            return Number(
-                                data || 0
-                            ).toLocaleString();
-                        }
-                    },
-                    {
-                        data: null,
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        className: 'text-center',
-                        render: function(data, type, row) {
-                            return `
+        columns: [{
+                data: 'year',
+                name: 'year',
+                className: 'text-gray-700'
+            },
+            {
+                data: 'month_name',
+                name: 'month_name',
+                className: 'text-gray-700'
+            },
+            {
+                data: 'verification_ohk',
+                name: 'verification_ohk',
+                className: 'text-gray-700 text-right',
+                render: function(data) {
+                    return Number(
+                        data || 0
+                    ).toLocaleString();
+                }
+            },
+            {
+                data: 'appointment_scheduled',
+                name: 'appointment_scheduled',
+                className: 'text-gray-700 text-right',
+                render: function(data) {
+                    return Number(
+                        data || 0
+                    ).toLocaleString();
+                }
+            },
+            {
+                data: 'payment_success',
+                name: 'payment_success',
+                className: 'text-gray-700 text-right',
+                render: function(data) {
+                    return Number(
+                        data || 0
+                    ).toLocaleString();
+                }
+            },
+            {
+                data: 'payment_failed',
+                name: 'payment_failed',
+                className: 'text-gray-700 text-right',
+                render: function(data) {
+                    return Number(
+                        data || 0
+                    ).toLocaleString();
+                }
+            },
+            {
+                data: 'insufficient_documents',
+                name: 'insufficient_documents',
+                className: 'text-gray-700 text-right',
+                render: function(data) {
+                    return Number(
+                        data || 0
+                    ).toLocaleString();
+                }
+            },
+            {
+                data: 'other',
+                name: 'other',
+                className: 'text-gray-700 text-right',
+                render: function(data) {
+                    return Number(
+                        data || 0
+                    ).toLocaleString();
+                }
+            },
+            {
+                data: 'total',
+                name: 'total',
+                className: 'text-gray-700 text-right font-bold',
+                render: function(data) {
+                    return Number(
+                        data || 0
+                    ).toLocaleString();
+                }
+            },
+            {
+                data: null,
+                name: 'action',
+                orderable: false,
+                searchable: false,
+                className: 'text-center',
+                render: function(data, type, row) {
+                    return `
                             <button
                                 type="button"
                                 class="view-month px-4 py-1 text-sm font-medium
