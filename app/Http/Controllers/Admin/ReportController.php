@@ -493,6 +493,7 @@ class ReportController extends Controller
                     'ap.customer_id',
                     'ap.status_id',
                     'ap.status_date',
+                    'ap.created_at',
                     'application_statuses.slug',
                     'application_statuses.status_name',
                 ]);
@@ -501,11 +502,11 @@ class ReportController extends Controller
                 ->fromSub($baseQuery, 'report_data')
 
                 ->selectRaw("
-                YEAR(status_date) AS year,
+                YEAR(created_at) AS year,
 
-                MONTH(status_date) AS month_no,
+                MONTH(created_at) AS month_no,
 
-                MONTHNAME(status_date) AS month_name,
+                MONTHNAME(created_at) AS month_name,
 
                 SUM(
                     CASE
@@ -565,14 +566,14 @@ class ReportController extends Controller
             ")
 
                 ->groupByRaw("
-                YEAR(status_date),
-                MONTH(status_date),
-                MONTHNAME(status_date)
+                YEAR(created_at),
+                MONTH(created_at),
+                MONTHNAME(created_at)
             ")
 
                 ->orderByRaw("
-                YEAR(status_date) DESC,
-                MONTH(status_date) DESC
+                YEAR(created_at) DESC,
+                MONTH(created_at) DESC
             ");
 
             $grandTotal = DB::query()
@@ -769,7 +770,7 @@ class ReportController extends Controller
             )
 
             ->selectRaw("
-            DATE(ap.status_date) AS report_date,
+            DATE(ap.created_at) AS report_date,
 
             SUM(
                 CASE
@@ -834,12 +835,12 @@ class ReportController extends Controller
             // )
 
             ->whereBetween(
-                'ap.status_date',
+                'ap.created_at',
                 [$start, $end]
             )
 
             ->groupByRaw(
-                'DATE(ap.status_date)'
+                'DATE(ap.created_at)'
             )
 
             ->get()
