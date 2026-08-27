@@ -80,12 +80,16 @@ class CustomerController extends Controller
 
             ->addColumn('application_status', function ($row) {
                 $status = $row->latestApplicationProgress?->status;
+
                 if (!$status) {
                     return '-';
                 }
-                $colorMap = ['green' => 'bg-green-100 text-green-800', 'red' => 'bg-red-100 text-red-800', 'blue' => 'bg-blue-100 text-blue-800', 'orange' => 'bg-orange-100 text-orange-800', 'yellow' => 'bg-yellow-100 text-yellow-800', 'purple' => 'bg-purple-100 text-purple-800', 'gray' => 'bg-gray-100 text-gray-800',];
-                $classes = $colorMap[$status->colorclass] ?? 'bg-gray-100 text-gray-800';
-                return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ' . $classes . '">' . e($status->status_name) . '</span>';
+
+                $color = getStatusColor($status->colorclass ?? 'gray');
+
+                return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ' .
+                    $color['tailwind'] .
+                    '">' . e($status->status_name) . '</span>';
             })
 
             ->addColumn('actions', function ($row) {

@@ -25,17 +25,17 @@ class ApplicationDocumentController extends Controller
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
         $query = ApplicationDocument::with('customer', 'documentType')->select([
-            'application_documents.id',
-            'application_documents.customer_id',
-            'application_documents.document_type_id',
-            'application_documents.is_submitted',
-            'application_documents.file_path',
-            'application_documents.is_verified',
-            'application_documents.created_at'
-        ])->where('application_documents.is_verified', 0);
+            'id',
+            'customer_id',
+            'document_type_id',
+            'is_submitted',
+            'file_path',
+            'is_verified',
+            'created_at'
+        ])->where('is_verified', 0);
 
         if ($request->from_date && $request->to_date) {
-            $query->whereBetween('application_documents.created_at', [
+            $query->whereBetween('created_at', [
                 $from . ' 00:00:00',
                 $to . ' 23:59:59'
             ]);

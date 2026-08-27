@@ -22,19 +22,14 @@
 </p>
 
 @php
-$statusStyle = getStatusColor($status->slug ?? '');
+$statusStyle = getStatusColor($status->colorclass ?? 'gray');
 @endphp
 <div style="
     background:#f7f9fc;
     border:1px solid #e3e8ef;
     border-radius:10px;">
 
-    <table width="100%"
-        cellpadding="12"
-        cellspacing="0"
-        border="0"
-        class="mobile-block"
-        style="
+    <table width="100%" cellpadding="12" cellspacing="0" border="0" class="mobile-block" style="
         border-collapse:collapse;
         font-size:13px;">
 
@@ -68,8 +63,7 @@ $statusStyle = getStatusColor($status->slug ?? '');
             <td class="mobile-label">
                 <strong>Remark</strong>
             </td>
-            <td class="mobile-value"
-                style="
+            <td class="mobile-value" style="
                 line-height:20px;
                 color:#555555;
                 word-break:break-word;">
