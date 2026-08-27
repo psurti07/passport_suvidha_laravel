@@ -91,74 +91,50 @@ if (!function_exists('decryptData')) {
 }
 
 if (!function_exists('getStatusColor')) {
-    function getStatusColor($slug)
+    function getStatusColor($color)
     {
-        return match (true) {
+        return match (strtolower(trim($color))) {
 
-            in_array($slug, [
-                'in_process',
-            ]) => [
-                'bg' => '#dbeafe',
-                'text' => '#1e40af',
-                'tailwind' => 'bg-blue-100 text-blue-800'
-            ],
-
-            in_array($slug, [
-                'documents_submitted',
-                'pov_success',
-            ]) => [
-                'bg' => '#dcfce7',
-                'text' => '#166534',
-                'tailwind' => 'bg-green-100 text-green-800'
-            ],
-
-            in_array($slug, [
-                'details_verification',
-                'not_contact_2_days_warning'
-            ]) => [
+            'yellow' => [
                 'bg' => '#fef9c3',
                 'text' => '#854d0e',
                 'tailwind' => 'bg-yellow-100 text-yellow-800'
             ],
 
-            in_array($slug, [
-                'appointment_scheduled',
-                'appointment_rescheduled1',
-                'appointment_rescheduled2',
-                'appointment_rescheduled3'
-            ])
-            => [
-                'bg' => '#ffedd5',
-                'text' => '#9a3412',
-                'tailwind' => 'bg-orange-100 text-orange-800'
-            ],
-
-            in_array($slug, [
-                'pov_failed',
-                'not_contact_2_days_reject'
-            ])
-            => [
+            'red' => [
                 'bg' => '#fee2e2',
                 'text' => '#991b1b',
                 'tailwind' => 'bg-red-100 text-red-800'
             ],
 
-            in_array($slug, [
-                'pov_insufficient_documents'
-            ])
-            => [
-                'bg' => '#f3f4f6',
-                'text' => '#374151',
-                'tailwind' => 'bg-gray-100 text-gray-800'
-            ],
-
-            in_array($slug, [
-                'refunded'
-            ])
-            => [
+            'purple' => [
                 'bg' => '#f3e8ff',
                 'text' => '#6b21a8',
                 'tailwind' => 'bg-purple-100 text-purple-800'
+            ],
+
+            'blue' => [
+                'bg' => '#dbeafe',
+                'text' => '#1e40af',
+                'tailwind' => 'bg-blue-100 text-blue-800'
+            ],
+
+            'green' => [
+                'bg' => '#dcfce7',
+                'text' => '#166534',
+                'tailwind' => 'bg-green-100 text-green-800'
+            ],
+
+            'orange' => [
+                'bg' => '#ffedd5',
+                'text' => '#9a3412',
+                'tailwind' => 'bg-orange-100 text-orange-800'
+            ],
+
+            'pink' => [
+                'bg' => '#fce7f3',
+                'text' => '#9d174d',
+                'tailwind' => 'bg-pink-100 text-pink-800'
             ],
 
             default => [

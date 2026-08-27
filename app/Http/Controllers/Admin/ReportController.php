@@ -432,7 +432,7 @@ class ReportController extends Controller
         if ($request->ajax()) {
 
             $statusSlugs = [
-                'in_process',
+                'verification_ohk',
                 'appointment_scheduled',
                 'pov_success',
                 'pov_failed',
@@ -509,11 +509,11 @@ class ReportController extends Controller
 
                 SUM(
                     CASE
-                        WHEN slug = 'in_process'
+                        WHEN slug = 'verification_ohk'
                         THEN 1
                         ELSE 0
                     END
-                ) AS in_process,
+                ) AS verification_ohk,
 
                 SUM(
                     CASE
@@ -565,11 +565,11 @@ class ReportController extends Controller
                 ->selectRaw("
                 SUM(
                     CASE
-                        WHEN slug = 'in_process'
+                        WHEN slug = 'verification_ohk'
                         THEN 1
                         ELSE 0
                     END
-                ) AS in_process,
+                ) AS verification_ohk,
 
                 SUM(
                     CASE
@@ -634,8 +634,8 @@ class ReportController extends Controller
 
             $json['grand_total'] = [
 
-                'in_process' =>
-                (int) ($grandTotal->in_process ?? 0),
+                'verification_ohk' =>
+                (int) ($grandTotal->verification_ohk ?? 0),
 
                 'appointment_scheduled' =>
                 (int) ($grandTotal->appointment_scheduled ?? 0),
@@ -674,7 +674,7 @@ class ReportController extends Controller
         }
 
         $statusSlugs = [
-            'in_process',
+            'verification_ohk',
             'appointment_scheduled',
             'pov_success',
             'pov_failed',
@@ -736,11 +736,11 @@ class ReportController extends Controller
 
             SUM(
                 CASE
-                    WHEN application_statuses.slug = 'in_process'
+                    WHEN application_statuses.slug = 'verification_ohk'
                     THEN 1
                     ELSE 0
                 END
-            ) AS in_process,
+            ) AS verification_ohk,
 
             SUM(
                 CASE
@@ -801,7 +801,7 @@ class ReportController extends Controller
         $data = [];
 
         $grand = [
-            'in_process' => 0,
+            'verification_ohk' => 0,
             'appointment_scheduled' => 0,
             'payment_success' => 0,
             'payment_failed' => 0,
@@ -815,8 +815,8 @@ class ReportController extends Controller
             $row = $rawData[$key] ?? null;
 
 
-            $inProcess = (int) (
-                $row->in_process ?? 0
+            $verificationOhk = (int) (
+                $row->verification_ohk ?? 0
             );
 
             $appointmentScheduled = (int) (
@@ -837,14 +837,14 @@ class ReportController extends Controller
 
             $data[] = [
                 'report_date' => $key,
-                'in_process' => $inProcess,
+                'verification_ohk' => $verificationOhk,
                 'appointment_scheduled' => $appointmentScheduled,
                 'payment_success' => $paymentSuccess,
                 'payment_failed' => $paymentFailed,
                 'insufficient_documents' => $insufficientDocuments,
             ];
 
-            $grand['in_process'] += $inProcess;
+            $grand['verification_ohk'] += $verificationOhk;
             $grand['appointment_scheduled'] += $appointmentScheduled;
             $grand['payment_success'] += $paymentSuccess;
             $grand['payment_failed'] += $paymentFailed;

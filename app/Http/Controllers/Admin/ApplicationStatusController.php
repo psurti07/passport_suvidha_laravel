@@ -17,36 +17,69 @@ class ApplicationStatusController extends Controller
         return view('admin.application-status.index', compact('statuses'));
     }
 
-    public function new()
+    public function verification()
     {
         $statuses = ApplicationStatus::orderBy('priority_no')->get();
 
         return view('admin.application-status.index', [
             'statuses' => $statuses,
-            'type' => 'new',
-            'title' => 'NEW'
+            'type' => 'verification',
+            'title' => 'VERIFICATION'
         ]);
     }
 
-    public function current()
+    public function appointment()
     {
         $statuses = ApplicationStatus::orderBy('priority_no')->get();
 
         return view('admin.application-status.index', [
             'statuses' => $statuses,
-            'type' => 'current',
-            'title' => 'CURRENT'
+            'type' => 'appointment',
+            'title' => 'APPOINTMENT'
         ]);
     }
 
-    public function completed()
+    public function success()
     {
         $statuses = ApplicationStatus::orderBy('priority_no')->get();
 
         return view('admin.application-status.index', [
             'statuses' => $statuses,
-            'type' => 'completed',
-            'title' => 'COMPLETED'
+            'type' => 'success',
+            'title' => 'SUCCESS'
+        ]);
+    }
+
+    public function failed()
+    {
+        $statuses = ApplicationStatus::orderBy('priority_no')->get();
+
+        return view('admin.application-status.index', [
+            'statuses' => $statuses,
+            'type' => 'failed',
+            'title' => 'FAILED'
+        ]);
+    }
+
+    public function insufficient()
+    {
+        $statuses = ApplicationStatus::orderBy('priority_no')->get();
+
+        return view('admin.application-status.index', [
+            'statuses' => $statuses,
+            'type' => 'insufficient',
+            'title' => 'INSUFFICIENT'
+        ]);
+    }
+
+    public function refund()
+    {
+        $statuses = ApplicationStatus::orderBy('priority_no')->get();
+
+        return view('admin.application-status.index', [
+            'statuses' => $statuses,
+            'type' => 'refund',
+            'title' => 'REFUND'
         ]);
     }
 
@@ -69,32 +102,39 @@ class ApplicationStatusController extends Controller
             $query->where('status_id', $request->status);
         }
 
-        if ($request->type == 'new') {
+        if ($request->type == 'verification') {
             $query->whereHas('status', function ($q) {
-                $q->where('status_name', 'Documents Submitted');
+                $q->where('slug', 'verification_ohk');
             });
         }
 
-        if ($request->type == 'current') {
+        if ($request->type == 'appointment') {
             $query->whereHas('status', function ($q) {
-                $q->whereIn('status_name', [
-                    'In Process',
-                    'Details Verification',
-                    'Appointment Scheduled',
-                    'Appointment Rescheduled 1',
-                    'Appointment Rescheduled 2',
-                    'Appointment Rescheduled 3'
-                ]);
+                $q->where('slug', 'appointment_scheduled');
             });
         }
 
-        if ($request->type == 'completed') {
+        if ($request->type == 'success') {
             $query->whereHas('status', function ($q) {
-                $q->whereIn('status_name', [
-                    'POV Success',
-                    'POV Failed',
-                    'POV Insufficient Documents'
-                ]);
+                $q->where('slug', 'pov_success');
+            });
+        }
+
+        if ($request->type == 'failed') {
+            $query->whereHas('status', function ($q) {
+                $q->where('slug', 'pov_failed');
+            });
+        }
+
+        if ($request->type == 'insufficient') {
+            $query->whereHas('status', function ($q) {
+                $q->where('slug', 'pov_insufficient_documents');
+            });
+        }
+
+        if ($request->type == 'refund') {
+            $query->whereHas('status', function ($q) {
+                $q->where('slug', 'refunded');
             });
         }
 

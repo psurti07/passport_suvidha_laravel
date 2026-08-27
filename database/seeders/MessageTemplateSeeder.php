@@ -31,7 +31,7 @@ class MessageTemplateSeeder extends Seeder
             ['slug' => 'welcome-sms', 'name' => 'Welcome SMS'],
 
 
-            ['slug' => 'application-in-process-sms', 'name' => 'Application In Process SMS'],
+            ['slug' => 'verification-ohk-sms', 'name' => 'Verification Ohk SMS'],
 
             ['slug' => 'documents-submitted-sms', 'name' => 'Documents Submitted SMS'],
 

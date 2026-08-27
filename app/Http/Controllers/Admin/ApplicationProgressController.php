@@ -136,7 +136,7 @@ class ApplicationProgressController extends Controller
         if ($customer && !empty($customer->mobile_number) && $status) {
 
             $templateSlug = match ($status->slug) {
-                'in_process' => 'application-in-process-sms',
+                'verification_ohk' => 'verification-ohk-sms',
                 'documents_submitted' => 'documents-submitted-sms',
                 'details_verification' => 'details-verification-sms',
                 'appointment_scheduled' => 'appointment-scheduled-sms',

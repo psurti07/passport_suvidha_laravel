@@ -25,24 +25,24 @@ class FinalDetailController extends Controller
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
         $query = FinalDetail::with('customer', 'uploader')->select([
-            'final_details.id',
-            'final_details.customer_id',
-            'final_details.file_path',
-            'final_details.upload_date',
-            'final_details.uploaded_by',
-            'final_details.is_approved',
-            'final_details.approved_date',
-            'final_details.approved_by_role',
-            'final_details.approved_by',
+            'id',
+            'customer_id',
+            'file_path',
+            'upload_date',
+            'uploaded_by',
+            'is_approved',
+            'approved_date',
+            'approved_by_role',
+            'approved_by',
         ])
 
-            ->whereBetween('final_details.upload_date', [
+            ->whereBetween('upload_date', [
                 $from . ' 00:00:00',
                 $to . ' 23:59:59'
             ]);
 
         if ($request->filled('is_approved')) {
-            $query->where('final_details.is_approved', $request->is_approved);
+            $query->where('is_approved', $request->is_approved);
         }
 
         return DataTables::of($query)

@@ -106,9 +106,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Application Status Routes
     Route::get('/application-status', [ApplicationStatusController::class, 'index'])->name('application.status');
     Route::get('/application-status/data', [ApplicationStatusController::class, 'data'])->name('application.status.data');
-    Route::get('/application-status/new', [ApplicationStatusController::class, 'new'])->name('application.status.new');
-    Route::get('/application-status/current', [ApplicationStatusController::class, 'current'])->name('application.status.current');
-    Route::get('/application-status/completed', [ApplicationStatusController::class, 'completed'])->name('application.status.completed');
+    Route::get('/application-status/verification', [ApplicationStatusController::class, 'verification'])->name('application.status.verification');
+    Route::get('/application-status/appointment', [ApplicationStatusController::class, 'appointment'])->name('application.status.appointment');
+    Route::get('/application-status/success', [ApplicationStatusController::class, 'success'])->name('application.status.success');
+    Route::get('/application-status/failed', [ApplicationStatusController::class, 'failed'])->name('application.status.failed');
+    Route::get('/application-status/insufficient', [ApplicationStatusController::class, 'insufficient'])->name('application.status.insufficient');
+    Route::get('/application-status/refund', [ApplicationStatusController::class, 'refund'])->name('application.status.refund');
 
     // Passport Credentials Routes
     Route::post('/customers/{customer}/passport-account', [PassportAccountController::class, 'store'])->name('customers.passport-account.store');

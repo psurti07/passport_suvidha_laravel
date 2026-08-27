@@ -22,12 +22,12 @@ class PreDefinedMessageController extends Controller
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
         $query = PreDefinedMessage::with('status')->select([
-            'pre_defined_messages.id',
-            'pre_defined_messages.status_id',
-            'pre_defined_messages.message_name',
-            'pre_defined_messages.message_remarks',
-            'pre_defined_messages.created_at',
-            'pre_defined_messages.updated_at',
+            'id',
+            'status_id',
+            'message_name',
+            'message_remarks',
+            'created_at',
+            'updated_at',
         ]);
 
         if ($request->filled('from_date') && $request->filled('to_date')) {
