@@ -57,7 +57,7 @@ body {
                     <tr>
 
                         <th colspan="2" class="!px-4 !py-3 !text-right text-gray-600 font-bold">Grand Total</th>
-                        <th id="grandInProcess" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0</th>
+                        <th id="grandVerificationOhk" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0</th>
                         <th id="grandAppointmentScheduled" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0
                         </th>
                         <th id="grandPaymentSuccess" class="!px-4 !py-3 !text-right text-gray-600 font-bold">0</th>
