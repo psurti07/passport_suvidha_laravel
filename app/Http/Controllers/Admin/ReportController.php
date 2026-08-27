@@ -551,7 +551,7 @@ class ReportController extends Controller
                 SUM(
                     CASE
                         WHEN slug NOT IN (
-                            'in_process',
+                            'verification_ohk',
                             'appointment_scheduled',
                             'pov_success',
                             'pov_failed',
@@ -623,7 +623,7 @@ class ReportController extends Controller
                 SUM(
                     CASE
                         WHEN slug NOT IN (
-                            'in_process',
+                            'verification_ohk',
                             'appointment_scheduled',
                             'pov_success',
                             'pov_failed',
@@ -815,7 +815,7 @@ class ReportController extends Controller
                 SUM(
                     CASE
                         WHEN application_statuses.slug NOT IN (
-                            'in_process',
+                            'verification_ohk',
                             'appointment_scheduled',
                             'pov_success',
                             'pov_failed',

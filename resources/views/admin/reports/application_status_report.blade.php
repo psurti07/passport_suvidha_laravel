@@ -33,7 +33,7 @@ body {
                         <tr>
                             <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Year</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Month</th>
-                            <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">In Process</th>
+                            <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">Verification Ohk</th>
                             <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">Appointment
                                 Scheduled</th>
                             <th class="px-4 py-3 !text-right text-xs font-semibold text-gray-600 uppercase">POV Success</th>
@@ -244,8 +244,8 @@ $(document).ready(function() {
                         className: 'text-gray-700'
                     },
                     {
-                        data: 'in_process',
-                        name: 'in_process',
+                        data: 'verification_ohk',
+                        name: 'verification_ohk',
                         className: 'text-gray-700 text-right',
                         render: function(data) {
                             return Number(
