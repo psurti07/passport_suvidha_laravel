@@ -47,92 +47,75 @@
             window.location.hash = activeTab;
         }
     }">
-        {{-- Sidebar Navigation --}}
-        <div class="w-full lg:w-1/4">
-            <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-                <nav class="divide-y divide-gray-200">
-                    {{-- Update links for Alpine --}}
-                    <a href="#" @click.prevent="setActiveTab('info')"
-                        :class="{ 'bg-blue-600 text-white': activeTab === 'info', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'info' }"
-                        class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Customer Info
-                    </a>
-                    <a href="#" @click.prevent="setActiveTab('documents')"
-                        :class="{ 'bg-blue-600 text-white': activeTab === 'documents', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'documents' }"
-                        class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Uploaded Documents
-                    </a>
-                    <a href="#" @click.prevent="setActiveTab('application-process')"
-                        :class="{ 'bg-blue-600 text-white': activeTab === 'application-process', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'application-process' }"
-                        class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
-                        Application Process
-                    </a>
-                    <a href="#" @click.prevent="setActiveTab('passport-credential')"
-                        :class="{ 'bg-blue-600 text-white': activeTab === 'passport-credential', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'passport-credential' }"
-                        class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <rect x="4" y="10" width="11" height="10" rx="2" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 10V7a4 4 0 018 0v3" />
-                            <circle cx="17" cy="15" r="2.5" stroke-linecap="round" stroke-linejoin="round" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M18.8 16.8L22 20m-1.5-1.5l1.2-1.2" />
-                        </svg>
-                        Passport Credential
-                    </a>
-                    <a href="#" @click.prevent="setActiveTab('actions')"
-                        :class="{ 'bg-blue-600 text-white': activeTab === 'actions', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'actions' }"
-                        class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        Actions
-                    </a>
-                </nav>
-            </div>
+    {{-- Sidebar Navigation --}}
+    <div class="w-full lg:w-1/4">
+        <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+            <nav class="divide-y divide-gray-200">
+                {{-- Update links for Alpine --}}
+                <a href="#" @click.prevent="setActiveTab('info')"
+                    :class="{ 'bg-blue-600 text-white': activeTab === 'info', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'info' }"
+                    class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Customer Info
+                </a>
+                <a href="#" @click.prevent="setActiveTab('documents')"
+                    :class="{ 'bg-blue-600 text-white': activeTab === 'documents', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'documents' }"
+                    class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Uploaded Documents
+                </a>
+                <a href="#" @click.prevent="setActiveTab('application-process')"
+                    :class="{ 'bg-blue-600 text-white': activeTab === 'application-process', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'application-process' }"
+                    class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                    Application Process
+                </a>
+                <a href="#" @click.prevent="setActiveTab('passport-credential')"
+                    :class="{ 'bg-blue-600 text-white': activeTab === 'passport-credential', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'passport-credential' }"
+                    class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <rect x="4" y="10" width="11" height="10" rx="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 10V7a4 4 0 018 0v3" />
+                        <circle cx="17" cy="15" r="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.8 16.8L22 20m-1.5-1.5l1.2-1.2" />
+                    </svg>
+                    Passport Credential
+                </a>
+                <a href="#" @click.prevent="setActiveTab('actions')"
+                    :class="{ 'bg-blue-600 text-white': activeTab === 'actions', 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-800': activeTab !== 'actions' }"
+                    class="flex items-center px-6 py-4 text-md font-bold transition duration-150 ease-in-out">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Actions
+                </a>
+            </nav>
         </div>
     </div>
 
     {{-- Main Content Area --}}
     <div class="w-full lg:w-3/4">
 
-            {{-- Customer Info Tab Content --}}
-            <div x-show="activeTab === 'info'" x-cloak>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                    <!-- {{-- Top Info Row --}}
-                                                                                                                                                                                <div
-                                                                                                                                                                                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-gray-200 gap-y-2">
-                                                                                                                                                                                    <p class="text-sm text-gray-600">
-                                                                                                                                                                                        Registration on: <strong
-                                                                                                                                                                                            class="text-gray-800 font-semibold">{{ $customer->payment_date ? $customer->payment_date->format('d M Y, H:i A') : 'N/A' }}</strong>
-                                                                                                                                                                                    </p>
-                                                                                                                                                                                    @if ($invoice)
-    <a href="{{ route('admin.invoices.download', $invoice->id) }}"
-                                                                                                                                                                                        class="inline-flex items-center text-sm px-4 py-2 w-auto bg-gradient-to-r from-green-500 to-green-600 font-medium rounded-lg border border-white text-white hover:from-green-600 hover:to-green-700">
-                                                                                                                                                                                        Download Invoice
-                                                                                                                                                                                    </a>
-@else
-    <span class="text-gray-400 text-sm">No Invoice Found</span>
-    @endif
-                                                                                                                                                                                </div> -->
+        {{-- Customer Info Tab Content --}}
+        <div x-show="activeTab === 'info'" x-cloak>
+            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
 
                 {{-- Top Info Row --}}
                 <div
@@ -584,14 +567,14 @@
 
                                 <option value="">Select Education Qualification</option>
 
-                                    <!-- <option value="Below 10th"
+                                <!-- <option value="Below 10th"
                                                                                     {{ old('education_qualification', $customer->education_qualification) == 'Below 10th' ? 'selected' : '' }}>
                                                                                     Below 10th
                                                                                 </option> -->
-                                    <option value="10th Pass And Above"
-                                        {{ old('education_qualification', $customer->education_qualification) == '10th Pass And Above' ? 'selected' : '' }}>
-                                        10th Pass And Above
-                                    </option>
+                                <option value="10th Pass And Above"
+                                    {{ old('education_qualification', $customer->education_qualification) == '10th Pass And Above' ? 'selected' : '' }}>
+                                    10th Pass And Above
+                                </option>
 
                                 <option value="7th Pass Or Less"
                                     {{ old('education_qualification', $customer->education_qualification) == '7th Pass Or Less' ? 'selected' : '' }}>
@@ -1084,272 +1067,20 @@
             }
             </script>
 
-                {{-- Alpine component for form toggle --}}
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-semibold text-gray-800">Application Process</h2>
-                        {{-- Send Remark Button --}}
-                        <button type="button" @click="showRemarkForm = !showRemarkForm"
-                            class="btn-primary inline-flex items-center px-4 py-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                            </svg>
-                            <span x-text="showRemarkForm ? 'Cancel' : 'Send Remark'">Send Remark</span>
-                        </button>
-                    </div>
-
-                    {{-- Remark Form (Initially Hidden) --}}
-                    <div x-show="showRemarkForm" x-cloak x-transition
-                        class="border border-gray-200 rounded-lg p-5 mb-6 bg-gray-50">
-                        <form action="{{ route('admin.application-progress.store') }}" method="POST"
-                            enctype="multipart/form-data" class="space-y-5" novalidate>
-                            @csrf
-                            {{-- Add customer_id as needed --}}
-                            <input type="hidden" name="customer_id" value="{{ $customer->id }}">
-                            <input type="hidden" name="redirect"
-                                value="{{ route('admin.customers.show', $customer->id) }}#application-process">
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-                                <div>
-                                    <label for="status_id"
-                                        class="block text-sm font-medium text-gray-700 mb-1">Application
-                                        Status <span class="text-red-500">*</span></label>
-                                    <select id="status_id" name="status_id" required x-model="selectedStatus"
-                                        @change="updateFileUpload(); updateMessages(true); updateRemarks()"
-                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm
-                                        @error('application_status') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
-                                        <option value="" disabled>Select Application Status</option>
-                                        @foreach ($statuses as $status)
-                                            <option value="{{ $status->id }}">
-                                                {{ $status->status_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('status_id')
-                                        <p class="mt-1 text-sm text-red-600 flex items-center">
-                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                            {{ $message }}
-                                        </p>
-                                    @enderror
-                                </div>
-                                <div>
-                                    <label for="status_date" class="block text-sm font-medium text-gray-700 mb-1">Status
-                                        Date <span class="text-red-500">*</span></label>
-                                    <input type="date" id="status_date" name="status_date" required
-                                        value="{{ date('Y-m-d') }}"
-                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
-                                        @error('status_date') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
-                                    @error('status_date')
-                                        <p class="mt-1 text-sm text-red-600 flex items-center">
-                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                            {{ $message }}
-                                        </p>
-                                    @enderror
-                                </div>
-
-                                {{-- File Upload Fields --}}
-                                <div x-show="showFileUpload || showAppointmentFields" class="md:col-span-2">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Upload File <span
-                                                x-show="showFileUpload" class="text-red-500">*</span></label>
-                                        <input type="file" id="file" name="file" :required="showFileUpload"
-                                            class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100
-                                            @error('file') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
-                                        <p class="mt-1 text-xs text-gray-500">PDF, JPG, JPEG, PNG. Max size: 5MB.</p>
-                                        @error('file')
-                                            <p class="mt-1 text-sm text-red-600 flex items-center">
-                                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                                {{ $message }}
-                                            </p>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mt-4" x-show="showAppointmentFields">
-                                        <label for="appointment_date"
-                                            class="block text-sm font-medium text-gray-700 mb-1">Appointment Date <span
-                                                class="text-red-500">*</span></label>
-                                        <input type="date" name="appointment_date" id="appointment_date"
-                                            :required="showAppointmentFields" min="{{ date('Y-m-d') }}"
-                                            class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
-                                            @error('appointment_date') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
-                                        @error('appointment_date')
-                                            <p class="mt-1 text-sm text-red-600 flex items-center">
-                                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                                {{ $message }}
-                                            </p>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mt-4" x-show="showAppointmentFields">
-                                        <label for="appointment_time"
-                                            class="block text-sm font-medium text-gray-700 mb-1">Appointment Time <span
-                                                class="text-red-500">*</span></label>
-                                        <input type="time" name="appointment_time" id="appointment_time"
-                                            :required="showAppointmentFields"
-                                            class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
-                                            @error('appointment_time') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
-                                        @error('appointment_time')
-                                            <p class="mt-1 text-sm text-red-600 flex items-center">
-                                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                                {{ $message }}
-                                            </p>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="md:col-span-2">
-                                    <label for="predefined_message"
-                                        class="block text-sm font-medium text-gray-700 mb-1">Pre-defined Messages</label>
-                                    <select name="predefined_message" id="predefined_message" x-model="selectedMessage"
-                                        @change="updateRemarks()"
-                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
-                                        <option value="" selected>Select Message (Optional)</option>
-                                        <template x-for="msg in filteredMessages" :key="msg.id">
-                                            <option :value="msg.message_name"
-                                                :selected="msg.message_name === selectedMessage"
-                                                x-text="msg.message_name">
-                                            </option>
-                                        </template>
-                                    </select>
-                                </div>
-
-                                <div class="md:col-span-2">
-                                    <label for="remark" class="block text-sm font-medium text-gray-700 mb-1">Remarks
-                                        <span class="text-red-500">*</span></label>
-                                    <textarea name="remark" id="remark" rows="4" required placeholder="Enter remarks..." x-model="remarks"
-                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
-                                        @error('remark') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"></textarea>
-                                    @error('remark')
-                                        <p class="mt-1 text-sm text-red-600 flex items-center">
-                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                            {{ $message }}
-                                        </p>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            {{-- Form Buttons --}}
-                            <div class="pt-5 mt-4 border-t border-gray-200 flex justify-end gap-3">
-                                <button type="button" @click="showRemarkForm = false; selectedMessage = ''; remarks = ''"
-                                    class="btn-secondary px-6 py-2">CANCEL</button>
-                                <button type="submit"
-                                    onclick="this.disabled=true; this.innerText='Adding...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
-                                    class="btn-primary px-8 py-2">ADD</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    {{-- Remark History Table --}}
-                    <div class="w-full overflow-x-auto">
-                        <table
-                            class="w-auto min-w-full text-sm text-left text-gray-600 border border-gray-200 divide-y divide-gray-200 rounded-lg">
-                            <thead class="bg-gray-50 text-xs uppercase text-gray-700">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">Status</th>
-                                    <th scope="col" class="px-6 py-3">Date</th>
-                                    <th scope="col" class="px-6 py-3">Remark</th>
-                                    <th scope="col" class="px-6 py-3">File</th>
-                                    <th scope="col" class="px-6 py-3">Staff Name</th>
-                                    <th scope="col" class="px-6 py-3"><span class="sr-only">Actions</span></th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                @forelse ($customer->applicationProgress()->orderBy('created_at', 'desc')->get() as
-                                                                                                                                                                                            $progress)
-                                    <tr class="hover:bg-gray-50 transition duration-150">
-                                        <td class="px-6 py-4">
-                                            @php
-                                                $color = getStatusColor($progress->status->slug ?? '');
-                                            @endphp
-
-                                            <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium {{ $color['tailwind'] }}">
-                                                {{ str_replace('_', ' ', ucfirst($progress->status->status_name ?? 'N/A')) }}
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            {{ $progress->status_date ? $progress->status_date->format('d M Y, h:i A') : 'N/A' }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-normal">{{ $progress->remark }}</td>
-                                        <td class="px-6 py-4">
-                                            @if ($progress->relatedFile)
-                                                <a href="{{ Storage::url($progress->relatedFile->file_path) }}"
-                                                    target="_blank"
-                                                    class="text-blue-600 hover:text-blue-800 text-sm font-medium inline-flex items-center">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
-                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                                        stroke-width="2">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                    </svg>
-                                                    View File
-                                                </a>
-                                            @else
-                                                <span class="text-gray-500 text-sm">No file</span>
-                                            @endif
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            {{ $progress->remarkedByUser ? $progress->remarkedByUser->name . ' (' . ucfirst($progress->remarkedByUser->role) . ')' : 'System' }}
-                                        </td>
-                                        <td class="px-6 py-4 text-right">
-                                            @if (auth()->user()->role === 'admin' || auth()->user()->id === $progress->remarked_by)
-                                                <form
-                                                    action="{{ route('admin.application-progress.destroy', $progress->id) }}"
-                                                    method="POST" class="inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <input type="hidden" name="redirect"
-                                                        value="{{ route('admin.customers.show', $customer->id) }}#application-process">
-                                                    <button type="button"
-                                                        onclick="confirmDelete('{{ str_replace('_', ' ', ucfirst($progress->status->status_name ?? 'N/A')) }} Remark', this.form)"
-                                                        class="text-red-600 hover:text-red-900" title="Delete">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">No remarks found
-                                            for this customer.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+            {{-- Alpine component for form toggle --}}
+            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-gray-800">Application Process</h2>
+                    {{-- Send Remark Button --}}
+                    <button type="button" @click="showRemarkForm = !showRemarkForm"
+                        class="btn-primary inline-flex items-center px-4 py-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                        <span x-text="showRemarkForm ? 'Cancel' : 'Send Remark'">Send Remark</span>
+                    </button>
                 </div>
 
                 {{-- Remark Form (Initially Hidden) --}}

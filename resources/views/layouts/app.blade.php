@@ -858,7 +858,7 @@ scrollToActive()" x-cloak>
                     </div>
 
                     <!-- Tooltip -->
-                    {{-- 
+                    {{--
                         <div x-show="sidebarCollapsed" class="sidebar-section-tooltip">
                             DOCUMENTS
                         </div> 
@@ -921,7 +921,7 @@ scrollToActive()" x-cloak>
                     </div>
 
                     <!-- Tooltip -->
-                    {{-- 
+                    {{--
                         <div x-show="sidebarCollapsed" class="sidebar-section-tooltip">
                             APPLICATION
                         </div> 
@@ -932,11 +932,8 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.application.status') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'All Applications' : ''">
-                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-application"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2">
+                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-application" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M9 12h6m-6 4h6m-6-8h6M5 4h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" />
                     </svg>
@@ -947,19 +944,80 @@ scrollToActive()" x-cloak>
                 <a href="{{ route('admin.application.status.verification') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.verification') ? 'active' : '' }}"
                     x-bind:title="sidebarCollapsed ? 'Verification Applications' : ''">
-                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-verification"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2">
+                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-verification" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7l7-4z" />
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M9 12l2 2 4-4" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
                     </svg>
 
                     <span class="nav-link-text font-semibold text-lg">Verification Applications</span>
                 </a>
+
+                <a href="{{ route('admin.application.status.appointment') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.appointment') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Appointment Applications' : ''">
+                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-appointment" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="17" rx="2" />
+                        <path stroke-linecap="round" d="M16 2v4M8 2v4M3 10h18" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 15l2 2 4-4" />
+                    </svg>
+
+                    <span class="nav-link-text font-semibold text-lg">Appointment Applications</span>
+                </a>
+
+                <a href="{{ route('admin.application.status.success') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.success') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Success Applications' : ''">
+                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-success" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="9" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12l2.5 2.5L16 9" />
+                    </svg>
+
+                    <span class="nav-link-text font-semibold text-lg">Success Applications</span>
+                </a>
+
+                <a href="{{ route('admin.application.status.failed') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.failed') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Failed Applications' : ''">
+                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-failed" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="9" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l6 6M15 9l-6 6" />
+                    </svg>
+
+                    <span class="nav-link-text font-semibold text-lg">Failed Applications</span>
+                </a>
+
+                <a href="{{ route('admin.application.status.insufficient') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.insufficient') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Insufficient Applications' : ''">
+                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-insufficient" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l9 17H3L12 3z" />
+                        <path stroke-linecap="round" d="M12 9v4" />
+                        <path stroke-linecap="round" d="M12 16h.01" />
+                    </svg>
+
+                    <span class="nav-link-text font-semibold text-lg">Insufficient Applications</span>
+                </a>
+
+                <a href="{{ route('admin.application.status.refund') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.refund') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Refund Applications' : ''">
+                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-refund" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h12l-3-3M16 7l-3 3" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20 17H8l3 3M8 17l3-3" />
+                    </svg>
+
+                    <span class="nav-link-text font-semibold text-lg">Refund Applications</span>
+                </a>
+
+                <!-- <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">INVOICES</div> -->
+
                 <div class="sidebar-section mt-6 relative group">
 
                     <!-- Expanded -->
@@ -980,99 +1038,13 @@ scrollToActive()" x-cloak>
                     </div>
 
                     <!-- Tooltip -->
-                    {{-- 
+                    {{--
     <div x-show="sidebarCollapsed" class="sidebar-section-tooltip">
         INVOICES
     </div>
     --}}
 
                 </div>
-
-                <a href="{{ route('admin.application.status.appointment') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.appointment') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Appointment Applications' : ''">
-                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-appointment"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2">
-                        <rect x="3" y="4" width="18" height="17" rx="2" />
-                        <path stroke-linecap="round" d="M16 2v4M8 2v4M3 10h18" />
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M8 15l2 2 4-4" />
-                    </svg>
-
-                    <span class="nav-link-text font-semibold text-lg">Appointment Applications</span>
-                </a>
-
-                <a href="{{ route('admin.application.status.success') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.success') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Success Applications' : ''">
-                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-success"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2">
-                        <circle cx="12" cy="12" r="9" />
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M8 12l2.5 2.5L16 9" />
-                    </svg>
-
-                    <span class="nav-link-text font-semibold text-lg">Success Applications</span>
-                </a>
-
-                <a href="{{ route('admin.application.status.failed') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.failed') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Failed Applications' : ''">
-                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-failed"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2">
-                        <circle cx="12" cy="12" r="9" />
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M9 9l6 6M15 9l-6 6" />
-                    </svg>
-
-                    <span class="nav-link-text font-semibold text-lg">Failed Applications</span>
-                </a>
-
-                <a href="{{ route('admin.application.status.insufficient') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.insufficient') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Insufficient Applications' : ''">
-                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-insufficient"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 3l9 17H3L12 3z" />
-                        <path stroke-linecap="round" d="M12 9v4" />
-                        <path stroke-linecap="round" d="M12 16h.01" />
-                    </svg>
-
-                    <span class="nav-link-text font-semibold text-lg">Insufficient Applications</span>
-                </a>
-
-                <a href="{{ route('admin.application.status.refund') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.refund') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Refund Applications' : ''">
-                    <svg class="h-5 w-5 mr-3 flex-shrink-0 icon-refund"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M4 7h12l-3-3M16 7l-3 3" />
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M20 17H8l3 3M8 17l3-3" />
-                    </svg>
-
-                    <span class="nav-link-text font-semibold text-lg">Refund Applications</span>
-                </a>
-
-                <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">INVOICES</div>
-
 
                 <a href="{{ route('admin.invoices.index') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}"
@@ -1128,7 +1100,7 @@ scrollToActive()" x-cloak>
                     </div>
 
                     <!-- Tooltip -->
-                    {{-- 
+                    {{--
     <div x-show="sidebarCollapsed" class="sidebar-section-tooltip">
         REPORTS
     </div>
