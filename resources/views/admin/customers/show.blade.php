@@ -697,9 +697,9 @@
                                     <option value="">Select Education Qualification</option>
 
                                     <!-- <option value="Below 10th"
-                                                                                                                            {{ old('education_qualification', $customer->education_qualification) == 'Below 10th' ? 'selected' : '' }}>
-                                                                                                                            Below 10th
-                                                                                                                        </option> -->
+                                                                                                                                {{ old('education_qualification', $customer->education_qualification) == 'Below 10th' ? 'selected' : '' }}>
+                                                                                                                                Below 10th
+                                                                                                                            </option> -->
                                     <option value="10th Pass And Above"
                                         {{ old('education_qualification', $customer->education_qualification) == '10th Pass And Above' ? 'selected' : '' }}>
                                         10th Pass And Above
@@ -1115,7 +1115,7 @@
                             showAppointmentFields: false,
                             filteredMessages: [],
                             remarks: '{{ old('
-                                                                                                                                                                                                                                                                                                            remark ') }}',
+                                                                                                                                                                                                                                                                                                                                        remark ') }}',
                             isInitialLoad: true,
 
                             init() {
@@ -1398,7 +1398,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse ($customer->applicationProgress()->orderBy('created_at', 'desc')->get() as
-                                                                    $progress)
+                                                                        $progress)
                                     <tr class="hover:bg-gray-50 transition duration-150">
                                         <td class="px-6 py-4">
                                             @php
@@ -1411,7 +1411,7 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            {{ $progress->status_date ? $progress->status_date->format('d M Y, h:i A') : 'N/A' }}
+                                            {{ $progress->status_date ? $progress->status_date->format('d M Y') : 'N/A' }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-normal">{{ $progress->remark }}</td>
                                         <td class="px-6 py-4">
