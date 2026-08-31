@@ -38,6 +38,13 @@ class Customer extends Authenticatable
         'police_station_name',
         'city',
         'state',
+
+        'is_address_permanent',
+        'permanent_address',
+        'permanent_pin_code',
+        'permanent_city',
+        'permanent_state',
+
         'gender',
         'date_of_birth',
         'place_of_birth',

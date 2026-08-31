@@ -204,6 +204,19 @@ class CustomerController extends Controller
             'police_station_name' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
+
+            'is_address_permanent' => 'required|boolean',
+
+            'permanent_address' => 'required_if:is_address_permanent,0|nullable|string',
+            'permanent_pin_code' => [
+                'required_if:is_address_permanent,0',
+                'nullable',
+                'string',
+                'regex:/^\d{6}$/',
+            ],
+            'permanent_city' => 'required_if:is_address_permanent,0|nullable|string|max:100',
+            'permanent_state' => 'required_if:is_address_permanent,0|nullable|string|max:100',
+
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
             'place_of_birth' => 'required|string|max:255',
@@ -219,6 +232,13 @@ class CustomerController extends Controller
             $validatedData['marital_status'] === 'married'
             ? $request->spouse_name
             : null;
+
+        if ((int) $validatedData['is_address_permanent'] === 1) {
+            $validatedData['permanent_address'] = null;
+            $validatedData['permanent_pin_code'] = null;
+            $validatedData['permanent_city'] = null;
+            $validatedData['permanent_state'] = null;
+        }
 
         $customer->update($validatedData);
 
@@ -408,6 +428,19 @@ class CustomerController extends Controller
             'police_station_name' => 'required|string|max:255',
             'city' => 'required|string|max:100',
             'state' => 'required|string|max:100',
+
+            'is_address_permanent' => 'required|boolean',
+
+            'permanent_address' => 'required_if:is_address_permanent,0|nullable|string',
+            'permanent_pin_code' => [
+                'required_if:is_address_permanent,0',
+                'nullable',
+                'string',
+                'regex:/^\d{6}$/',
+            ],
+            'permanent_city' => 'required_if:is_address_permanent,0|nullable|string|max:100',
+            'permanent_state' => 'required_if:is_address_permanent,0|nullable|string|max:100',
+
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
             'place_of_birth' => 'required|string|max:255',
