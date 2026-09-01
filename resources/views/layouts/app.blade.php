@@ -624,6 +624,7 @@ scrollToActive()" x-cloak>
                         'admin.todaystatistics',
                         'admin.leads.today',
                         'admin.customers.today',
+                        'admin.todayprocesssteps',
                     );
                 @endphp
 
@@ -675,7 +676,7 @@ scrollToActive()" x-cloak>
                             </svg>
 
                             <span class="nav-link-text font-semibold text-lg">
-                                Today Statistics
+                                Statistics
                             </span>
 
                         </a>
@@ -695,7 +696,7 @@ scrollToActive()" x-cloak>
                             </svg>
 
                             <span class="nav-link-text font-semibold text-lg">
-                                Today's Process Steps
+                                Process Steps
                             </span>
 
                         </a>
@@ -725,7 +726,7 @@ scrollToActive()" x-cloak>
                             </svg>
 
                             <span class="nav-link-text font-semibold text-lg">
-                                Today's Leads
+                                Leads
                             </span>
 
                         </a>
@@ -744,7 +745,7 @@ scrollToActive()" x-cloak>
                             </svg>
 
                             <span class="nav-link-text font-semibold text-lg">
-                                Today's Customers
+                                Customers
                             </span>
 
                         </a>
@@ -1195,7 +1196,7 @@ scrollToActive()" x-cloak>
 
                 <a href="{{ route('admin.report.application-status') }}"
                     class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.application-status') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
+                    x-bind:title="sidebarCollapsed ? 'Application Statu' : ''">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
