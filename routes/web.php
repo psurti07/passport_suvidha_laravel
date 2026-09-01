@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\RemarketingLogController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\RefundController;
 use App\Http\Controllers\Admin\PassportAccountController;
+use App\Http\Controllers\Admin\TodayProcessStepController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +65,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Statistics Routes
     Route::get('/todaystatistics', [TodayStatisticsController::class, 'index'])->name('todaystatistics');
+    Route::get('/todayprocesssteps', [TodayProcessStepController::class, 'index'])->name('todayprocesssteps');
 
     // Customers Routes
     Route::get('/search-customer', [SearchController::class, 'showSearchForm'])->name('customer.search.form');
