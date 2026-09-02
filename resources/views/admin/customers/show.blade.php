@@ -697,9 +697,9 @@
                                     <option value="">Select Education Qualification</option>
 
                                     <!-- <option value="Below 10th"
-                                                                                                                                {{ old('education_qualification', $customer->education_qualification) == 'Below 10th' ? 'selected' : '' }}>
-                                                                                                                                Below 10th
-                                                                                                                            </option> -->
+                                                                                                                                        {{ old('education_qualification', $customer->education_qualification) == 'Below 10th' ? 'selected' : '' }}>
+                                                                                                                                        Below 10th
+                                                                                                                                    </option> -->
                                     <option value="10th Pass And Above"
                                         {{ old('education_qualification', $customer->education_qualification) == '10th Pass And Above' ? 'selected' : '' }}>
                                         10th Pass And Above
@@ -1114,8 +1114,7 @@
                             showFileUpload: false,
                             showAppointmentFields: false,
                             filteredMessages: [],
-                            remarks: '{{ old('
-                                                                                                                                                                                                                                                                                                                                        remark ') }}',
+                            remarks: '{{ old('remark ') }}',
                             isInitialLoad: true,
 
                             init() {
@@ -1397,8 +1396,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                @forelse ($customer->applicationProgress()->orderBy('created_at', 'desc')->get() as
-                                                                        $progress)
+                                @forelse ($customer->applicationProgress()->orderBy('created_at', 'desc')->get() as $progress)
                                     <tr class="hover:bg-gray-50 transition duration-150">
                                         <td class="px-6 py-4">
                                             @php
@@ -1445,7 +1443,8 @@
                                                         value="{{ route('admin.customers.show', $customer->id) }}#application-process">
                                                     <button type="button"
                                                         onclick="confirmDelete('{{ str_replace('_', ' ', ucfirst($progress->status->status_name ?? 'N/A')) }} Remark', this.form)"
-                                                        class="text-red-600 hover:text-red-900" title="Delete">
+                                                        class="group inline-flex items-center justify-center h-9 w-9 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:border-red-600 transition-all duration-200 shadow-sm"
+                                                        title="Delete">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round"

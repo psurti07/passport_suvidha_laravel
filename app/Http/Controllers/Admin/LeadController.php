@@ -76,7 +76,7 @@ class LeadController extends Controller
                     <form action="' . route('admin.customer.search') . '" method="POST" style="display:inline;">
                         ' . csrf_field() . '
                         <input type="hidden" name="search" value="' . $row->mobile_number . '">
-                        <button type="submit" class="text-blue-600 hover:text-blue-900" title="View">
+                        <button type="submit" class="group inline-flex items-center justify-center h-8 w-8 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 hover:border-blue-600 transition-all duration-200 shadow-sm" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -150,7 +150,7 @@ class LeadController extends Controller
                     <form action="' . route('admin.customer.search') . '" method="POST" style="display:inline;">
                         ' . csrf_field() . '
                         <input type="hidden" name="search" value="' . $row->mobile_number . '">
-                        <button type="submit" class="text-blue-600 hover:text-blue-900" title="View">
+                        <button type="submit" class="group inline-flex items-center justify-center h-8 w-8 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 hover:border-blue-600 transition-all duration-200 shadow-sm" title="View">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round"

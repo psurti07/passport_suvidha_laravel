@@ -129,7 +129,7 @@ class ApplicationDocumentController extends Controller
                             ' . method_field('DELETE') . '
                             <button type="button" 
                                 onclick="confirmDelete(\'' . $row->documentType->name . ' Document\', this.form)"
-                                class="text-red-600 hover:text-red-900" 
+                                class="group inline-flex items-center justify-center h-9 w-9 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:border-red-600 transition-all duration-200 shadow-sm" 
                                 title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
