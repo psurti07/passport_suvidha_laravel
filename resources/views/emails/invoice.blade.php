@@ -10,8 +10,19 @@
     </p>
 
     <p style="font-size:15px;color:#555;line-height:20px;">
-        Thank you for your payment. Your transaction has been completed successfully and your application has been submitted
-        for processing.
+        हमें आपका ₹999 का पेमेंट सफलतापूर्वक मिल गया है।
+        यह राशि केवल हमारी कंसल्टिंग फीस है; पासपोर्ट के लिए सरकारी फीस आपको सरकारी वेबसाइट पर अलग से जमा करनी होगी।
+        पासपोर्ट की आगे की प्रक्रिया के लिए हमारी टीम अगले 24 से 48 घंटों में आपसे संपर्क करेगी।
+        धन्यवाद!
+        आपके विश्वास के लिए हम आभारी हैं।
+    </p>
+    <p style="font-size:15px;color:#555;line-height:20px;">
+        we have successfully received your payment of ₹999.
+        This amount is only our consulting fee; the government fee for the passport must be paid separately on the official
+        government website.
+        For the passport process, our team will contact you within the next 24 to 48 hours.
+        Thank You!
+        We are grateful for your trust.
     </p>
 
     <!-- CARD -->
