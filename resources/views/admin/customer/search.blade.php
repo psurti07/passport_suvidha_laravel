@@ -80,7 +80,6 @@
                                 </dd>
                                 {{-- Assuming mobile_number from controller fix --}}
                             </div>
-                            <!-- <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">                                                                                                               </div> -->
                             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                                 <dt class="text-md font-bold text-gray-500">
                                     {{ $customer->is_paid == 1 ? 'Registration Date' : 'Created Date' }}
@@ -161,8 +160,22 @@
                                         @csrf
                                         @method('PUT')
                                         <input type="hidden" name="mobile_number" value="{{ $customer->mobile_number }}">
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
 
+                                        <div class="border-b border-gray-200 pb-3">
+                                            <div
+                                                class="md:text-xl font-semibold tracking-tight text-xl flex items-center gap-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="h-5 w-5 text-navy">
+                                                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                                    <circle cx="12" cy="7" r="4"></circle>
+                                                </svg>
+                                                Applicant Details
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 gap-x-6 gap-y-5">
                                             <div>
                                                 <label for="payment_date"
                                                     class="block text-sm font-medium text-gray-700 mb-1">Registration Date
@@ -177,27 +190,53 @@
                                             </div>
 
                                             <div>
-                                                <label for="father_name"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">Father Name <span
+                                                <label for="gender"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Gender <span
                                                         class="text-red-500">*</span></label>
-                                                <input type="text" id="father_name" name="father_name"
-                                                    value="{{ old('father_name', $customer->father_name) }}" required
-                                                    placeholder="Enter Father Name"
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                                @error('father_name')
+                                                <select id="gender" name="gender" required
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
+                                                    <option value="" disabled selected>Select gender</option>
+                                                    <option value="male"
+                                                        {{ old('gender', $customer->gender) == 'male' ? 'selected' : '' }}>
+                                                        Male
+                                                    </option>
+                                                    <option value="female"
+                                                        {{ old('gender', $customer->gender) == 'female' ? 'selected' : '' }}>
+                                                        Female
+                                                    </option>
+                                                    <option value="other"
+                                                        {{ old('gender', $customer->gender) == 'other' ? 'selected' : '' }}>
+                                                        Other
+                                                    </option>
+                                                </select>
+                                                @error('gender')
                                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                                 @enderror
                                             </div>
 
                                             <div>
-                                                <label for="mother_name"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">Mother Name <span
-                                                        class="text-red-500">*</span></label>
-                                                <input type="text" id="mother_name" name="mother_name"
-                                                    value="{{ old('mother_name', $customer->mother_name) }}" required
-                                                    placeholder="Enter Mother Name"
+                                                <label for="date_of_birth"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Date of
+                                                    Birth <span class="text-red-500">*</span></label>
+                                                <input type="date" id="date_of_birth" name="date_of_birth"
+                                                    value="{{ old('date_of_birth', $customer->date_of_birth ? $customer->date_of_birth->format('Y-m-d') : '') }}"
+                                                    required placeholder="Enter date of birth"
                                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                                @error('mother_name')
+                                                @error('date_of_birth')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            <div>
+                                                <label for="place_of_birth"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Place
+                                                    of
+                                                    Birth <span class="text-red-500">*</span></label>
+                                                <input type="text" id="place_of_birth" name="place_of_birth"
+                                                    value="{{ old('place_of_birth', $customer->place_of_birth ?? '') }}"
+                                                    required placeholder="Enter place of birth"
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                                @error('place_of_birth')
                                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                                 @enderror
                                             </div>
@@ -241,322 +280,6 @@
                                                     </option>
                                                 </select>
                                                 @error('marital_status')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            <div id="spouse_name_div">
-                                                <label for="spouse_name"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">Spouse Name <span
-                                                        class="text-red-500">*</span></label>
-                                                <input type="text" id="spouse_name" name="spouse_name"
-                                                    value="{{ old('spouse_name', $customer->spouse_name) }}" required
-                                                    placeholder="Enter Spouse Name"
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                                @error('spouse_name')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            <div>
-                                                <label for="emergency_contact_name"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact
-                                                    Name <span class="text-red-500">*</span></label>
-                                                <input type="text" id="emergency_contact_name"
-                                                    name="emergency_contact_name"
-                                                    value="{{ old('emergency_contact_name', $customer->emergency_contact_name) }}"
-                                                    required placeholder="Enter Emergency Contact Name"
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                                @error('emergency_contact_name')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-                                            <div>
-                                                <label for="emergency_contact_mobile"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact
-                                                    Mobile <span class="text-red-500">*</span></label>
-                                                <input type="tel" id="emergency_contact_mobile"
-                                                    name="emergency_contact_mobile"
-                                                    value="{{ old('emergency_contact_mobile', $customer->emergency_contact_mobile) }}"
-                                                    required maxlength="10" inputmode="numeric"
-                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                                                    placeholder="Enter Emergency Contact Mobile"
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                                @error('emergency_contact_mobile')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-                                            <div>
-                                                <label for="emergency_contact_email"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact
-                                                    Email <span class="text-red-500">*</span></label>
-                                                <input type="tel" id="emergency_contact_email"
-                                                    name="emergency_contact_email"
-                                                    value="{{ old('emergency_contact_email', $customer->emergency_contact_email) }}"
-                                                    required placeholder="Enter Emergency Contact Email"
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                                @error('emergency_contact_email')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            <div>
-                                                <label for="address"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">Address <span
-                                                        class="text-red-500">*</span></label>
-                                                <textarea id="address" name="address" required placeholder="Enter address" rows="2"
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">{{ old('address', $customer->address ?? '') }}</textarea>
-                                                @error('address')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            <div>
-                                                <label for="pin_code"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">Pincode <span
-                                                        class="text-red-500">*</span></label>
-                                                <input type="text" id="pin_code" name="pin_code"
-                                                    value="{{ old('pin_code', $customer->pin_code) }}" required
-                                                    placeholder="Enter pincode" maxlength="6" minlength="6"
-                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                                @error('pin_code')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                                <span id="pincode-error" class="text-red-500 text-sm"></span>
-                                            </div>
-
-                                            <div>
-                                                <label for="city"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">City <span
-                                                        class="text-red-500">*</span></label>
-                                                <input type="text" id="city" name="city"
-                                                    value="{{ old('city', $customer->city) }}" required
-                                                    placeholder="Enter city" readonly
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                                @error('city')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            <div>
-                                                <label for="state"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">State <span
-                                                        class="text-red-500">*</span></label>
-                                                <input type="text" id="state" name="state"
-                                                    value="{{ old('state', $customer->state) }}" required
-                                                    placeholder="Enter state" readonly
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                                @error('state')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-                                            <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                                    Is Permanent Address Same as Current Address?
-                                                    <span class="text-red-500">*</span>
-                                                </label>
-
-                                                <div class="flex items-center gap-6">
-                                                    {{-- YES --}}
-                                                    <label class="flex items-center gap-2 cursor-pointer">
-                                                        <input type="radio" name="is_address_permanent" value="1"
-                                                            id="is_address_permanent_yes"
-                                                            {{ old('is_address_permanent', $customer->is_address_permanent ?? '1') == '1' ? 'checked' : '' }}
-                                                            class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                                                        <span class="text-sm text-gray-700">Yes</span>
-                                                    </label>
-
-                                                    {{-- NO --}}
-                                                    <label class="flex items-center gap-2 cursor-pointer">
-                                                        <input type="radio" name="is_address_permanent" value="0"
-                                                            id="is_address_permanent_no"
-                                                            {{ old('is_address_permanent', $customer->is_address_permanent ?? '1') == '0' ? 'checked' : '' }}
-                                                            class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                                                        <span class="text-sm text-gray-700">No</span>
-                                                    </label>
-                                                </div>
-
-                                                @error('is_address_permanent')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-                                            <div id="permanent-address-fields"
-                                                class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-5"
-                                                style="{{ old('is_address_permanent', $customer->is_address_permanent ?? '1') == '0' ? '' : 'display:none;' }}">
-
-                                                <div>
-                                                    <label for="permanent_address"
-                                                        class="block text-sm font-medium text-gray-700 mb-1">
-                                                        Permanent Address
-                                                        <span class="text-red-500">*</span>
-                                                    </label>
-
-                                                    <textarea id="permanent_address" name="permanent_address" rows="2" placeholder="Enter permanent address"
-                                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">{{ old('permanent_address', $customer->permanent_address ?? '') }}</textarea>
-
-                                                    @error('permanent_address')
-                                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                    @enderror
-                                                </div>
-
-                                                <div>
-                                                    <label for="permanent_pin_code"
-                                                        class="block text-sm font-medium text-gray-700 mb-1">
-                                                        Permanent Pincode
-                                                        <span class="text-red-500">*</span>
-                                                    </label>
-
-                                                    <input type="text" id="permanent_pin_code"
-                                                        name="permanent_pin_code"
-                                                        value="{{ old('permanent_pin_code', $customer->permanent_pin_code ?? '') }}"
-                                                        placeholder="Enter pincode" maxlength="6" minlength="6"
-                                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-
-                                                    @error('permanent_pin_code')
-                                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                    @enderror
-
-                                                    <span id="permanent-pincode-error"
-                                                        class="text-red-500 text-sm"></span>
-                                                </div>
-
-                                                <div>
-                                                    <label for="permanent_city"
-                                                        class="block text-sm font-medium text-gray-700 mb-1">Permanent City
-                                                        <span class="text-red-500">*</span></label>
-                                                    <input type="text" id="permanent_city" name="permanent_city"
-                                                        value="{{ old('permanent_city', $customer->permanent_city) }}"
-                                                        required placeholder="Enter permanent_city" readonly
-                                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                                    @error('permanent_city')
-                                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                    @enderror
-                                                </div>
-
-                                                <div>
-                                                    <label for="permanent_state"
-                                                        class="block text-sm font-medium text-gray-700 mb-1">
-                                                        Permanent State
-                                                        <span class="text-red-500">*</span>
-                                                    </label>
-
-                                                    <input type="text" id="permanent_state" name="permanent_state"
-                                                        value="{{ old('permanent_state', $customer->permanent_state ?? '') }}"
-                                                        placeholder="Enter state" readonly
-                                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-
-                                                    @error('permanent_state')
-                                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                    @enderror
-                                                </div>
-
-                                            </div>
-
-                                            <div>
-                                                <label for="police_station_name"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">Nearest Police
-                                                    Station Name <span class="text-red-500">*</span></label>
-                                                <input type="text" id="police_station_name" name="police_station_name"
-                                                    value="{{ old('police_station_name', $customer->police_station_name) }}"
-                                                    required placeholder="Enter Police Station Name"
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                                @error('police_station_name')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            <div>
-                                                <label for="gender"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">Gender <span
-                                                        class="text-red-500">*</span></label>
-                                                <select id="gender" name="gender" required
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
-                                                    <option value="" disabled selected>Select gender</option>
-                                                    <option value="male"
-                                                        {{ old('gender', $customer->gender) == 'male' ? 'selected' : '' }}>
-                                                        Male
-                                                    </option>
-                                                    <option value="female"
-                                                        {{ old('gender', $customer->gender) == 'female' ? 'selected' : '' }}>
-                                                        Female
-                                                    </option>
-                                                    <option value="other"
-                                                        {{ old('gender', $customer->gender) == 'other' ? 'selected' : '' }}>
-                                                        Other
-                                                    </option>
-
-                                                    {{-- Add other states --}}
-                                                </select>
-                                                @error('gender')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            <div>
-                                                <label for="date_of_birth"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">Date of
-                                                    Birth <span class="text-red-500">*</span></label>
-                                                <input type="date" id="date_of_birth" name="date_of_birth"
-                                                    value="{{ old('date_of_birth', $customer->date_of_birth ? $customer->date_of_birth->format('Y-m-d') : '') }}"
-                                                    required placeholder="Enter date of birth"
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                                @error('date_of_birth')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            <div>
-                                                <label for="place_of_birth"
-                                                    class="block text-sm font-medium text-gray-700 mb-1">Place
-                                                    of
-                                                    Birth <span class="text-red-500">*</span></label>
-                                                <input type="text" id="place_of_birth" name="place_of_birth"
-                                                    value="{{ old('place_of_birth', $customer->place_of_birth ?? '') }}"
-                                                    required placeholder="Enter place of birth"
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
-                                                @error('place_of_birth')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            <div>
-                                                <label for="education_qualification"
-                                                    class="block text-sm font-medium text-gray-700 mb-1"> Education
-                                                    Qualification
-                                                    <span class="text-red-500">*</span></label>
-                                                <select id="education_qualification" name="education_qualification"
-                                                    required
-                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
-                                                    <option value="">Select Education Qualification</option>
-
-                                                    <!-- <option value="Below 10th"
-                                                                                                                                                                                                                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
-                                                                                                                                                                                                                                        Below 10th
-                                                                                                                                                                                                                                    </option> -->
-
-                                                    <option value="10th Pass And Above"
-                                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>
-                                                        10th Pass And Above
-                                                    </option>
-
-                                                    <option value="7th Pass Or Less"
-                                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('7th Pass Or Less') ? 'selected' : '' }}>
-                                                        7th Pass Or Less
-                                                    </option>
-
-                                                    <option value="Between 8th And 9th Standard"
-                                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Between 8th And 9th Standard') ? 'selected' : '' }}>
-                                                        Between 8th And 9th Standard
-                                                    </option>
-
-                                                    <option value="Graduate And Above"
-                                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Graduate And Above') ? 'selected' : '' }}>
-                                                        Graduate And Above
-                                                    </option>
-                                                </select>
-                                                @error('education_qualification')
                                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                                 @enderror
                                             </div>
@@ -609,7 +332,6 @@
                                                 @enderror
                                             </div>
 
-                                            {{-- Organisation Name --}}
                                             <div id="organisation_name_div"
                                                 class="{{ old('employment_type', $customer->employment_type) == 'Government' ? '' : 'hidden' }}">
 
@@ -630,6 +352,293 @@
                                             </div>
 
                                             <div>
+                                                <label for="education_qualification"
+                                                    class="block text-sm font-medium text-gray-700 mb-1"> Education
+                                                    Qualification
+                                                    <span class="text-red-500">*</span></label>
+                                                <select id="education_qualification" name="education_qualification"
+                                                    required
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 pr-10 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
+                                                    <option value="">Select Education Qualification</option>
+
+                                                    <!-- <option value="Below 10th"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                Below 10th
+                                                                                                                                                                                                                                                                                                                                                                                                                                            </option> -->
+
+                                                    <option value="10th Pass And Above"
+                                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>
+                                                        10th Pass And Above
+                                                    </option>
+
+                                                    <option value="7th Pass Or Less"
+                                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('7th Pass Or Less') ? 'selected' : '' }}>
+                                                        7th Pass Or Less
+                                                    </option>
+
+                                                    <option value="Between 8th And 9th Standard"
+                                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Between 8th And 9th Standard') ? 'selected' : '' }}>
+                                                        Between 8th And 9th Standard
+                                                    </option>
+
+                                                    <option value="Graduate And Above"
+                                                        {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Graduate And Above') ? 'selected' : '' }}>
+                                                        Graduate And Above
+                                                    </option>
+                                                </select>
+                                                @error('education_qualification')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="border-b border-gray-200 pb-3 pt-4">
+                                            <div
+                                                class="md:text-xl font-semibold tracking-tight text-xl flex items-center gap-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="h-5 w-5 text-navy">
+                                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                                    <circle cx="9" cy="7" r="4" />
+                                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                                </svg>
+                                                Family Details
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 gap-6">
+                                            <div>
+                                                <label for="father_name"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Father Name <span
+                                                        class="text-red-500">*</span></label>
+                                                <input type="text" id="father_name" name="father_name"
+                                                    value="{{ old('father_name', $customer->father_name) }}" required
+                                                    placeholder="Enter Father Name"
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                                @error('father_name')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            <div>
+                                                <label for="mother_name"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Mother Name <span
+                                                        class="text-red-500">*</span></label>
+                                                <input type="text" id="mother_name" name="mother_name"
+                                                    value="{{ old('mother_name', $customer->mother_name) }}" required
+                                                    placeholder="Enter Mother Name"
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                                @error('mother_name')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            <div id="spouse_name_div">
+                                                <label for="spouse_name"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Spouse Name <span
+                                                        class="text-red-500">*</span></label>
+                                                <input type="text" id="spouse_name" name="spouse_name"
+                                                    value="{{ old('spouse_name', $customer->spouse_name) }}" required
+                                                    placeholder="Enter Spouse Name"
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                                @error('spouse_name')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="border-b border-gray-200 pb-3 pt-4">
+                                            <div
+                                                class="md:text-xl font-semibold tracking-tight text-xl flex items-center gap-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="h-5 w-5 text-navy">
+                                                    <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z" />
+                                                    <circle cx="12" cy="10" r="3" />
+                                                </svg>
+                                                Address Details
+                                            </div>
+                                        </div>
+
+
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label for="address"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Address <span
+                                                        class="text-red-500">*</span></label>
+                                                <textarea id="address" name="address" required placeholder="Enter address" rows="2"
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">{{ old('address', $customer->address ?? '') }}</textarea>
+                                                @error('address')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            <div>
+                                                <label for="pin_code"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Pincode <span
+                                                        class="text-red-500">*</span></label>
+                                                <input type="text" id="pin_code" name="pin_code"
+                                                    value="{{ old('pin_code', $customer->pin_code) }}" required
+                                                    placeholder="Enter pincode" maxlength="6" minlength="6"
+                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                                @error('pin_code')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                                <span id="pincode-error" class="text-red-500 text-sm"></span>
+                                            </div>
+
+                                            <div>
+                                                <label for="city"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">City <span
+                                                        class="text-red-500">*</span></label>
+                                                <input type="text" id="city" name="city"
+                                                    value="{{ old('city', $customer->city) }}" required readonly
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                                @error('city')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            <div>
+                                                <label for="state"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">State <span
+                                                        class="text-red-500">*</span></label>
+                                                <input type="text" id="state" name="state"
+                                                    value="{{ old('state', $customer->state) }}" required readonly
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                                @error('state')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                                    Is Permanent Address Same as Current Address?
+                                                    <span class="text-red-500">*</span>
+                                                </label>
+
+                                                <div class="flex items-center gap-6">
+                                                    {{-- YES --}}
+                                                    <label class="flex items-center gap-2 cursor-pointer">
+                                                        <input type="radio" name="is_address_permanent" value="1"
+                                                            id="is_address_permanent_yes"
+                                                            {{ old('is_address_permanent', $customer->is_address_permanent ?? '1') == '1' ? 'checked' : '' }}
+                                                            class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                                        <span class="text-sm text-gray-700">Yes</span>
+                                                    </label>
+
+                                                    {{-- NO --}}
+                                                    <label class="flex items-center gap-2 cursor-pointer">
+                                                        <input type="radio" name="is_address_permanent" value="0"
+                                                            id="is_address_permanent_no"
+                                                            {{ old('is_address_permanent', $customer->is_address_permanent ?? '1') == '0' ? 'checked' : '' }}
+                                                            class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                                        <span class="text-sm text-gray-700">No</span>
+                                                    </label>
+                                                </div>
+
+                                                @error('is_address_permanent')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div id="permanent-address-fields"
+                                                class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-5"
+                                                style="{{ old('is_address_permanent', $customer->is_address_permanent ?? '1') == '0' ? '' : 'display:none;' }}">
+
+                                                <div>
+                                                    <label for="permanent_address"
+                                                        class="block text-sm font-medium text-gray-700 mb-1">
+                                                        Permanent Address
+                                                        <span class="text-red-500">*</span>
+                                                    </label>
+
+                                                    <textarea id="permanent_address" name="permanent_address" rows="2" placeholder="Enter permanent address"
+                                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">{{ old('permanent_address', $customer->permanent_address ?? '') }}</textarea>
+
+                                                    @error('permanent_address')
+                                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
+                                                <div>
+                                                    <label for="permanent_pin_code"
+                                                        class="block text-sm font-medium text-gray-700 mb-1">
+                                                        Permanent Pincode
+                                                        <span class="text-red-500">*</span>
+                                                    </label>
+
+                                                    <input type="text" id="permanent_pin_code"
+                                                        name="permanent_pin_code"
+                                                        value="{{ old('permanent_pin_code', $customer->permanent_pin_code ?? '') }}"
+                                                        placeholder="Enter pincode" maxlength="6" minlength="6"
+                                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+
+                                                    @error('permanent_pin_code')
+                                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                    @enderror
+
+                                                    <span id="permanent-pincode-error"
+                                                        class="text-red-500 text-sm"></span>
+                                                </div>
+
+                                                <div>
+                                                    <label for="permanent_city"
+                                                        class="block text-sm font-medium text-gray-700 mb-1">Permanent City
+                                                        <span class="text-red-500">*</span></label>
+                                                    <input type="text" id="permanent_city" name="permanent_city"
+                                                        value="{{ old('permanent_city', $customer->permanent_city) }}"
+                                                        required readonly
+                                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                                    @error('permanent_city')
+                                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
+                                                <div>
+                                                    <label for="permanent_state"
+                                                        class="block text-sm font-medium text-gray-700 mb-1">
+                                                        Permanent State
+                                                        <span class="text-red-500">*</span>
+                                                    </label>
+
+                                                    <input type="text" id="permanent_state" name="permanent_state"
+                                                        value="{{ old('permanent_state', $customer->permanent_state ?? '') }}"
+                                                        readonly
+                                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+
+                                                    @error('permanent_state')
+                                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label for="police_station_name"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Nearest Police
+                                                    Station Name <span class="text-red-500">*</span></label>
+                                                <input type="text" id="police_station_name" name="police_station_name"
+                                                    value="{{ old('police_station_name', $customer->police_station_name) }}"
+                                                    required placeholder="Enter Police Station Name"
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                                @error('police_station_name')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            <div>
                                                 <label for="nationality"
                                                     class="block text-sm font-medium text-gray-700 mb-1">Nationality <span
                                                         class="text-red-500">*</span></label>
@@ -641,7 +650,86 @@
                                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                                 @enderror
                                             </div>
+                                        </div>
 
+                                        <div class="border-b border-gray-200 pb-3 pt-4">
+                                            <div
+                                                class="md:text-xl font-semibold tracking-tight text-xl flex items-center gap-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="h-5 w-5 text-navy">
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <line x1="12" y1="8" x2="12" y2="12">
+                                                    </line>
+                                                    <line x1="12" y1="16" x2="12.01" y2="16">
+                                                    </line>
+                                                </svg>
+                                                Emergency Contact Details
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                                            <div>
+                                                <label for="emergency_contact_name"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact
+                                                    Name <span class="text-red-500">*</span></label>
+                                                <input type="text" id="emergency_contact_name"
+                                                    name="emergency_contact_name"
+                                                    value="{{ old('emergency_contact_name', $customer->emergency_contact_name) }}"
+                                                    required placeholder="Enter Emergency Contact Name"
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                                @error('emergency_contact_name')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            <div>
+                                                <label for="emergency_contact_mobile"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact
+                                                    Mobile <span class="text-red-500">*</span></label>
+                                                <input type="tel" id="emergency_contact_mobile"
+                                                    name="emergency_contact_mobile"
+                                                    value="{{ old('emergency_contact_mobile', $customer->emergency_contact_mobile) }}"
+                                                    required maxlength="10" inputmode="numeric"
+                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                                    placeholder="Enter Emergency Contact Mobile"
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                                @error('emergency_contact_mobile')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            <div>
+                                                <label for="emergency_contact_email"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact
+                                                    Email <span class="text-red-500">*</span></label>
+                                                <input type="email" id="emergency_contact_email"
+                                                    name="emergency_contact_email"
+                                                    value="{{ old('emergency_contact_email', $customer->emergency_contact_email) }}"
+                                                    required placeholder="Enter Emergency Contact Email"
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+                                                @error('emergency_contact_email')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="border-b border-gray-200 pb-3 pt-4">
+                                            <div
+                                                class="md:text-xl font-semibold tracking-tight text-xl flex items-center gap-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="h-5 w-5 text-navy">
+                                                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                                                    <line x1="2" y1="10" x2="22" y2="10" />
+                                                </svg>
+                                                Application Details
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
                                                 <label for="card_number"
                                                     class="block text-sm font-semibold text-gray-900">
@@ -650,7 +738,7 @@
                                                 <div class="relative group">
                                                     <input type="text" id="card_number" name="card_number"
                                                         value="{{ old('card_number', $cardNumber) }}"
-                                                        placeholder="Enter card number"
+                                                        placeholder="Enter card number" readonly
                                                         class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                                         hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                                         transition-all duration-200 placeholder-gray-400">
@@ -677,13 +765,14 @@
                                                 <div class="relative group">
                                                     <input type="text" id="payment_id" name="payment_id"
                                                         value="{{ old('payment_id', $paymentId) }}"
-                                                        placeholder="Enter payment id"
+                                                        placeholder="Enter payment id" readonly
                                                         class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                                         hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                                         transition-all duration-200 placeholder-gray-400">
                                                 </div>
                                             </div>
                                         </div>
+
 
                                         {{-- Form Buttons --}}
                                         <div class="pt-5 mt-4 border-t border-gray-200 flex justify-end gap-3">
@@ -693,6 +782,7 @@
                                         </div>
                                     </form>
                                 </div>
+                            </div>
                         @endif
                     @elseif(isset($search))
                         <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
@@ -795,6 +885,88 @@
                 }, 500);
             });
 
+            $('#permanent_pin_code').on('input', function() {
+
+                clearTimeout(debounceTimer);
+
+                let pincode = $(this).val().trim();
+
+                $('#permanent-pincode-error').text('');
+
+                if (!/^\d*$/.test(pincode)) {
+
+                    $('#permanent-pincode-error').text(
+                        'Only numbers allowed'
+                    );
+
+                    $('#permanent_city').val('');
+                    $('#permanent_state').val('');
+
+                    return;
+                }
+
+                if (pincode.length !== 6) {
+
+                    $('#permanent_city').val('');
+                    $('#permanent_state').val('');
+
+                    return;
+                }
+
+                debounceTimer = setTimeout(function() {
+
+                    $.ajax({
+                        url: "{{ route('admin.pincode.location') }}",
+                        type: "POST",
+
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            pincode: pincode
+                        },
+
+                        beforeSend: function() {
+
+                            $('#permanent_city').val('Loading...');
+                            $('#permanent_state').val('Loading...');
+
+                        },
+
+                        success: function(res) {
+
+                            if (res.status === 'success') {
+
+                                $('#permanent_city').val(res.city);
+                                $('#permanent_state').val(res.state);
+
+                                $('#permanent-pincode-error').text('');
+
+                            } else {
+
+                                $('#permanent_city').val('');
+                                $('#permanent_state').val('');
+
+                                $('#permanent-pincode-error').text(
+                                    res.message || 'Invalid pincode'
+                                );
+                            }
+                        },
+
+                        error: function(xhr) {
+
+                            $('#permanent_city').val('');
+                            $('#permanent_state').val('');
+
+                            let msg =
+                                xhr.responseJSON?.message ||
+                                'Invalid pincode';
+
+                            $('#permanent-pincode-error').text(msg);
+                        }
+                    });
+
+                }, 500);
+            });
+
         });
 
         function toggleSpouseName() {
@@ -864,36 +1036,6 @@
                 toggleOrganisation();
             });
 
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const yesRadio = document.getElementById('is_address_permanent_yes');
-            const noRadio = document.getElementById('is_address_permanent_no');
-            const permanentFields = document.getElementById('permanent-address-fields');
-            const permanentAddress = document.getElementById('permanent_address');
-            const permanentPin = document.getElementById('permanent_pin_code');
-            const permanentCity = document.getElementById('permanent_city');
-            const permanentState = document.getElementById('permanent_state');
-
-            function togglePermanentFields() {
-                if (noRadio && noRadio
-                    .checked) {
-                    permanentFields.style.display = '';
-                    permanentAddress.required = true;
-                    permanentPin.required = true;
-                    permanentCity.required = true;
-                    permanentState.required = true;
-                } else {
-                    permanentFields.style.display = 'none';
-                    permanentAddress.required = false;
-                    permanentPin.required = false;
-                    permanentCity.required = false;
-                    permanentState.required = false;
-                }
-            }
-            yesRadio.addEventListener('change', togglePermanentFields);
-            noRadio.addEventListener('change', togglePermanentFields);
-            togglePermanentFields();
         });
 
         $(document).ready(function() {
