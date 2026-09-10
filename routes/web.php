@@ -241,4 +241,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/refund', [RefundController::class, 'index'])->name('refund.index');
     Route::get('/refund/data', [RefundController::class, 'data'])
         ->name('refund.data');
+    Route::get(
+        '/refunds/{refund_id}/download',
+        [RefundController::class, 'downloadRefund']
+    )->name('refunds.download');
 });

@@ -134,7 +134,7 @@
                             Payment ID
                         </label>
 
-                        <input type="text" id="payment_id" name="payment_id" readonly
+                        <input type="text" id="payment_id" name="payment_id"
                             class="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2.5 text-sm text-gray-600 cursor-not-allowed">
                     </div>
 

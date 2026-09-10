@@ -76,7 +76,6 @@
                                     </th>
 
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
-
                                     </th>
 
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Refunded
@@ -84,6 +83,9 @@
                                     </th>
 
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Remark
+                                    </th>
+
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
                                     </th>
 
                                 </tr>
@@ -194,6 +196,12 @@
                     {
                         data: 'remark',
                         name: 'remark'
+                    },
+                    {
+                        data: 'actions',
+                        name: 'actions',
+                        orderable: false,
+                        searchable: false
                     }
                 ],
 

@@ -856,7 +856,7 @@
                                     Payment ID
                                 </label>
 
-                                <input type="text" id="payment_id" name="payment_id" readonly
+                                <input type="text" id="payment_id" name="payment_id"
                                     value="{{ old('payment_id', $paymentId) }}" placeholder="Enter payment ID"
                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm
                 py-2 px-3 mt-1 hover:border-gray-300 focus:border-blue-500

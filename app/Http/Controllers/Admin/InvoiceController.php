@@ -133,7 +133,7 @@ class InvoiceController extends Controller
 
 
                              <!-- Refund -->
-                            <!-- <button type="button"
+                             <button type="button"
                                 onclick="openRefundModal(
                                     \'' . $row->id . '\',
                                     \'' . ($row->order->payment_id ?? '') . '\',
@@ -160,7 +160,7 @@ class InvoiceController extends Controller
 
                                 </svg>
 
-                            </button> -->
+                            </button>
 
 
                             <!-- Delete -->

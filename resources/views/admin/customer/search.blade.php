@@ -362,9 +362,9 @@
                                                     <option value="">Select Education Qualification</option>
 
                                                     <!-- <option value="Below 10th"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                Below 10th
-                                                                                                                                                                                                                                                                                                                                                                                                                                            </option> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    Below 10th
+                                                                                                                                                                                                                                                                                                                                                                                                                                                </option> -->
 
                                                     <option value="10th Pass And Above"
                                                         {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>
@@ -765,7 +765,7 @@
                                                 <div class="relative group">
                                                     <input type="text" id="payment_id" name="payment_id"
                                                         value="{{ old('payment_id', $paymentId) }}"
-                                                        placeholder="Enter payment id" readonly
+                                                        placeholder="Enter payment id"
                                                         class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                                         hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                                         transition-all duration-200 placeholder-gray-400">

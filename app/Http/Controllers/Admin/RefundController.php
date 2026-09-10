@@ -15,6 +15,7 @@ use App\Models\Customer;
 use App\Models\RazorpayLog;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use Throwable;
 
@@ -26,6 +27,230 @@ class RefundController extends Controller
     {
         return view('admin.refund.index');
     }
+
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'invoice_id' => 'required|exists:invoices,id',
+    //         'payment_id' => 'required|string|max:256',
+    //         'remark' => 'required|string|max:255',
+    //     ]);
+
+    //     try {
+    //         $invoice = Invoice::with([
+    //             'order',
+    //             'customer',
+    //         ])->findOrFail($request->invoice_id);
+
+    //         if (!$invoice) {
+    //             return back()->with('error', 'Order not found for this invoice');
+    //         }
+
+    //         $paymentId = $invoice->order->payment_id;
+    //         if (!$paymentId) {
+    //             return back()->with('error', 'Payment ID not found for this order.');
+    //         }
+
+    //         if ($paymentId !== $request->payment_id) {
+    //             return back()->with('error', 'Invalid payment ID.');
+    //         }
+
+    //         $refundAmount = (float) $invoice->total_amount;
+
+
+    //         if ($refundAmount <= 0) {
+    //             return back()->with('error', 'Invalid refund amount.');
+    //         }
+
+    //         $existingRefund = Refund::where(
+    //             'invoice_id',
+    //             $invoice->id
+    //         )
+    //             ->whereIn('status', [
+    //                 'pending',
+    //                 'processed'
+    //             ])
+    //             ->first();
+
+
+    //         if ($existingRefund) {
+    //             return back()->with('error', 'Refund already exists for this invoice.');
+    //         }
+
+    //         $refundNo =
+    //             'REF-' .
+    //             now()->format('YmdHis') .
+    //             '-' .
+    //             strtoupper(Str::random(6));
+
+    //         $isCashPayment = str_starts_with(
+    //             strtolower($paymentId),
+    //             'cash_'
+    //         );
+
+    //         if ($isCashPayment) {
+    //             $refund = Refund::create([
+    //                 'customer_id' => $invoice->customer_id,
+    //                 'order_id' => $invoice->order_id,
+    //                 'invoice_id' => $invoice->id,
+    //                 'payment_id' => $paymentId,
+    //                 'refund_no' => $refundNo,
+
+    //                 'amount' => $refundAmount,
+
+    //                 // Cash refund is considered completed immediately
+    //                 'status' => 'processed',
+
+    //                 'remark' => $request->remark,
+
+    //                 'refunded_at' => now(),
+    //             ]);
+
+    //             $refundStatus = 'processed';
+    //         } else {
+
+
+    //             $api = new Api(
+    //                 config('services.razorpay.key'),
+    //                 config('services.razorpay.secret')
+    //             );
+
+    //             $payment = $api->payment->fetch($paymentId);
+
+    //             if ($payment->status !== 'captured') {
+    //                 return back()->with('error', 'Payment is not captured.');
+    //             }
+
+    //             $paidAmount = ((float) $payment->amount) / 100;
+
+    //             $alreadyRefunded = Refund::where(
+    //                 'payment_id',
+    //                 $paymentId
+    //             )
+    //                 ->whereIn('status', [
+    //                     'pending',
+    //                     'processed'
+    //                 ])
+    //                 ->sum('amount');
+
+    //             $remainingAmount =
+    //                 $paidAmount - $alreadyRefunded;
+
+
+    //             if ($refundAmount > $remainingAmount) {
+    //                 return back()->with('error', 'Refund amount exceeds refundable amount.');
+    //             }
+
+    //             $refundNo =
+    //                 'REF-' .
+    //                 now()->format('YmdHis') .
+    //                 '-' .
+    //                 strtoupper(Str::random(6));
+
+
+    //             $refund = Refund::create([
+
+    //                 'customer_id' => $invoice->customer_id,
+
+    //                 'order_id' => $invoice->order_id,
+
+    //                 'invoice_id' => $invoice->id,
+
+    //                 'payment_id' => $paymentId,
+
+    //                 'refund_no' => $refundNo,
+
+    //                 'amount' => $refundAmount,
+
+    //                 'status' => 'pending',
+
+    //                 'remark' => $request->remark,
+
+    //             ]);
+
+
+    //             $razorpayRefund = $api
+    //                 ->payment
+    //                 ->fetch($paymentId)
+    //                 ->refund([
+
+    //                     'amount' => (int) round(
+    //                         $refundAmount * 100
+    //                     ),
+
+    //                     'speed' => 'normal',
+
+    //                     'receipt' => $refundNo,
+
+    //                     'notes' => [
+
+    //                         'refund_no' => $refundNo,
+
+    //                         'invoice_id' =>
+    //                         (string) $invoice->id,
+
+    //                         'order_id' =>
+    //                         (string) $invoice->order_id,
+
+    //                     ]
+
+    //                 ]);
+
+    //             $refundStatus = $razorpayRefund->status ?? 'pending';
+
+    //             $refund->update([
+
+    //                 'refund_id' => $razorpayRefund->id ?? null,
+
+    //                 'status' => $refundStatus,
+
+    //                 'refunded_at' => ($razorpayRefund->status ?? null) === 'processed' ? now() : null,
+
+    //             ]);
+
+    //             $refundStatus = 'processed';
+    //         }
+
+    //         if ($refundStatus == 'processed') {
+    //             DB::transaction(function () use ($invoice, $paymentId) {
+    //                 $status = ApplicationStatus::where('slug', 'refunded')->first();
+
+    //                 ApplicationProgress::create([
+    //                     'customer_id' => $invoice->customer_id,
+    //                     'status_id' => $status->id,
+    //                     'status_date' => now(),
+    //                     'remark' => 'Application cancelled due to refund.',
+    //                     'remarked_by' => auth()->id(),
+    //                 ]);
+
+    //                 $invoice->delete();
+
+    //                 Customer::where('id', $invoice->customer_id)->update([
+    //                     'registration_step' => $status->step,
+    //                     'is_active' => 0,
+    //                 ]);
+
+    //                 RazorpayLog::where('payment_id', $paymentId)->update([
+    //                     'tx_status' => 'refunded',
+    //                 ]);
+    //             });
+    //         }
+
+    //         return back()->with('success', 'Refund initiated successfully.');
+    //     } catch (Throwable $e) {
+
+    //         Log::error('Refund failed', [
+    //             'invoice_id' => $request->invoice_id,
+    //             'payment_id' => $request->payment_id,
+    //             'message' => $e->getMessage(),
+    //             'file' => $e->getFile(),
+    //             'line' => $e->getLine(),
+    //             'trace' => $e->getTraceAsString(),
+    //         ]);
+
+    //         return back()->with('error', 'Refund failed.');
+    //     }
+    // }
 
     public function store(Request $request)
     {
@@ -41,9 +266,9 @@ class RefundController extends Controller
                 'customer',
             ])->findOrFail($request->invoice_id);
 
-            if (!$invoice) {
-                return back()->with('error', 'Order not found for this invoice');
-            }
+            // if (!$invoice) {
+            //     return back()->with('error', 'Order not found for this invoice');
+            // }
 
             $paymentId = $invoice->order->payment_id;
             if (!$paymentId) {
@@ -82,156 +307,51 @@ class RefundController extends Controller
                 '-' .
                 strtoupper(Str::random(6));
 
-            $isCashPayment = str_starts_with(
-                strtolower($paymentId),
-                'cash_'
-            );
-
-            if ($isCashPayment) {
-                $refund = Refund::create([
+            DB::transaction(function () use (
+                $invoice,
+                $paymentId,
+                $refundAmount,
+                $refundNo,
+                $request
+            ) {
+                Refund::create([
                     'customer_id' => $invoice->customer_id,
                     'order_id' => $invoice->order_id,
                     'invoice_id' => $invoice->id,
                     'payment_id' => $paymentId,
                     'refund_no' => $refundNo,
-
                     'amount' => $refundAmount,
-
-                    // Cash refund is considered completed immediately
                     'status' => 'processed',
-
                     'remark' => $request->remark,
-
                     'refunded_at' => now(),
                 ]);
 
-                $refundStatus = 'processed';
-            } else {
+                // $status = ApplicationStatus::where('slug', 'refunded')->first();
 
-                $api = new Api(
-                    config('services.razorpay.key'),
-                    config('services.razorpay.secret')
-                );
+                // ApplicationProgress::create([
+                //     'customer_id' => $invoice->customer_id,
+                //     'status_id' => $status->id,
+                //     'status_date' => now(),
+                //     'remark' => 'Application cancelled due to refund.',
+                //     'remarked_by' => auth()->id(),
+                // ]);
 
-                $payment = $api->payment->fetch($paymentId);
+                $invoice->delete();
 
-                if ($payment->status !== 'captured') {
-                    return back()->with('error', 'Payment is not captured.');
-                }
-
-                $paidAmount = ((float) $payment->amount) / 100;
-
-                $alreadyRefunded = Refund::where(
-                    'payment_id',
-                    $paymentId
-                )
-                    ->whereIn('status', [
-                        'pending',
-                        'processed'
-                    ])
-                    ->sum('amount');
-
-                $remainingAmount =
-                    $paidAmount - $alreadyRefunded;
-
-
-                if ($refundAmount > $remainingAmount) {
-                    return back()->with('error', 'Refund amount exceeds refundable amount.');
-                }
-
-                $refundNo =
-                    'REF-' .
-                    now()->format('YmdHis') .
-                    '-' .
-                    strtoupper(Str::random(6));
-
-
-                $refund = Refund::create([
-
-                    'customer_id' => $invoice->customer_id,
-
-                    'order_id' => $invoice->order_id,
-
-                    'invoice_id' => $invoice->id,
-
-                    'payment_id' => $paymentId,
-
-                    'refund_no' => $refundNo,
-
-                    'amount' => $refundAmount,
-
-                    'status' => 'pending',
-
-                    'remark' => $request->remark,
-
+                Customer::where('id', $invoice->customer_id)->update([
+                    // 'registration_step' => $status->step,
+                    'is_active' => 0,
                 ]);
 
-                $razorpayRefund = $api
-                    ->payment
-                    ->fetch($paymentId)
-                    ->refund([
-
-                        'amount' => (int) round(
-                            $refundAmount * 100
-                        ),
-
-                        'speed' => 'normal',
-
-                        'receipt' => $refundNo,
-
-                        'notes' => [
-
-                            'refund_no' => $refundNo,
-
-                            'invoice_id' =>
-                            (string) $invoice->id,
-
-                            'order_id' =>
-                            (string) $invoice->order_id,
-
-                        ]
-
-                    ]);
-
-                $refundStatus = $razorpayRefund->status ?? 'pending';
-
-                $refund->update([
-
-                    'refund_id' => $razorpayRefund->id ?? null,
-
-                    'status' => $refundStatus,
-
-                    'refunded_at' => ($razorpayRefund->status ?? null) === 'processed' ? now() : null,
-
+                RazorpayLog::where('payment_id', $paymentId)->update([
+                    'tx_status' => 'refunded',
                 ]);
-            }
+            });
 
-            if ($refundStatus == 'processed') {
-                DB::transaction(function () use ($invoice, $paymentId) {
-                    $status = ApplicationStatus::where('slug', 'refunded')->first();
-
-                    ApplicationProgress::create([
-                        'customer_id' => $invoice->customer_id,
-                        'status_id' => $status->id,
-                        'status_date' => now(),
-                        'remark' => 'Application cancelled due to refund.',
-                        'remarked_by' => auth()->id(),
-                    ]);
-
-                    $invoice->delete();
-
-                    Customer::where('id', $invoice->customer_id)->update([
-                        'registration_step' => $status->step,
-                        'is_active' => 0,
-                    ]);
-
-                    RazorpayLog::where('payment_id', $paymentId)->update([
-                        'tx_status' => 'refunded',
-                    ]);
-                });
-            }
-
-            return back()->with('success', 'Refund initiated successfully.');
+            return back()->with(
+                'success',
+                'Refund initiated successfully.'
+            );
         } catch (Throwable $e) {
 
             Log::error('Refund failed', [
@@ -340,6 +460,31 @@ class RefundController extends Controller
                 return $row->remark ?? '-';
             })
 
+            ->addColumn('actions', function ($row) {
+                return '
+                        <!-- Download -->
+                            <a href="' . route('admin.refunds.download', $row->id) . '"
+                                class="group inline-flex items-center justify-center h-9 w-9 rounded-lg border border-green-200 bg-green-50 text-green-600 hover:bg-green-100 hover:border-green-600 transition-all duration-200 shadow-sm"
+                                target="_blank"
+                                title="Download">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+
+                                </svg>
+                            </a>
+                    ';
+            })
+
+
             ->filterColumn('customer_name', function ($query, $keyword) {
                 $query->whereHas('customer', function ($q) use ($keyword) {
                     $q->where('full_name', 'like', "%{$keyword}%")
@@ -374,8 +519,115 @@ class RefundController extends Controller
                 $query->where('status', 'like', "%{$keyword}%");
             })
 
-            ->rawColumns(['status'])
+            ->rawColumns(['status', 'actions'])
 
             ->make(true);
+    }
+
+    public function downloadRefund($refund_id)
+    {
+        $refund = DB::table('refunds')
+            ->where('id', $refund_id)
+            ->first();
+
+        if (!$refund) {
+            abort(404, 'Refund not found');
+        }
+
+        $invoice = DB::table('invoices')
+            ->where('id', $refund->invoice_id)
+            ->first();
+
+        if (!$invoice) {
+            abort(404, 'Original invoice not found');
+        }
+
+        $customer = DB::table('customers')
+            ->where('id', $refund->customer_id)
+            ->first();
+
+        if (!$customer) {
+            abort(404, 'Customer not found');
+        }
+
+        $service = DB::table('services')
+            ->where('id', $invoice->service_id)
+            ->first();
+
+        $order = DB::table('application_orders')
+            ->where('id', $refund->order_id)
+            ->first();
+
+        $paymentLog = null;
+
+        if ($order) {
+            $paymentLog = DB::table('razorpay_logs')
+                ->where('order_id', $order->id)
+                ->latest('id')
+                ->first();
+        }
+
+        $payment_amount = $paymentLog->order_amount
+            ?? ($order->amount ?? null)
+            ?? $invoice->total_amount
+            ?? 0;
+
+        $payment_mode = $paymentLog->payment_mode
+            ?? 'Online';
+
+        $payment_id = $refund->payment_id
+            ?? ($paymentLog->reference_id ?? null)
+            ?? ($order->payment_id ?? null)
+            ?? 'N/A';
+
+        $customer_state = strtoupper($customer->state ?? '');
+
+        $is_gujarat = ($customer_state === 'GUJARAT');
+
+        $gst_rate = 18;
+
+        $net_amount = $invoice->net_amount ?? 0;
+
+        $service_charges = $service->service_charges ?? 0;
+
+        $cgst = $invoice->cgst ?? 0;
+
+        $sgst = $invoice->sgst ?? 0;
+
+        $igst = $invoice->igst ?? 0;
+
+        $refund_amount = (float) ($refund->amount ?? 0);
+
+        if ($refund_amount <= 0) {
+            abort(400, 'Invalid refund amount');
+        }
+
+        $pdf = Pdf::loadView(
+            'invoice.refund_invoice',
+            [
+                'customer'        => $customer,
+                'service'         => $service,
+                'invoice'         => $invoice,
+                'refund'          => $refund,
+                'payment_amount'  => $payment_amount,
+                'payment_mode'    => $payment_mode,
+                'payment_id'      => $payment_id,
+                'net_amount'      => $net_amount,
+                'service_charges' => $service_charges,
+                'cgst'            => $cgst,
+                'sgst'            => $sgst,
+                'igst'            => $igst,
+                'refund_amount'   => $refund_amount,
+                'grand_total'     => $refund_amount,
+                'is_gujarat'      => $is_gujarat,
+                'gst_rate'        => $gst_rate,
+            ]
+        );
+
+        $fileName = 'Refund_'
+            . ($refund->refund_no ?? $refund->id)
+            . '.pdf';
+
+        return $pdf->download($fileName);
     }
 }
