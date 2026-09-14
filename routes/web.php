@@ -77,6 +77,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/leads-data', [LeadController::class, 'data'])->name('leads.data');
     Route::get('/customers/today', [CustomerController::class, 'today'])->name('customers.today');
     Route::get('/customers/today/data', [CustomerController::class, 'todayData'])->name('customers.today.data');
+    Route::get('/customers/pov-success-15d', [CustomerController::class, 'povSuccess15d'])->name('customers.pov-success-15d');
+    Route::get('/customers/pov-success-15d/data', [CustomerController::class, 'povSuccess15dData'])->name('customers.pov-success-15d.data');
     Route::resource('customers', CustomerController::class);
     Route::get('/customers-data', [CustomerController::class, 'data'])->name('customers.data');
     Route::put('/customers/{customer}/convert', [CustomerController::class, 'convertToCustomer'])->name('customers.convert');

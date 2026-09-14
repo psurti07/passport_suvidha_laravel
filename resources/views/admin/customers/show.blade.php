@@ -1275,7 +1275,7 @@
                                         </p>
                                     @enderror
                                 </div>
-                                <div>
+                                {{-- <div>
                                     <label for="status_date" class="block text-sm font-medium text-gray-700 mb-1">Status
                                         Date <span class="text-red-500">*</span></label>
                                     <input type="date" id="status_date" name="status_date" required
@@ -1287,6 +1287,33 @@
                                             <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd"
                                                     d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                </div> --}}
+
+                                <div>
+                                    <label for="status_date" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Status Date & Time <span class="text-red-500">*</span>
+                                    </label>
+
+                                    <input type="datetime-local" id="status_date" name="status_date" step="1"
+                                        required value="{{ old('status_date', now()->format('Y-m-d\TH:i:s')) }}"
+                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3
+                                            hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200
+                                            focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm
+                                            @error('status_date')
+                                                border-red-300 text-red-900 placeholder-red-300
+                                                focus:border-red-500 focus:ring-red-500
+                                            @enderror">
+
+                                    @error('status_date')
+                                        <p class="mt-1 text-sm text-red-600 flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0V6a1 1 0 011-1 1 1 0 011 1v4a1 1 0 01-2 0V6z"
                                                     clip-rule="evenodd" />
                                             </svg>
                                             {{ $message }}

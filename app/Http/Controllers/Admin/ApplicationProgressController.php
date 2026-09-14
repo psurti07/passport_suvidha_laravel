@@ -56,7 +56,7 @@ class ApplicationProgressController extends Controller
         $rules = [
             'customer_id' => 'required|exists:customers,id',
             'status_id' => 'required|exists:application_statuses,id',
-            'status_date' => 'required|date',
+            'status_date' => 'required|date_format:Y-m-d\TH:i:s',
             'remark' => 'required|string',
             'redirect' => 'nullable|string',
         ];
@@ -90,6 +90,9 @@ class ApplicationProgressController extends Controller
         }
 
         $data = $request->all();
+
+        $data['status_date'] = \Carbon\Carbon::parse($request->status_date)->format('Y-m-d H:i:s');
+
         $data['remarked_by'] = Auth::id();
 
         if ($request->hasFile('file')) {
