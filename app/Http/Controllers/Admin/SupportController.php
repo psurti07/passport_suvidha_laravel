@@ -59,11 +59,11 @@ class SupportController extends Controller
 
             ->editColumn('status', function ($row) {
                 if ($row->status == 'open') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Open</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">Open</span>';
                 } elseif ($row->status == 'in_progress') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">In Progress</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-yellow-100 text-yellow-800">In Progress</span>';
                 } else {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Closed</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-red-100 text-red-800">Closed</span>';
                 }
             })
 

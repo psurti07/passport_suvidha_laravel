@@ -159,7 +159,7 @@ class ApplicationStatusController extends Controller
                 $status = $row->status->status_name ?? 'N/A';
                 $color = $row->status->colorclass ?? 'gray';
 
-                return '<span class="px-2 py-1 text-xs rounded bg-' . $color . '-100 text-' . $color . '-800">'
+                return '<span class="px-3 py-1 font-bold text-xs rounded bg-' . $color . '-100 text-' . $color . '-800">'
                     . $status .
                     '</span>';
             })

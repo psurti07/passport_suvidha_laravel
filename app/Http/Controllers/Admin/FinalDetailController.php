@@ -77,9 +77,9 @@ class FinalDetailController extends Controller
 
             ->editColumn('is_approved', function ($row) {
                 if ($row->is_approved == '1') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Approved</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">Approved</span>';
                 } else {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Pending</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-yellow-100 text-yellow-800">Pending</span>';
                 }
             })
 

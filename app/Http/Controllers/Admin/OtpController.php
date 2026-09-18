@@ -48,9 +48,9 @@ class OtpController extends Controller
 
             ->editColumn('is_verified', function ($row) {
                 if ($row->is_verified == '1') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Verified</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">Verified</span>';
                 } else {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Pending</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-yellow-100 text-yellow-800">Pending</span>';
                 }
             })
 

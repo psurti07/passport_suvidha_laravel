@@ -73,9 +73,9 @@ class StarOfferController extends Controller
 
             ->editColumn('is_customer', function ($row) {
                 if ($row->is_customer == '1') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Customer</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">Customer</span>';
                 } else {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Lead</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-red-100 text-red-800">Lead</span>';
                 }
             })
 

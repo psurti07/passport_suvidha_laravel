@@ -183,7 +183,7 @@
                         data: 'remark',
                         name: 'remark',
                         render: function(data) {
-                            return `<div class="whitespace-normal break-words" style="max-width:450px;">
+                            return `<div class="w-[350px] min-w-[350px] max-w-[400px] whitespace-normal break-words">
                                 ${data ?? '-'}
                             </div>`;
                         }

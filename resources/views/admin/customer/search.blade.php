@@ -119,12 +119,12 @@
                                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                     @if ($customer->is_paid == 1)
                                         <span
-                                            class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            class="px-3 py-1 font-bold inline-flex text-xs leading-5 rounded bg-green-100 text-green-800">
                                             Registered Customer
                                         </span>
                                     @else
                                         <span
-                                            class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                            class="px-3 py-1 font-bold inline-flex text-xs leading-5 rounded bg-yellow-100 text-yellow-800">
                                             Lead
                                         </span>
                                     @endif
@@ -362,9 +362,9 @@
                                                     <option value="">Select Education Qualification</option>
 
                                                     <!-- <option value="Below 10th"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    Below 10th
-                                                                                                                                                                                                                                                                                                                                                                                                                                                </option> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                            Below 10th
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        </option> -->
 
                                                     <option value="10th Pass And Above"
                                                         {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>

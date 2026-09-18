@@ -63,7 +63,7 @@ class LeadController extends Controller
 
             ->editColumn('is_paid', function ($row) {
                 if ($row->is_paid == '0') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Lead</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-yellow-100 text-yellow-800">Lead</span>';
                 }
             })
 
@@ -137,7 +137,7 @@ class LeadController extends Controller
 
             ->editColumn('is_paid', function ($row) {
                 if ($row->is_paid == '0') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Lead</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-yellow-100 text-yellow-800">Lead</span>';
                 }
             })
 

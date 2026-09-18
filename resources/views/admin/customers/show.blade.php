@@ -1452,7 +1452,7 @@
                                             @endphp
 
                                             <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-{{ $color }}-100 text-{{ $color }}-800">
+                                                class="inline-flex items-center px-3 py-1 font-bold rounded text-xs bg-{{ $color }}-100 text-{{ $color }}-800">
                                                 {{ str_replace('_', ' ', ucfirst($progress->status->status_name ?? 'N/A')) }}
                                             </span>
                                         </td>
@@ -1536,7 +1536,7 @@
 
                         @if ($passportAccount && $passportAccount->is_email)
                             <span
-                                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                class="inline-flex items-center px-4 py-2 font-bold rounded text-xs bg-green-100 text-green-700">
                                 <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7" />

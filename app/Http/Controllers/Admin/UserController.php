@@ -69,9 +69,9 @@ class UserController extends Controller
 
             ->editColumn('is_active', function ($row) {
                 if ($row->is_active == '1') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Active</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">Active</span>';
                 } else {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Inactive</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-red-100 text-red-800">Inactive</span>';
                 }
             })
 

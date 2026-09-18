@@ -44,9 +44,9 @@ class DocumentTypeController extends Controller
 
             ->editColumn('is_mandatory', function ($row) {
                 if ($row->is_mandatory == '1') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Mandatory</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">Mandatory</span>';
                 } else {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Optional</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-yellow-100 text-yellow-800">Optional</span>';
                 }
             })
 

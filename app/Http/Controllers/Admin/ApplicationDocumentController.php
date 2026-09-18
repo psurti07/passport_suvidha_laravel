@@ -67,7 +67,7 @@ class ApplicationDocumentController extends Controller
 
             ->editColumn('is_verified', function ($row) {
                 if ($row->is_verified == '0') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Unverified</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-red-100 text-red-800">Unverified</span>';
                 }
             })
 

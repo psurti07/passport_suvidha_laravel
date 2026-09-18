@@ -71,7 +71,7 @@ class CustomerController extends Controller
 
             ->editColumn('is_paid', function ($row) {
                 if ($row->is_paid == '1') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Paid</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">Paid</span>';
                 }
             })
 
@@ -88,7 +88,7 @@ class CustomerController extends Controller
 
                 $color = getStatusColor($status->colorclass ?? 'gray');
 
-                return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ' .
+                return '<span class="inline-flex items-center px-3 py-1 font-bold rounded text-xs ' .
                     $color['tailwind'] .
                     '">' . e($status->status_name) . '</span>';
             })
@@ -157,7 +157,7 @@ class CustomerController extends Controller
 
             ->editColumn('is_paid', function ($row) {
                 if ($row->is_paid == '1') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Paid</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">Paid</span>';
                 }
             })
 
@@ -781,7 +781,7 @@ class CustomerController extends Controller
             })
 
             ->editColumn('is_paid', function ($row) {
-                return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">
+                return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">
                         Paid
                     </span>';
             })

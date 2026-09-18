@@ -68,27 +68,27 @@ class ScheduleSlotController extends Controller
 
             ->editColumn('language', function ($row) {
                 if ($row->language == '1') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800">Hindi</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-blue-100 text-blue-800">Hindi</span>';
                 } else if ($row->language == '2') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">English</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">English</span>';
                 } else if ($row->language == '3') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Gujarati</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-red-100 text-red-800">Gujarati</span>';
                 } else {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-800">Unknown</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-gray-100 text-gray-800">Unknown</span>';
                 }
             })
 
             ->editColumn('status', function ($row) {
                 if ($row->status == '1') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800">Scheduled</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-blue-100 text-blue-800">Scheduled</span>';
                 } else if ($row->status == '2') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">Completed</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">Completed</span>';
                 } else if ($row->status == '3') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800">Cancelled</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-red-100 text-red-800">Cancelled</span>';
                 } else if ($row->status == '4') {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800">Not Reachable</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-yellow-100 text-yellow-800">Not Reachable</span>';
                 } else {
-                    return '<span class="inline-flex px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-800">Unknown</span>';
+                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-gray-100 text-gray-800">Unknown</span>';
                 }
             })
 

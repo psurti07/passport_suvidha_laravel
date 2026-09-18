@@ -430,17 +430,17 @@ class RefundController extends Controller
                 $status = strtolower($row->status);
 
                 if ($status === 'processed') {
-                    return '<span class="px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded">Processed</span>';
+                    return '<span class="px-3 py-1 font-bold text-xs bg-green-100 text-green-800 rounded">Processed</span>';
                 }
 
                 if ($status === 'pending') {
-                    return '<span class="px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded">
+                    return '<span class="px-3 py-1 font-bold text-xs bg-yellow-100 text-yellow-800 rounded">
                             Pending
                         </span>';
                 }
 
                 if ($status === 'failed') {
-                    return '<span class="px-2 py-0.5 text-xs bg-red-100 text-red-800 rounded">
+                    return '<span class="px-3 py-1 font-bold text-xs bg-red-100 text-red-800 rounded">
                             Failed
                         </span>';
                 }
