@@ -13,6 +13,8 @@ use App\Models\AppointmentLetter;
 use App\Models\ApplicationStatus;
 use App\Services\SmsService;
 use App\Services\BrevoMailService;
+use App\Services\InteraktService;
+use App\Services\SecureDocumentService;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ApplicationProgressController extends Controller
@@ -418,5 +420,103 @@ class ApplicationProgressController extends Controller
             ->get();
 
         return view('admin.application-progress.history', compact('customer', 'history'));
+    }
+
+    public function sendWhatsApp(
+        ApplicationProgress $progress,
+        InteraktService $interaktService,
+        SecureDocumentService $secureDocumentService
+    ) {
+        $customer = $progress->customer;
+
+        if (!$customer) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Customer not found.',
+            ], 404);
+        }
+
+        if (empty($customer->mobile_number)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Customer mobile number not found.',
+            ], 422);
+        }
+
+        $statusSlug = $progress->status->slug ?? null;
+
+        if ($statusSlug === 'details_verification') {
+
+            $finalDetail = FinalDetail::where(
+                'customer_id',
+                $customer->id
+            )
+                ->latest('id')
+                ->first();
+
+            if (!$finalDetail) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Final details document not found.',
+                ], 404);
+            }
+
+            $documentUrl = $secureDocumentService->generateUrl(
+                'final_details',
+                $finalDetail->id
+            );
+
+            $response = $interaktService->sendDocument(
+                $customer->mobile_number,
+                $customer->full_name ?: 'Customer',
+                $documentUrl,
+                'details_verification'
+            );
+        } elseif (in_array($statusSlug, [
+            'appointment_scheduled',
+            'appointment_rescheduled1',
+            'appointment_rescheduled2',
+            'appointment_rescheduled3',
+        ], true)) {
+
+            $appointmentLetter = AppointmentLetter::where(
+                'customer_id',
+                $customer->id
+            )
+                ->latest('id')
+                ->first();
+
+            if (!$appointmentLetter) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Appointment letter not found.',
+                ], 404);
+            }
+
+            $documentUrl = $secureDocumentService->generateUrl(
+                'appointment_letters',
+                $appointmentLetter->id
+            );
+
+            $response = $interaktService->sendDocument(
+                $customer->mobile_number,
+                $customer->full_name ?: 'Customer',
+                $documentUrl,
+                'appointment'
+            );
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'WhatsApp is not available for this status.',
+            ], 422);
+        }
+
+        return response()->json([
+            'status' => $response['status'] ?? false,
+
+            'message' => ($response['status'] ?? false)
+                ? 'WhatsApp message sent successfully.'
+                : ($response['message'] ?? 'WhatsApp message failed.'),
+        ]);
     }
 }

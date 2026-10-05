@@ -34,6 +34,7 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\RefundController;
 use App\Http\Controllers\Admin\PassportAccountController;
 use App\Http\Controllers\Admin\TodayProcessStepController;
+use App\Http\Controllers\Admin\WhatsAppMessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,8 +78,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/leads-data', [LeadController::class, 'data'])->name('leads.data');
     Route::get('/customers/today', [CustomerController::class, 'today'])->name('customers.today');
     Route::get('/customers/today/data', [CustomerController::class, 'todayData'])->name('customers.today.data');
-    Route::get('/customers/pov-success-15d', [CustomerController::class, 'povSuccess15d'])->name('customers.pov-success-15d');
-    Route::get('/customers/pov-success-15d/data', [CustomerController::class, 'povSuccess15dData'])->name('customers.pov-success-15d.data');
+    Route::get('/customers/pov-success-20d', [CustomerController::class, 'povSuccess20d'])->name('customers.pov-success-20d');
+    Route::get('/customers/pov-success-20d/data', [CustomerController::class, 'povSuccess20dData'])->name('customers.pov-success-20d.data');
     Route::resource('customers', CustomerController::class);
     Route::get('/customers-data', [CustomerController::class, 'data'])->name('customers.data');
     Route::put('/customers/{customer}/convert', [CustomerController::class, 'convertToCustomer'])->name('customers.convert');
@@ -88,6 +89,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Application Progress Routes
     Route::get('customers/{customer}/application-progress', [ApplicationProgressController::class, 'customerHistory'])->name('application-progress.customer-history');
     Route::resource('application-progress', ApplicationProgressController::class);
+    Route::post('/application-progress/{progress}/send-whatsapp', [ApplicationProgressController::class, 'sendWhatsApp'])->name('admin.application-progress.send-whatsapp');
+    Route::post('/applications/{progressId}/whatsapp/document', [WhatsAppMessageController::class, 'sendDocument'])->name('applications.whatsapp.document');
 
     // Application Documents Routes
     Route::resource('application-documents', ApplicationDocumentController::class);

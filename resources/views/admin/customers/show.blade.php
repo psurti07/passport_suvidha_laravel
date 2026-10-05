@@ -152,8 +152,8 @@
                         @method('PUT')
 
                         {{-- =========================================================
-        APPLICANT DETAILS
-    ========================================================== --}}
+                                APPLICANT DETAILS
+                            ========================================================== --}}
                         <div>
                             <div class="mb-5 border-b border-gray-200 pb-3">
                                 <h2 class="text-lg font-semibold text-gray-800">
@@ -1137,6 +1137,7 @@
                             filteredMessages: [],
                             remarks: '{{ old('remark ') }}',
                             isInitialLoad: true,
+                            sendingWhatsApp: false,
 
                             init() {
                                 if (this.selectedStatus) {
@@ -1155,6 +1156,10 @@
                             getSelectedStatusSlug() {
                                 const found = this.statuses.find(s => s.id == this.selectedStatus);
                                 return found ? found.slug : null;
+                            },
+
+                            get selectedStatusSlug() {
+                                return this.getSelectedStatusSlug();
                             },
 
                             updateMessages(reset = true) {
@@ -1481,28 +1486,57 @@
                                             {{ $progress->remarkedByUser ? $progress->remarkedByUser->name . ' (' . ucfirst($progress->remarkedByUser->role) . ')' : 'System' }}
                                         </td>
                                         <td class="px-6 py-4 text-right">
-                                            @if (auth()->user()->role === 'admin' || auth()->user()->id === $progress->remarked_by)
-                                                <form
-                                                    action="{{ route('admin.application-progress.destroy', $progress->id) }}"
-                                                    method="POST" class="inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <input type="hidden" name="redirect"
-                                                        value="{{ route('admin.customers.show', $customer->id) }}#application-process">
+                                            <div class="inline-flex items-center gap-2">
+                                                {{-- SEND WHATSAPP --}}
+                                                @php
+                                                    $whatsappStatuses = [
+                                                        'details_verification',
+                                                        'appointment_scheduled',
+                                                        // 'appointment_rescheduled1',
+                                                        // 'appointment_rescheduled2',
+                                                        // 'appointment_rescheduled3',
+                                                    ];
+                                                    $statusSlug = $progress->status->slug ?? null;
+                                                    $hasWhatsappDocument = $progress->relatedFile !== null;
+                                                @endphp
+
+                                                @if (in_array($statusSlug, $whatsappStatuses, true) && $hasWhatsappDocument)
                                                     <button type="button"
-                                                        onclick="confirmDelete('{{ str_replace('_', ' ', ucfirst($progress->status->status_name ?? 'N/A')) }} Remark', this.form)"
-                                                        class="group inline-flex items-center justify-center h-9 w-9 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:border-red-600 transition-all duration-200 shadow-sm"
-                                                        title="Delete">
+                                                        onclick="sendWhatsAppDocument({{ $progress->id }}, this)"
+                                                        class="group inline-flex items-center justify-center h-9 w-9 rounded-lg border border-green-200 bg-green-50 text-green-600 hover:bg-green-100 hover:border-green-600 transition-all duration-200 shadow-sm"
+                                                        title="Send WhatsApp">
+                                                        {{-- WhatsApp icon --}}
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                            </path>
+                                                            viewBox="0 0 24 24" fill="currentColor">
+                                                            <path
+                                                                d="M20.52 3.48A11.86 11.86 0 0012.04 0C5.48 0 .13 5.35.13 11.91c0 2.1.55 4.15 1.6 5.96L0 24l6.28-1.65a11.9 11.9 0 005.75 1.47h.01c6.56 0 11.91-5.35 11.91-11.91 0-3.18-1.24-6.17-3.43-8.43zM12.04 21.8h-.01a9.87 9.87 0 01-5.03-1.37l-.36-.21-3.73.98.99-3.64-.23-.37a9.88 9.88 0 01-1.52-5.28C2.15 6.47 6.6 2.02 12.05 2.02c2.64 0 5.12 1.03 6.98 2.89a9.84 9.84 0 012.89 7c0 5.45-4.45 9.89-9.88 9.89zm5.42-7.41c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.08 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z" />
                                                         </svg>
                                                     </button>
-                                                </form>
-                                            @endif
+                                                @endif
+
+                                                @if (auth()->user()->role === 'admin' || auth()->user()->id === $progress->remarked_by)
+                                                    <form
+                                                        action="{{ route('admin.application-progress.destroy', $progress->id) }}"
+                                                        method="POST" class="inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <input type="hidden" name="redirect"
+                                                            value="{{ route('admin.customers.show', $customer->id) }}#application-process">
+                                                        <button type="button"
+                                                            onclick="confirmDelete('{{ str_replace('_', ' ', ucfirst($progress->status->status_name ?? 'N/A')) }} Remark', this.form)"
+                                                            class="group inline-flex items-center justify-center h-9 w-9 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:border-red-600 transition-all duration-200 shadow-sm"
+                                                            title="Delete">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                                </path>
+                                                            </svg>
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty
@@ -2084,6 +2118,88 @@
             });
 
         });
+        async function sendWhatsAppDocument(progressId, button) {
+            if (!progressId) {
+                alert('Application progress not found.');
+                return;
+            }
+
+            if (button.disabled) {
+                return;
+            }
+
+            const result = await confirmWhatsAppSend();
+            if (!result.isConfirmed) {
+                return;
+            }
+            const originalHtml = button.innerHTML;
+
+            try {
+                button.disabled = true;
+                button.classList.add('opacity-50', 'cursor-not-allowed');
+
+                button.innerHTML = `
+            <svg class="animate-spin h-5 w-5"
+                 xmlns="http://www.w3.org/2000/svg"
+                 fill="none"
+                 viewBox="0 0 24 24">
+                <circle class="opacity-25"
+                        cx="12" cy="12" r="10"
+                        stroke="currentColor"
+                        stroke-width="4">
+                </circle>
+                <path class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0
+                         C5.373 0 0 5.373 0 12h4z">
+                </path>
+            </svg>
+        `;
+
+                const response = await fetch(
+                    `/admin/application-progress/${progressId}/send-whatsapp`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document
+                                .querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content'),
+                            'Accept': 'application/json',
+                        },
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message || 'Failed to send WhatsApp message.'
+                    );
+                }
+
+                // if (data.status) {
+                //     alert(data.message || 'WhatsApp message sent successfully.');
+                // } else {
+                //     alert(data.message || 'Failed to send WhatsApp message.');
+                // }
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to send WhatsApp message.');
+                }
+                if (data.status) {
+                    showToast(data.message || 'WhatsApp message sent successfully.', 'success');
+                } else {
+                    showToast(data.message || 'Failed to send WhatsApp message.', 'error');
+                }
+
+            } catch (error) {
+                console.error('WhatsApp Error:', error);
+                alert(error.message || 'Failed to send WhatsApp message.');
+            } finally {
+                button.disabled = false;
+                button.classList.remove('opacity-50', 'cursor-not-allowed');
+                button.innerHTML = originalHtml;
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
             const yesRadio = document.getElementById('is_address_permanent_yes');

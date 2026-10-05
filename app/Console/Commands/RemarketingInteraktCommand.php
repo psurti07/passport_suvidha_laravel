@@ -45,7 +45,7 @@ class RemarketingInteraktCommand extends Command
 
         $cronjobs = [
             '0' => ['23:30', '09:30'],
-            '1' => ['09:00'],
+            '1' => ['09:00', '20:00'],
             '2' => ['22:30', '11:30'],
             '3' => ['21:30', '12:30'],
             '4' => ['20:30'],
@@ -59,6 +59,8 @@ class RemarketingInteraktCommand extends Command
             '16' => ['16:00'],
             '17' => ['10:30'],
             '20' => ['15:00'],
+            '25' => ['19:00'],
+            '30' => ['10:00'],
         ];
 
         $scheduleDay = null;

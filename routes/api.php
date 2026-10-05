@@ -68,7 +68,7 @@ Route::middleware('auth:customer')->group(function () { // Add routes requiring 
         Route::post('/verify', [FinalDetailController::class, 'verifyApplication'])->name('api.application-review.verify');
     });
 
-    Route::get('/application-progress/status', [ApplicationProgressController::class, 'getApplicationProgress']);
+
 
     Route::prefix('appointment-letters')->group(function () {
         Route::get('/', [AppointmentLetterController::class, 'listUserLetters'])->name('api.appointment-letters.list');
@@ -94,6 +94,10 @@ Route::middleware('auth:sanctum')->get(
     '/application-progress',
     [ApplicationProgressController::class, 'getCustomerApplicationStatus']
 );
+
+Route::get('/application-progress/status', [ApplicationProgressController::class, 'getApplicationProgress']);
+
+Route::get('/application-progress/file/{encryptedId}', [ApplicationProgressController::class, 'file'])->where('encryptedId', '.+');
 
 Route::post('/public/support/tickets', [SupportTicketController::class, 'storePublic']);
 Route::get('/services/passport', [ServiceController::class, 'passportServices']);

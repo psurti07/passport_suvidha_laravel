@@ -54,6 +54,10 @@ class ApplicationStatusSeeder extends Seeder
             ['status_name' => 'POV Insufficient Documents', 'slug' => 'pov_insufficient_documents', 'priority_no' => 19, 'colorclass' => 'pink', 'step' => 25],
 
             ['status_name' => 'Not Intersted', 'slug' => 'not_intersted', 'priority_no' => 20, 'colorclass' => 'red', 'step' => 26],
+
+            ['status_name' => 'Passport Received', 'slug' => 'passport_received', 'priority_no' => 21, 'colorclass' => 'green', 'step' => 27],
+
+            ['status_name' => 'Passport Not Received', 'slug' => 'passport_not_received', 'priority_no' => 22, 'colorclass' => 'red', 'step' => 28],
         ];
 
         foreach ($statuses as $status) {

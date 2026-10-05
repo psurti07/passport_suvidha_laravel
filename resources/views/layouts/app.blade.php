@@ -750,11 +750,11 @@ scrollToActive()" x-cloak>
                         </a>
 
 
-                        <!-- POV Success 15 Days Old -->
-                        <a href="{{ route('admin.customers.pov-success-15d') }}"
+                        <!-- POV Success 20 Days Old -->
+                        <a href="{{ route('admin.customers.pov-success-20d') }}"
                             class="nav-link flex items-center px-4 py-2.5 rounded-lg mb-1
-    {{ request()->routeIs('admin.customers.pov-success-15d') ? 'active' : '' }}"
-                            x-bind:title="sidebarCollapsed ? 'POV Success 15 Days Old' : ''">
+    {{ request()->routeIs('admin.customers.pov-success-20d') ? 'active' : '' }}"
+                            x-bind:title="sidebarCollapsed ? 'POV Success 20 Days Old' : ''">
 
                             <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -767,7 +767,7 @@ scrollToActive()" x-cloak>
                             </svg>
 
                             <span class="nav-link-text font-semibold text-lg">
-                                POV Success 15 Days Old
+                                POV Success 20 Days Old
                             </span>
 
                         </a>

@@ -716,17 +716,24 @@ class CustomerController extends Controller
             ->withFragment('actions');
     }
 
-    public function povSuccess15d()
+    public function povSuccess20d()
     {
         $services = Service::select('id', 'service_name')
             ->orderBy('service_name')
             ->get();
 
-        return view('admin.customers.povSuccess15d', compact('services'));
+        return view('admin.customers.povSuccess20d', compact('services'));
     }
-    public function povSuccess15dData(Request $request)
+    public function povSuccess20dData(Request $request)
     {
-        $povSuccess15dDate = now()->subDays(15)->toDateString();
+        $fromDate = $request->filled('from_date')
+            ? \Carbon\Carbon::parse($request->from_date)->startOfDay()
+            : now()->startOfDay();
+
+        $toDate = $request->filled('to_date')
+            ? \Carbon\Carbon::parse($request->to_date)->endOfDay()
+            : now()->endOfDay();
+
 
         $query = Customer::select([
             'customers.id',
@@ -739,24 +746,68 @@ class CustomerController extends Controller
         ])
             ->addSelect([
                 'success_date' => ApplicationProgress::select('status_date')
-                    ->whereColumn('application_progress.customer_id', 'customers.id')
-                    ->whereHas('status', function ($statusQuery) {
-                        $statusQuery->where('slug', 'pov_success');
+                    ->whereColumn(
+                        'application_progress.customer_id',
+                        'customers.id'
+                    )
+                    ->where('id', function ($subQuery) {
+
+                        $subQuery->select('latest_progress.id')
+                            ->from('application_progress as latest_progress')
+                            ->whereColumn(
+                                'latest_progress.customer_id',
+                                'application_progress.customer_id'
+                            )
+                            ->whereNull('latest_progress.deleted_at')
+                            ->orderByDesc('latest_progress.id')
+                            ->limit(1);
                     })
-                    ->whereDate('status_date', $povSuccess15dDate)
-                    ->orderByDesc('status_date')
-                    ->limit(1)
+                    ->limit(1),
             ])
             ->where('customers.is_paid', 1)
-            ->whereHas('applicationProgress', function ($q) use ($povSuccess15dDate) {
-                $q->whereHas('status', function ($statusQuery) {
-                    $statusQuery->where('slug', 'pov_success');
-                })
-                    ->whereDate('status_date', $povSuccess15dDate);
+            ->whereHas('applicationProgress', function ($q) use (
+                $fromDate,
+                $toDate
+            ) {
+                $q->where(
+                    'application_progress.id',
+                    function ($subQuery) {
+
+                        $subQuery->select('latest_progress.id')
+                            ->from('application_progress as latest_progress')
+                            ->whereColumn(
+                                'latest_progress.customer_id',
+                                'application_progress.customer_id'
+                            )
+                            ->whereNull('latest_progress.deleted_at')
+                            ->orderByDesc('latest_progress.id')
+                            ->limit(1);
+                    }
+                )
+                    ->whereHas('status', function ($statusQuery) {
+
+                        $statusQuery->where(
+                            'slug',
+                            'pov_success'
+                        );
+                    })
+                    ->whereBetween(
+                        \DB::raw(
+                            'DATE_ADD(application_progress.status_date, INTERVAL 20 DAY)'
+                        ),
+                        [
+                            $fromDate,
+                            $toDate,
+                        ]
+                    );
             });
 
-        if ($request->service) {
-            $query->where('customers.service_id', $request->service);
+        if ($request->filled('service')) {
+
+            $query->where(
+                'customers.service_id',
+                $request->service
+            );
         }
 
         return DataTables::of($query)
@@ -764,55 +815,87 @@ class CustomerController extends Controller
             ->addIndexColumn()
 
             ->addColumn('service_name', function ($row) {
+
                 if (!$row->service) {
                     return '-';
                 }
 
-                $isTatkal = str_starts_with($row->service->service_code, 'TP');
+                $isTatkal = str_starts_with(
+                    $row->service->service_code,
+                    'TP'
+                );
 
                 return '<span>'
                     . ($isTatkal ? '🔴 ' : '🟢 ')
-                    . $row->service->service_name
+                    . e($row->service->service_name)
                     . '</span>';
             })
 
             ->addColumn('customer_name', function ($row) {
-                return Str::title(strtolower($row->full_name));
+
+                return Str::title(
+                    strtolower($row->full_name)
+                );
             })
 
+
             ->editColumn('is_paid', function ($row) {
-                return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">
-                        Paid
-                    </span>';
+
+                return '
+                <span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">
+                    Paid
+                </span>
+            ';
             })
 
             ->editColumn('payment_date', function ($row) {
+
                 return $row->payment_date
                     ? $row->payment_date->format('d M Y, h:i A')
                     : '-';
             })
 
             ->editColumn('success_date', function ($row) {
+
                 return $row->success_date
-                    ? \Carbon\Carbon::parse($row->success_date)->format('d M Y, h:i A')
+                    ? \Carbon\Carbon::parse(
+                        $row->success_date
+                    )->format('d M Y, h:i A')
                     : '-';
             })
 
             ->addColumn('actions', function ($row) {
+
                 return '
-                    <a href="' . route('admin.customers.show', $row->id) . '" 
-                        class="group inline-flex items-center justify-center h-8 w-8 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 hover:border-blue-600 transition-all duration-200 shadow-sm" 
-                        title="View">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                    </a>    
-                ';
+                <a href="' . route(
+                    'admin.customers.show',
+                    $row->id
+                ) . '"
+                    class="group inline-flex items-center justify-center h-8 w-8 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 hover:border-blue-600 transition-all duration-200 shadow-sm"
+                    title="View">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7z" />
+
+                    </svg>
+
+                </a>
+            ';
             })
 
             ->rawColumns([

@@ -56,6 +56,14 @@ class InitSiteOptions extends Command
             'interakt-template-name',
             'interakt-media-url',
 
+            'interakt-appointment-key',
+            'interakt-appointment-template-name',
+            'interakt-appointment-media-url',
+
+            'interakt-details-verification-key',
+            'interakt-details-verification-template-name',
+            'interakt-details-verification-media-url',
+
             // RCS
             'rcs-user-id',
             'rcs-api-key',

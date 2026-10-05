@@ -234,8 +234,7 @@ class InvoiceController extends Controller
 
         $payment_mode = optional($paymentLog)->payment_mode ?? 'Online';
 
-        $payment_id = $paymentLog->reference_id
-            ?? $order->payment_id
+        $payment_id = $order->payment_id
             ?? 'N/A';
 
         $customer_state = strtoupper($customer->state ?? '');
