@@ -252,6 +252,13 @@ class DetailsVerificationReminderCommand extends Command
 
                 $success = $response['status'] ?? false;
 
+                Log::info('Interakt message result', [
+                    'mobile' => $mobile,
+                    'response' => $response,
+                ]);
+
+                sleep(2);
+
                 $responses[] = [
                     'status' => $success,
                     'mobile' => $mobile,

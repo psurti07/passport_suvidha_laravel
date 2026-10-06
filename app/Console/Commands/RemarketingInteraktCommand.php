@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\Customer;
 use App\Models\SmsLog;
 use App\Services\InteraktService;
+use Illuminate\Support\Facades\Log;
 
 class RemarketingInteraktCommand extends Command
 {
@@ -141,17 +142,40 @@ class RemarketingInteraktCommand extends Command
         } else {
 
             foreach ($mobiles as $mobile => $data) {
-
-                $response = app(InteraktService::class)
-                    ->send(
+                try {
+                    $response = app(InteraktService::class)->send(
                         $mobile,
                         $data['name']
                     );
 
-                $responses[] = [
-                    'mobile' => $mobile,
-                    'response' => $response,
-                ];
+                    $responses[] = [
+                        'mobile' => $mobile,
+                        'response' => $response,
+                    ];
+
+                    if (!($response['status'] ?? false)) {
+                        Log::warning('Interakt remarketing message failed', [
+                            'mobile' => $mobile,
+                            'response' => $response,
+                        ]);
+                    }
+                } catch (\Throwable $e) {
+                    $responses[] = [
+                        'mobile' => $mobile,
+                        'response' => [
+                            'status' => false,
+                            'message' => $e->getMessage(),
+                        ],
+                    ];
+
+                    Log::error('Interakt remarketing exception', [
+                        'mobile' => $mobile,
+                        'message' => $e->getMessage(),
+                    ]);
+
+                } finally {
+                    sleep(2); // Wait 2 seconds after each attempt
+                }
             }
         }
 

@@ -164,6 +164,13 @@ class AppointmentReminderCommand extends Command
                     'appointment'
                 );
 
+                Log::info('Interakt message result', [
+                    'mobile' => $mobile,
+                    'response' => $response,
+                ]);
+
+                sleep(2);
+
                 $responses[] = [
                     'status' => $response['status'] ?? false,
                     'mobile' => $mobile,
