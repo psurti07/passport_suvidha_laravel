@@ -48,7 +48,7 @@ class DetailsVerificationReminderCommand extends Command
         $currentTime = now()->format('H:i');
 
         $cronjobs = [
-            // '0' => ['11:24'],
+            // '0' => ['11:30'],
             '1' => ['17:00'],
             '2' => ['10:00'],
             '3' => ['16:00'],
@@ -57,7 +57,7 @@ class DetailsVerificationReminderCommand extends Command
         $scheduleDay = null;
 
         foreach ($cronjobs as $day => $times) {
-            if (in_array($currentTime, $times, true)) {
+            if (in_array($currentTime, $times)) {
                 $scheduleDay = (int) $day;
                 break;
             }

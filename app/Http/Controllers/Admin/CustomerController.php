@@ -234,7 +234,7 @@ class CustomerController extends Controller
                 'regex:/^[6-9][0-9]{9}$/',
                 'different:mobile_number',
             ],
-            'emergency_contact_email' => 'required|email|max:255',
+            'emergency_contact_email' => 'required|email|max:255|different:email',
 
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',

@@ -197,7 +197,7 @@ class CustomerController extends Controller
                 'regex:/^[6-9][0-9]{9}$/',
                 'different:mobile_number',
             ],
-            'emergency_contact_email' => 'required|email|max:255',
+            'emergency_contact_email' => 'required|email|max:255|different:email',
 
             'address' => 'required|string',
             'pin_code' => 'required|string|max:10',
@@ -357,6 +357,7 @@ class CustomerController extends Controller
 
     public function addFamilyDetails(Request $request)
     {
+        $customer = $request->user();
         $request->merge([
             'marital_status' => strtolower(trim($request->marital_status))
         ]);
@@ -380,9 +381,14 @@ class CustomerController extends Controller
             'emergency_contact_mobile' => [
                 'required',
                 'digits:10',
-                'different:mobile_number',
+                Rule::notIn([$customer->mobile_number]),
             ],
-            'emergency_contact_email' => 'required|email|max:255',
+            'emergency_contact_email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::notIn([$customer->email]),
+            ]
         ]);
 
         if ($validator->fails()) {
