@@ -1073,6 +1073,27 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text font-semibold text-lg">Refund Applications</span>
                 </a>
 
+                <a href="{{ route('admin.application.status.passportReceived') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.application.status.passportReceived') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Passport Received Applications' : ''">
+                    <svg class="h-5 w-5 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        stroke-width="2">
+
+                        <!-- Document -->
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 3h8l4 4v14H6V3z" />
+
+                        <!-- Document fold -->
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 3v5h5" />
+
+                        <!-- Received arrow -->
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v7" />
+
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m9 14 3 3 3-3" />
+                    </svg>
+
+                    <span class="nav-link-text font-semibold text-lg">Passport Received Applications</span>
+                </a>
+
                 <!-- <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">INVOICES</div> -->
 
                 <div class="sidebar-section mt-6 relative group">

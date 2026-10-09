@@ -83,6 +83,17 @@ class ApplicationStatusController extends Controller
         ]);
     }
 
+    public function passportReceived()
+    {
+        $statuses = ApplicationStatus::orderBy('priority_no')->get();
+
+        return view('admin.application-status.index', [
+            'statuses' => $statuses,
+            'type' => 'passport_received',
+            'title' => 'PAAPORT RECEIVED'
+        ]);
+    }
+
     public function data(Request $request)
     {
         $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
@@ -135,6 +146,12 @@ class ApplicationStatusController extends Controller
         if ($request->type == 'refund') {
             $query->whereHas('status', function ($q) {
                 $q->where('slug', 'refunded');
+            });
+        }
+
+        if ($request->type == 'passport_received') {
+            $query->whereHas('status', function ($q) {
+                $q->where('slug', 'passport_received');
             });
         }
 

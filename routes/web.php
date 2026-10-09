@@ -119,6 +119,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/application-status/failed', [ApplicationStatusController::class, 'failed'])->name('application.status.failed');
     Route::get('/application-status/insufficient', [ApplicationStatusController::class, 'insufficient'])->name('application.status.insufficient');
     Route::get('/application-status/refund', [ApplicationStatusController::class, 'refund'])->name('application.status.refund');
+    Route::get('/application-status/passportReceived', [ApplicationStatusController::class, 'passportReceived'])->name('application.status.passportReceived');
 
     // Passport Credentials Routes
     Route::post('/customers/{customer}/passport-account', [PassportAccountController::class, 'store'])->name('customers.passport-account.store');
