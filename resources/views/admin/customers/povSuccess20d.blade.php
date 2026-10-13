@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'POV Success 20 Days Old')
+@section('title', 'Normal Passport - POV Sucess 20 Days Old')
 
 @section('content')
 
@@ -15,7 +15,7 @@
                         <div class="flex items-center gap-4">
                             <h2
                                 class="text-xl sm:text-2xl md:text-2xl mb-3 font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                                POV Success 20 Days Old
+                                Normal Passport - POV Sucess 20 Days Old
                             </h2>
                         </div>
                         <div class="flex flex-wrap gap-3">

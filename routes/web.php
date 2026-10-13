@@ -79,7 +79,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/customers/today', [CustomerController::class, 'today'])->name('customers.today');
     Route::get('/customers/today/data', [CustomerController::class, 'todayData'])->name('customers.today.data');
     Route::get('/customers/pov-success-20d', [CustomerController::class, 'povSuccess20d'])->name('customers.pov-success-20d');
+    Route::get('/customers/pov-success-7d', [CustomerController::class, 'povSuccess7d'])->name('customers.pov-success-7d');
     Route::get('/customers/pov-success-20d/data', [CustomerController::class, 'povSuccess20dData'])->name('customers.pov-success-20d.data');
+    Route::get('/customers/pov-success-7d/data', [CustomerController::class, 'povSuccess7dData'])->name('customers.pov-success-7d.data');
     Route::resource('customers', CustomerController::class);
     Route::get('/customers-data', [CustomerController::class, 'data'])->name('customers.data');
     Route::put('/customers/{customer}/convert', [CustomerController::class, 'convertToCustomer'])->name('customers.convert');

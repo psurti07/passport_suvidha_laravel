@@ -716,16 +716,227 @@ class CustomerController extends Controller
             ->withFragment('actions');
     }
 
+    // public function povSuccess20dData(Request $request)
+    // {
+    //     $fromDate = $request->filled('from_date')
+    //         ? \Carbon\Carbon::parse($request->from_date)->startOfDay()
+    //         : now()->startOfDay();
+
+    //     $toDate = $request->filled('to_date')
+    //         ? \Carbon\Carbon::parse($request->to_date)->endOfDay()
+    //         : now()->endOfDay();
+
+
+    //     $query = Customer::select([
+    //         'customers.id',
+    //         'customers.service_id',
+    //         'customers.full_name',
+    //         'customers.email',
+    //         'customers.mobile_number',
+    //         'customers.is_paid',
+    //         'customers.payment_date',
+    //     ])
+    //         ->addSelect([
+    //             'success_date' => ApplicationProgress::select('status_date')
+    //                 ->whereColumn(
+    //                     'application_progress.customer_id',
+    //                     'customers.id'
+    //                 )
+    //                 ->where('id', function ($subQuery) {
+
+    //                     $subQuery->select('latest_progress.id')
+    //                         ->from('application_progress as latest_progress')
+    //                         ->whereColumn(
+    //                             'latest_progress.customer_id',
+    //                             'application_progress.customer_id'
+    //                         )
+    //                         ->whereNull('latest_progress.deleted_at')
+    //                         ->orderByDesc('latest_progress.id')
+    //                         ->limit(1);
+    //                 })
+    //                 ->limit(1),
+    //         ])
+    //         ->where('customers.is_paid', 1)
+    //         ->whereHas('applicationProgress', function ($q) use (
+    //             $fromDate,
+    //             $toDate
+    //         ) {
+    //             $q->where(
+    //                 'application_progress.id',
+    //                 function ($subQuery) {
+
+    //                     $subQuery->select('latest_progress.id')
+    //                         ->from('application_progress as latest_progress')
+    //                         ->whereColumn(
+    //                             'latest_progress.customer_id',
+    //                             'application_progress.customer_id'
+    //                         )
+    //                         ->whereNull('latest_progress.deleted_at')
+    //                         ->orderByDesc('latest_progress.id')
+    //                         ->limit(1);
+    //                 }
+    //             )
+    //                 ->whereHas('status', function ($statusQuery) {
+
+    //                     $statusQuery->where(
+    //                         'slug',
+    //                         'pov_success'
+    //                     );
+    //                 })
+    //                 ->whereBetween(
+    //                     \DB::raw(
+    //                         'DATE_ADD(application_progress.status_date, INTERVAL 20 DAY)'
+    //                     ),
+    //                     [
+    //                         $fromDate,
+    //                         $toDate,
+    //                     ]
+    //                 );
+    //         });
+
+    //     if ($request->filled('service')) {
+
+    //         $query->where(
+    //             'customers.service_id',
+    //             $request->service
+    //         );
+    //     }
+
+    //     return DataTables::of($query)
+
+    //         ->addIndexColumn()
+
+    //         ->addColumn('service_name', function ($row) {
+
+    //             if (!$row->service) {
+    //                 return '-';
+    //             }
+
+    //             $isTatkal = str_starts_with(
+    //                 $row->service->service_code,
+    //                 'TP'
+    //             );
+
+    //             return '<span>'
+    //                 . ($isTatkal ? '🔴 ' : '🟢 ')
+    //                 . e($row->service->service_name)
+    //                 . '</span>';
+    //         })
+
+    //         ->addColumn('customer_name', function ($row) {
+
+    //             return Str::title(
+    //                 strtolower($row->full_name)
+    //             );
+    //         })
+
+
+    //         ->editColumn('is_paid', function ($row) {
+
+    //             return '
+    //             <span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">
+    //                 Paid
+    //             </span>
+    //         ';
+    //         })
+
+    //         ->editColumn('payment_date', function ($row) {
+
+    //             return $row->payment_date
+    //                 ? $row->payment_date->format('d M Y, h:i A')
+    //                 : '-';
+    //         })
+
+    //         ->editColumn('success_date', function ($row) {
+
+    //             return $row->success_date
+    //                 ? \Carbon\Carbon::parse(
+    //                     $row->success_date
+    //                 )->format('d M Y, h:i A')
+    //                 : '-';
+    //         })
+
+    //         ->addColumn('actions', function ($row) {
+
+    //             return '
+    //             <a href="' . route(
+    //                 'admin.customers.show',
+    //                 $row->id
+    //             ) . '"
+    //                 class="group inline-flex items-center justify-center h-8 w-8 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 hover:border-blue-600 transition-all duration-200 shadow-sm"
+    //                 title="View">
+
+    //                 <svg xmlns="http://www.w3.org/2000/svg"
+    //                     class="h-5 w-5"
+    //                     fill="none"
+    //                     viewBox="0 0 24 24"
+    //                     stroke="currentColor">
+
+    //                     <path
+    //                         stroke-linecap="round"
+    //                         stroke-linejoin="round"
+    //                         stroke-width="2"
+    //                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+
+    //                     <path
+    //                         stroke-linecap="round"
+    //                         stroke-linejoin="round"
+    //                         stroke-width="2"
+    //                         d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7z" />
+
+    //                 </svg>
+
+    //             </a>
+    //         ';
+    //         })
+
+    //         ->rawColumns([
+    //             'service_name',
+    //             'is_paid',
+    //             'actions'
+    //         ])
+
+    //         ->make(true);
+    // }
+
     public function povSuccess20d()
     {
         $services = Service::select('id', 'service_name')
+            ->where('service_code', 'like', 'NP%')
             ->orderBy('service_name')
             ->get();
 
         return view('admin.customers.povSuccess20d', compact('services'));
     }
+    public function povSuccess7d()
+    {
+        $services = Service::select('id', 'service_name')
+            ->where('service_code', 'like', 'TP%')
+            ->orderBy('service_name')
+            ->get();
+
+        return view('admin.customers.povSuccess7d', compact('services'));
+    }
     public function povSuccess20dData(Request $request)
     {
+        return $this->povSuccessData($request, 'NP');
+    }
+    public function povSuccess7dData(Request $request)
+    {
+        return $this->povSuccessData($request, 'TP');
+    }
+
+    private function povSuccessData(Request $request, string $type)
+    {
+        $type = strtoupper($type);
+
+        if (!in_array($type, ['TP', 'NP'], true)) {
+            abort(400, 'Invalid passport service type.');
+        }
+
+        // Normal = 20 days; Tatkal = 7 days.
+        $days = $type === 'TP' ? 7 : 20;
+
         $fromDate = $request->filled('from_date')
             ? \Carbon\Carbon::parse($request->from_date)->startOfDay()
             : now()->startOfDay();
@@ -734,94 +945,85 @@ class CustomerController extends Controller
             ? \Carbon\Carbon::parse($request->to_date)->endOfDay()
             : now()->endOfDay();
 
+        $query = Customer::query()
+            ->select([
+                'customers.id',
+                'customers.service_id',
+                'customers.full_name',
+                'customers.email',
+                'customers.mobile_number',
+                'customers.is_paid',
+                'customers.payment_date',
+            ])
 
-        $query = Customer::select([
-            'customers.id',
-            'customers.service_id',
-            'customers.full_name',
-            'customers.email',
-            'customers.mobile_number',
-            'customers.is_paid',
-            'customers.payment_date',
-        ])
+            // Get the status date of the latest progress record.
             ->addSelect([
-                'success_date' => ApplicationProgress::select('status_date')
+                'success_date' => DB::table('application_progress as latest_progress')
+                    ->select('latest_progress.status_date')
                     ->whereColumn(
-                        'application_progress.customer_id',
+                        'latest_progress.customer_id',
                         'customers.id'
                     )
-                    ->where('id', function ($subQuery) {
-
-                        $subQuery->select('latest_progress.id')
-                            ->from('application_progress as latest_progress')
-                            ->whereColumn(
-                                'latest_progress.customer_id',
-                                'application_progress.customer_id'
-                            )
-                            ->whereNull('latest_progress.deleted_at')
-                            ->orderByDesc('latest_progress.id')
-                            ->limit(1);
-                    })
+                    ->orderByDesc('latest_progress.id')
                     ->limit(1),
             ])
-            ->where('customers.is_paid', 1)
-            ->whereHas('applicationProgress', function ($q) use (
-                $fromDate,
-                $toDate
-            ) {
-                $q->where(
-                    'application_progress.id',
-                    function ($subQuery) {
 
-                        $subQuery->select('latest_progress.id')
+            ->where('customers.is_paid', 1)
+
+            // The latest progress record must be POV Success
+            // and its reminder due date must fall in the selected range.
+            ->whereHas('applicationProgress', function ($progressQuery) use (
+                $fromDate,
+                $toDate,
+                $days
+            ) {
+                $progressQuery
+                    ->whereIn('application_progress.id', function ($subQuery) {
+                        $subQuery
+                            ->selectRaw('MAX(latest_progress.id)')
                             ->from('application_progress as latest_progress')
                             ->whereColumn(
                                 'latest_progress.customer_id',
                                 'application_progress.customer_id'
-                            )
-                            ->whereNull('latest_progress.deleted_at')
-                            ->orderByDesc('latest_progress.id')
-                            ->limit(1);
-                    }
-                )
-                    ->whereHas('status', function ($statusQuery) {
-
-                        $statusQuery->where(
-                            'slug',
-                            'pov_success'
-                        );
+                            );
                     })
+
+                    ->whereHas('status', function ($statusQuery) {
+                        $statusQuery->where('slug', 'pov_success');
+                    })
+
                     ->whereBetween(
-                        \DB::raw(
-                            'DATE_ADD(application_progress.status_date, INTERVAL 20 DAY)'
+                        DB::raw(
+                            "DATE_ADD(application_progress.status_date, INTERVAL {$days} DAY)"
                         ),
-                        [
-                            $fromDate,
-                            $toDate,
-                        ]
+                        [$fromDate, $toDate]
                     );
+            })
+
+            // Filter by passport type.
+            ->whereHas('service', function ($serviceQuery) use ($type) {
+                $serviceQuery->where(
+                    'service_code',
+                    'like',
+                    $type . '%'
+                );
             });
 
+        // Optional service filter.
         if ($request->filled('service')) {
-
-            $query->where(
-                'customers.service_id',
-                $request->service
-            );
+            $query->where('customers.service_id', $request->service);
         }
 
         return DataTables::of($query)
-
             ->addIndexColumn()
 
             ->addColumn('service_name', function ($row) {
-
                 if (!$row->service) {
                     return '-';
                 }
 
                 $isTatkal = str_starts_with(
-                    $row->service->service_code,
+                    $row->service->service_code ?? '',
                     'TP'
                 );
 
@@ -832,78 +1034,45 @@ class CustomerController extends Controller
             })
 
             ->addColumn('customer_name', function ($row) {
-
-                return Str::title(
-                    strtolower($row->full_name)
+                return \Illuminate\Support\Str::title(
+                    strtolower($row->full_name ?? '')
                 );
             })
 
-
             ->editColumn('is_paid', function ($row) {
-
-                return '
-                <span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">
-                    Paid
-                </span>
-            ';
+                return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">Paid</span>';
             })
 
             ->editColumn('payment_date', function ($row) {
-
                 return $row->payment_date
-                    ? $row->payment_date->format('d M Y, h:i A')
+                    ? \Carbon\Carbon::parse($row->payment_date)
+                    ->format('d M Y, h:i A')
                     : '-';
             })
 
             ->editColumn('success_date', function ($row) {
-
                 return $row->success_date
-                    ? \Carbon\Carbon::parse(
-                        $row->success_date
-                    )->format('d M Y, h:i A')
+                    ? \Carbon\Carbon::parse($row->success_date)
+                    ->format('d M Y, h:i A')
                     : '-';
             })
 
             ->addColumn('actions', function ($row) {
-
-                return '
-                <a href="' . route(
-                    'admin.customers.show',
-                    $row->id
-                ) . '"
-                    class="group inline-flex items-center justify-center h-8 w-8 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 hover:border-blue-600 transition-all duration-200 shadow-sm"
-                    title="View">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor">
-
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7z" />
-
-                    </svg>
-
-                </a>
-            ';
+                return '<a href="' . route('admin.customers.show', $row->id) . '"
+                class="group inline-flex items-center justify-center h-8 w-8 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 hover:border-blue-600 transition-all duration-200 shadow-sm"
+                title="View">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+            </a>';
             })
 
-            ->rawColumns([
-                'service_name',
-                'is_paid',
-                'actions'
-            ])
-
+            ->rawColumns(['service_name', 'is_paid', 'actions'])
             ->make(true);
     }
 }
