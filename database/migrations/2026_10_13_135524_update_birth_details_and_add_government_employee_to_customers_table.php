@@ -15,6 +15,9 @@ class UpdateBirthDetailsAndAddGovernmentEmployeeToCustomersTable extends Migrati
     {
         Schema::table('customers', function (Blueprint $table) {
             $table->renameColumn('place_of_birth', 'birth_city');
+        });
+
+        Schema::table('customers', function (Blueprint $table) {
             $table->string('birth_state')->nullable()->after('birth_city');
             $table->string('birth_district')->nullable()->after('birth_state');
             $table->boolean('is_ps_gov_emp')->default(0)->after('birth_district');
@@ -30,6 +33,9 @@ class UpdateBirthDetailsAndAddGovernmentEmployeeToCustomersTable extends Migrati
     {
         Schema::table('customers', function (Blueprint $table) {
             $table->dropColumn(['birth_state', 'birth_district', 'is_ps_gov_emp',]);
+        });
+
+        Schema::table('customers', function (Blueprint $table) {
             $table->renameColumn('birth_city', 'place_of_birth');
         });
     }
