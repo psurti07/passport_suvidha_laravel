@@ -255,7 +255,13 @@ class CustomerController extends Controller
             'permanent_state' => 'required_if:is_address_permanent,0|nullable|string|max:100',
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
-            'place_of_birth' => 'required|string|max:255',
+            // 'place_of_birth' => 'required|string|max:255',
+            'birth_city' => 'required|string|max:191',
+            'birth_state' => 'required|string|max:191',
+            'birth_district' => 'required|string|max:191',
+
+            'is_ps_gov_emp' => 'required|boolean',
+
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
             'organisation_name' => 'required_if:employment_type,Government|string|max:255|nullable',
@@ -311,6 +317,8 @@ class CustomerController extends Controller
 
         $passportPassword = '';
 
+        $services = Service::all();
+
         if ($passportAccount && $passportAccount->password) {
             try {
                 $passportPassword = Crypt::decryptString(
@@ -333,7 +341,7 @@ class CustomerController extends Controller
             'status_id'
         )->get();
 
-        return view('admin.customers.show', compact('customer', 'statuses', 'predefinedMessages', 'invoice', 'passportAccount', 'passportPassword'));
+        return view('admin.customers.show', compact('customer', 'statuses', 'predefinedMessages', 'invoice', 'passportAccount', 'passportPassword', 'services'));
     }
 
     public function edit(Customer $customer)
@@ -348,6 +356,7 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $rules = [
+            'service_id' => 'required|exists:services,id',
             'full_name' => 'required|string|max:255',
             'mobile_number' => [
                 'required',
@@ -406,7 +415,13 @@ class CustomerController extends Controller
 
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
-            'place_of_birth' => 'required|string|max:255',
+            // 'place_of_birth' => 'required|string|max:255',
+            'birth_city' => 'required|string|max:191',
+            'birth_state' => 'required|string|max:191',
+            'birth_district' => 'required|string|max:191',
+
+            'is_ps_gov_emp' => 'required|boolean',
+
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
             'organisation_name' => 'required_if:employment_type,Government|string|nullable|max:255',
@@ -510,7 +525,13 @@ class CustomerController extends Controller
 
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
-            'place_of_birth' => 'required|string|max:255',
+            // 'place_of_birth' => 'required|string|max:255',
+            'birth_city' => 'required|string|max:191',
+            'birth_state' => 'required|string|max:191',
+            'birth_district' => 'required|string|max:191',
+
+            'is_ps_gov_emp' => 'required|boolean',
+
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
             'organisation_name' => 'required_if:employment_type,Government|string|nullable|max:255',

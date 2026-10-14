@@ -163,6 +163,36 @@
 
                             <div class="grid grid-cols-1 gap-x-6 gap-y-5">
 
+                                {{-- Service Name --}}
+                                <div>
+                                    <label for="service_id" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Service Name <span class="text-red-500">*</span>
+                                    </label>
+
+                                    <div class="relative">
+                                        <select id="service_id" name="service_id" required
+                                            class="block w-full rounded-lg border border-gray-300 bg-white shadow-sm py-2 px-3 focus:border-blue-500 focus:ring-blue-500 sm:text-sm
+            @error('service_id') border-red-500 @enderror">
+                                            <option value="">Select service name</option>
+
+                                            @foreach ($services as $service)
+                                                <option value="{{ $service->id }}"
+                                                    {{ old('service_id', $customer->service_id ?? '') == $service->id ? 'selected' : '' }}>
+                                                    {{ $service->service_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    @error('service_id')
+                                        <p class="mt-1 text-sm text-red-600">
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                </div>
+
+
+
                                 {{-- Name and Surname --}}
                                 <div>
                                     <label for="full_name" class="block text-sm font-medium text-gray-700 mb-1">
@@ -232,23 +262,111 @@
                                     @enderror
                                 </div>
 
-                                {{-- Place of Birth --}}
+                                {{-- Birth City --}}
                                 <div>
-                                    <label for="place_of_birth" class="block text-sm font-medium text-gray-700 mb-1">
-                                        Place of Birth <span class="text-red-500">*</span>
+                                    <label for="birth_city" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Birth City <span class="text-red-500">*</span>
                                     </label>
 
-                                    <input type="text" id="place_of_birth" name="place_of_birth"
-                                        value="{{ old('place_of_birth', $customer->place_of_birth ?? '') }}" required
+                                    <input type="text" id="birth_city" name="birth_city"
+                                        value="{{ old('birth_city', $customer->birth_city ?? '') }}" required
                                         class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3
-                    hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200
-                    focus:ring-opacity-50 transition-all duration-200 sm:text-sm
-                    @error('place_of_birth') border-red-300 text-red-900 @enderror">
+        hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200
+        focus:ring-opacity-50 transition-all duration-200 sm:text-sm
+        @error('birth_city') border-red-300 text-red-900 @enderror">
 
-                                    @error('place_of_birth')
+                                    @error('birth_city')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
+
+                                {{-- Birth District --}}
+                                <div>
+                                    <label for="birth_district" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Birth District <span class="text-red-500">*</span>
+                                    </label>
+
+                                    <input type="text" id="birth_district" name="birth_district"
+                                        value="{{ old('birth_district', $customer->birth_district ?? '') }}" required
+                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3
+        hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200
+        focus:ring-opacity-50 transition-all duration-200 sm:text-sm
+        @error('birth_district') border-red-300 text-red-900 @enderror">
+
+                                    @error('birth_district')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                {{-- Birth State --}}
+                                <div>
+                                    <label for="birth_state" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Birth State <span class="text-red-500">*</span>
+                                    </label>
+
+                                    <select id="birth_state" name="birth_state" required
+                                        class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3
+        hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200
+        focus:ring-opacity-50 transition-all duration-200 sm:text-sm
+        @error('birth_state') border-red-300 text-red-900 @enderror">
+                                        <option value="">Select State</option>
+
+                                        @php
+                                            $states = [
+                                                'Andhra Pradesh',
+                                                'Arunachal Pradesh',
+                                                'Assam',
+                                                'Bihar',
+                                                'Chhattisgarh',
+                                                'Goa',
+                                                'Gujarat',
+                                                'Haryana',
+                                                'Himachal Pradesh',
+                                                'Jharkhand',
+                                                'Karnataka',
+                                                'Kerala',
+                                                'Madhya Pradesh',
+                                                'Maharashtra',
+                                                'Manipur',
+                                                'Meghalaya',
+                                                'Mizoram',
+                                                'Nagaland',
+                                                'Odisha',
+                                                'Punjab',
+                                                'Rajasthan',
+                                                'Sikkim',
+                                                'Tamil Nadu',
+                                                'Telangana',
+                                                'Tripura',
+                                                'Uttar Pradesh',
+                                                'Uttarakhand',
+                                                'West Bengal',
+                                                'Andaman and Nicobar Islands',
+                                                'Chandigarh',
+                                                'Dadra and Nagar Haveli and Daman and Diu',
+                                                'Delhi',
+                                                'Jammu and Kashmir',
+                                                'Ladakh',
+                                                'Lakshadweep',
+                                                'Puducherry',
+                                            ];
+                                        @endphp
+
+                                        @foreach ($states as $state)
+                                            <option value="{{ $state }}"
+                                                {{ old('birth_state', $customer->birth_state ?? '') === $state ? 'selected' : '' }}>
+                                                {{ $state }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('birth_state')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+
+
 
                                 {{-- Marital Status --}}
                                 <div>
@@ -415,7 +533,34 @@
                                     @enderror
                                 </div>
 
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Is your parent/spouse a government employee?
+                                        <span class="text-red-500">*</span>
+                                    </label>
 
+                                    <div class="flex items-center gap-6">
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input type="radio" name="is_ps_gov_emp" value="1"
+                                                id="is_ps_gov_emp_yes"
+                                                {{ old('is_ps_gov_emp', isset($customer) ? (int) $customer->is_ps_gov_emp : '') == '1' ? 'checked' : '' }}
+                                                required class="h-4 w-4 text-blue-600">
+                                            <span>Yes</span>
+                                        </label>
+
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input type="radio" name="is_ps_gov_emp" value="0"
+                                                id="is_ps_gov_emp_no"
+                                                {{ old('is_ps_gov_emp', isset($customer) ? (int) $customer->is_ps_gov_emp : '') == '0' ? 'checked' : '' }}
+                                                required class="h-4 w-4 text-blue-600">
+                                            <span>No</span>
+                                        </label>
+                                    </div>
+
+                                    @error('is_ps_gov_emp')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
 
@@ -1790,8 +1935,9 @@
                                                 hover:from-yellow-600 hover:to-yellow-700
                                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 
                                                transition ease-in-out duration-150">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                                             </svg>
@@ -1845,7 +1991,8 @@
                                 <div class="mb-3 md:mb-0">
                                     <h3 class="text-lg font-medium text-red-800 flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                            stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                         </svg>

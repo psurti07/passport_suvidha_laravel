@@ -47,8 +47,11 @@ class Customer extends Authenticatable
 
         'gender',
         'date_of_birth',
-        'place_of_birth',
+        'birth_city',
+        'birth_state',
+        'birth_district',
         'education_qualification',
+        'is_ps_gov_emp',
         'employment_type',
         'organisation_name',
         'nationality',
@@ -67,6 +70,7 @@ class Customer extends Authenticatable
     protected $casts = [
         'date_of_birth' => 'date',
         'is_paid' => 'boolean',
+        'is_ps_gov_emp' => 'boolean',
         'is_active' => 'boolean',
         'is_dnd' => 'boolean',
         'registration_step' => 'integer',

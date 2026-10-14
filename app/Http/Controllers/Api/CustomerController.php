@@ -219,7 +219,12 @@ class CustomerController extends Controller
 
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
-            'place_of_birth' => 'required|string|max:255',
+
+            'birth_city' => 'required|string|max:191',
+            'birth_state' => 'required|string|max:191',
+            'birth_district' => 'required|string|max:191',
+
+            'is_ps_gov_emp' => 'required|boolean',
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
             'organisation_name' => 'required_if:employment_type,Government|nullable|string|max:255',
@@ -377,6 +382,7 @@ class CustomerController extends Controller
                 ]),
             ],
             'spouse_name' => 'required_if:marital_status,married|nullable|string|max:255',
+            'is_ps_gov_emp' => 'required|boolean',
             'emergency_contact_name' => 'required|string|max:255',
             'emergency_contact_mobile' => [
                 'required',
@@ -449,7 +455,11 @@ class CustomerController extends Controller
 
             'gender' => 'required|in:male,female,other',
             'date_of_birth' => 'required|date',
-            'place_of_birth' => 'required|string|max:255',
+
+            'birth_city' => 'required|string|max:191',
+            'birth_state' => 'required|string|max:191',
+            'birth_district' => 'required|string|max:191',
+
             'education_qualification' => 'required|string|max:255',
             'employment_type' => 'required|string|max:255',
             'organisation_name' => 'required_if:employment_type,Government|nullable|string|max:255',

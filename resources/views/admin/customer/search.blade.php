@@ -227,7 +227,7 @@
                                                 @enderror
                                             </div>
 
-                                            <div>
+                                            {{-- <div>
                                                 <label for="place_of_birth"
                                                     class="block text-sm font-medium text-gray-700 mb-1">Place
                                                     of
@@ -237,6 +237,106 @@
                                                     required placeholder="Enter place of birth"
                                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                                 @error('place_of_birth')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div> --}}
+
+
+                                            {{-- Birth City --}}
+                                            <div>
+                                                <label for="birth_city"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">
+                                                    Birth City <span class="text-red-500">*</span>
+                                                </label>
+
+                                                <input type="text" id="birth_city" name="birth_city"
+                                                    value="{{ old('birth_city', $customer->birth_city ?? '') }}" required
+                                                    placeholder="Enter birth city"
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+
+                                                @error('birth_city')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            {{-- Birth District --}}
+                                            <div>
+                                                <label for="birth_district"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">
+                                                    Birth District <span class="text-red-500">*</span>
+                                                </label>
+
+                                                <input type="text" id="birth_district" name="birth_district"
+                                                    value="{{ old('birth_district', $customer->birth_district ?? '') }}"
+                                                    required placeholder="Enter birth district"
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
+
+                                                @error('birth_district')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            {{-- Birth State --}}
+                                            <div>
+                                                <label for="birth_state"
+                                                    class="block text-sm font-medium text-gray-700 mb-1">
+                                                    Birth State <span class="text-red-500">*</span>
+                                                </label>
+
+                                                @php
+                                                    $states = [
+                                                        'Andhra Pradesh',
+                                                        'Arunachal Pradesh',
+                                                        'Assam',
+                                                        'Bihar',
+                                                        'Chhattisgarh',
+                                                        'Goa',
+                                                        'Gujarat',
+                                                        'Haryana',
+                                                        'Himachal Pradesh',
+                                                        'Jharkhand',
+                                                        'Karnataka',
+                                                        'Kerala',
+                                                        'Madhya Pradesh',
+                                                        'Maharashtra',
+                                                        'Manipur',
+                                                        'Meghalaya',
+                                                        'Mizoram',
+                                                        'Nagaland',
+                                                        'Odisha',
+                                                        'Punjab',
+                                                        'Rajasthan',
+                                                        'Sikkim',
+                                                        'Tamil Nadu',
+                                                        'Telangana',
+                                                        'Tripura',
+                                                        'Uttar Pradesh',
+                                                        'Uttarakhand',
+                                                        'West Bengal',
+                                                        'Andaman and Nicobar Islands',
+                                                        'Chandigarh',
+                                                        'Dadra and Nagar Haveli and Daman and Diu',
+                                                        'Delhi',
+                                                        'Jammu and Kashmir',
+                                                        'Ladakh',
+                                                        'Lakshadweep',
+                                                        'Puducherry',
+                                                    ];
+                                                @endphp
+
+                                                <select id="birth_state" name="birth_state" required
+                                                    class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 sm:text-sm">
+                                                    <option value="">Select birth state</option>
+
+                                                    @foreach ($states as $state)
+                                                        <option value="{{ $state }}"
+                                                            {{ old('birth_state', $customer->birth_state ?? '') == $state ? 'selected' : '' }}>
+                                                            {{ $state }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+
+                                                @error('birth_state')
                                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                                 @enderror
                                             </div>
@@ -362,9 +462,9 @@
                                                     <option value="">Select Education Qualification</option>
 
                                                     <!-- <option value="Below 10th"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            Below 10th
-                                                                                                                                                                                                                                                                                                                                                                                                                                                        </option> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Below 10th
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </option> -->
 
                                                     <option value="10th Pass And Above"
                                                         {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>
@@ -390,6 +490,37 @@
                                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                                 @enderror
                                             </div>
+
+                                            {{-- Parent / Spouse Government Employee --}}
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                                    Is your parent/spouse a government employee?
+                                                    <span class="text-red-500">*</span>
+                                                </label>
+
+                                                <div class="flex items-center gap-6">
+                                                    <label class="flex items-center gap-2 cursor-pointer">
+                                                        <input type="radio" name="is_ps_gov_emp" id="is_ps_gov_emp_yes"
+                                                            value="1"
+                                                            {{ old('is_ps_gov_emp', isset($customer) ? (int) $customer->is_ps_gov_emp : '') == '1' ? 'checked' : '' }}
+                                                            required class="h-4 w-4 text-blue-600">
+                                                        <span>Yes</span>
+                                                    </label>
+
+                                                    <label class="flex items-center gap-2 cursor-pointer">
+                                                        <input type="radio" name="is_ps_gov_emp" id="is_ps_gov_emp_no"
+                                                            value="0"
+                                                            {{ old('is_ps_gov_emp', isset($customer) ? (int) $customer->is_ps_gov_emp : '') == '0' ? 'checked' : '' }}
+                                                            required class="h-4 w-4 text-blue-600">
+                                                        <span>No</span>
+                                                    </label>
+                                                </div>
+
+                                                @error('is_ps_gov_emp')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
                                         </div>
 
                                         <div class="border-b border-gray-200 pb-3 pt-4">
