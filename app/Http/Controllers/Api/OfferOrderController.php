@@ -900,8 +900,8 @@ class OfferOrderController extends Controller
                 'offer_type' => $order->offer_type,
             ]);
 
-            $order->payment_id = $txnid;
-            $order->save();
+            // $order->payment_id = $txnid;
+            // $order->save();
         } catch (\Throwable $e) {
             Log::error('PAYU INITIATION FAILED', [
                 'order_id' => $order->id,
@@ -1060,6 +1060,18 @@ class OfferOrderController extends Controller
                 );
 
             $log->save();
+
+            if ($isPaid) {
+                $offerOrder = OfferOrder::find($log->order_id);
+
+                if ($offerOrder) {
+                    $offerOrder->payment_id = $transaction['mihpayid']
+                        ?? $data['mihpayid']
+                        ?? null;
+                    $offerOrder->card_number = generateCardNumber();
+                    $offerOrder->save();
+                }
+            }
 
             $frontendUrl = rtrim(config('services.app.frontend_url'), '/');
             // Log::info('redirect url', [$frontendUrl . '/bumperoffer-response?status=' .
