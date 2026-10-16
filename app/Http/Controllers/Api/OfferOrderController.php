@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\OfferOrder;
 use App\Models\CashfreeLog;
 use App\Models\Customer;
+use App\Models\PayuLog;
 use App\Models\Service;
 use App\Models\PhonepeLog;
 use App\Services\BrevoMailService;
@@ -51,6 +52,7 @@ class OfferOrderController extends Controller
         $offer_map = [
             'card_offer' => 1,
             'star_offer' => 2,
+            'bumper_offer' => 3,
         ];
 
         $offer_type = $offer_map[$request->offer_type] ?? null;
@@ -98,6 +100,7 @@ class OfferOrderController extends Controller
         return match ($offerType) {
             'card_offer' => 'cashfree',
             'star_offer' => 'phonepe',
+            'bumper_offer' => 'payu',
             default => 'cashfree',
         };
     }
@@ -110,6 +113,9 @@ class OfferOrderController extends Controller
 
             case 'phonepe':
                 return $this->processPhonepe($order, $request);
+
+            case 'payu':
+                return $this->processPayu($order, $request);
 
             default:
                 return response()->json(['success' => false]);
@@ -518,11 +524,6 @@ class OfferOrderController extends Controller
         }
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | ENV
-    |--------------------------------------------------------------------------
-    */
     private function getCashfreeBaseUrl()
     {
         return config("services.cashfree.mode") === 'production'
@@ -530,11 +531,13 @@ class OfferOrderController extends Controller
             : 'https://sandbox.cashfree.com/pg';
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | PHONEPE
-    |--------------------------------------------------------------------------
-    */
+    private function getPayUBaseUrl()
+    {
+        return config('services.payu.mode') === 'production'
+            ? 'https://secure.payu.in/_payment'
+            : 'https://test.payu.in/_payment';
+    }
+
     private function isProduction()
     {
         return config('app.env') === 'production';
@@ -618,8 +621,9 @@ class OfferOrderController extends Controller
                 ], 500);
             }
 
-            $merchantOrderId =
-                'order_' . strtoupper(Str::random(8));
+            // $merchantOrderId =
+            //     'order_' . strtoupper(Str::random(8));
+            $merchantOrderId = generateReferenceId();
 
             $finalAmount = $order->amount;
 
@@ -712,129 +716,6 @@ class OfferOrderController extends Controller
             ], 500);
         }
     }
-
-    // public function checkPhonepeStatus(Request $request)
-    // {
-    //     try {
-
-    //         $request->validate([
-    //             'order_id' => 'required'
-    //         ]);
-
-    //         $log = PhonepeLog::where('reference_id', $request->order_id)->first();
-
-    //         if (!$log) {
-    //             return response()->json([
-    //                 'status' => 'not_found'
-    //             ], 404);
-    //         }
-
-    //         if ($log->tx_status === 'success') {
-    //             return response()->json([
-    //                 'status' => 'success'
-    //             ]);
-    //         }
-
-    //         $accessToken = $this->getPhonepeAccessToken();
-
-    //         if (!$accessToken) {
-    //             return response()->json([
-    //                 'status' => 'pending'
-    //             ]);
-    //         }
-
-    //         $response = Http::withHeaders([
-    //             'Authorization' => 'O-Bearer ' . $accessToken,
-    //             'Accept' => 'application/json',
-    //         ])->get(
-    //             $this->getPhonePeOrderStatusUrl(
-    //                 $request->order_id
-    //             )
-    //         );
-
-    //         // Log::info('PHONEPE STATUS RESPONSE', [
-    //         //     'status' => $response->status(),
-    //         //     'body'   => $response->body(),
-    //         // ]);
-
-    //         if (!$response->successful()) {
-    //             return response()->json([
-    //                 'status' => 'pending'
-    //             ]);
-    //         }
-
-    //         $data = $response->json();
-
-    //         $state = strtoupper(
-    //             $data['state']
-    //                 ?? $data['paymentDetails'][0]['state']
-    //                 ?? 'PENDING'
-    //         );
-
-    //         $paymentId = $data['paymentDetails'][0]['transactionId']
-    //             ?? null;
-
-    //         $paymentMode = $data['paymentDetails'][0]['paymentMode']
-    //             ?? null;
-
-    //         if ($state === 'COMPLETED') {
-
-    //             $order = OfferOrder::find($log->order_id);
-
-    //             if ($order && !$order->payment_id) {
-    //                 $order->update([
-    //                     'payment_id'  => $paymentId,
-    //                     'card_number' => generateCardNumber(),
-    //                 ]);
-    //             }
-
-    //             $log->update([
-    //                 'payment_id'   => $paymentId,
-    //                 'tx_status'    => 'success',
-    //                 'payment_mode' => $paymentMode,
-    //             ]);
-
-    //             return response()->json([
-    //                 'status' => 'success'
-    //             ]);
-    //         }
-
-    //         if (
-    //             in_array(
-    //                 $state,
-    //                 [
-    //                     'FAILED',
-    //                     'FAILURE',
-    //                     'CANCELLED'
-    //                 ]
-    //             )
-    //         ) {
-
-    //             $log->update([
-    //                 'tx_status' => 'failed',
-    //                 'payment_id' => $paymentId,
-    //                 'payment_mode' => $paymentMode,
-    //             ]);
-
-    //             return response()->json([
-    //                 'status' => 'failed'
-    //             ]);
-    //         }
-
-    //         return response()->json([
-    //             'status' => 'pending'
-    //         ]);
-    //     } catch (\Exception $e) {
-
-    //         Log::error('PHONEPE STATUS ERROR', [
-    //             'message' => $e->getMessage()
-    //         ]);
-
-    //         return response()->json([
-    //             'status' => 'error'
-    //         ], 500);
-    //     }
-    // }
 
     public function phonepeVerify(Request $request, BrevoMailService $brevoMailService)
     {
@@ -971,5 +852,230 @@ class OfferOrderController extends Controller
         return redirect(
             config('services.app.frontend_url') . '/staroffer-response?status=failed'
         );
+    }
+
+    public function processPayu($order, Request $request)
+    {
+        $key = config('services.payu.key');
+        $salt = config('services.payu.salt');
+
+        $txnid = generateReferenceId();
+        $amount = number_format((float) $order->amount, 2, '.', '');
+        $productinfo = 'Bumper Offer';
+        $firstname = trim($request->fullName);
+        $email = trim($request->email);
+
+        $udf1 = '';
+        $udf2 = '';
+        $udf3 = '';
+        $udf4 = '';
+        $udf5 = '';
+
+        $hashString = implode('|', [
+            $key,
+            $txnid,
+            $amount,
+            $productinfo,
+            $firstname,
+            $email,
+            $udf1,
+            $udf2,
+            $udf3,
+            $udf4,
+            $udf5,
+        ]) . '||||||' . $salt;
+
+        $hash = strtolower(hash('sha512', $hashString));
+
+        try {
+            PayuLog::create([
+                'order_id' => (string) $order->id,
+                'order_amount' => $amount,
+                'order_note' => $productinfo,
+                'reference_id' => $txnid,
+                'payment_id' => null,
+                'tx_status' => 'initiated',
+                'payment_mode' => null,
+                'service_type' => $request->service_code,
+                'offer_type' => $order->offer_type,
+            ]);
+
+            $order->payment_id = $txnid;
+            $order->save();
+        } catch (\Throwable $e) {
+            Log::error('PAYU INITIATION FAILED', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to initiate payment.',
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'gateway' => 'payu',
+            'payment_url' => rtrim($this->getPayUBaseUrl(), '/') . '/_payment',
+            'payment_data' => [
+                'key' => $key,
+                'txnid' => $txnid,
+                'amount' => $amount,
+                'productinfo' => $productinfo,
+                'firstname' => $firstname,
+                'email' => $email,
+                'phone' => $order->mobile,
+                'surl' => route('payu.callback'),
+                'furl' => route('payu.callback'),
+                'hash' => $hash,
+            ],
+        ]);
+    }
+    public function handlePayuCallback(Request $request)
+    {
+        $data = $request->all();
+        $key = config('services.payu.key');
+        $salt = config('services.payu.salt');
+        $txnid = (string) ($data['txnid'] ?? '');
+
+        if (
+            !$key || !$salt || !$txnid ||
+            empty($data['hash']) ||
+            !isset(
+                $data['status'],
+                $data['amount'],
+                $data['productinfo'],
+                $data['firstname'],
+                $data['email']
+            ) ||
+            !hash_equals($key, (string) ($data['key'] ?? ''))
+        ) {
+            return response('Invalid PayU response.', 400);
+        }
+
+        // Validate PayU's reverse response hash.
+        $reverseHash = $salt . '|' .
+            $data['status'] . '||||||' .
+            ($data['udf5'] ?? '') . '|' .
+            ($data['udf4'] ?? '') . '|' .
+            ($data['udf3'] ?? '') . '|' .
+            ($data['udf2'] ?? '') . '|' .
+            ($data['udf1'] ?? '') . '|' .
+            $data['email'] . '|' .
+            $data['firstname'] . '|' .
+            $data['productinfo'] . '|' .
+            $data['amount'] . '|' .
+            $txnid . '|' . $key;
+
+        if (!hash_equals(
+            strtolower(hash('sha512', $reverseHash)),
+            strtolower((string) $data['hash'])
+        )) {
+            return response('Invalid PayU hash.', 400);
+        }
+
+        $log = PayuLog::where('reference_id', $txnid)->first();
+
+        if (!$log) {
+            return response('Transaction not found.', 404);
+        }
+
+        // Do not process a transaction already marked successful.
+        if ($log->tx_status === 'success') {
+            return redirect()->away(
+                rtrim(config('app.frontend_url'), '/') . '/bumperoffer-response?status=success'
+            );
+        }
+
+        $apiUrl = config('services.payu.mode') === 'production'
+            ? 'https://info.payu.in/merchant/postservice.php?form=2'
+            : 'https://test.payu.in/merchant/postservice.php?form=2';
+
+        $verifyHash = strtolower(hash(
+            'sha512',
+            $key . '|verify_payment|' . $txnid . '|' . $salt
+        ));
+
+        try {
+            $response = Http::asForm()->timeout(20)->post($apiUrl, [
+                'key' => $key,
+                'command' => 'verify_payment',
+                'var1' => $txnid,
+                'hash' => $verifyHash,
+            ]);
+
+            if (!$response->successful()) {
+                return response('Payment verification pending.', 503);
+            }
+
+            $result = $response->json();
+            // Log::info('PAYU VERIFY DEBUG', [
+            //     'txnid' => $txnid,
+            //     'http_status' => $response->status(),
+            //     'api_status' => $result['status'] ?? null,
+            //     'api_message' => $result['msg'] ?? null,
+            //     'transaction' => $result['transaction_details'][$txnid] ?? null,
+            //     'callback_amount' => $data['amount'] ?? null,
+            //     'expected_amount' => $log->order_amount,
+            // ]);
+            $transaction = $result['transaction_details'][$txnid] ?? null;
+
+            if (!is_array($transaction)) {
+                return response('Transaction verification pending.', 503);
+            }
+
+            $verifiedAmount = $transaction['amt']
+                ?? $transaction['transaction_amount']
+                ?? null;
+
+            $expectedAmount = number_format(
+                (float) $log->order_amount,
+                2,
+                '.',
+                ''
+            );
+
+            $isPaid = ($result['status'] ?? null) == 1
+                && strtolower((string) ($transaction['status'] ?? '')) === 'success'
+                && strtolower((string) ($transaction['unmappedstatus'] ?? '')) === 'captured'
+                && $verifiedAmount !== null
+                && (float) $verifiedAmount === (float) $expectedAmount
+                && (float) $data['amount'] === (float) $expectedAmount;
+
+            $log->payment_id = $transaction['mihpayid']
+                ?? $data['mihpayid']
+                ?? $txnid;
+
+            $log->payment_mode = $transaction['mode']
+                ?? $data['mode']
+                ?? null;
+
+            $log->tx_status = $isPaid
+                ? 'success'
+                : (
+                    strtolower((string) ($transaction['status'] ?? '')) === 'failure'
+                    ? 'failure'
+                    : 'pending'
+                );
+
+            $log->save();
+
+            $frontendUrl = rtrim(config('services.app.frontend_url'), '/');
+            // Log::info('redirect url', [$frontendUrl . '/bumperoffer-response?status=' .
+            //     ($isPaid ? 'success' : 'failure')]);
+
+            return redirect()->away(
+                $frontendUrl . '/bumperoffer-response?status=' .
+                    ($isPaid ? 'success' : 'failure')
+            );
+        } catch (\Throwable $e) {
+            Log::error('PAYU CALLBACK ERROR', [
+                'txnid' => $txnid,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response('Payment verification pending.', 503);
+        }
     }
 }

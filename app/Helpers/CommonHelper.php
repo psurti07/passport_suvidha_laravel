@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Str;
+
 if (!function_exists('generateCardNumber')) {
     function generateCardNumber()
     {
@@ -143,5 +145,12 @@ if (!function_exists('getStatusColor')) {
                 'tailwind' => 'bg-gray-100 text-gray-800'
             ],
         };
+    }
+}
+
+if (!function_exists('generateReferenceId')) {
+    function generateReferenceId()
+    {
+        return 'order_' . strtoupper(Str::random(8));
     }
 }

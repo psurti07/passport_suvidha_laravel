@@ -44,6 +44,7 @@ class PhonepeLog extends Model
         return match ($this->offer_type) {
             1 => 'Card Offer',
             2 => 'Star Offer',
+            3 => 'Bumper Offer',
             default => 'Direct',
         };
     }

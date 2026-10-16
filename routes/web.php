@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\PreDefinedMessageController;
 use App\Http\Controllers\Admin\DocumentTypeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ApplicationStatusController;
+use App\Http\Controllers\Admin\BumperofferController;
 use App\Http\Controllers\Admin\DndController;
 use App\Http\Controllers\Admin\RazorpayLogController;
 use App\Http\Controllers\Admin\CashfreeLogController;
@@ -33,6 +34,7 @@ use App\Http\Controllers\Admin\RemarketingLogController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\RefundController;
 use App\Http\Controllers\Admin\PassportAccountController;
+use App\Http\Controllers\Admin\PayuLogsController;
 use App\Http\Controllers\Admin\TodayProcessStepController;
 use App\Http\Controllers\Admin\WhatsAppMessageController;
 
@@ -165,16 +167,22 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/invoices/{invoice}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
 
     // Card Offer Routes
-    Route::get('card-offers', [CardOfferController::class, 'index'])->name('card-offers.index');
+    Route::get('/card-offers', [CardOfferController::class, 'index'])->name('card-offers.index');
     Route::get('/card-offers-data', [CardOfferController::class, 'data'])->name('card-offers.data');
-    Route::patch('card-offers/{cardOffer}/customer', [CardOfferController::class, 'customer'])->name('card-offers.customer');
-    Route::patch('card-offers/{cardOffer}/lead', [CardOfferController::class, 'lead'])->name('card-offers.lead');
+    Route::patch('/card-offers/{cardOffer}/customer', [CardOfferController::class, 'customer'])->name('card-offers.customer');
+    Route::patch('/card-offers/{cardOffer}/lead', [CardOfferController::class, 'lead'])->name('card-offers.lead');
 
     // Star Offers Routes
-    Route::get('star-offers', [StarOfferController::class, 'index'])->name('star-offers.index');
+    Route::get('/star-offers', [StarOfferController::class, 'index'])->name('star-offers.index');
     Route::get('/star-offers-data', [StarOfferController::class, 'data'])->name('star-offers.data');
-    Route::patch('star-offers/{starOffer}/customer', [StarOfferController::class, 'customer'])->name('star-offers.customer');
-    Route::patch('star-offers/{starOffer}/lead', [StarOfferController::class, 'lead'])->name('star-offers.lead');
+    Route::patch('/star-offers/{starOffer}/customer', [StarOfferController::class, 'customer'])->name('star-offers.customer');
+    Route::patch('/star-offers/{starOffer}/lead', [StarOfferController::class, 'lead'])->name('star-offers.lead');
+
+    // Bumper Offer Routes
+    Route::get('/bumper-offers', [BumperOfferController::class, 'index'])->name('bumper-offers.index');
+    Route::get('/bumper-offers-data', [BumperofferController::class, 'data'])->name('bumper-offers.data');
+    Route::patch('/bumper-offers/{bumperOffer}/customer', [BumperOfferController::class, 'customer'])->name('bumper-offers.customer');
+    Route::patch('/bumper-offers/{bumperOffer}/lead', [BumperOfferController::class, 'lead'])->name('bumper-offers.lead');
 
     // Razorpay Logs Routes
     Route::get('/razorpay-logs', [RazorpayLogController::class, 'index'])->name('razorpay-logs.index');
@@ -187,6 +195,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // PhonePe Logs Routes
     Route::get('/phonepe-logs', [PhonepeLogController::class, 'index'])->name('phonepe-logs.index');
     Route::get('/phonepe-logs/data', [PhonepeLogController::class, 'data'])->name('phonepe-logs.data');
+
+    // PayU Logs Routes
+    Route::get('/payu-logs', [PayuLogsController::class, 'index'])->name('payu-logs.index');
+    Route::get('/payu-logs/data', [PayuLogsController::class, 'data'])->name('payu-logs.data');
 
     // Support Routes
     Route::get('/support/customer', [SupportController::class, 'customerSupport'])->name('support.customer');

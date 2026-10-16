@@ -117,6 +117,13 @@ class TodayStatisticsController extends Controller
             ->where('offer_type', 2)
             ->count();
 
+        // PayU → Bumper Offer
+        $payUStarOffer = DB::table('payu_logs')
+            ->whereDate('created_at', $today)
+            ->where('tx_status', 'success')
+            ->where('offer_type', 3)
+            ->count();
+
         // Convert to array format
         $paymentStats = $razorpayServices->toArray();
 
@@ -134,6 +141,13 @@ class TodayStatisticsController extends Controller
             'count' => $phonepeStarOffer,
             'icon' => 'fa-star',
             'route' => '/admin/phonepe-logs'
+        ];
+
+        $paymentStats[] = [
+            'label' => 'PayU - Bumper Offer',
+            'count' => $payUStarOffer,
+            'icon' => 'fa-star',
+            'route' => '/admin/payu-logs'
         ];
 
         // ================= MAIN STATS =================

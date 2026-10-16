@@ -119,6 +119,7 @@ Route::get('/check-payment-status', [OfferOrderController::class, 'checkPaymentS
 Route::post('/mark-payment-failed', [OfferOrderController::class, 'markPaymentFailed']);
 Route::post('/payment-cancelled', [OfferOrderController::class, 'paymentCancelled']);
 Route::get('/cardoffer-response', [OfferOrderController::class, 'paymentResponse']);
+Route::post('/payment/payu/callback', [OfferOrderController::class, 'handlePayuCallback'])->name('payu.callback');
 
 // welcome message routesstorePublic
 Route::get('/welcome-message', [SiteOptionController::class, 'getWelcomeMessage']);

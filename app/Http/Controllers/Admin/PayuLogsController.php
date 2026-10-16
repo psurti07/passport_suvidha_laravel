@@ -1,0 +1,167 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\ApplicationOrder;
+use App\Models\Customer;
+use App\Models\OfferOrder;
+use App\Models\PayuLog;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Yajra\DataTables\Facades\DataTables;
+
+class PayuLogsController extends Controller
+{
+    public function index()
+    {
+        return view('admin.payu-logs.index');
+    }
+
+    public function data(Request $request)
+    {
+        $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
+        $to   = $request->to_date ?? now()->format('Y-m-d');
+
+        $query = PayuLog::select([
+            'id',
+            'customer_id',
+            'order_id',
+            'order_amount',
+            'order_note',
+            'reference_id',
+            'payment_id',
+            'tx_status',
+            'payment_mode',
+            'service_type',
+            'offer_type',
+            'created_at'
+        ]);
+
+        if ($request->from_date && $request->to_date) {
+            $query->whereBetween('created_at', [
+                $from . ' 00:00:00',
+                $to . ' 23:59:59'
+            ]);
+        }
+
+        if ($request->filled('tx_status')) {
+            $query->where('tx_status', $request->tx_status);
+        }
+
+        // $logs = $query->get();
+        $logs = $query
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->get();
+
+        $applicationIds = [];
+        $offerIds = [];
+
+        foreach ($logs as $log) {
+            if (!empty($log->customer_id)) {
+                $applicationIds[] = $log->order_id;
+            } else {
+                $offerIds[] = $log->order_id;
+            }
+        }
+
+        $appOrders = ApplicationOrder::with('customer')
+            ->whereIn('id', $applicationIds)
+            ->get()
+            ->keyBy('id');
+
+        $offerOrders = OfferOrder::whereIn('id', $offerIds)
+            ->get()
+            ->keyBy('id');
+
+        return DataTables::of($logs)
+
+            ->addIndexColumn()
+
+            ->addColumn('customer_name', function ($row) use ($offerOrders) {
+
+                if ($row->offer_type) {
+
+                    $offer = $offerOrders[$row->order_id] ?? null;
+
+                    return "
+                        <div>
+                            <div class='font-semibold text-gray-900'>" . (Str::title(strtolower($offer->full_name ?? '-'))) . "</div>
+                            <div class='text-xs text-gray-500'>" . ($offer->email ?? '-') . "</div>
+                        </div>
+                    ";
+                }
+
+                if ($row->customer_id) {
+
+                    $customer = Customer::find($row->customer_id);
+
+                    $fullName = trim(($customer->full_name ?? ''));
+
+                    return "
+                        <div>
+                            <div class='font-semibold text-gray-900'>" . (Str::title(strtolower($fullName ?? '-'))) . "</div>
+                            <div class='text-xs text-gray-500'>" . ($customer->email ?? '-') . "</div>
+                        </div>
+                    ";
+                }
+
+                return '-';
+            })
+
+            ->addColumn('customer_mobile_number', function ($row) use ($offerOrders) {
+
+                if ($row->offer_type) {
+                    $offer = $offerOrders[$row->order_id] ?? null;
+                    return $offer->mobile ?? '-';
+                }
+
+                if ($row->customer_id) {
+                    $customer = Customer::find($row->customer_id);
+                    return $customer->mobile_number ?? '-';
+                }
+
+                return '-';
+            })
+
+            ->addColumn('type', function ($row) {
+
+                if ($row->offer_type) {
+                    return $row->offer_text;
+                }
+
+                return $row->service_text;
+            })
+
+            ->editColumn('payment_id', function ($row) {
+                return $row->payment_id ?: '-';
+            })
+
+            ->editColumn('payment_mode', function ($row) {
+                return $row->payment_mode ?: '-';
+            })
+
+            ->editColumn('tx_status', function ($row) {
+
+                if (!$row->tx_status) {
+                    return '<span class="px-3 py-1 font-bold text-xs bg-gray-100 text-gray-800 rounded">N/A</span>';
+                }
+
+                return match ($row->tx_status) {
+                    'initiated' => '<span class="px-3 py-1 font-bold text-xs bg-yellow-100 text-yellow-800 rounded">Initiated</span>',
+                    'failure'  => '<span class="px-3 py-1 font-bold text-xs bg-red-100 text-red-800 rounded">Failure</span>',
+                    'success' => '<span class="px-3 py-1 font-bold text-xs bg-green-100 text-green-800 rounded">Success</span>',
+                    default   => '<span class="px-3 py-1 font-bold text-xs bg-gray-100 text-gray-800 rounded">' . ucfirst($row->tx_status) . '</span>',
+                };
+            })
+
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at->format('d M Y, h:i A');
+            })
+
+            ->rawColumns(['customer_name', 'tx_status'])
+
+            ->make(true);
+    }
+}

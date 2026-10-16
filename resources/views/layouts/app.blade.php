@@ -1331,6 +1331,22 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text font-semibold text-lg">Star Offer</span>
                 </a>
 
+                <a href="{{ route('admin.bumper-offers.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.bumper-offers.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'Bumper Offer' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2"
+                            stroke-width="2"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 15h2m4 0h4">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 3l5 5-5 5">
+                        </path>
+                    </svg>
+                    <span class="nav-link-text font-semibold text-lg">Bumper Offer</span>
+                </a>
+
                 <div class="sidebar-section mt-6 relative group">
 
                     <!-- Expanded -->
@@ -1393,6 +1409,18 @@ scrollToActive()" x-cloak>
                         <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
                     </svg>
                     <span class="nav-link-text font-semibold text-lg">PhonePe Log</span>
+                </a>
+
+                <a href="{{ route('admin.payu-logs.index') }}"
+                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.payu-logs.*') ? 'active' : '' }}"
+                    x-bind:title="sidebarCollapsed ? 'PayU Log' : ''">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2"
+                            stroke-width="2"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10" stroke-width="2"></line>
+                    </svg>
+                    <span class="nav-link-text font-semibold text-lg">PayU Log</span>
                 </a>
 
                 <div class="sidebar-section mt-6 relative group">

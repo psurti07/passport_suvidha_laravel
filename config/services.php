@@ -78,6 +78,12 @@ return [
         'version' => env('PHONEPE_CLIENT_VERSION'),
     ],
 
+    'payu' => [
+        'mode' => env('PAYU_MODE', 'test'),
+        'key' => env('PAYU_KEY'),
+        'salt' => env('PAYU_SALT'),
+    ],
+
     'interkt' => [
         'key' => env('INTERAKT_API_KEY'),
         'url' => env('INTERAKT_BASE_URL')

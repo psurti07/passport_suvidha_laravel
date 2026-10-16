@@ -1,14 +1,14 @@
 <?php
- 
+
 namespace App\Models;
- 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
- 
+
 class CashfreeLog extends Model
 {
     use HasFactory;
-  
+
     protected $fillable = [
         'customer_id',
         'order_id',
@@ -21,7 +21,7 @@ class CashfreeLog extends Model
         'service_type',
         'offer_type',
     ];
- 
+
     // Relationships
     public function customer()
     {
@@ -30,7 +30,7 @@ class CashfreeLog extends Model
 
     public function getServiceTextAttribute()
     {
-        return match($this->service_type) {
+        return match ($this->service_type) {
             'NP36' => 'New Passport - 36 Pages',
             'NP60' => 'New Passport - 60 Pages',
             'TP36' => 'Tatkal Passport - 36 Pages',
@@ -41,9 +41,10 @@ class CashfreeLog extends Model
 
     public function getOfferTextAttribute()
     {
-        return match($this->offer_type) {
+        return match ($this->offer_type) {
             1 => 'Card Offer',
             2 => 'Star Offer',
+            3 => 'Bumper Offer',
             default => 'Direct',
         };
     }
