@@ -866,18 +866,20 @@ scrollToActive()" x-cloak>
                 <span class="nav-link-text font-semibold text-lg">Today's Leads</span>
                 </a> --}}
 
-                <a href="{{ route('admin.leads.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.leads.index') && !request()->routeIs('admin.leads.today') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Leads' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <circle cx="9" cy="8" r="3" stroke-width="2"></circle>
-                        <circle cx="17" cy="8" r="3" stroke-width="2"></circle>
-                        <path stroke-width="2" d="M5 20c0-3 4-4 4-4s4 1 4 4"></path>
-                        <path stroke-width="2" d="M13 20c0-3 4-4 4-4s4 1 4 4"></path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Leads</span>
-                </a>
+                @if (Auth::check() && Auth::user()->isAdmin())
+                    <a href="{{ route('admin.leads.index') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.leads.index') && !request()->routeIs('admin.leads.today') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Leads' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <circle cx="9" cy="8" r="3" stroke-width="2"></circle>
+                            <circle cx="17" cy="8" r="3" stroke-width="2"></circle>
+                            <path stroke-width="2" d="M5 20c0-3 4-4 4-4s4 1 4 4"></path>
+                            <path stroke-width="2" d="M13 20c0-3 4-4 4-4s4 1 4 4"></path>
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">Leads</span>
+                    </a>
+                @endif
 
                 {{-- <a href="{{ route('admin.customers.today') }}"
                 class="nav-link flex items-center px-4 py-3 rounded-lg mb-1
@@ -1117,160 +1119,163 @@ scrollToActive()" x-cloak>
                 </a>
 
                 <!-- <div class="mt-6 px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">INVOICES</div> -->
+                @if (Auth::check() && Auth::user()->isAdmin())
+                    <div class="sidebar-section mt-6 relative group">
 
-                <div class="sidebar-section mt-6 relative group">
+                        <!-- Expanded -->
+                        <div x-show="!sidebarCollapsed"
+                            class="px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">
+                            INVOICES
+                        </div>
 
-                    <!-- Expanded -->
-                    <div x-show="!sidebarCollapsed"
-                        class="px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">
-                        INVOICES
-                    </div>
+                        <!-- Collapsed -->
+                        <div x-show="sidebarCollapsed"
+                            class="flex items-center justify-center py-3 rounded-md bg-blue cursor-pointer">
 
-                    <!-- Collapsed -->
-                    <div x-show="sidebarCollapsed"
-                        class="flex items-center justify-center py-3 rounded-md bg-blue cursor-pointer">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 14h6m-6 4h6m2 3H7a2 2 0 01-2-2V5a2 2 0 012-2h6l5 5v11a2 2 0 01-2 2z" />
+                            </svg>
 
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 14h6m-6 4h6m2 3H7a2 2 0 01-2-2V5a2 2 0 012-2h6l5 5v11a2 2 0 01-2 2z" />
-                        </svg>
+                        </div>
 
-                    </div>
-
-                    <!-- Tooltip -->
-                    {{--
+                        <!-- Tooltip -->
+                        {{--
     <div x-show="sidebarCollapsed" class="sidebar-section-tooltip">
         INVOICES
     </div>
     --}}
 
-                </div>
-
-                <a href="{{ route('admin.invoices.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Invoice</span>
-                </a>
-
-                <a href="{{ route('admin.gst.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.gst.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'GST Data' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-width="2" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                        <path stroke-width="2" d="M14 2v6h6" />
-                        <path stroke-width="2" d="M8 17v-4M12 17v-6M16 17v-2" />
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">GST Data</span>
-                </a>
-
-                <a href="{{ route('admin.refund.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.refund.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Refund Data' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l-4-4 4-4" />
-
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M5 10h9a5 5 0 015 5v1" />
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Refund</span>
-                </a>
-
-                <div class="sidebar-section mt-6 relative group">
-
-                    <!-- Expanded -->
-                    <div x-show="!sidebarCollapsed"
-                        class="px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">
-                        REPORTS
                     </div>
 
-                    <!-- Collapsed -->
-                    <div x-show="sidebarCollapsed"
-                        class="flex items-center justify-center py-3 rounded-md bg-blue cursor-pointer">
-
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('admin.invoices.index') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 17v-2m3 2v-4m3 4v-6m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h6l5 5v11a2 2 0 01-2 2z" />
+                                d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
+                            </path>
                         </svg>
+                        <span class="nav-link-text font-semibold text-lg">Invoice</span>
+                    </a>
 
-                    </div>
+                    <a href="{{ route('admin.gst.index') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.gst.*') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'GST Data' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-width="2" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                            <path stroke-width="2" d="M14 2v6h6" />
+                            <path stroke-width="2" d="M8 17v-4M12 17v-6M16 17v-2" />
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">GST Data</span>
+                    </a>
 
-                    <!-- Tooltip -->
-                    {{--
+                    <a href="{{ route('admin.refund.index') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.refund.*') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Refund Data' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 14l-4-4 4-4" />
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 10h9a5 5 0 015 5v1" />
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">Refund</span>
+                    </a>
+                @endif
+                @if (Auth::check() && Auth::user()->isAdmin())
+                    <div class="sidebar-section mt-6 relative group">
+
+                        <!-- Expanded -->
+                        <div x-show="!sidebarCollapsed"
+                            class="px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">
+                            REPORTS
+                        </div>
+
+                        <!-- Collapsed -->
+                        <div x-show="sidebarCollapsed"
+                            class="flex items-center justify-center py-3 rounded-md bg-blue cursor-pointer">
+
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 17v-2m3 2v-4m3 4v-6m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h6l5 5v11a2 2 0 01-2 2z" />
+                            </svg>
+
+                        </div>
+
+                        <!-- Tooltip -->
+                        {{--
     <div x-show="sidebarCollapsed" class="sidebar-section-tooltip">
         REPORTS
     </div>
     --}}
 
-                </div>
+                    </div>
 
-                <a href="{{ route('admin.report.lead') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.lead') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Lead List' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Lead</span>
-                </a>
+                    <a href="{{ route('admin.report.lead') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.lead') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Lead List' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">Lead</span>
+                    </a>
 
-                <a href="{{ route('admin.report.customer') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.customer') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Customer List' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Customer</span>
-                </a>
 
-                <a href="{{ route('admin.report.service') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.service') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Service List' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Service</span>
-                </a>
+                    <a href="{{ route('admin.report.customer') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.customer') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Customer List' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">Customer</span>
+                    </a>
 
-                <a href="{{ route('admin.report.invoice') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.invoice') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Invoice</span>
-                </a>
+                    <a href="{{ route('admin.report.service') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.service') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Service List' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">Service</span>
+                    </a>
 
-                <a href="{{ route('admin.report.application-status') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.application-status') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Application Statu' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Application Status</span>
-                </a>
+                    <a href="{{ route('admin.report.invoice') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.invoice') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Invoice List' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">Invoice</span>
+                    </a>
 
+                    <a href="{{ route('admin.report.application-status') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.report.application-status') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Application Statu' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6M9 8h6m2 12H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v9a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">Application Status</span>
+                    </a>
+                @endif
                 <div class="sidebar-section mt-6 relative group">
 
                     <!-- Expanded -->
@@ -1487,220 +1492,229 @@ scrollToActive()" x-cloak>
                     <span class="nav-link-text font-semibold text-lg">Contact Enquiry</span>
                 </a>
 
-                <div class="sidebar-section mt-6 relative group">
+                @if (Auth::check() && Auth::user()->isAdmin())
+                    <div class="sidebar-section mt-6 relative group">
 
-                    <!-- Expanded -->
-                    <div x-show="!sidebarCollapsed"
-                        class="px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">
-                        SMS
-                    </div>
+                        <!-- Expanded -->
+                        <div x-show="!sidebarCollapsed"
+                            class="px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">
+                            SMS
+                        </div>
 
-                    <!-- Collapsed -->
-                    <div x-show="sidebarCollapsed"
-                        class="flex items-center justify-center py-3 rounded-md bg-blue cursor-pointer">
+                        <!-- Collapsed -->
+                        <div x-show="sidebarCollapsed"
+                            class="flex items-center justify-center py-3 rounded-md bg-blue cursor-pointer">
 
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8A8.5 8.5 0 0112.5 3a8.38 8.38 0 013.8.9 8.5 8.5 0 014.7 7.6z" />
-                        </svg>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8A8.5 8.5 0 0112.5 3a8.38 8.38 0 013.8.9 8.5 8.5 0 014.7 7.6z" />
+                            </svg>
 
-                    </div>
+                        </div>
 
-                    <!-- Tooltip -->
-                    {{--
+                        <!-- Tooltip -->
+                        {{--
     <div x-show="sidebarCollapsed" class="sidebar-section-tooltip">
         SMS
     </div>
     --}}
 
-                </div>
-
-                <a href="{{ route('admin.otps.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">OTP Management</span>
-                </a>
-
-                <a href="{{ route('admin.sms.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.sms.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'SMS Messages' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4-.8L3 20l1.3-3.9A7.93 7.93 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">SMS Messages</span>
-                </a>
-
-                <a href="{{ route('admin.remarketing-logs.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.remarketing-logs.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Remarketing Logs' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17V7"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17v-3"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 21h14"></path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Remarketing Logs</span>
-                </a>
-
-                <a href="{{ route('admin.dnd.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.dnd.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'DND List' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5l14 14"></path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">DND List</span>
-                </a>
-
-                <div class="sidebar-section mt-6 relative group">
-
-                    <!-- Expanded -->
-                    <div x-show="!sidebarCollapsed"
-                        class="px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">
-                        SCHEDULES SLOTS
                     </div>
 
-                    <!-- Collapsed -->
-                    <div x-show="sidebarCollapsed"
-                        class="flex items-center justify-center py-3 rounded-md bg-blue cursor-pointer">
-
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('admin.otps.index') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.otps.*') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'OTP Management' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 5h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2zm3 8h2m2 0h2m2 0h2m-8 4h2m2 0h2m2 0h2" />
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                            </path>
                         </svg>
+                        <span class="nav-link-text font-semibold text-lg">OTP Management</span>
+                    </a>
 
-                    </div>
+                    <a href="{{ route('admin.sms.index') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.sms.*') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'SMS Messages' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4-.8L3 20l1.3-3.9A7.93 7.93 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                            </path>
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">SMS Messages</span>
+                    </a>
 
-                    <!-- Tooltip -->
-                    {{--
+                    <a href="{{ route('admin.remarketing-logs.index') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.remarketing-logs.*') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Remarketing Logs' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17V7">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17v-3">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 21h14">
+                            </path>
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">Remarketing Logs</span>
+                    </a>
+
+                    <a href="{{ route('admin.dnd.index') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.dnd.*') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'DND List' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5l14 14">
+                            </path>
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">DND List</span>
+                    </a>
+                @endif
+                @if (Auth::check() && Auth::user()->isAdmin())
+                    <div class="sidebar-section mt-6 relative group">
+
+                        <!-- Expanded -->
+                        <div x-show="!sidebarCollapsed"
+                            class="px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">
+                            SCHEDULES SLOTS
+                        </div>
+
+                        <!-- Collapsed -->
+                        <div x-show="sidebarCollapsed"
+                            class="flex items-center justify-center py-3 rounded-md bg-blue cursor-pointer">
+
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 5h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2zm3 8h2m2 0h2m2 0h2m-8 4h2m2 0h2m2 0h2" />
+                            </svg>
+
+                        </div>
+
+                        <!-- Tooltip -->
+                        {{--
     <div x-show="sidebarCollapsed" class="sidebar-section-tooltip">
         SCHEDULES SLOTS
     </div>
     --}}
 
-                </div>
-
-                <a href="{{ route('admin.schedule-slots.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.schedule-slots.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Schedule Slots' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                        </path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12v3l2 2">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Schedule Slots</span>
-                </a>
-
-                <div class="sidebar-section mt-6 relative group">
-
-                    <!-- Expanded -->
-                    <div x-show="!sidebarCollapsed"
-                        class="px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">
-                        TEMPLATES
                     </div>
 
-                    <!-- Collapsed -->
-                    <div x-show="sidebarCollapsed"
-                        class="flex items-center justify-center py-3 rounded-md bg-blue cursor-pointer">
-
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('admin.schedule-slots.index') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.schedule-slots.*') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Schedule Slots' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h6l5 5v11a2 2 0 01-2 2z" />
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12v3l2 2">
+                            </path>
                         </svg>
+                        <span class="nav-link-text font-semibold text-lg">Schedule Slots</span>
+                    </a>
+                @endif
+                @if (Auth::check() && Auth::user()->isAdmin())
+                    <div class="sidebar-section mt-6 relative group">
 
-                    </div>
+                        <!-- Expanded -->
+                        <div x-show="!sidebarCollapsed"
+                            class="px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">
+                            TEMPLATES
+                        </div>
 
-                    <!-- Tooltip -->
-                    {{--
+                        <!-- Collapsed -->
+                        <div x-show="sidebarCollapsed"
+                            class="flex items-center justify-center py-3 rounded-md bg-blue cursor-pointer">
+
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h6l5 5v11a2 2 0 01-2 2z" />
+                            </svg>
+
+                        </div>
+
+                        <!-- Tooltip -->
+                        {{--
     <div x-show="sidebarCollapsed" class="sidebar-section-tooltip">
         TEMPLATES
     </div>
     --}}
 
-                </div>
-
-                <a href="{{ route('admin.predefined-messages.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.predefined-messages.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Predefined Messages' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M7 8h10M7 12h4m1 8l-5-5h11.5a2.5 2.5 0 002.5-2.5V7.5a2.5 2.5 0 00-2.5-2.5H5.5A2.5 2.5 0 003 7.5v7.008A2.492 2.492 0 005.5 17H7z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Predefined Messages</span>
-                </a>
-
-                <a href="{{ route('admin.document-types.index') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.document-types.*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Document Types' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Document Types</span>
-                </a>
-
-                <div class="sidebar-section mt-6 relative group">
-
-                    <!-- Expanded -->
-                    <div x-show="!sidebarCollapsed"
-                        class="px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">
-                        OTHER OPTIONS
                     </div>
 
-                    <!-- Collapsed -->
-                    <div x-show="sidebarCollapsed"
-                        class="flex items-center justify-center py-3 rounded-md bg-blue cursor-pointer">
-
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('admin.predefined-messages.index') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.predefined-messages.*') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Predefined Messages' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8v8m-4-4h8m7 0a11 11 0 11-22 0 11 11 0 0122 0z" />
+                                d="M7 8h10M7 12h4m1 8l-5-5h11.5a2.5 2.5 0 002.5-2.5V7.5a2.5 2.5 0 00-2.5-2.5H5.5A2.5 2.5 0 003 7.5v7.008A2.492 2.492 0 005.5 17H7z">
+                            </path>
                         </svg>
+                        <span class="nav-link-text font-semibold text-lg">Predefined Messages</span>
+                    </a>
 
-                    </div>
+                    <a href="{{ route('admin.document-types.index') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.document-types.*') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Document Types' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">Document Types</span>
+                    </a>
+                @endif
+                @if (Auth::check() && Auth::user()->isAdmin())
+                    <div class="sidebar-section mt-6 relative group">
 
-                    <!-- Tooltip -->
-                    {{--
+                        <!-- Expanded -->
+                        <div x-show="!sidebarCollapsed"
+                            class="px-4 py-3 text-md rounded-md bg-blue font-semibold text-text-gray">
+                            OTHER OPTIONS
+                        </div>
+
+                        <!-- Collapsed -->
+                        <div x-show="sidebarCollapsed"
+                            class="flex items-center justify-center py-3 rounded-md bg-blue cursor-pointer">
+
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v8m-4-4h8m7 0a11 11 0 11-22 0 11 11 0 0122 0z" />
+                            </svg>
+
+                        </div>
+
+                        <!-- Tooltip -->
+                        {{--
     <div x-show="sidebarCollapsed" class="sidebar-section-tooltip">
         OTHER OPTIONS
     </div>
     --}}
 
-                </div>
+                    </div>
 
-                <a href="{{ route('admin.site-options') }}"
-                    class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.site-options*') ? 'active' : '' }}"
-                    x-bind:title="sidebarCollapsed ? 'Site Options' : ''">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0 feather feather-settings" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path
-                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-                        </path>
-                    </svg>
-                    <span class="nav-link-text font-semibold text-lg">Site Options</span>
-                </a>
+                    <a href="{{ route('admin.site-options') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.site-options*') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Site Options' : ''">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0 feather feather-settings" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path
+                                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                            </path>
+                        </svg>
+                        <span class="nav-link-text font-semibold text-lg">Site Options</span>
+                    </a>
 
-                {{-- Staff Management Section --}}
-                @if (Auth::check() && Auth::user()->isAdmin())
+                    {{-- Staff Management Section --}}
+                    {{-- @if (Auth::check() && Auth::user()->isAdmin()) --}}
                     <a href="{{ route('admin.users.index') }}"
                         class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
                         x-bind:title="sidebarCollapsed ? 'Staff Members' : ''">
@@ -1712,8 +1726,8 @@ scrollToActive()" x-cloak>
                         </svg>
                         <span class="nav-link-text font-semibold text-lg">Staff Members</span>
                     </a>
+                    {{-- @endif --}}
                 @endif
-
 
                 {{-- End New Templates Section --}}
             </nav>

@@ -274,7 +274,7 @@
             <tr>
                 <td class="center">1</td>
 
-                <td>Service Charges</td>
+                <td>Passport Suvidha Consulting Charge</td>
 
 
                 <td class="right">₹{{ number_format($net_amount, 2) }}</td>
@@ -310,7 +310,7 @@
             <tr>
                 <td class="center">1</td>
 
-                <td>Service Charges</td>
+                <td>Passport Suvidha Consulting Charge</td>
 
                 {{-- <td class="center">998599</td> --}}
 
