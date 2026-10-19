@@ -36,6 +36,7 @@ use App\Http\Controllers\Admin\RefundController;
 use App\Http\Controllers\Admin\PassportAccountController;
 use App\Http\Controllers\Admin\PayuLogsController;
 use App\Http\Controllers\Admin\TodayProcessStepController;
+use App\Http\Controllers\Admin\WebsiteLinkController;
 use App\Http\Controllers\Admin\WhatsAppMessageController;
 
 /*
@@ -265,4 +266,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         '/refunds/{refund_id}/download',
         [RefundController::class, 'downloadRefund']
     )->name('refunds.download');
+
+    // Wesite Links 
+    Route::get('/website-links', [WebsiteLinkController::class, 'index'])->name('website-links.index');
+    Route::get('/website-links/data', [WebsiteLinkController::class, 'data'])->name('website-links.data');
+    Route::post('/website-links', [WebsiteLinkController::class, 'store'])->name('website-links.store');
+    Route::get('/website-links/{websiteLink}/edit', [WebsiteLinkController::class, 'edit'])->name('website-links.edit');
+    Route::put('/website-links/{websiteLink}', [WebsiteLinkController::class, 'update'])->name('website-links.update');
+    Route::delete('/website-links/{websiteLink}', [WebsiteLinkController::class, 'destroy'])->name('website-links.destroy');
 });

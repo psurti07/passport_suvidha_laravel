@@ -1699,6 +1699,23 @@ scrollToActive()" x-cloak>
 
                     </div>
 
+                    <a href="{{ route('admin.website-links.index') }}"
+                        class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.website-links.*') ? 'active' : '' }}"
+                        x-bind:title="sidebarCollapsed ? 'Website Links' : ''">
+
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71
+               M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71">
+                            </path>
+                        </svg>
+
+                        <span class="nav-link-text font-semibold text-lg">
+                            Website Links
+                        </span>
+                    </a>
+
                     <a href="{{ route('admin.site-options') }}"
                         class="nav-link flex items-center px-4 py-3 rounded-lg mb-1 {{ request()->routeIs('admin.site-options*') ? 'active' : '' }}"
                         x-bind:title="sidebarCollapsed ? 'Site Options' : ''">
@@ -1728,6 +1745,7 @@ scrollToActive()" x-cloak>
                     </a>
                     {{-- @endif --}}
                 @endif
+
 
                 {{-- End New Templates Section --}}
             </nav>

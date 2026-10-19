@@ -223,7 +223,6 @@ class SupportTicketController extends Controller
     }
 
     if (!$customer instanceof Customer || $ticket->customer_id !== $customer->id) {
-
       return response()->json(['error' => 'Unauthorized to view this ticket.'], 403);
     }
 
