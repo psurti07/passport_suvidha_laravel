@@ -14,7 +14,29 @@
                 <div class="p-8 p-0">
                     <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-6" novalidate>
                         @csrf
+                        {{-- User Role --}}
+                        <div class="mb-4">
+                            <label for="role" class="block text-sm font-semibold text-gray-700 mb-2">
+                                User Role <span class="text-red-500">*</span>
+                            </label>
 
+                            <select id="role" name="role" required
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3
+               text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+
+                                <option value="">Select Role</option>
+                                <option value="staff" {{ old('role', 'staff') === 'staff' ? 'selected' : '' }}>
+                                    Staff
+                                </option>
+                                <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>
+                                    Admin
+                                </option>
+                            </select>
+
+                            @error('role')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                         {{-- Name Field --}}
                         <div class="space-y-2">
                             <label for="name" class="block text-sm font-semibold text-gray-900">

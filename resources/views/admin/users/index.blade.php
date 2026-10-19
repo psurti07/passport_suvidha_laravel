@@ -72,6 +72,9 @@
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Name</th>
 
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Email</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                                        Role
+                                    </th>
 
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
                                     </th>
@@ -150,6 +153,10 @@
                     {
                         data: 'email',
                         name: 'email'
+                    },
+                    {
+                        data: 'role',
+                        name: 'role'
                     },
                     {
                         data: 'is_active',

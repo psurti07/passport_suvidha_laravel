@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -34,14 +35,18 @@ class UserController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $query = User::with('creator')->where('role', 'staff')->select([
-            'id',
-            'name',
-            'email',
-            'is_active',
-            'created_at',
-            'updated_at',
-        ]);
+        $query = User::with('creator')
+            ->whereIn('role', ['staff', 'admin'])
+            ->select([
+                'id',
+                'name',
+                'email',
+                'role',
+                'is_active',
+                'created_by',
+                'created_at',
+                'updated_at',
+            ]);
 
         if ($request->filled('from_date') && $request->filled('to_date')) {
 
@@ -65,6 +70,28 @@ class UserController extends Controller
 
             ->addColumn('created_by', function ($row) {
                 return optional($row->creator)->name ?? '-';
+            })
+            ->editColumn('role', function ($row) {
+                $roles = [
+                    'admin' => [
+                        'label' => 'Admin',
+                        'class' => 'bg-purple-100 text-purple-800',
+                    ],
+                    'staff' => [
+                        'label' => 'Staff',
+                        'class' => 'bg-blue-100 text-blue-800',
+                    ],
+                ];
+
+                $role = $roles[$row->role] ?? [
+                    'label' => ucfirst($row->role),
+                    'class' => 'bg-gray-100 text-gray-700',
+                ];
+
+                return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs '
+                    . $role['class'] . '">'
+                    . e($role['label'])
+                    . '</span>';
             })
 
             ->editColumn('is_active', function ($row) {
@@ -132,7 +159,7 @@ class UserController extends Controller
                 ';
             })
 
-            ->rawColumns(['is_active', 'actions'])
+            ->rawColumns(['is_active', 'role', 'actions'])
 
             ->make(true);
     }
@@ -151,17 +178,18 @@ class UserController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Password::defaults()],
+            'role' => ['required', Rule::in(['staff', 'admin'])],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'staff',
+            'role' => $validated['role'],
             'created_by' => auth()->id(),
         ]);
 
@@ -175,7 +203,8 @@ class UserController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        if ($user->role !== 'staff') {
+
+        if (!in_array($user->role, ['staff', 'admin'], true)) {
             abort(404);
         }
         return view('admin.users.show', compact('user'));
@@ -187,7 +216,7 @@ class UserController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        if ($user->role !== 'staff') {
+        if (!in_array($user->role, ['staff', 'admin'], true)) {
             abort(404);
         }
         return view('admin.users.edit', compact('user'));
@@ -199,19 +228,39 @@ class UserController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        if ($user->role !== 'staff') {
+        if (!in_array($user->role, ['staff', 'admin'], true)) {
             abort(404);
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'is_active' => ['boolean'],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+            'role' => ['required', Rule::in(['staff', 'admin'])],
+            'is_active' => ['sometimes', 'boolean'],
         ]);
+
+        if (
+            $user->id === auth()->id()
+            && $validated['role'] !== $user->role
+        ) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors([
+                    'role' => 'You cannot change your own role.',
+                ]);
+        }
+
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
+            'role' => $validated['role'],
             'is_active' => $request->is_active ?? $user->is_active,
         ]);
 
