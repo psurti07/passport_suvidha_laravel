@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('remarketing:sms')->everyFifteenMinutes();
         $schedule->command('appointmentReminder:interakt')->everyFifteenMinutes();
         $schedule->command('detailsVerificationReminder:interakt')->everyFifteenMinutes();
+        $schedule->command('verification-ohk:interakt')->everyFifteenMinutes();
     }
 
     /**
@@ -30,7 +31,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

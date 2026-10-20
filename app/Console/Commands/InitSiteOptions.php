@@ -64,6 +64,10 @@ class InitSiteOptions extends Command
             'interakt-details-verification-template-name',
             'interakt-details-verification-media-url',
 
+            'interakt-verification-ohk-key',
+            'interakt-verification-ohk-template-name',
+            'interakt-verification-ohk-media-url',
+
             // RCS
             'rcs-user-id',
             'rcs-api-key',

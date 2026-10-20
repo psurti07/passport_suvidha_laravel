@@ -12,12 +12,16 @@ class InteraktService
     protected $apiKey;
     protected $appointmentApiKey;
     protected $detailsVerificationApiKey;
+    protected $verificationOhkApiKey;
     protected $templateName;
     protected $appointmentTemplateName;
+    protected $verificationOhkTemplateName;
     protected $detailsVerificationTemplateName;
     protected $mediaUrl;
     protected $appointmentMediaUrl;
     protected $detailsVerificationMediaUrl;
+    protected $verificationOhkMediaUrl;
+
 
     public function __construct()
     {
@@ -25,12 +29,18 @@ class InteraktService
         $this->apiKey = SiteOption::getValue('interakt-key');
         $this->templateName = SiteOption::getValue('interakt-template-name');
         $this->mediaUrl = SiteOption::getValue('interakt-media-url');
+
         $this->appointmentApiKey = SiteOption::getValue('interakt-appointment-key');
         $this->appointmentTemplateName = SiteOption::getValue('interakt-appointment-template-name');
         $this->appointmentMediaUrl = SiteOption::getValue('interakt-appointment-media-url');
+
         $this->detailsVerificationApiKey = SiteOption::getValue('interakt-details-verification-key');
         $this->detailsVerificationTemplateName = SiteOption::getValue('interakt-details-verification-template-name');
         $this->detailsVerificationMediaUrl = SiteOption::getValue('interakt-details-verification-media-url');
+
+        $this->verificationOhkApiKey = SiteOption::getValue('interakt-verification-ohk-key');
+        $this->verificationOhkTemplateName = SiteOption::getValue('interakt-verification-ohk-template-name');
+        $this->verificationOhkMediaUrl = SiteOption::getValue('interakt-verification-ohk-media-url');
     }
 
     public function send(string $mobile, string $name)
@@ -68,6 +78,60 @@ class InteraktService
             $response = $http
                 ->withHeaders([
                     'Authorization' => 'Basic ' . $this->apiKey,
+                    'Content-Type' => 'application/json',
+                ])
+                ->post(
+                    $this->baseUrl . '/v1/public/message/',
+                    $payload
+                );
+
+            return [
+                'status' => $response->successful(),
+                'response' => $response->json(),
+            ];
+        } catch (\Exception $e) {
+
+            Log::error('INTERAKT SEND ERROR : ' . $e->getMessage());
+
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    public function sendVerificationOhk(string $mobile, string $name)
+    {
+        if (!$this->baseUrl || !$this->verificationOhkApiKey || !$this->verificationOhkTemplateName) {
+            Log::error('INTERAKT CONFIG MISSING');
+            return [
+                'status' => false,
+                'message' => 'Interakt config missing'
+            ];
+        }
+
+        $payload = [
+            "fullPhoneNumber" => '+91' . $mobile,
+            "callbackData" => "some text here",
+            "type" => "Template",
+            "template" => [
+                "name" => $this->verificationOhkTemplateName,
+                "languageCode" => "en",
+                "headerValues" => [
+                    $this->verificationOhkMediaUrl
+                ]
+            ]
+        ];
+
+        try {
+
+            $http = app()->environment('local')
+                ? Http::withoutVerifying()
+                : Http::acceptJson();
+
+            $response = $http
+                ->withHeaders([
+                    'Authorization' => 'Basic ' . $this->verificationOhkApiKey,
                     'Content-Type' => 'application/json',
                 ])
                 ->post(

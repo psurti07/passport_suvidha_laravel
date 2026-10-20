@@ -106,46 +106,79 @@
                     <h3 class="font-semibold mb-4">Interakt Settings</h3>
 
                     @php
-                        $interakt = [
-                            'interakt-key' => 'Interakt API Key',
-                            'interakt-template-name' => 'Interakt Template Name',
-                            'interakt-media-url' => 'Interakt Media URL',
-                            'interakt-appointment-key' => 'Interakt Appointment Key',
-                            'interakt-appointment-template-name' => 'Interakt Appointment Template Name',
-                            'interakt-appointment-media-url' => 'Interakt Appointment Media Url',
-                            'interakt-details-verification-key' => 'Interakt Details Verification Key',
-                            'interakt-details-verification-template-name' =>
-                                'Interakt Details Verification Template Name',
-                            'interakt-details-verification-media-url' => 'Interakt Details Verification Media Url',
+                        $interaktGroups = [
+                            'General Interakt Template' => [
+                                'interakt-key' => 'Interakt API Key',
+                                'interakt-template-name' => 'Interakt Template Name',
+                                'interakt-media-url' => 'Interakt Media URL',
+                            ],
+
+                            'Appointment Template' => [
+                                'interakt-appointment-key' => 'Appointment API Key',
+                                'interakt-appointment-template-name' => 'Appointment Template Name',
+                                'interakt-appointment-media-url' => 'Appointment Media URL',
+                            ],
+
+                            'Details Verification Template' => [
+                                'interakt-details-verification-key' => 'Details Verification API Key',
+                                'interakt-details-verification-template-name' => 'Details Verification Template Name',
+                                'interakt-details-verification-media-url' => 'Details Verification Media URL',
+                            ],
+
+                            'Verification OHK Template' => [
+                                'interakt-verification-ohk-key' => 'Verification OHK API Key',
+                                'interakt-verification-ohk-template-name' => 'Verification OHK Template Name',
+                                'interakt-verification-ohk-media-url' => 'Verification OHK Media URL',
+                            ],
                         ];
                     @endphp
 
-                    @foreach ($interakt as $key => $label)
-                        <form method="POST" action="{{ route('admin.site-options.update') }}" class="mb-4">
-                            @csrf
-                            <input type="hidden" name="option_key" value="{{ $key }}">
-                            <input type="hidden" name="option_label" value="{{ $label }}">
+                    @foreach ($interaktGroups as $groupTitle => $settings)
+                        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6">
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">{{ $label }}</label>
-                                </div>
+                            {{-- Group heading --}}
+                            <h3 class="text-sm font-bold text-gray-800 mb-4 pb-3">
+                                {{ $groupTitle }}
+                            </h3>
 
-                                <div class="md:col-span-2 flex gap-3">
-                                    <input type="text" name="option_value" value="{{ getOption($key) }}"
-                                        placeholder="Enter {{ $label }}"
-                                        class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm">
+                            @foreach ($settings as $key => $label)
+                                <form method="POST" action="{{ route('admin.site-options.update') }}"
+                                    class="mb-4 last:mb-0">
 
-                                    <button type="submit"
-                                        onclick="this.disabled=true; this.innerText='Updating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
-                                        class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
-                                rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 
-                                transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap">
-                                        Update
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                                    @csrf
+
+                                    <input type="hidden" name="option_key" value="{{ $key }}">
+                                    <input type="hidden" name="option_label" value="{{ $label }}">
+
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+
+                                        <div>
+                                            <label class="text-sm font-medium text-gray-700">
+                                                {{ $label }}
+                                            </label>
+                                        </div>
+
+                                        <div class="md:col-span-2 flex gap-3">
+                                            <input type="text" name="option_value" value="{{ getOption($key) }}"
+                                                placeholder="Enter {{ $label }}"
+                                                class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm">
+
+                                            <button type="submit"
+                                                onclick="this.disabled=true; this.innerText='Updating...'; this.form.submit();"
+                                                class="px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800
+                            text-white rounded-lg text-sm font-medium
+                            hover:from-blue-700 hover:to-blue-900 shadow-md
+                            whitespace-nowrap">
+
+                                                Update
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            @endforeach
+
+                        </div>
                     @endforeach
                 </div>
 

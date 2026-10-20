@@ -37,13 +37,13 @@
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Sr. No.
                                     </th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Title</th>
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Date</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Type</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Short Link
                                     </th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Link</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status
                                     </th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Date</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
                                     </th>
                                 </tr>
@@ -299,10 +299,7 @@
                         data: 'title',
                         name: 'title'
                     },
-                    {
-                        data: 'date',
-                        name: 'created_at'
-                    },
+
                     {
                         data: 'link_type_badge',
                         name: 'link_type',
@@ -326,6 +323,10 @@
                         name: 'status',
                         orderable: false,
                         searchable: false
+                    },
+                    {
+                        data: 'date',
+                        name: 'created_at'
                     },
                     {
                         data: 'actions',

@@ -172,7 +172,6 @@ class RemarketingInteraktCommand extends Command
                         'mobile' => $mobile,
                         'message' => $e->getMessage(),
                     ]);
-
                 } finally {
                     sleep(2); // Wait 2 seconds after each attempt
                 }

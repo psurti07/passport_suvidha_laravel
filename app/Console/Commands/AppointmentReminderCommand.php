@@ -50,20 +50,9 @@ class AppointmentReminderCommand extends Command
         $now = now();
         $currentTime = $now->format('H:i');
 
-        // Log::info('APPOINTMENT REMINDER: COMMAND STARTED', [
-        //     'datetime' => $now->toDateTimeString(),
-        //     'time' => $currentTime,
-        //     'timezone' => config('app.timezone'),
-        // ]);
-
         $cronjobs = [
             '0' => ['10:00', '21:00'],
         ];
-
-        // Log::info('APPOINTMENT REMINDER: CHECKING SCHEDULE', [
-        //     'current_time' => $currentTime,
-        //     'cronjobs' => $cronjobs,
-        // ]);
 
         $scheduleDay = null;
         $scheduleTime = null;
@@ -86,42 +75,14 @@ class AppointmentReminderCommand extends Command
             }
         }
 
-        /*
-    |--------------------------------------------------------------------------
-    | Schedule Not Found
-    |--------------------------------------------------------------------------
-    */
-
         if (is_null($scheduleDay)) {
-
-            // Log::warning('APPOINTMENT REMINDER: NO SCHEDULE FOUND', [
-            //     'current_time' => $currentTime,
-            //     'datetime' => $now->toDateTimeString(),
-            //     'timezone' => config('app.timezone'),
-            // ]);
 
             $this->info('No Schedule Found');
 
             return 0;
         }
 
-        // Log::info('APPOINTMENT REMINDER: SCHEDULE FOUND', [
-        //     'schedule_day' => $scheduleDay,
-        //     'scheduled_time' => $scheduleTime,
-        //     'current_time' => $currentTime,
-        // ]);
-
-        /*
-    |--------------------------------------------------------------------------
-    | Services
-    |--------------------------------------------------------------------------
-    */
-
         $tomorrow = Carbon::tomorrow()->toDateString();
-
-        // Log::info('APPOINTMENT REMINDER: CHECKING APPOINTMENTS', [
-        //     'appointment_date' => $tomorrow,
-        // ]);
 
         $documentService = app(SecureDocumentService::class);
         $interaktService = app(InteraktService::class);
@@ -129,94 +90,31 @@ class AppointmentReminderCommand extends Command
         $responses = [];
         $mobiles = [];
 
-        /*
-    |--------------------------------------------------------------------------
-    | Get Appointment Letters
-    |--------------------------------------------------------------------------
-    */
-
         $appointmentLetters = AppointmentLetter::query()
             ->whereDate('appointment_date', $tomorrow)
             ->whereNotNull('customer_id')
             ->get();
 
-        // Log::info('APPOINTMENT REMINDER: APPOINTMENTS FOUND', [
-        //     'count' => $appointmentLetters->count(),
-        //     'appointment_date' => $tomorrow,
-        // ]);
-
-        /*
-    |--------------------------------------------------------------------------
-    | Process Appointments
-    |--------------------------------------------------------------------------
-    */
-
         foreach ($appointmentLetters as $appointment) {
-
-            // Log::info('APPOINTMENT REMINDER: PROCESSING APPOINTMENT', [
-            //     'appointment_id' => $appointment->id,
-            //     'customer_id' => $appointment->customer_id,
-            //     'appointment_date' => $appointment->appointment_date,
-            //     'appointment_time' => $appointment->appointment_time,
-            // ]);
 
             $customer = Customer::find($appointment->customer_id);
 
             if (!$customer) {
-
-                // Log::warning('APPOINTMENT REMINDER: CUSTOMER NOT FOUND', [
-                //     'appointment_id' => $appointment->id,
-                //     'customer_id' => $appointment->customer_id,
-                // ]);
-
                 continue;
             }
-
-            // Log::info('APPOINTMENT REMINDER: CUSTOMER FOUND', [
-            //     'customer_id' => $customer->id,
-            //     'mobile' => $customer->mobile_number,
-            //     'is_active' => $customer->is_active,
-            //     'is_dnd' => $customer->is_dnd,
-            // ]);
-
-            /*
-        |--------------------------------------------------------------------------
-        | Customer Eligibility
-        |--------------------------------------------------------------------------
-        */
 
             if (
                 empty($customer->mobile_number) ||
                 !$customer->is_active ||
                 $customer->is_dnd
             ) {
-
-                // Log::warning('APPOINTMENT REMINDER: CUSTOMER NOT ELIGIBLE', [
-                //     'customer_id' => $customer->id,
-                //     'mobile' => $customer->mobile_number,
-                //     'is_active' => $customer->is_active,
-                //     'is_dnd' => $customer->is_dnd,
-                // ]);
-
                 continue;
             }
-
-            /*
-        |--------------------------------------------------------------------------
-        | Check Appointment Document
-        |--------------------------------------------------------------------------
-        */
 
             if (
                 empty($appointment->file_path) ||
                 !$documentService->fileExists($appointment)
             ) {
-
-                // Log::warning('APPOINTMENT REMINDER: DOCUMENT NOT FOUND', [
-                //     'appointment_id' => $appointment->id,
-                //     'customer_id' => $customer->id,
-                //     'file_path' => $appointment->file_path,
-                // ]);
 
                 $responses[] = [
                     'status' => false,
@@ -226,12 +124,6 @@ class AppointmentReminderCommand extends Command
 
                 continue;
             }
-
-            /*
-        |--------------------------------------------------------------------------
-        | Add Recipient
-        |--------------------------------------------------------------------------
-        */
 
             $mobile = trim($customer->mobile_number);
 
@@ -245,22 +137,9 @@ class AppointmentReminderCommand extends Command
                     $appointment->id
                 ),
             ];
-
-            // Log::info('APPOINTMENT REMINDER: RECIPIENT ADDED', [
-            //     'customer_id' => $customer->id,
-            //     'mobile' => $mobile,
-            // ]);
         }
 
-        /*
-    |--------------------------------------------------------------------------
-    | Test Mode
-    |--------------------------------------------------------------------------
-    */
-
         if (config('services.interakt.test_mode')) {
-
-            // Log::info('APPOINTMENT REMINDER: TEST MODE ENABLED');
 
             $testNumbers = array_filter(
                 array_map(
@@ -271,10 +150,6 @@ class AppointmentReminderCommand extends Command
                     )
                 )
             );
-
-            // Log::info('APPOINTMENT REMINDER: TEST NUMBERS', [
-            //     'count' => count($testNumbers),
-            // ]);
 
             foreach ($testNumbers as $number) {
 
@@ -292,17 +167,6 @@ class AppointmentReminderCommand extends Command
             }
         }
 
-        /*
-    |--------------------------------------------------------------------------
-    | Final Recipients
-    |--------------------------------------------------------------------------
-    */
-
-        // Log::info('APPOINTMENT REMINDER: RECIPIENTS READY', [
-        //     'count' => count($mobiles),
-        //     'mobiles' => array_keys($mobiles),
-        // ]);
-
         if (empty($mobiles)) {
 
             Log::warning('APPOINTMENT REMINDER: NO ELIGIBLE RECIPIENTS', [
@@ -317,18 +181,7 @@ class AppointmentReminderCommand extends Command
             $this->warn('No eligible recipients found.');
         }
 
-        /*
-    |--------------------------------------------------------------------------
-    | Send Interakt Messages
-    |--------------------------------------------------------------------------
-    */
-
         foreach ($mobiles as $mobile => $data) {
-
-            // Log::info('APPOINTMENT REMINDER: SENDING INTERAKT MESSAGE', [
-            //     'mobile' => $mobile,
-            //     'customer_id' => $data['customer_id'],
-            // ]);
 
             try {
 
@@ -338,12 +191,6 @@ class AppointmentReminderCommand extends Command
                     $data['document_url'],
                     'appointment'
                 );
-
-                // Log::info('APPOINTMENT REMINDER: INTERAKT RESPONSE', [
-                //     'mobile' => $mobile,
-                //     'customer_id' => $data['customer_id'],
-                //     'response' => $response,
-                // ]);
 
                 sleep(2);
 
@@ -355,11 +202,6 @@ class AppointmentReminderCommand extends Command
                     // 'appointment_time' => $data['appointment_time'],
                     'response' => $response,
                 ];
-
-                // Log::info('APPOINTMENT REMINDER: MESSAGE PROCESSED', [
-                //     'mobile' => $mobile,
-                //     'status' => $response['status'] ?? false,
-                // ]);
             } catch (Throwable $e) {
 
                 Log::error('APPOINTMENT REMINDER: SEND ERROR', [
@@ -377,12 +219,6 @@ class AppointmentReminderCommand extends Command
             }
         }
 
-        /*
-    |--------------------------------------------------------------------------
-    | Save SMS Log
-    |--------------------------------------------------------------------------
-    */
-
         SmsLog::create([
             'type' => 'interakt',
             'crontype' => 'appointment reminder',
@@ -390,23 +226,6 @@ class AppointmentReminderCommand extends Command
             'msgcount' => count($mobiles),
             'msgresponse' => json_encode($responses),
         ]);
-
-        // Log::info('APPOINTMENT REMINDER: SMS LOG CREATED', [
-        //     'schedule_day' => $scheduleDay,
-        //     'message_count' => count($mobiles),
-        // ]);
-
-        /*
-    |--------------------------------------------------------------------------
-    | Complete
-    |--------------------------------------------------------------------------
-    */
-
-        // Log::info('APPOINTMENT REMINDER: COMMAND COMPLETED', [
-        //     'schedule_day' => $scheduleDay,
-        //     'message_count' => count($mobiles),
-        //     'datetime' => now()->toDateTimeString(),
-        // ]);
 
         $this->info(
             'Appointment Reminder Messages Processed: ' . count($mobiles)
