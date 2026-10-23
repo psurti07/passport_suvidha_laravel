@@ -77,6 +77,9 @@
                                         By
                                     </th>
 
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                                        Application Status</th>
+
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
                                     </th>
 
@@ -156,6 +159,10 @@
                     {
                         data: 'user_name',
                         name: 'user_name'
+                    },
+                    {
+                        data: 'application_status',
+                        name: 'application_status',
                     },
                     {
                         data: 'actions',
