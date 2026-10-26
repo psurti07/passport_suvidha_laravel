@@ -883,8 +883,8 @@
                                 </label>
 
                                 <input type="text" id="emergency_contact_name" name="emergency_contact_name"
-                                    value="{{ old('emergency_contact_name') }}" required maxlength="10"
-                                    inputmode="numeric" placeholder="Enter emergency contact name"
+                                    value="{{ old('emergency_contact_name') }}" required
+                                    placeholder="Enter emergency contact name"
                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm
                 py-2 px-3 mt-1 hover:border-gray-300 focus:border-blue-500
                 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200
