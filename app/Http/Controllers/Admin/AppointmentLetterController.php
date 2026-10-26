@@ -25,20 +25,54 @@ class AppointmentLetterController extends Controller
         $from = $request->from_date ?? now()->subDays(1)->format('Y-m-d');
         $to   = $request->to_date ?? now()->format('Y-m-d');
 
-        $query = AppointmentLetter::with('customer', 'uploader')->select([
-            'id',
-            'customer_id',
-            'upload_date',
-            'appointment_date',
-            'appointment_time',
-            'uploaded_by',
-        ])
+        $query = AppointmentLetter::with('customer', 'uploader')
+            ->select([
+                'id',
+                'customer_id',
+                'upload_date',
+                'appointment_date',
+                'appointment_time',
+                'uploaded_by',
+            ])
+            ->addSelect([
+                'application_status' => ApplicationProgress::query()
+                    ->join(
+                        'application_statuses as ast',
+                        'ast.id',
+                        '=',
+                        'application_progress.status_id'
+                    )
+                    ->select('ast.status_name')
+                    ->whereColumn(
+                        'application_progress.customer_id',
+                        'appointment_letters.customer_id'
+                    )
+                    ->whereNull('application_progress.deleted_at')
+                    ->orderByDesc('application_progress.status_date')
+                    ->orderByDesc('application_progress.id')
+                    ->limit(1),
 
+                'application_status_color' => ApplicationProgress::query()
+                    ->join(
+                        'application_statuses as ast',
+                        'ast.id',
+                        '=',
+                        'application_progress.status_id'
+                    )
+                    ->select('ast.colorclass')
+                    ->whereColumn(
+                        'application_progress.customer_id',
+                        'appointment_letters.customer_id'
+                    )
+                    ->whereNull('application_progress.deleted_at')
+                    ->orderByDesc('application_progress.status_date')
+                    ->orderByDesc('application_progress.id')
+                    ->limit(1),
+            ])
             ->whereBetween('appointment_date', [
                 $from . ' 00:00:00',
-                $to . ' 23:59:59'
+                $to . ' 23:59:59',
             ]);
-
         return DataTables::of($query)
 
             ->addIndexColumn()
@@ -76,6 +110,18 @@ class AppointmentLetterController extends Controller
 
             ->addColumn('user_name', function ($row) {
                 return $row->uploader->name ?? 'System';
+            })
+
+            ->addColumn('application_status', function ($row) {
+                if (!$row->application_status) {
+                    return '-';
+                }
+
+                $color = getStatusColor($row->application_status_color ?? 'gray');
+
+                return '<span class="inline-flex items-center px-3 py-1 font-bold rounded text-xs ' .
+                    e($color['tailwind'] ?? 'bg-gray-100 text-gray-600') .
+                    '">' . e($row->application_status) . '</span>';
             })
 
             ->filterColumn('customer_name', function ($query, $keyword) {
@@ -151,7 +197,11 @@ class AppointmentLetterController extends Controller
                 ';
             })
 
-            ->rawColumns(['customer_name', 'actions'])
+            ->rawColumns([
+                'customer_name',
+                'actions',
+                'application_status'
+            ])
 
             ->make(true);
     }

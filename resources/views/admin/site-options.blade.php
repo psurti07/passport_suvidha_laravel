@@ -259,19 +259,17 @@
                         $label = 'Welcome Message';
                     @endphp
 
-                    <form method="POST" action="{{ route('admin.site-options.update') }}">
+                    <form id="welcome-message-form" method="POST" action="{{ route('admin.site-options.update') }}">
                         @csrf
                         <input type="hidden" name="option_key" value="{{ $key }}">
                         <input type="hidden" name="option_label" value="{{ $label }}">
 
-                        <textarea name="option_value" rows="3" placeholder="Enter {{ $label }}"
+                        {{-- CKEditor replaces this textarea --}}
+                        <textarea id="welcome-message-editor" name="option_value" placeholder="Enter {{ $label }}"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm">{{ getOption($key) }}</textarea>
 
-                        <button type="submit"
-                            onclick="this.disabled=true; this.innerText='Updating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
-                            class="h-full px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white 
-                                rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 
-                                transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap">
+                        <button id="welcome-message-update" type="submit"
+                            class="mt-4 px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap">
                             Update
                         </button>
                     </form>
@@ -281,3 +279,76 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script src="https://cdn.ckeditor.com/ckeditor5/43.0.0/ckeditor5.umd.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.querySelector('#welcome-message-editor');
+            const form = document.querySelector('#welcome-message-form');
+            const updateButton = document.querySelector('#welcome-message-update');
+
+            if (!textarea || !form) {
+                return;
+            }
+
+            if (typeof CKEDITOR === 'undefined') {
+                console.error('CKEditor could not be loaded.');
+                return;
+            }
+
+            const {
+                ClassicEditor,
+                Essentials,
+                Bold,
+                Italic,
+                Font,
+                Paragraph
+            } = CKEDITOR;
+
+            ClassicEditor.create(textarea, {
+                    licenseKey: 'GPL',
+
+                    plugins: [
+                        Essentials,
+                        Bold,
+                        Italic,
+                        Font,
+                        Paragraph
+                    ],
+
+                    toolbar: [
+                        'undo',
+                        'redo',
+                        '|',
+                        'bold',
+                        'italic',
+                        '|',
+                        'fontSize',
+                        'fontFamily',
+                        'fontColor',
+                        'fontBackgroundColor'
+                    ]
+                })
+                .then(function(editor) {
+                    console.log('Welcome Message CKEditor initialized successfully.');
+
+                    // Save the latest editor content to the original textarea
+                    // before the form is submitted.
+                    form.addEventListener('submit', function() {
+                        editor.updateSourceElement();
+
+                        if (updateButton) {
+                            updateButton.disabled = true;
+                            updateButton.textContent = 'Updating...';
+                            updateButton.classList.add('opacity-50', 'cursor-not-allowed');
+                        }
+                    });
+                })
+                .catch(function(error) {
+                    console.error('Welcome Message CKEditor initialization failed:', error);
+                });
+        });
+    </script>
+@endpush

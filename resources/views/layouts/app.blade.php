@@ -39,10 +39,65 @@
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
+    {{-- CK Editoe   --}}
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.0.0/ckeditor5.css">
+
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.12.0/dist/cdn.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        #welcome-message-form .ck-editor {
+            width: 100%;
+            max-width: 100%;
+            font-size: 14px;
+        }
+
+        #welcome-message-form .ck.ck-toolbar {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2px;
+            padding: 6px 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px 8px 0 0;
+            background: #f9fafb;
+        }
+
+        #welcome-message-form .ck.ck-toolbar .ck-toolbar__items {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2px;
+        }
+
+        #welcome-message-form .ck.ck-button {
+            min-width: 30px;
+            min-height: 30px;
+        }
+
+        #welcome-message-form .ck.ck-editor__main>.ck-editor__editable {
+            min-height: 220px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 0 0 8px 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            background: #fff;
+        }
+
+        #welcome-message-form .ck.ck-editor__main>.ck-editor__editable:focus {
+            border-color: #0889F4;
+            box-shadow: 0 0 0 2px rgb(8 137 244 / 12%);
+        }
+
+        #welcome-message-form .ck.ck-dropdown .ck-button {
+            min-width: auto;
+        }
+
         :root {
             --primary-blue: #0D3B66;
             --secondary-blue: #1E5B94;
