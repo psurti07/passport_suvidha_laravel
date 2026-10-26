@@ -251,8 +251,8 @@
                 </div>
 
                 {{-- ================= WELCOME MESSAGE ================= --}}
-                <div class="border border-gray-200 rounded-lg p-5 mt-6 mb-6 bg-gray-50">
-                    <h3 class="font-semibold mb-4">Welcome Message</h3>
+                <div class="mt-6 mb-6 rounded-lg border border-gray-200 bg-gray-50 p-5">
+                    <h3 class="mb-4 font-semibold">Welcome Message</h3>
 
                     @php
                         $key = 'welcome-message';
@@ -261,24 +261,26 @@
 
                     <form id="welcome-message-form" method="POST" action="{{ route('admin.site-options.update') }}">
                         @csrf
+
                         <input type="hidden" name="option_key" value="{{ $key }}">
                         <input type="hidden" name="option_label" value="{{ $label }}">
 
-                        {{-- CKEditor replaces this textarea --}}
                         <textarea id="welcome-message-editor" name="option_value" placeholder="Enter {{ $label }}"
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm">{{ getOption($key) }}</textarea>
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm">{{ getOption($key) }}</textarea>
 
                         <button id="welcome-message-update" type="submit"
-                            class="mt-4 px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap">
+                            class="mt-4 rounded-lg bg-gradient-to-r from-blue-600 to-blue-800 px-5 py-2 text-sm font-medium text-white shadow-md transition-all duration-200 hover:from-blue-700 hover:to-blue-900 hover:shadow-lg">
                             Update
                         </button>
                     </form>
                 </div>
 
+
             </div>
         </div>
     </div>
 @endsection
+
 
 @push('scripts')
     <script src="https://cdn.ckeditor.com/ckeditor5/43.0.0/ckeditor5.umd.js"></script>
@@ -289,9 +291,7 @@
             const form = document.querySelector('#welcome-message-form');
             const updateButton = document.querySelector('#welcome-message-update');
 
-            if (!textarea || !form) {
-                return;
-            }
+            if (!textarea || !form) return;
 
             if (typeof CKEDITOR === 'undefined') {
                 console.error('CKEditor could not be loaded.');
@@ -304,7 +304,8 @@
                 Bold,
                 Italic,
                 Font,
-                Paragraph
+                Paragraph,
+                Link
             } = CKEDITOR;
 
             ClassicEditor.create(textarea, {
@@ -315,7 +316,8 @@
                         Bold,
                         Italic,
                         Font,
-                        Paragraph
+                        Paragraph,
+                        Link
                     ],
 
                     toolbar: [
@@ -328,26 +330,37 @@
                         'fontSize',
                         'fontFamily',
                         'fontColor',
-                        'fontBackgroundColor'
-                    ]
+                        'fontBackgroundColor',
+                        '|',
+                        'link'
+                    ],
+
+                    link: {
+                        addTargetToExternalLinks: true,
+                        defaultProtocol: 'https://'
+                    }
                 })
                 .then(function(editor) {
                     console.log('Welcome Message CKEditor initialized successfully.');
 
-                    // Save the latest editor content to the original textarea
-                    // before the form is submitted.
                     form.addEventListener('submit', function() {
                         editor.updateSourceElement();
 
                         if (updateButton) {
                             updateButton.disabled = true;
                             updateButton.textContent = 'Updating...';
-                            updateButton.classList.add('opacity-50', 'cursor-not-allowed');
+                            updateButton.classList.add(
+                                'opacity-50',
+                                'cursor-not-allowed'
+                            );
                         }
                     });
                 })
                 .catch(function(error) {
-                    console.error('Welcome Message CKEditor initialization failed:', error);
+                    console.error(
+                        'Welcome Message CKEditor initialization failed:',
+                        error
+                    );
                 });
         });
     </script>
