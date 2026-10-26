@@ -7,16 +7,29 @@
     transform: translateX(100%);
     animation: slideIn 0.3s ease forwards;
 }
+
 @keyframes slideIn {
-    to { opacity: 1; transform: translateX(0); }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
+
 .toast-content {
     backdrop-filter: blur(8px);
 }
+
 .toastify.on {
     opacity: 1;
 }
-.bg-blue{
+
+.bg-blue {
     background: #0033660d;
     color: #003366;
+}
+
+.ck-content a {
+    color: #2563eb;
+    text-decoration: underline;
+    cursor: pointer;
 }
