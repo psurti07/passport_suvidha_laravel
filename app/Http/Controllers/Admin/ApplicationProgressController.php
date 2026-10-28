@@ -147,8 +147,8 @@ class ApplicationProgressController extends Controller
                 'appointment_scheduled' => 'appointment-scheduled-sms',
                 'appointment_rescheduled1', 'appointment_rescheduled2', 'appointment_rescheduled3' => 'appointment-rescheduled-sms',
                 'pov_success' => 'pov-success-sms',
-                'pov_failed' => 'pov-failed-sms',
-                'pov_insufficient_documents' => 'pov-insufficient-documents-sms',
+                // 'pov_failed' => 'pov-failed-sms',
+                // 'pov_insufficient_documents' => 'pov-insufficient-documents-sms',
                 default => null
             };
 
