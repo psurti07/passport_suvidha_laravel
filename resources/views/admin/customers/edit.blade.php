@@ -175,7 +175,7 @@
                                     <div class="relative group">
                                         <input type="text" id="city" name="city"
                                             value="{{ old('city', $customer->city) }}" :required="isPaid"
-                                            placeholder="Enter city" readonly
+                                            placeholder="Enter city"
                                             class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                             hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                             transition-all duration-200 placeholder-gray-400
@@ -204,7 +204,7 @@
                                     <div class="relative group">
                                         <input type="text" id="state" name="state"
                                             value="{{ old('state', $customer->state) }}" :required="isPaid"
-                                            placeholder="Enter state" readonly
+                                            placeholder="Enter state"
                                             class="peer p-2 pl-3 mt-1 block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm 
                                             hover:border-gray-300 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 
                                             transition-all duration-200 placeholder-gray-400

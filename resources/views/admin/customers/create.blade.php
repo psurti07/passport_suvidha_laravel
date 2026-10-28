@@ -624,7 +624,7 @@
                                 </label>
 
                                 <input type="text" id="state" name="state" value="{{ old('state') }}"
-                                    required readonly placeholder="State"
+                                    required placeholder="State"
                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm
                                         py-2 px-3 mt-1 hover:border-gray-300 focus:border-blue-500
                                         focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200
@@ -643,7 +643,7 @@
                                 </label>
 
                                 <input type="text" id="city" name="city" value="{{ old('city') }}"
-                                    required readonly placeholder="City"
+                                    required placeholder="City"
                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm
                                         py-2 px-3 mt-1 hover:border-gray-300 focus:border-blue-500
                                         focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200
@@ -746,7 +746,7 @@
                                 </label>
 
                                 <input type="text" id="permanent_city" name="permanent_city"
-                                    value="{{ old('permanent_city') }}" readonly placeholder="Permanent district    "
+                                    value="{{ old('permanent_city') }}" placeholder="Permanent district    "
                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm
                 py-2 px-3 mt-1 hover:border-gray-300 focus:border-blue-500
                 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200
@@ -765,7 +765,7 @@
                                 </label>
 
                                 <input type="text" id="permanent_state" name="permanent_state"
-                                    value="{{ old('permanent_state') }}" readonly placeholder="Permanent state"
+                                    value="{{ old('permanent_state') }}" placeholder="Permanent state"
                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm
                 py-2 px-3 mt-1 hover:border-gray-300 focus:border-blue-500
                 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200

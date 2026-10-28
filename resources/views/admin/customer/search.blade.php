@@ -462,9 +462,9 @@
                                                     <option value="">Select Education Qualification</option>
 
                                                     <!-- <option value="Below 10th"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Below 10th
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </option> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('Below 10th') ? 'selected' : '' }}>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Below 10th
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </option> -->
 
                                                     <option value="10th Pass And Above"
                                                         {{ strtolower(trim(old('education_qualification', $customer->education_qualification))) == strtolower('10th Pass And Above') ? 'selected' : '' }}>
@@ -627,7 +627,7 @@
                                                     class="block text-sm font-medium text-gray-700 mb-1">City <span
                                                         class="text-red-500">*</span></label>
                                                 <input type="text" id="city" name="city"
-                                                    value="{{ old('city', $customer->city) }}" required readonly
+                                                    value="{{ old('city', $customer->city) }}" required
                                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                                 @error('city')
                                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -639,7 +639,7 @@
                                                     class="block text-sm font-medium text-gray-700 mb-1">State <span
                                                         class="text-red-500">*</span></label>
                                                 <input type="text" id="state" name="state"
-                                                    value="{{ old('state', $customer->state) }}" required readonly
+                                                    value="{{ old('state', $customer->state) }}" required
                                                     class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                                 @error('state')
                                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -728,7 +728,7 @@
                                                         <span class="text-red-500">*</span></label>
                                                     <input type="text" id="permanent_city" name="permanent_city"
                                                         value="{{ old('permanent_city', $customer->permanent_city) }}"
-                                                        required readonly
+                                                        required
                                                         class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
                                                     @error('permanent_city')
                                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -744,7 +744,6 @@
 
                                                     <input type="text" id="permanent_state" name="permanent_state"
                                                         value="{{ old('permanent_state', $customer->permanent_state ?? '') }}"
-                                                        readonly
                                                         class="block w-full rounded-lg border-2 border-gray-200 bg-white shadow-sm py-2 px-3 hover:border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200 placeholder-gray-400 sm:text-sm">
 
                                                     @error('permanent_state')
