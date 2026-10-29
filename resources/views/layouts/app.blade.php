@@ -680,6 +680,8 @@ scrollToActive()" x-cloak>
                         'admin.leads.today',
                         'admin.customers.today',
                         'admin.todayprocesssteps',
+                        'admin.customers.pov-success-20d',
+                        'admin.customers.pov-success-7d',
                     );
                 @endphp
 
