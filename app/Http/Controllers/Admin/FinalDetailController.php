@@ -91,7 +91,7 @@ class FinalDetailController extends Controller
 
             ->filterColumn('customer_name', function ($query, $keyword) {
                 $query->whereHas('customer', function ($q) use ($keyword) {
-                    $q->where('fullName', 'like', "%{$keyword}%");
+                    $q->where('full_name', 'like', "%{$keyword}%");
                 });
             })
 
