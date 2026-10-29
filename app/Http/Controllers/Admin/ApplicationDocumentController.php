@@ -107,43 +107,48 @@ class ApplicationDocumentController extends Controller
                 ';
             })
 
-            ->addColumn('actions', function ($row) {
+            // Verify Column
+            ->addColumn('verify', function ($row) {
                 return '
-                    <div class="flex items-center gap-2">
-                    
-                        <!-- View -->
-                        <a href="' . route('admin.documents.toggleVerify', ['id' => $row->id, 'redirect' => 'list']) . '" 
-                            class="text-green-600 hover:text-green-900 flex" title="Verify">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                            Click to Verify
-                        </a>
-
-                        <!-- Delete -->
-                        <form action="' . route('admin.application-documents.destroy', $row->id) . '" method="POST" class="inline">
-                            <input type="hidden" name="redirect" value="list">
-                            ' . csrf_field() . '
-                            ' . method_field('DELETE') . '
-                            <button type="button" 
-                                onclick="confirmDelete(\'' . $row->documentType->name . ' Document\', this.form)"
-                                class="group inline-flex items-center justify-center h-9 w-9 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:border-red-600 transition-all duration-200 shadow-sm" 
-                                title="Delete">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                            </button>
-                        </form>
-                    </div>
-                ';
+        <a href="' . route('admin.documents.toggleVerify', [
+                    'id' => $row->id,
+                    'redirect' => 'list'
+                ]) . '" class="text-green-600 hover:text-green-900 flex items-center"
+           title="Verify">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M5 13l4 4L19 7" />
+            </svg>
+            Click to Verify
+        </a>
+    ';
             })
 
-            ->rawColumns(['customer_name', 'is_verified', 'document', 'actions'])
+            // Delete Column
+            ->addColumn('actions', function ($row) {
+                return '
+        <form action="' . route('admin.application-documents.destroy', $row->id) . '"
+            method="POST" class="inline">
+            <input type="hidden" name="redirect" value="list">
+            ' . csrf_field() . '
+            ' . method_field('DELETE') . '
+            <button type="button"
+                onclick="confirmDelete(\'' . addslashes($row->documentType->name ?? 'Document') . ' Document\', this.form)"
+                class="inline-flex items-center justify-center h-9 w-9 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100"
+                title="Delete">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+            </button>
+        </form>
+    ';
+            })
+
+            ->rawColumns(['customer_name', 'is_verified', 'document', 'verify', 'actions'])
 
             ->make(true);
     }

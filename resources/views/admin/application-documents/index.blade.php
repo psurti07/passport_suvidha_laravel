@@ -77,6 +77,9 @@
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created
                                     </th>
 
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Verify
+                                    </th>
+
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
                                     </th>
 
@@ -162,6 +165,12 @@
                     {
                         data: 'created_at',
                         name: 'created_at'
+                    },
+                    {
+                        data: 'verify',
+                        name: 'verify',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'actions',
