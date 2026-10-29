@@ -1230,14 +1230,16 @@
                                 $('#city').val('');
                                 $('#state').val('');
                                 $('#pincode-error').text(res.message ||
-                                    'Invalid pincode');
+                                    'Location not found. Please enter city and state manually.'
+                                );
                             }
                         },
                         error: function(xhr) {
                             $('#city').val('');
                             $('#state').val('');
 
-                            let msg = xhr.responseJSON?.message || 'Invalid pincode';
+                            let msg = xhr.responseJSON?.message ||
+                                'Unable to fetch location. Please enter city and state manually.';
                             $('#pincode-error').text(msg);
                         }
                     });
@@ -1306,7 +1308,8 @@
                                 $('#permanent_state').val('');
 
                                 $('#permanent-pincode-error').text(
-                                    res.message || 'Invalid pincode'
+                                    res.message ||
+                                    'Location not found. Please enter city and state manually.'
                                 );
                             }
                         },
@@ -1318,7 +1321,7 @@
 
                             let msg =
                                 xhr.responseJSON?.message ||
-                                'Invalid pincode';
+                                'Unable to fetch location. Please enter city and state manually.';
 
                             $('#permanent-pincode-error').text(msg);
                         }

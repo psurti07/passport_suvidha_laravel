@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 class LocationService
@@ -24,7 +25,7 @@ class LocationService
 
         if ($response === false) {
             curl_close($curl);
-            return ['error' => 'Unable to fetch data'];
+            return ['error' => 'Location not found. Please enter city and state manually.'];
         }
 
         curl_close($curl);
@@ -38,6 +39,6 @@ class LocationService
             ];
         }
 
-        return ['error' => 'Invalid Pincode'];
+        return ['error' => 'Location not found. Please enter city and state manually.'];
     }
 }
