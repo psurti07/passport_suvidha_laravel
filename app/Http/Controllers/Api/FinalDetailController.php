@@ -33,6 +33,7 @@ class FinalDetailController extends Controller
                 'file_name' => 'Application_Summary.pdf',
                 'upload_date' => $finalDetail->upload_date,
                 'is_approved' => $finalDetail->is_approved,
+                'status' => $finalDetail->status,
                 'approved_date' => $finalDetail->approved_date,
                 'customer_details' => [
                     'name' => $customer->full_name,
@@ -138,6 +139,7 @@ public function download()
         if ($request->is_verified) {
             $finalDetail->update([
                 'is_approved' => true,
+                'status' => 'approved',
                 'approved_date' => now(),
                 'approved_by' => $customer->id,
                 'approved_by_role' => 'customer'
@@ -147,6 +149,7 @@ public function download()
                 'message' => 'Application verified successfully',
                 'data' => [
                     'is_approved' => true,
+                    'status' => $finalDetail->status,
                     'approved_date' => $finalDetail->approved_date
                 ]
             ]);
@@ -155,7 +158,8 @@ public function download()
         return response()->json([
             'message' => 'Application verification required',
             'data' => [
-                'is_approved' => false
+                'is_approved' => false,
+                'status' => $finalDetail->status,
             ]
         ], 422);
     }

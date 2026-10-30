@@ -16,6 +16,7 @@ class FinalDetail extends Model
         'upload_date',
         'uploaded_by',
         'is_approved',
+        'status',
         'approved_date',
         'approved_by_role',
         'approved_by',
@@ -43,15 +44,15 @@ class FinalDetail extends Model
      */
     public function approver()
     {
-        if (!$this->approved_by_role || !$this->approved_by) {
+        if (!$this->approved_by || !$this->approved_by_role) {
             return null;
         }
 
-        if ($this->approved_by_role === 'user') {
-            return User::find($this->approved_by);
-        } else {
-            return Customer::find($this->approved_by);
-        }
+        return match ($this->approved_by_role) {
+            'user' => User::find($this->approved_by),
+            'customer' => Customer::find($this->approved_by),
+            default => null,
+        };
     }
 
     public function getApproverNameAttribute()

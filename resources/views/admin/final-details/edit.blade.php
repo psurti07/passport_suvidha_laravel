@@ -101,16 +101,24 @@
                             @enderror
                         </div>
 
-                        {{-- Is Approved --}}
+                        {{-- Review Status --}}
                         <div>
-                            <div class="flex items-center">
-                                <input id="is_approved" name="is_approved" type="checkbox" value="1"
-                                    {{ $finalDetail->is_approved ? 'checked' : '' }}
-                                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                <label for="is_approved" class="ml-2 block text-sm font-medium text-gray-700">
-                                    Approved
-                                </label>
-                            </div>
+                            <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <select id="status" name="status" required
+                                class="w-full border border-gray-300 rounded-lg text-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm @error('status') border-red-500 @enderror">
+                                <option value="pending"
+                                    {{ old('status', $finalDetail->status) === 'pending' ? 'selected' : '' }}>Pending
+                                </option>
+                                <option value="approved"
+                                    {{ old('status', $finalDetail->status) === 'approved' ? 'selected' : '' }}>Approved
+                                </option>
+                                <option value="not_approved"
+                                    {{ old('status', $finalDetail->status) === 'not_approved' ? 'selected' : '' }}>Not
+                                    Approved</option>
+                            </select>
+                            @error('status')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                             <p class="mt-1 text-xs text-gray-500">Approving will automatically set the approval date and
                                 approver to the current user.</p>
                             @if ($finalDetail->is_approved)

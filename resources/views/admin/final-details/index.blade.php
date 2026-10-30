@@ -35,10 +35,11 @@
 
                             <div>
                                 <label class="text-sm">Status</label>
-                                <select id="is_approved" class="border rounded-lg px-3 py-2 text-sm sm:w-32">
+                                <select id="status" class="border rounded-lg px-3 py-2 text-sm sm:w-36">
                                     <option value="">All</option>
-                                    <option value="1">Approved</option>
-                                    <option value="0">Pending</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="not_approved">Not Approved</option>
                                 </select>
                             </div>
 
@@ -91,8 +92,12 @@
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Approved
                                         By
                                     </th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                                        Approval Actions
+                                    </th>
 
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                                        Actions
                                     </th>
 
                                 </tr>
@@ -136,7 +141,7 @@
                     data: function(d) {
                         d.from_date = $('#from_date').val();
                         d.to_date = $('#to_date').val();
-                        d.is_approved = $('#is_approved').val();
+                        d.status = $('#status').val();
                     }
                 },
 
@@ -172,8 +177,8 @@
                         name: 'user_name'
                     },
                     {
-                        data: 'is_approved',
-                        name: 'is_approved'
+                        data: 'status',
+                        name: 'status',
                     },
                     {
                         data: 'approved_date',
@@ -182,6 +187,10 @@
                     {
                         data: 'approved_by_name',
                         name: 'approved_by_name'
+                    },
+                    {
+                        data: 'approval_actions',
+                        name: 'approval_actions',
                     },
                     {
                         data: 'actions',

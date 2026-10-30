@@ -96,10 +96,15 @@
                                 <div>
                                     <span class="block text-sm font-medium text-gray-500">Status</span>
                                     <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 mt-1">
-                                        @if ($finalDetail->is_approved)
+                                        @if ($finalDetail->status === 'approved')
                                             <span
                                                 class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                 Approved
+                                            </span>
+                                        @elseif ($finalDetail->status === 'not_approved')
+                                            <span
+                                                class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                Not Approved
                                             </span>
                                         @else
                                             <span
@@ -170,7 +175,7 @@
 
                 <!-- Approval/Unapproval Buttons -->
                 <div class="mt-6 flex justify-end">
-                    @if (!$finalDetail->is_approved)
+                    @if ($finalDetail->status !== 'approved')
                         <form action="{{ route('admin.final-details.approve', $finalDetail) }}" method="POST">
                             @csrf
                             @method('PATCH')
@@ -191,14 +196,14 @@
                             @csrf
                             @method('PATCH')
                             <button type="submit"
-                                onclick="this.disabled=true; this.innerText='Unapproving...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
+                                onclick="this.disabled=true; this.innerText='Updating...'; this.classList.add('opacity-50','cursor-not-allowed'); this.form.submit();"
                                 class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg text-sm font-medium hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 shadow-md hover:shadow-lg">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
-                                Remove Approval
+                                Mark Not Approved
                             </button>
                         </form>
                     @endif

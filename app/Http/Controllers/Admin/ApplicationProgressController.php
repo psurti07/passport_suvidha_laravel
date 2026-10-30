@@ -108,7 +108,8 @@ class ApplicationProgressController extends Controller
                     'file_path' => $filePath,
                     'upload_date' => now(),
                     'uploaded_by' => Auth::id(),
-                    'is_approved' => false
+                    'is_approved' => false,
+                    'status' => 'pending',
                 ]);
 
                 $data['file_type'] = 'final_details';
@@ -352,7 +353,8 @@ class ApplicationProgressController extends Controller
                     'file_path' => $filePath,
                     'upload_date' => now(),
                     'uploaded_by' => Auth::id(),
-                    'is_approved' => false
+                    'is_approved' => false,
+                    'status' => 'pending',
                 ]);
 
                 $data['file_type'] = 'final_details';

@@ -31,6 +31,7 @@ class FinalDetailController extends Controller
             'upload_date',
             'uploaded_by',
             'is_approved',
+            'status',
             'approved_date',
             'approved_by_role',
             'approved_by',
@@ -41,8 +42,8 @@ class FinalDetailController extends Controller
                 $to . ' 23:59:59'
             ]);
 
-        if ($request->filled('is_approved')) {
-            $query->where('is_approved', $request->is_approved);
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
 
         return DataTables::of($query)
@@ -63,24 +64,25 @@ class FinalDetailController extends Controller
                 return $row->uploader->name ?? 'System';
             })
 
-            ->addColumn('is_approved', function ($row) {
-                return $row->is_approved ? 1 : 0;
+            ->addColumn('status', function ($row) {
+                $statuses = [
+                    'pending' => ['Pending', 'bg-yellow-100 text-yellow-800'],
+                    'approved' => ['Approved', 'bg-green-100 text-green-800'],
+                    'not_approved' => ['Not Approved', 'bg-red-100 text-red-800'],
+                ];
+                [$label, $classes] = $statuses[$row->status] ?? $statuses['pending'];
+
+                return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs ' . $classes . '">' . $label . '</span>';
             })
 
             ->addColumn('approved_by_name', function ($row) {
-                return $row->approver_name;
+                $approver = $row->approver();
+
+                return $approver?->name ?? ucfirst($row->approved_by_role ?? 'N/A');
             })
 
             ->editColumn('upload_date', function ($row) {
                 return $row->upload_date->format('d M Y, h:i A');
-            })
-
-            ->editColumn('is_approved', function ($row) {
-                if ($row->is_approved == '1') {
-                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-green-100 text-green-800">Approved</span>';
-                } else {
-                    return '<span class="inline-flex px-3 py-1 font-bold rounded text-xs bg-yellow-100 text-yellow-800">Pending</span>';
-                }
             })
 
             ->editColumn('approved_date', function ($row) {
@@ -116,6 +118,40 @@ class FinalDetailController extends Controller
                         </svg>
                         View File
                     </a>
+                ';
+            })
+
+            ->addColumn('approval_actions', function ($row) {
+                $approved = $row->status === 'approved';
+                $notApproved = $row->status === 'not_approved';
+
+                return '
+                    <div class="flex items-center justify-center gap-2">
+                        <form action="' . route('admin.final-details.approve', $row->id) . '" method="POST" class="inline">
+                            ' . csrf_field() . '
+                            ' . method_field('PATCH') . '
+                            <button type="submit" title="Approve"
+                                ' . ($approved ? 'disabled aria-pressed="true"' : 'aria-pressed="false"') . '
+                                class="inline-flex items-center justify-center h-9 w-9 rounded-lg border border-green-200 bg-green-50 text-green-600 hover:bg-green-100 hover:border-green-500 transition-all duration-200 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
+                                aria-label="Approve final detail">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </button>
+                        </form>
+                        <form action="' . route('admin.final-details.unapprove', $row->id) . '" method="POST" class="inline">
+                            ' . csrf_field() . '
+                            ' . method_field('PATCH') . '
+                            <button type="submit" title="Mark not approved"
+                                ' . ($notApproved ? 'disabled aria-pressed="true"' : 'aria-pressed="false"') . '
+                                class="inline-flex items-center justify-center h-9 w-9 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:border-red-500 transition-all duration-200 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
+                                aria-label="Mark final detail not approved">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
                 ';
             })
 
@@ -165,50 +201,12 @@ class FinalDetailController extends Controller
                             </button>
                         </form>
                     ';
-                if (!$row->is_approved) {
-                    $html .= '
-                        <form action="' . route('admin.final-details.approve', $row->id) . '"
-                            method="POST" class="inline">
-                            ' . csrf_field() . '
-                            ' . method_field('PATCH') . '
-                            <button type="submit"
-                                class="text-green-600 hover:text-green-900 flex"
-                                title="Approve">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="M5 13l4 4L19 7" />
-                                </svg>
-                                Approve
-                            </button>
-                        </form>
-                    ';
-                } else {
-                    $html .= '
-                        <form action="' . route('admin.final-details.unapprove', $row->id) . '"
-                            method="POST" class="inline">
-                            ' . csrf_field() . '
-                            ' . method_field('PATCH') . '
-                            <button type="submit"
-                                class="text-yellow-600 hover:text-yellow-900 flex"
-                                title="Unapprove">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                                Unapprove
-                            </button>
-                        </form>
-                    ';
-                }
-
                 $html .= '</div>';
 
                 return $html;
             })
 
-            ->rawColumns(['customer_name', 'is_approved', 'document', 'actions'])
+            ->rawColumns(['customer_name', 'status', 'document', 'approval_actions', 'actions'])
 
             ->make(true);
     }
@@ -239,12 +237,13 @@ class FinalDetailController extends Controller
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
             'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
-            'is_approved' => 'boolean',
+            'status' => 'required|in:pending,approved,not_approved',
         ]);
 
         $data = [
             'customer_id' => $validated['customer_id'],
-            'is_approved' => $request->has('is_approved'),
+            'status' => $validated['status'],
+            'is_approved' => $validated['status'] === 'approved',
         ];
 
         // Handle file upload if a new file is provided
@@ -261,22 +260,14 @@ class FinalDetailController extends Controller
         }
 
         // Handle approval status changes
-        if ($request->has('is_approved')) {
-            $isApproved = (bool) $request->input('is_approved');
-
-            // If approving and it wasn't approved before
-            if ($isApproved && !$finalDetail->is_approved) {
-                $data['approved_date'] = now();
-                $data['approved_by_role'] = 'user'; // Staff/admin is approving
-                $data['approved_by'] = auth()->id(); // Set current user as approver
-            }
-
-            // If un-approving
-            if (!$isApproved && $finalDetail->is_approved) {
-                $data['approved_date'] = null;
-                $data['approved_by_role'] = null;
-                $data['approved_by'] = null;
-            }
+        if ($validated['status'] === 'approved' && !$finalDetail->is_approved) {
+            $data['approved_date'] = now();
+            $data['approved_by_role'] = 'user';
+            $data['approved_by'] = auth()->id();
+        } elseif ($validated['status'] !== 'approved' && $finalDetail->is_approved) {
+            $data['approved_date'] = null;
+            $data['approved_by_role'] = null;
+            $data['approved_by'] = null;
         }
 
         $finalDetail->update($data);
@@ -313,6 +304,7 @@ class FinalDetailController extends Controller
     {
         $finalDetail->update([
             'is_approved' => true,
+            'status' => 'approved',
             'approved_date' => now(),
             'approved_by_role' => 'user', // Staff/admin is approving
             'approved_by' => auth()->id(), // Set current user as approver
@@ -325,10 +317,11 @@ class FinalDetailController extends Controller
     public function unapprove(FinalDetail $finalDetail)
     {
         $finalDetail->update([
-            'is_approved' => false,
-            'approved_date' => null,
-            'approved_by_role' => null,
-            'approved_by' => null,
+            'is_approved'      => false,
+            'status'           => 'not_approved',
+            'approved_date'    => now(),
+            'approved_by_role' => 'user',
+            'approved_by'      => auth()->id(),
         ]);
 
         return redirect()->route('admin.final-details.index')
